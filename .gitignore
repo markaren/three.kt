@@ -1,0 +1,58 @@
+
+
+#Java class files
+*.class
+
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+*.dll
+*.so
+
+!**/resources/**/*.dll
+!**/resources/**/*.so
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+bin/
+tmp/
+
+.metadata
+.gradle
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+
+gradle.properties
+
+.nb-gradle/
+
+.idea/
+out/
+build/
+
+*.iml
+
+*.csv
+
+/**/out/
+/**/build/
+
+/**/src/test/resources/fmus
+
+/**/cmake-build-debug
+/**/cmake-build-release

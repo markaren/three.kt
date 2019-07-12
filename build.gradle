@@ -1,0 +1,76 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.41'
+}
+
+apply plugin: 'maven-publish'
+
+group 'info.laht'
+version 'r107-ALPHA'
+
+sourceCompatibility = 1.8
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+repositories {
+    mavenCentral()
+}
+
+project.ext.lwjglVersion = "3.2.2"
+project.ext.lwjglNatives = "natives-windows"
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    implementation "org.lwjgl:lwjgl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+    runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
+
+    def junit_version = '5.3.2'
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junit_version")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junit_version")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit_version")
+}
+
+test {
+    failFast = true
+    useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+task cleanThreejs() {
+    doLast {
+        new File("threejs").traverse{
+            if (it.name.endsWith(".js")) {
+                it.delete()
+            }
+        }
+    }
+}
+//
+//task ts2kt() {
+//   doLast {
+//
+//       def sb = new StringBuilder()
+//
+//       new File("src/main/resources/shaders/chunk").listFiles().each { file ->
+//
+//            sb.append("val ${file.name.replace(".glsl", "")} by lazy {\n\tload(\"${file.name}\")\n}\n\n")
+//           
+//       }
+//
+//       println sb
+//
+//   }
+//}

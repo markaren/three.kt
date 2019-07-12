@@ -1,0 +1,77 @@
+package info.laht.threekt.core
+
+import info.laht.threekt.cameras.Camera
+import info.laht.threekt.math.Ray
+import info.laht.threekt.math.Vector2
+import info.laht.threekt.math.Vector3
+
+class Intersection(
+    val distance: Double,
+    val distanceToRay: Double?,
+    val point: Vector3,
+    val index: Int?,
+    val face: Face3?,
+    val faceIndex: Int?,
+    val `object`: Object3D,
+    val uv: Vector2?
+)
+
+
+class Raycaster(
+    origin: Vector3,
+    direction: Vector3,
+    val near: Double = 0.0,
+    val far: Double = Double.POSITIVE_INFINITY
+
+) {
+
+    private val ray = Ray(origin, direction)
+
+    /**
+     * Updates the ray with a new origin and direction.
+     * @param origin The origin vector where the ray casts from.
+     * @param direction The normalized direction vector that gives direction to the ray.
+     */
+    fun set(origin: Vector3, direction: Vector3) {
+        TODO()
+    }
+
+    /**
+     * Updates the ray with a new origin and direction.
+     * @param coords 2D coordinates of the mouse, in normalized device coordinates (NDC)---X and Y components should be between -1 and 1.
+     * @param camera camera from which the ray should originate
+     */
+    fun setFromCamera(coords: Vector2, camera: Camera) {
+        TODO()
+    }
+
+    /**
+     * Checks all intersection between the ray and the object with or without the descendants. Intersections are returned sorted by distance, closest first.
+     * @param object The object to check for intersection with the ray.
+     * @param recursive If true, it also checks all descendants. Otherwise it only checks intersecton with the object. Default is false.
+     * @param optionalTarget (optional) target to set the result. Otherwise a new Array is instantiated. If set, you must clear this array prior to each call (i.e., array.length = 0)
+     */
+    fun intersectObject(
+        `object`: Object3D,
+        recursive: Boolean = false,
+        optionalTarget: List<Intersection>?
+    ): List<Intersection> {
+        TODO()
+    }
+
+
+    /**
+     * Checks all intersection between the ray and the objects with or without the descendants. Intersections are returned sorted by distance, closest first. Intersections are of the same form as those returned by .intersectObject.
+     * @param objects The objects to check for intersection with the ray.
+     * @param recursive If true, it also checks all descendants of the objects. Otherwise it only checks intersecton with the objects. Default is false.
+     * @param optionalTarget (optional) target to set the result. Otherwise a new Array is instantiated. If set, you must clear this array prior to each call (i.e., array.length = 0)
+     */
+    fun intersectObjects(
+        objects: List<Object3D>,
+        recursive: Boolean = false,
+        optionalTarget: List<Intersection>?
+    ): List<Intersection> {
+        TODO()
+    }
+
+}
