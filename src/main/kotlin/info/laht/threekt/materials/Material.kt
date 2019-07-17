@@ -1,6 +1,7 @@
 package info.laht.threekt.materials
 
 import info.laht.threekt.*
+import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.EventDispatcher
 import info.laht.threekt.math.Plane
 import info.laht.threekt.math.generateUUID
@@ -8,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 open class Material(
     parameters: MaterialParameters? = null
-) : EventDispatcher() {
+) : Cloneable, EventDispatcher() {
 
     internal val program: Int? = null
 
@@ -106,12 +107,12 @@ open class Material(
     /**
      * Whether the material is affected by fog. Default is true.
      */
-    open var fog = true
+    var fog = true
 
     /**
      * Whether the material is affected by lights. Default is true.
      */
-    open var lights = true
+    var lights = true
 
     /**
      * Specifies that the material needs to be updated, WebGL wise. Set it to true if you made changes that need to be reflected in WebGL.
@@ -123,6 +124,8 @@ open class Material(
      * Opacity. Default is 1.
      */
     var opacity = 1f
+
+    var precision: String? = null // override the renderer's default precision for this material
 
     /**
      * Whether to use polygon offset. Default is false. This corresponds to the POLYGON_OFFSET_FILL WebGL feature.
@@ -184,7 +187,7 @@ open class Material(
      */
     var visible = true
 
-    var defines: MutableMap<String, String>? = null
+    var defines = mutableMapOf<String, Boolean>()
 
     init {
 
@@ -238,7 +241,7 @@ open class Material(
     /**
      * Return a new material with the same parameters as this material.
      */
-    fun clone(): Material {
+    override fun clone(): Material {
         return Material().copy(this)
     }
 
@@ -295,7 +298,7 @@ open class Material(
      * This disposes the material. Textures of a material don't get disposed. These needs to be disposed by {@link Texture}.
      */
     fun dispose() {
-        dispatchEvent("dispose")
+        dispatchEvent("dispose", this)
     }
 
     private companion object {

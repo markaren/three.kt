@@ -3,11 +3,11 @@ package info.laht.threekt.math
 import kotlin.math.*
 
 class Quaternion(
-    internal var x: Double = 0.0,
-    internal var y: Double = 0.0,
-    internal var z: Double = 0.0,
-    internal var w: Double = 1.0
-) {
+    internal var x: Float = 0f,
+    internal var y: Float = 0f,
+    internal var z: Float = 0f,
+    internal var w: Float = 1f
+): Cloneable {
 
     internal var onChangeCallback: (() -> Unit)? = null
 
@@ -15,10 +15,10 @@ class Quaternion(
      * Sets values of this quaternion.
      */
     fun set(x: Number, y: Number, z: Number, w: Number): Quaternion {
-        this.x = x.toDouble()
-        this.y = y.toDouble()
-        this.z = z.toDouble()
-        this.w = w.toDouble()
+        this.x = x.toFloat()
+        this.y = y.toFloat()
+        this.z = z.toFloat()
+        this.w = w.toFloat()
         this.onChangeCallback?.invoke()
         return this
     }
@@ -26,7 +26,7 @@ class Quaternion(
     /**
      * Clones this quaternion.
      */
-    fun clone(): Quaternion {
+    override fun clone(): Quaternion {
         return Quaternion(x, y, z, w)
     }
 
@@ -109,7 +109,7 @@ class Quaternion(
         return this;
     }
 
-    fun setFromAxisAngle(axisX: Double, axisY: Double, axisZ: Double, angle: Double): Quaternion {
+    fun setFromAxisAngle(axisX: Float, axisY: Float, axisZ: Float, angle: Float): Quaternion {
         val halfAngle = angle / 2
         val s = sin(halfAngle);
 
@@ -128,7 +128,7 @@ class Quaternion(
      * Adapted from http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm.
      * Axis have to be normalized, angle is in radians.
      */
-    fun setFromAxisAngle(axis: Vector3, angle: Double): Quaternion {
+    fun setFromAxisAngle(axis: Vector3, angle: Float): Quaternion {
         return this.setFromAxisAngle(axis.x, axis.y, axis.z, angle)
     }
 
@@ -153,43 +153,43 @@ class Quaternion(
         val m33 = te[10]
 
         val trace = m11 + m22 + m33
-        val s: Double
+        val s: Float
 
         if (trace > 0) {
 
-            s = 0.5 / sqrt(trace + 1.0);
+            s = 0.5.toFloat() / sqrt(trace + 1.toFloat());
 
-            this.w = 0.25 / s;
+            this.w = 0.25.toFloat() / s;
             this.x = (m32 - m23) * s;
             this.y = (m13 - m31) * s;
             this.z = (m21 - m12) * s;
 
         } else if (m11 > m22 && m11 > m33) {
 
-            s = 2.0 * sqrt(1.0 + m11 - m22 - m33);
+            s = 2.toFloat() * sqrt(1.toFloat() + m11 - m22 - m33);
 
             this.w = (m32 - m23) / s;
-            this.x = 0.25 * s;
+            this.x = 0.25.toFloat() * s;
             this.y = (m12 + m21) / s;
             this.z = (m13 + m31) / s;
 
         } else if (m22 > m33) {
 
-            s = 2.0 * sqrt(1.0 + m22 - m11 - m33);
+            s = 2.toFloat() * sqrt(1.toFloat() + m22 - m11 - m33);
 
             this.w = (m13 - m31) / s;
             this.x = (m12 + m21) / s;
-            this.y = 0.25 * s;
+            this.y = 0.25.toFloat() * s;
             this.z = (m23 + m32) / s;
 
         } else {
 
-            s = 2.0 * sqrt(1.0 + m33 - m11 - m22);
+            s = 2.toFloat() * sqrt(1.toFloat() + m33 - m11 - m22);
 
             this.w = (m21 - m12) / s;
             this.x = (m13 + m31) / s;
             this.y = (m23 + m32) / s;
-            this.z = 0.25 * s;
+            this.z = 0.25.toFloat() * s;
 
         }
 
@@ -201,24 +201,24 @@ class Quaternion(
     fun setFromUnitVectors(vFrom: Vector3, vTo: Vector3): Quaternion {
         // assumes direction vectors vFrom and vTo are normalized
 
-        val EPS = 0.000001
+        val EPS = 0.000001.toFloat()
 
         var r = vFrom.dot(vTo) + 1
 
         if (r < EPS) {
 
-            r = 0.0
+            r = 0.toFloat()
 
             if (abs(vFrom.x) > abs(vFrom.z)) {
 
                 this.x = -vFrom.y
                 this.y = vFrom.x
-                this.z = 0.0
+                this.z = 0.toFloat()
                 this.w = r
 
             } else {
 
-                this.x = 0.0
+                this.x = 0.toFloat()
                 this.y = -vFrom.z
                 this.z = vFrom.y
                 this.w = r
@@ -239,16 +239,16 @@ class Quaternion(
         return this.normalize()
     }
 
-    fun angleTo(q: Quaternion): Double {
+    fun angleTo(q: Quaternion): Float {
         return 2 * acos(abs(clamp(this.dot(q), -1, 1)));
     }
 
-    fun rotateTowards(q: Quaternion, step: Double): Quaternion {
+    fun rotateTowards(q: Quaternion, step: Float): Quaternion {
         val angle = this.angleTo(q);
 
-        if (angle == 0.0) return this;
+        if (angle == 0.toFloat()) return this;
 
-        val t = min(1.0, step / angle);
+        val t = min(1.toFloat(), step / angle);
 
         this.slerp(q, t);
 
@@ -272,18 +272,18 @@ class Quaternion(
         return this;
     }
 
-    fun dot(v: Quaternion): Double {
+    fun dot(v: Quaternion): Float {
         return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w
     }
 
-    fun lengthSq(): Double {
+    fun lengthSq(): Float {
         return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w
     }
 
     /**
      * Computes length of this quaternion.
      */
-    fun length(): Double {
+    fun length(): Float {
         return sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w)
 
     }
@@ -294,16 +294,16 @@ class Quaternion(
     fun normalize(): Quaternion {
         var l = this.length();
 
-        if (l == 0.0) {
+        if (l == 0.toFloat()) {
 
-            this.x = 0.0
-            this.y = 0.0
-            this.z = 0.0
-            this.w = 1.0
+            this.x = 0.toFloat()
+            this.y = 0.toFloat()
+            this.z = 0.toFloat()
+            this.w = 1.toFloat()
 
         } else {
 
-            l = 1.0 / l
+            l = 1.toFloat() / l
 
             this.x = this.x * l
             this.y = this.y * l
@@ -352,11 +352,11 @@ class Quaternion(
         return this;
     }
 
-    fun slerp(qb: Quaternion, t: Double): Quaternion {
-        if (t == 0.0) {
+    fun slerp(qb: Quaternion, t: Float): Quaternion {
+        if (t == 0.toFloat()) {
             return this
         }
-        if (t == 1.0) {
+        if (t == 1.toFloat()) {
             return this.copy(qb)
         }
 
@@ -412,10 +412,10 @@ class Quaternion(
 
         }
 
-        val sinHalfTheta = Math.sqrt(sqrSinHalfTheta)
-        val halfTheta = Math.atan2(sinHalfTheta, cosHalfTheta)
-        val ratioA = Math.sin((1 - t) * halfTheta) / sinHalfTheta
-        val ratioB = Math.sin(t * halfTheta) / sinHalfTheta;
+        val sinHalfTheta = sqrt(sqrSinHalfTheta).toFloat()
+        val halfTheta = atan2(sinHalfTheta, cosHalfTheta)
+        val ratioA = sin((1 - t) * halfTheta) / sinHalfTheta
+        val ratioB = sin(t * halfTheta) / sinHalfTheta;
 
         this.w = (w * ratioA + this.w * ratioB);
         this.x = (x * ratioA + this.x * ratioB);
@@ -429,7 +429,7 @@ class Quaternion(
 
 
     @JvmOverloads
-    fun fromArray(array: DoubleArray, offset: Int = 0): Quaternion {
+    fun fromArray(array: FloatArray, offset: Int = 0): Quaternion {
         x = array[offset + 0]
         y = array[offset + 1]
         z = array[offset + 2]
@@ -438,7 +438,7 @@ class Quaternion(
     }
 
     @JvmOverloads
-    fun toArray(array: DoubleArray = DoubleArray(4), offset: Int = 0): DoubleArray {
+    fun toArray(array: FloatArray = FloatArray(4), offset: Int = 0): FloatArray {
         array[offset + 0] = x
         array[offset + 1] = y
         array[offset + 2] = z

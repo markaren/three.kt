@@ -24,7 +24,9 @@ abstract class Camera: Object3D() {
 
     }
 
-    override fun getWorldDirection( target: Vector3 ): Vector3 {
+    abstract override fun clone(): Camera
+
+    override fun getWorldDirection(target: Vector3 ): Vector3 {
 
         this.updateMatrixWorld( true )
 
@@ -41,7 +43,5 @@ abstract class Camera: Object3D() {
         this.matrixWorldInverse.getInverse( this.matrixWorld );
 
     }
-
-    abstract fun clone (): Camera
 
 }

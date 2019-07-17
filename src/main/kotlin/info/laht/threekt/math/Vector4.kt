@@ -1,16 +1,18 @@
 package info.laht.threekt.math
 
+import info.laht.threekt.core.Cloneable
+
 
 class Vector4(
-    var x: Double,
-    var y: Double,
-    var z: Double,
-    var w: Double
-) {
+    var x: Float,
+    var y: Float,
+    var z: Float,
+    var w: Float
+) : Cloneable {
 
-    constructor(): this(0.0, 0.0, 0.0, 0.0)
+    constructor() : this(0.toFloat(), 0.toFloat(), 0.toFloat(), 0.toFloat())
 
-    fun set(x: Double, y: Double, z: Double, w: Double): Vector4 {
+    fun set(x: Float, y: Float, z: Float, w: Float): Vector4 {
         this.x = x
         this.y = y
         this.z = z
@@ -19,16 +21,40 @@ class Vector4(
         return this
     }
 
-    fun clone(v: Vector4): Vector4 {
-        return Vector4().copy(this)
+    fun multiplyScalar(scalar: Number): Vector4 {
+
+        this.x *= scalar.toFloat()
+        this.y *= scalar.toFloat()
+        this.z *= scalar.toFloat()
+        this.w *= scalar.toFloat()
+
+        return this
+
+    }
+
+    fun applyMatrix4(m: Matrix4): Vector4 {
+
+        val x = this.x
+        val y = this.y
+        val z = this.z
+        val w = this.w
+        val e = m.elements
+
+        this.x = e[0] * x + e[4] * y + e[8] * z + e[12] * w
+        this.y = e[1] * x + e[5] * y + e[9] * z + e[13] * w
+        this.z = e[2] * x + e[6] * y + e[10] * z + e[14] * w
+        this.w = e[3] * x + e[7] * y + e[11] * z + e[15] * w
+
+        return this
+
+    }
+
+    override fun clone(): Vector4 {
+        return Vector4(x, y, z, w)
     }
 
     fun copy(v: Vector4): Vector4 {
-        this.x = v.x
-        this.y = v.y
-        this.z = v.z
-        this.w = v.w
-        return this
+        return set(v.x, v.y, v.z, v.w)
     }
 
     override fun equals(other: Any?): Boolean {

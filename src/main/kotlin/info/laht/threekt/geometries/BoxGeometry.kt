@@ -1,17 +1,14 @@
 package info.laht.threekt.geometries
 
-import info.laht.threekt.core.BufferGeometry
+import info.laht.threekt.core.*
 import info.laht.threekt.math.Vector3
-import info.laht.threekt.core.BufferAttribute
-import info.laht.threekt.core.DoubleBufferAttribute
-import info.laht.threekt.core.IntBufferAttribute
 
-
+typealias BoxGeometry = BoxBufferGeometry
 
 class BoxBufferGeometry(
-    val width: Double = 1.0,
-    val height: Double = 1.0,
-    val depth: Double = 1.0,
+    val width: Float = 1.toFloat(),
+    val height: Float = 1.toFloat(),
+    val depth: Float = 1.toFloat(),
     val widthSegments: Int = 1,
     val heightSegments: Int = 1,
     val depthSegments: Int = 1
@@ -22,9 +19,9 @@ class BoxBufferGeometry(
         val helper = BoxBufferGeometryHelper()
 
         setIndex(IntBufferAttribute(helper.indices, 1))
-        addAttribute("position", DoubleBufferAttribute(helper.vertices, 3))
-        addAttribute("normal", DoubleBufferAttribute(helper.normals, 3))
-        addAttribute("uv", DoubleBufferAttribute(helper.uvs, 2))
+        addAttribute("position", FloatBufferAttribute(helper.vertices, 3))
+        addAttribute("normal", FloatBufferAttribute(helper.normals, 3))
+        addAttribute("uv", FloatBufferAttribute(helper.uvs, 2))
 
     }
 
@@ -43,9 +40,9 @@ class BoxBufferGeometry(
         val indexCount = calculateIndexCount(widthSegments, heightSegments, depthSegments)
 
         val indices = IntArray(indexCount)
-        val vertices = DoubleArray(vertexCount * 3)
-        val normals = DoubleArray(vertexCount * 3)
-        val uvs = DoubleArray(vertexCount * 2)
+        val vertices = FloatArray(vertexCount * 3)
+        val normals = FloatArray(vertexCount * 3)
+        val uvs = FloatArray(vertexCount * 2)
 
         init {
 
@@ -65,9 +62,9 @@ class BoxBufferGeometry(
             w: Int,
             udir: Int,
             vdir: Int,
-            width: Double,
-            height: Double,
-            depth: Double,
+            width: Float,
+            height: Float,
+            depth: Float,
             gridX: Int,
             gridY: Int,
             materialIndex: Int
@@ -108,9 +105,9 @@ class BoxBufferGeometry(
                     vertices[vertexBufferOffset + 2] = vector.z
 
                     // set values to correct vector component
-                    vector.setComponent(u, 0.0)
-                    vector.setComponent(v, 0.0)
-                    vector.setComponent(w, if (depth > 0) 1.0 else -1.0)
+                    vector.setComponent(u, 0.toFloat())
+                    vector.setComponent(v, 0.toFloat())
+                    vector.setComponent(w, if (depth > 0) 1.toFloat() else (-1).toFloat())
 
                     // now apply vector to normal buffer
                     normals[vertexBufferOffset] = vector.x
@@ -118,8 +115,8 @@ class BoxBufferGeometry(
                     normals[vertexBufferOffset + 2] = vector.z
 
                     // uvs
-                    uvs[uvBufferOffset] = ix.toDouble() / gridX
-                    uvs[uvBufferOffset + 1] = (1 - iy).toDouble() / gridY
+                    uvs[uvBufferOffset] = ix.toFloat() / gridX
+                    uvs[uvBufferOffset + 1] = (1 - iy).toFloat() / gridY
 
                     // update offsets and counters
                     vertexBufferOffset += 3

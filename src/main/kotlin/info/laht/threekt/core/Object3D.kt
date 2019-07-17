@@ -7,7 +7,7 @@ import info.laht.threekt.math.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Predicate
 
-open class Object3D : EventDispatcher() {
+open class Object3D : Cloneable, EventDispatcher() {
 
     var name = ""
     val uuid = generateUUID()
@@ -25,7 +25,7 @@ open class Object3D : EventDispatcher() {
     val quaternion = Quaternion().also {
         it.onChangeCallback = { onRotationChange() }
     }
-    val scale = Vector3(1.0, 1.0, 1.0)
+    val scale = Vector3(1.toFloat(), 1.toFloat(), 1.toFloat())
 
     val modelViewMatrix = Matrix4()
     val normalMatrix = Matrix3()
@@ -70,7 +70,7 @@ open class Object3D : EventDispatcher() {
         return this;
     }
 
-    fun setRotationFromAxisAngle(axis: Vector3, angle: Double) {
+    fun setRotationFromAxisAngle(axis: Vector3, angle: Float) {
         // assumes axis is normalized
         this.quaternion.setFromAxisAngle(axis, angle);
     }
@@ -94,7 +94,7 @@ open class Object3D : EventDispatcher() {
      * @param axis    A normalized vector in object space.
      * @param angle    The angle in radians.
      */
-    fun rotateOnAxis(axis: Vector3, angle: Double): Object3D {
+    fun rotateOnAxis(axis: Vector3, angle: Float): Object3D {
         // rotate object on axis in object space
         // axis is assumed to be normalized
         val q1 = Quaternion()
@@ -109,7 +109,7 @@ open class Object3D : EventDispatcher() {
      * @param axis    A normalized vector in object space.
      * @param angle    The angle in radians.
      */
-    fun rotateOnWorldAxis(axis: Vector3, angle: Double): Object3D {
+    fun rotateOnWorldAxis(axis: Vector3, angle: Float): Object3D {
         // rotate object on axis in world space
         // axis is assumed to be normalized
         // method assumes no rotated parent
@@ -124,7 +124,7 @@ open class Object3D : EventDispatcher() {
      *
      * @param angle
      */
-    fun rotateX(angle: Double): Object3D {
+    fun rotateX(angle: Float): Object3D {
         return this.rotateOnAxis(Vector3.X, angle)
     }
 
@@ -132,7 +132,7 @@ open class Object3D : EventDispatcher() {
      *
      * @param angle
      */
-    fun rotateY(angle: Double): Object3D {
+    fun rotateY(angle: Float): Object3D {
         return this.rotateOnAxis(Vector3.Y, angle)
     }
 
@@ -140,7 +140,7 @@ open class Object3D : EventDispatcher() {
      *
      * @param angle
      */
-    fun rotateZ(angle: Double): Object3D {
+    fun rotateZ(angle: Float): Object3D {
         return this.rotateOnAxis(Vector3.Z, angle)
     }
 
@@ -148,7 +148,7 @@ open class Object3D : EventDispatcher() {
      * @param axis    A normalized vector in object space.
      * @param distance    The distance to translate.
      */
-    fun translateOnAxis(axis: Vector3, distance: Double): Object3D {
+    fun translateOnAxis(axis: Vector3, distance: Float): Object3D {
         val v1 = Vector3()
         v1.copy(axis).applyQuaternion(this.quaternion);
         this.position.add(v1.multiplyScalar(distance));
@@ -160,7 +160,7 @@ open class Object3D : EventDispatcher() {
      * Translates object along x axis by distance.
      * @param distance Distance.
      */
-    fun translateX(distance: Double): Object3D {
+    fun translateX(distance: Float): Object3D {
         return this.translateOnAxis(Vector3.X, distance);
     }
 
@@ -168,7 +168,7 @@ open class Object3D : EventDispatcher() {
      * Translates object along y axis by distance.
      * @param distance Distance.
      */
-    fun translateY(distance: Double): Object3D {
+    fun translateY(distance: Float): Object3D {
         return this.translateOnAxis(Vector3.Y, distance);
     }
 
@@ -176,7 +176,7 @@ open class Object3D : EventDispatcher() {
      * Translates object along z axis by distance.
      * @param distance Distance.
      */
-    fun translateZ(distance: Double): Object3D {
+    fun translateZ(distance: Float): Object3D {
         return this.translateOnAxis(Vector3.Z, distance);
     }
 
@@ -207,7 +207,7 @@ open class Object3D : EventDispatcher() {
     /**
      * Rotates object to face point in space.
      */
-    fun lookAt(x: Double, y: Double, z: Double) {
+    fun lookAt(x: Float, y: Float, z: Float) {
         // This method does not support objects having non-uniformly-scaled parent(s)
 
         val q1 = Quaternion()
@@ -251,7 +251,7 @@ open class Object3D : EventDispatcher() {
             it.parent?.remove(it)
             it.parent = this
             children.add(it)
-            it.dispatchEvent("added")
+            it.dispatchEvent("added", this)
         }
 
         return this
@@ -265,7 +265,7 @@ open class Object3D : EventDispatcher() {
         objects.forEach {
             if (children.remove(it)) {
                 it.parent = null
-                it.dispatchEvent("removed")
+                it.dispatchEvent("removed", this)
             }
         }
 
@@ -279,19 +279,19 @@ open class Object3D : EventDispatcher() {
 
         val m = Matrix4()
 
-        this.updateWorldMatrix(true, false)
+        this.updateWorldMatrix(updateParents = true, updateChildren = false)
 
         m.getInverse(this.matrixWorld)
 
         `object`.parent?.also {
-            it.updateWorldMatrix(true, false);
+            it.updateWorldMatrix(updateParents = true, updateChildren = false);
 
             m.multiply(it.matrixWorld);
         }
 
 
         `object`.applyMatrix(m)
-        `object`.updateWorldMatrix(false, false)
+        `object`.updateWorldMatrix(updateParents = false, updateChildren = false)
 
         this.add(`object`)
 
@@ -300,7 +300,7 @@ open class Object3D : EventDispatcher() {
 
     /**
      * Searches through the object's children and returns the first with a matching id.
-     * @param id    Unique Double of the object instance
+     * @param id    Unique Float of the object instance
      */
     fun getObjectById(id: Int): Object3D? {
         return getObject(Predicate {
@@ -457,9 +457,8 @@ open class Object3D : EventDispatcher() {
 
     }
 
-    @JvmOverloads
-    open fun clone(recursive: Boolean = true): Object3D {
-        return Object3D().copy(this, recursive)
+    override fun clone(): Object3D {
+        return clone(true)
     }
 
     @JvmOverloads
@@ -471,7 +470,7 @@ open class Object3D : EventDispatcher() {
 
         private val object3DId = AtomicInteger()
 
-        var defaultUp = Vector3(0.0, 0.0, 1.0)
+        var defaultUp = Vector3.Z.clone()
 
     }
 

@@ -1,12 +1,13 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.BufferAttribute
+import info.laht.threekt.core.Cloneable
 import kotlin.math.*
 
 data class Vector2i(
     var x: Int,
     var y: Int
-) {
+): Cloneable {
 
     constructor() : this(0, 0)
 
@@ -20,7 +21,7 @@ data class Vector2i(
     /**
      * Returns a new Vector2 instance with the same `x` and `y` values.
      */
-    fun clone(): Vector2i {
+    override fun clone(): Vector2i {
         return Vector2i(x, y)
     }
 
@@ -35,16 +36,16 @@ data class Vector2i(
 
 
 data class Vector2(
-    var x: Double,
-    var y: Double
+    var x: Float,
+    var y: Float
 ) {
 
-    constructor(): this(0.0, 0.0)
+    constructor(): this(0.toFloat(), 0.toFloat())
 
     /**
      * Sets value of this vector.
      */
-    fun set( x: Double, y: Double ): Vector2 {
+    fun set( x: Float, y: Float ): Vector2 {
         this.x = x
         this.y = y
 
@@ -54,14 +55,14 @@ data class Vector2(
     /**
      * Sets the x and y values of this vector both equal to scalar.
      */
-    fun setScalar( scalar: Double ): Vector2 {
+    fun setScalar( scalar: Float ): Vector2 {
         return set(scalar, scalar)
     }
 
     /**
      * Sets a component of this vector.
      */
-    fun setComponent( index: Int, value: Double ): Vector2 {
+    fun setComponent( index: Int, value: Float ): Vector2 {
         when(index) {
             0 -> x = value
             1 -> y = value
@@ -74,7 +75,7 @@ data class Vector2(
     /**
      * Gets a component of this vector.
      */
-    fun getComponent( index: Int ): Double {
+    fun getComponent( index: Int ): Float {
         return when(index) {
             0 -> x
             1 -> y
@@ -109,7 +110,7 @@ data class Vector2(
     /**
      * Adds the scalar value s to this vector's x and y values.
      */
-    fun  addScalar( s: Double ): Vector2 {
+    fun  addScalar( s: Float ): Vector2 {
         this.x += s
         this.y += s
 
@@ -129,7 +130,7 @@ data class Vector2(
     /**
      * Adds the multiple of v and s to this vector.
      */
-    fun addScaledVector(v: Vector2, s: Double ): Vector2 {
+    fun addScaledVector(v: Vector2, s: Float ): Vector2 {
         this.x += v.x * s
         this.y += v.y * s
 
@@ -149,7 +150,7 @@ data class Vector2(
     /**
      * Subtracts s from this vector's x and y components.
      */
-    fun subScalar( s: Double ): Vector2 {
+    fun subScalar( s: Float ): Vector2 {
         this.x -= s
         this.y -= s
 
@@ -179,7 +180,7 @@ data class Vector2(
     /**
      * Multiplies this vector by scalar s.
      */
-    fun multiplyScalar( scalar: Double ): Vector2 {
+    fun multiplyScalar( scalar: Float ): Vector2 {
         this.x *= scalar
         this.y *= scalar
 
@@ -200,8 +201,8 @@ data class Vector2(
      * Divides this vector by scalar s.
      * Set vector to ( 0, 0 ) if s == 0.
      */
-    fun divideScalar( s: Double ): Vector2 {
-        return this.multiplyScalar( 1.0 / s )
+    fun divideScalar( s: Float ): Vector2 {
+        return this.multiplyScalar( 1.toFloat() / s )
     }
 
     /**
@@ -257,7 +258,7 @@ data class Vector2(
      * @param min the minimum value the components will be clamped to.
      * @param max the maximum value the components will be clamped to.
      */
-    fun clampScalar( min: Double, max: Double ): Vector2 {
+    fun clampScalar( min: Float, max: Float ): Vector2 {
         this.x = max( min, min( max, this.x ) )
         this.y = max( min, min( max, this.y ) )
 
@@ -270,7 +271,7 @@ data class Vector2(
      * @param min the minimum value the length will be clamped to.
      * @param max the maximum value the length will be clamped to.
      */
-    fun  clampLength( min: Double, max: Double ): Vector2 {
+    fun  clampLength( min: Float, max: Float ): Vector2 {
         TODO()
     }
 
@@ -298,8 +299,8 @@ data class Vector2(
      * The components of the vector are rounded to the nearest integer value.
      */
     fun round(): Vector2 {
-        this.x = this.x.roundToInt().toDouble()
-        this.y = this.y.roundToInt().toDouble()
+        this.x = this.x.roundToInt().toFloat()
+        this.y = this.y.roundToInt().toFloat()
 
         return this
     }
@@ -327,39 +328,39 @@ data class Vector2(
     /**
      * Computes dot product of this vector and v.
      */
-    fun dot( v: Vector2 ): Double {
+    fun dot( v: Vector2 ): Float {
         return this.x * v.x + this.y * v.y
     }
 
     /**
      * Computes cross product of this vector and v.
      */
-    fun cross( v: Vector2 ): Double {
+    fun cross( v: Vector2 ): Float {
         return this.x * v.y - this.y * v.x
     }
 
     /**
      * Computes squared length of this vector.
      */
-    fun lengthSq(): Double {
+    fun lengthSq(): Float {
         return this.x * this.x + this.y * this.y
     }
 
     /**
      * Computes length of this vector.
      */
-    fun length(): Double {
+    fun length(): Float {
         return sqrt( this.x * this.x + this.y * this.y )
     }
 
     /**
      * Computes the Manhattan length of this vector.
      *
-     * @return {Double}
+     * @return {Float}
      *
      * @see {@link http://en.wikipedia.org/wiki/Taxicab_geometry|Wikipedia: Taxicab Geometry}
      */
-    fun manhattanLength(): Double {
+    fun manhattanLength(): Float {
         return abs(this.x) + abs(this.y)
     }
 
@@ -369,7 +370,7 @@ data class Vector2(
     fun normalize(): Vector2 {
         var length = this.length()
         if (length.isNaN()) {
-            length = 1.0
+            length = 1.toFloat()
         }
         this.divideScalar(  length )
 
@@ -379,10 +380,10 @@ data class Vector2(
     /**
      * computes the angle in radians with respect to the positive x-axis
      */
-    fun angle(): Double {
+    fun angle(): Float {
         var angle = atan2(this.y, this.x)
         if ( angle < 0 ) {
-            angle += 2 * PI
+            angle += 2 * PI.toFloat()
         }
         return angle
     }
@@ -390,14 +391,14 @@ data class Vector2(
     /**
      * Computes distance of this vector to v.
      */
-    fun distanceTo( v: Vector2 ): Double {
+    fun distanceTo( v: Vector2 ): Float {
         return sqrt( this.distanceToSquared( v ) )
     }
 
     /**
      * Computes squared distance of this vector to v.
      */
-    fun distanceToSquared( v: Vector2 ): Double {
+    fun distanceToSquared( v: Vector2 ): Float {
         val dx = this.x - v.x
         val dy = this.y - v.y
         return dx * dx + dy * dy
@@ -408,18 +409,18 @@ data class Vector2(
      *
      * @param {Vector2} v
      *
-     * @return {Double}
+     * @return {Float}
      *
      * @see {@link http://en.wikipedia.org/wiki/Taxicab_geometry|Wikipedia: Taxicab Geometry}
      */
-    fun manhattanDistanceTo( v: Vector2 ): Double {
+    fun manhattanDistanceTo( v: Vector2 ): Float {
         return abs(this.x - v.x) + abs(this.y - v.y)
     }
 
     /**
      * Normalizes this vector and multiplies it by l.
      */
-    fun setLength( length: Double ) {
+    fun setLength( length: Float ) {
         this.normalize().also {
             multiplyScalar( length )
         }
@@ -430,7 +431,7 @@ data class Vector2(
      * @param v vector to interpolate towards.
      * @param alpha interpolation factor in the closed interval [0, 1].
      */
-    fun lerp(v: Vector2, alpha: Double ): Vector2 {
+    fun lerp(v: Vector2, alpha: Float ): Vector2 {
         this.x += ( v.x - this.x ) * alpha
         this.y += ( v.y - this.y ) * alpha
 
@@ -443,7 +444,7 @@ data class Vector2(
      * @param v2 vector to interpolate towards.
      * @param alpha interpolation factor in the closed interval [0, 1].
      */
-    fun lerpVectors(v1: Vector2, v2: Vector2, alpha: Double ) {
+    fun lerpVectors(v1: Vector2, v2: Vector2, alpha: Float ) {
         TODO()
     }
 
@@ -452,7 +453,7 @@ data class Vector2(
      * @param array the source array.
      * @param offset (optional) offset into the array. Default is 0.
      */
-    fun fromArray( array: DoubleArray, offset: Int = 0 ) {
+    fun fromArray( array: FloatArray, offset: Int = 0 ) {
         TODO()
     }
 
@@ -463,7 +464,7 @@ data class Vector2(
      * @return The created or provided array.
      */
     @JvmOverloads
-    fun toArray(array: DoubleArray = DoubleArray(2), offset: Int = 0 ): DoubleArray {
+    fun toArray(array: FloatArray = FloatArray(2), offset: Int = 0 ): FloatArray {
         return array.also {
             array[0] = x
             array[1] = y
@@ -475,7 +476,7 @@ data class Vector2(
      * @param attribute the source attribute.
      * @param index index in the attribute.
      */
-    fun fromBufferAttribute( attribute: BufferAttribute, index: Double ) {
+    fun fromBufferAttribute( attribute: BufferAttribute, index: Float ) {
         TODO()
     }
 
@@ -484,7 +485,7 @@ data class Vector2(
      * @param center the point around which to rotate.
      * @param angle the angle to rotate, in radians.
      */
-    fun rotateAround(center: Vector2, angle: Double ): Vector2 {
+    fun rotateAround(center: Vector2, angle: Float ): Vector2 {
         val c = cos(angle)
         val s = sin(angle)
 

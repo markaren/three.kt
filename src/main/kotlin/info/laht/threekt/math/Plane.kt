@@ -1,22 +1,24 @@
 package info.laht.threekt.math
 
+import info.laht.threekt.core.Cloneable
+
 
 class Plane @JvmOverloads constructor(
-    val normal: Vector3 = Vector3(0.0, 0.0, 1.0),
-    constant: Double = 0.0
-) {
+    val normal: Vector3 = Vector3(0.toFloat(), 0.toFloat(), 1.toFloat()),
+    constant: Float = 0.toFloat()
+): Cloneable {
 
     var constant = constant
         private set
 
-    fun set(normal: Vector3, constant: Double): Plane {
+    fun set(normal: Vector3, constant: Float): Plane {
         this.normal.copy(normal)
         this.constant = constant
 
         return this
     }
 
-    fun setComponents(x: Double, y: Double, z: Double, w: Double): Plane {
+    fun setComponents(x: Float, y: Float, z: Float, w: Float): Plane {
         TODO()
     }
 
@@ -28,7 +30,7 @@ class Plane @JvmOverloads constructor(
         TODO()
     }
 
-    fun clone(): Plane {
+    override fun clone(): Plane {
         return Plane().copy(this)
     }
 
@@ -47,11 +49,11 @@ class Plane @JvmOverloads constructor(
         TODO()
     }
 
-    fun distanceToPoint(point: Vector3): Double {
+    fun distanceToPoint(point: Vector3): Float {
         TODO()
     }
 
-    fun distanceToSphere(sphere: Sphere): Double {
+    fun distanceToSphere(sphere: Sphere): Float {
         TODO()
     }
 

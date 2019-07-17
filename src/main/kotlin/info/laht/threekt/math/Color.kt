@@ -9,15 +9,34 @@ class Color(
 
     constructor() : this(0f, 0f, 0f)
 
-    fun clone(): Color {
-        return Color().copy(this)
+    constructor(hex: Int) : this() {
+        set(hex)
+    }
+
+    fun set(r: Float, g: Float, b: Float): Color {
+        this.r = r
+        this.g = g
+        this.b = b
+        return this
+    }
+
+    fun set(c: Color): Color {
+        return this.copy(c)
+    }
+
+    fun set(hex: Int): Color {
+        val r = (hex shr 16 and 255).toFloat() / 255
+        val g = (hex shr 8 and 255).toFloat() / 255
+        val b = (hex and 255).toFloat() / 255
+        return set(r, g, b)
     }
 
     fun copy(c: Color): Color {
-        r = c.r
-        g = c.g
-        b = c.b
-        return this
+        return set(c.r, c.g, c.b)
+    }
+
+    fun clone(): Color {
+        return Color(r, g, b)
     }
 
     override fun toString(): String {
@@ -25,10 +44,6 @@ class Color(
     }
 
     companion object {
-
-        fun fromRgb(r: Float, g: Float, b: Float): Color {
-            return Color(r, g, b)
-        }
 
         fun fromHex(hex: Int): Color {
             val r = (hex shr 16 and 255).toFloat() / 255

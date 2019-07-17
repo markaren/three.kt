@@ -8,10 +8,10 @@ import kotlin.math.min
 import kotlin.math.tan
 
 class PerspectiveCamera(
-    var fov: Double = 50.0,
-    var aspect: Double = 1.0,
-    var near: Double = 0.1,
-    var far: Double = 2000.0
+    var fov: Int = 50,
+    var aspect: Float = 1.toFloat(),
+    var near: Float = 0.1.toFloat(),
+    var far: Float = 2000.toFloat()
 ) : Camera() {
 
     var zoom = 1
@@ -32,9 +32,9 @@ class PerspectiveCamera(
     fun setFocalLength(focalLength: Int) {
 
         // see http://www.bobatkins.com/photography/technical/field_of_view.html
-        val vExtentSlope = 0.5 * this.getFilmHeight() / focalLength;
+        val vExtentSlope = 0.5.toFloat() * this.getFilmHeight() / focalLength;
 
-        this.fov = RAD2DEG * 2 * atan(vExtentSlope);
+        this.fov = (RAD2DEG * 2 * atan(vExtentSlope)).toInt()
         this.updateProjectionMatrix();
 
     }
@@ -42,36 +42,35 @@ class PerspectiveCamera(
     /**
      * Calculates the focal length from the current .fov and .filmGauge.
      */
-    fun getFocalLength(): Double {
+    fun getFocalLength(): Float {
 
-        val vExtentSlope = tan(DEG2RAD * 0.5 * this.fov)
-
-        return 0.5 * this.getFilmHeight() / vExtentSlope;
-
-    }
-
-    fun getEffectiveFOV(): Double {
-
-        return RAD2DEG * 2 * atan(tan(DEG2RAD * 0.5 * this.fov) / this.zoom);
+        val vExtentSlope = tan(DEG2RAD * 0.5.toFloat() * this.fov).toFloat()
+        return 0.5.toFloat() * this.getFilmHeight() / vExtentSlope;
 
     }
 
-    fun getFilmWidth(): Double {
+    fun getEffectiveFOV(): Float {
+
+        return RAD2DEG * 2 * atan(tan(DEG2RAD * 0.5.toFloat() * this.fov).toFloat() / this.zoom);
+
+    }
+
+    fun getFilmWidth(): Float {
 
         // film not completely covered in portrait format (aspect < 1)
-        return this.filmGauge * min(this.aspect, 1.0)
+        return this.filmGauge * min(this.aspect, 1.toFloat())
 
     }
 
-    fun getFilmHeight(): Double {
+    fun getFilmHeight(): Float {
 
         // film not completely covered in landscape format (aspect > 1)
-        return this.filmGauge / max(this.aspect, 1.0)
+        return this.filmGauge / max(this.aspect, 1.toFloat())
 
     }
 
     /**
-     * Sets an offset in a larger frustum. This is useful for multi-window or multi-monitor/multi-machine setups.
+     * Sets an offset in a larger frustum. This is useful for multi-pointer or multi-monitor/multi-machine setups.
      * For example, if you have 3x2 monitors and each monitor is 1920x1080 and the monitors are in grid like this:
      *
      *		 +---+---+---+
@@ -115,7 +114,7 @@ class PerspectiveCamera(
         width: Int,
         height: Int
     ) {
-        this.aspect = fullWidth.toDouble() / fullHeight
+        this.aspect = fullWidth.toFloat() / fullHeight
 
         if (view == null) {
             view = View(
@@ -130,13 +129,13 @@ class PerspectiveCamera(
         }
 
         view?.also {
-            it.enabled = true;
-            it.fullWidth = fullWidth;
-            it.fullHeight = fullHeight;
-            it.offsetX = x;
-            it.offsetY = y;
-            it.width = width;
-            it.height = height;
+            it.enabled = true
+            it.fullWidth = fullWidth
+            it.fullHeight = fullHeight
+            it.offsetX = x
+            it.offsetY = y
+            it.width = width
+            it.height = height
         }
 
         this.updateProjectionMatrix();
@@ -144,7 +143,6 @@ class PerspectiveCamera(
     }
 
     fun clearViewOffset() {
-
         view?.apply {
             enabled = false
         }
@@ -156,10 +154,10 @@ class PerspectiveCamera(
      */
     fun updateProjectionMatrix() {
         val near = this.near
-        var top = near * tan( DEG2RAD * 0.5 * this.fov ) / this.zoom
+        var top = near * tan( DEG2RAD * 0.5 * this.fov ).toFloat() / this.zoom
         var height = 2 * top
         var width = this.aspect * height
-        var left = - 0.5 * width
+        var left = (-0.5).toFloat() * width
 
         view?.also {
             if (it.enabled) {
@@ -199,7 +197,23 @@ class PerspectiveCamera(
         return this;
     }
 
-    override fun clone(): Camera {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun clone(): PerspectiveCamera {
+        return PerspectiveCamera().copy(this, true)
     }
+}
+
+data class View(
+    var enabled: Boolean,
+    var fullWidth: Int,
+    var fullHeight: Int,
+    var offsetX: Int,
+    var offsetY: Int,
+    var width: Int,
+    var height: Int
+) {
+
+    override fun toString(): String {
+        return "View(enabled=$enabled, fullWidth=$fullWidth, fullHeight=$fullHeight, offsetX=$offsetX, offsetY=$offsetY, width=$width, height=$height)"
+    }
+
 }

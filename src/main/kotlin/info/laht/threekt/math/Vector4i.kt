@@ -1,12 +1,26 @@
 package info.laht.threekt.math
 
+import info.laht.threekt.core.Cloneable
+import kotlin.math.floor
+
 class Vector4i(
     var x: Int,
     var y: Int,
     var z: Int,
     var w: Int
-) {
-    constructor(): this(0, 0, 0, 0)
+) : Cloneable {
+    constructor() : this(0, 0, 0, 0)
+
+    var width: Int
+        get() = z
+        set(value) {
+            z = value
+        }
+    var height: Int
+        get() = w
+        set(value) {
+            w = value
+        }
 
     fun set(x: Int, y: Int, z: Int, w: Int): Vector4i {
         this.x = x
@@ -17,16 +31,23 @@ class Vector4i(
         return this
     }
 
-    fun clone(): Vector4i {
-        return Vector4i().copy(this)
+    fun multiplyScalar(scalar: Number): Vector4i {
+
+        this.x = floor(this.x * scalar.toFloat()).toInt()
+        this.y = floor(this.y * scalar.toFloat()).toInt()
+        this.z = floor(this.z * scalar.toFloat()).toInt()
+        this.w = floor(this.w * scalar.toFloat()).toInt()
+
+        return this
+
+    }
+
+    override fun clone(): Vector4i {
+        return Vector4i(x, y, z, w)
     }
 
     fun copy(v: Vector4i): Vector4i {
-        this.x = v.x
-        this.y = v.y
-        this.z = v.z
-        this.w = v.w
-        return this
+        return set(v.x, v.y, v.z, v.w)
     }
 
     override fun equals(other: Any?): Boolean {

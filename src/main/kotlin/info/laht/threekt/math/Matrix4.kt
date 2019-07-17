@@ -1,35 +1,36 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.BufferAttribute
+import info.laht.threekt.core.Cloneable
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 import kotlin.math.sqrt
 
 class Matrix4(
-    val elements: DoubleArray = DoubleArray(16)
-) {
+    val elements: FloatArray = FloatArray(16)
+): Cloneable {
 
     /**
      * Sets all fields of this matrix.
      */
     fun set(
-        n11: Double,
-        n12: Double,
-        n13: Double,
-        n14: Double,
-        n21: Double,
-        n22: Double,
-        n23: Double,
-        n24: Double,
-        n31: Double,
-        n32: Double,
-        n33: Double,
-        n34: Double,
-        n41: Double,
-        n42: Double,
-        n43: Double,
-        n44: Double
+        n11: Float,
+        n12: Float,
+        n13: Float,
+        n14: Float,
+        n21: Float,
+        n22: Float,
+        n23: Float,
+        n24: Float,
+        n31: Float,
+        n32: Float,
+        n33: Float,
+        n34: Float,
+        n41: Float,
+        n42: Float,
+        n43: Float,
+        n44: Float
     ): Matrix4 {
         val te = this.elements;
 
@@ -47,15 +48,15 @@ class Matrix4(
     fun identity(): Matrix4 {
         return set(
 
-            1.0, 0.0, 0.0, 0.0,
-            0.0, 1.0, 0.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
-            0.0, 0.0, 0.0, 1.0
+            1f, 0f, 0f, 0f,
+            0f, 1f, 0f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 0f, 1f
 
-        );
+        )
     }
 
-    fun clone(): Matrix4 {
+    override fun clone(): Matrix4 {
         TODO()
     }
 
@@ -76,19 +77,19 @@ class Matrix4(
     }
 
     fun extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix4 {
-        xAxis.setFromMatrixColumn(this, 0);
-        yAxis.setFromMatrixColumn(this, 1);
-        zAxis.setFromMatrixColumn(this, 2);
+        xAxis.setFromMatrixColumn(this, 0)
+        yAxis.setFromMatrixColumn(this, 1)
+        zAxis.setFromMatrixColumn(this, 2)
 
-        return this;
+        return this
     }
 
     fun makeBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix4 {
         return set(
-            xAxis.x, yAxis.x, zAxis.x, 0.0,
-            xAxis.y, yAxis.y, zAxis.y, 0.0,
-            xAxis.z, yAxis.z, zAxis.z, 0.0,
-            0.0, 0.0, 0.0, 1.0
+            xAxis.x, yAxis.x, zAxis.x, 0f,
+            xAxis.y, yAxis.y, zAxis.y, 0f,
+            xAxis.z, yAxis.z, zAxis.z, 0f,
+            0f, 0f, 0f, 1f
         );
     }
 
@@ -102,29 +103,29 @@ class Matrix4(
         val te = this.elements;
         val me = m.elements;
 
-        val scaleX = 1.0 / v1.setFromMatrixColumn(m, 0).length();
-        val scaleY = 1.0 / v1.setFromMatrixColumn(m, 1).length();
-        val scaleZ = 1.0 / v1.setFromMatrixColumn(m, 2).length();
+        val scaleX = 1f / v1.setFromMatrixColumn(m, 0).length();
+        val scaleY = 1f / v1.setFromMatrixColumn(m, 1).length();
+        val scaleZ = 1f / v1.setFromMatrixColumn(m, 2).length();
 
         te[0] = me[0] * scaleX;
         te[1] = me[1] * scaleX;
         te[2] = me[2] * scaleX;
-        te[3] = 0.0
+        te[3] = 0f
 
         te[4] = me[4] * scaleY;
         te[5] = me[5] * scaleY;
         te[6] = me[6] * scaleY;
-        te[7] = 0.0
+        te[7] = 0f
 
         te[8] = me[8] * scaleZ;
         te[9] = me[9] * scaleZ;
         te[10] = me[10] * scaleZ;
-        te[11] = 0.0
+        te[11] = 0f
 
-        te[12] = 0.0
-        te[13] = 0.0
-        te[14] = 0.0
-        te[15] = 1.0
+        te[12] = 0f
+        te[13] = 0f
+        te[14] = 0f
+        te[15] = 1f
 
         return this;
     }
@@ -259,15 +260,15 @@ class Matrix4(
         }
 
         // bottom row
-        te[3] = 0.0
-        te[7] = 0.0
-        te[11] = 0.0
+        te[3] = 0f
+        te[7] = 0f
+        te[11] = 0f
 
         // last column
-        te[12] = 0.0
-        te[13] = 0.0
-        te[14] = 0.0
-        te[15] = 1.0
+        te[12] = 0f
+        te[13] = 0f
+        te[14] = 0f
+        te[15] = 1f
 
         return this;
     }
@@ -362,7 +363,7 @@ class Matrix4(
     /**
      * Multiplies this matrix by s.
      */
-    fun multiplyScalar(s: Double): Matrix4 {
+    fun multiplyScalar(s: Float): Matrix4 {
         val te = this.elements
 
         te[0] *= s; te[4] *= s; te[8] *= s; te[12] *= s
@@ -383,7 +384,7 @@ class Matrix4(
      * Computes determinant of this matrix.
      * Based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
      */
-    fun determinant(): Double {
+    fun determinant(): Float {
         val te = this.elements
 
         val n11 = te[0]
@@ -445,7 +446,7 @@ class Matrix4(
      */
     fun transpose(): Matrix4 {
         val te = this.elements
-        var tmp: Double
+        var tmp: Float
 
         tmp = te[1]; te[1] = te[4]; te[4] = tmp
         tmp = te[2]; te[2] = te[8]; te[8] = tmp
@@ -461,9 +462,9 @@ class Matrix4(
     fun setPosition(x: Number, y: Number, z: Number): Matrix4 {
         val te = this.elements
 
-        te[12] = x.toDouble()
-        te[13] = y.toDouble()
-        te[14] = z.toDouble()
+        te[12] = x.toFloat()
+        te[13] = y.toFloat()
+        te[14] = z.toFloat()
 
         return this
     }
@@ -518,7 +519,7 @@ class Matrix4(
 
         val det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14
 
-        if (det == 0.0) {
+        if (det == 0f) {
             val msg = "can't invert matrix, determinant is 0"
             if (throwOnDegeneratee) {
                 throw IllegalStateException(msg)
@@ -527,7 +528,7 @@ class Matrix4(
             }
             return this.identity()
         }
-        val detInv = 1.0 / det
+        val detInv = 1f / det
 
         te[0] = t11 * detInv;
         te[1] =
@@ -581,7 +582,7 @@ class Matrix4(
         return this
     }
 
-    fun getMaxScaleOnAxis(): Double {
+    fun getMaxScaleOnAxis(): Float {
         val te = this.elements;
 
         val scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
@@ -594,13 +595,13 @@ class Matrix4(
     /**
      * Sets this matrix as translation transform.
      */
-    fun makeTranslation(x: Double, y: Double, z: Double): Matrix4 {
+    fun makeTranslation(x: Float, y: Float, z: Float): Matrix4 {
         this.set(
 
-            1.0, 0.0, 0.0, x,
-            0.0, 1.0, 0.0, y,
-            0.0, 0.0, 1.0, z,
-            0.0, 0.0, 0.0, 1.0
+            1f, 0f, 0f, x,
+            0f, 1f, 0f, y,
+            0f, 0f, 1f, z,
+            0f, 0f, 0f, 1f
 
         );
 
@@ -612,16 +613,16 @@ class Matrix4(
      *
      * @param theta Rotation angle in radians.
      */
-    fun makeRotationX(theta: Double): Matrix4 {
+    fun makeRotationX(theta: Float): Matrix4 {
         val c = cos(theta)
         val s = sin(theta)
 
         this.set(
 
-            1.0, 0.0, 0.0, 0.0,
-            0.0, c, -s, 0.0,
-            0.0, s, c, 0.0,
-            0.0, 0.0, 0.0, 1.0
+            1f, 0f, 0f, 0f,
+            0f, c, -s, 0f,
+            0f, s, c, 0f,
+            0f, 0f, 0f, 1f
 
         )
 
@@ -633,16 +634,16 @@ class Matrix4(
      *
      * @param theta Rotation angle in radians.
      */
-    fun makeRotationY(theta: Double): Matrix4 {
+    fun makeRotationY(theta: Float): Matrix4 {
         val c = cos(theta)
         val s = sin(theta)
 
         this.set(
 
-            c, 0.0, s, 0.0,
-            0.0, 1.0, 0.0, 0.0,
-            -s, 0.0, c, 0.0,
-            0.0, 0.0, 0.0, 1.0
+            c, 0f, s, 0f,
+            0f, 1f, 0f, 0f,
+            -s, 0f, c, 0f,
+            0f, 0f, 0f, 1f
 
         )
 
@@ -654,16 +655,16 @@ class Matrix4(
      *
      * @param theta Rotation angle in radians.
      */
-    fun makeRotationZ(theta: Double): Matrix4 {
+    fun makeRotationZ(theta: Float): Matrix4 {
         val c = cos(theta)
         val s = sin(theta)
 
         this.set(
 
-            c, -s, 0.0, 0.0,
-            s, c, 0.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
-            0.0, 0.0, 0.0, 1.0
+            c, -s, 0f, 0f,
+            s, c, 0f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 0f, 1f
 
         )
 
@@ -677,12 +678,12 @@ class Matrix4(
      * @param axis Rotation axis.
      * @param theta Rotation angle in radians.
      */
-    fun makeRotationAxis(axis: Vector3, angle: Double): Matrix4 {
+    fun makeRotationAxis(axis: Vector3, angle: Float): Matrix4 {
         // Based on http://www.gamedev.net/reference/articles/article1199.asp
 
         val c = cos(angle)
         val s = sin(angle)
-        val t = 1.0 - c
+        val t = 1f - c
         val x = axis.x;
         val y = axis.y;
         val z = axis.z
@@ -691,10 +692,10 @@ class Matrix4(
 
         this.set(
 
-            tx * x + c, tx * y - s * z, tx * z + s * y, 0.0,
-            tx * y + s * z, ty * y + c, ty * z - s * x, 0.0,
-            tx * z - s * y, ty * z + s * x, t * z * z + c, 0.0,
-            0.0, 0.0, 0.0, 1.0
+            tx * x + c, tx * y - s * z, tx * z + s * y, 0f,
+            tx * y + s * z, ty * y + c, ty * z - s * x, 0f,
+            tx * z - s * y, ty * z + s * x, t * z * z + c, 0f,
+            0f, 0f, 0f, 1f
 
         )
 
@@ -704,13 +705,13 @@ class Matrix4(
     /**
      * Sets this matrix as scale transform.
      */
-    fun makeScale(x: Double, y: Double, z: Double): Matrix4 {
+    fun makeScale(x: Float, y: Float, z: Float): Matrix4 {
         this.set(
 
-            x, 0.0, 0.0, 0.0,
-            0.0, y, 0.0, 0.0,
-            0.0, 0.0, z, 0.0,
-            0.0, 0.0, 0.0, 1.0
+            x, 0f, 0f, 0f,
+            0f, y, 0f, 0f,
+            0f, 0f, z, 0f,
+            0f, 0f, 0f, 1f
 
         )
 
@@ -740,22 +741,22 @@ class Matrix4(
         te[ 0 ] = ( 1 - ( yy + zz ) ) * sx;
         te[ 1 ] = ( xy + wz ) * sx;
         te[ 2 ] = ( xz - wy ) * sx;
-        te[ 3 ] = 0.0
+        te[ 3 ] = 0f
 
         te[ 4 ] = ( xy - wz ) * sy;
         te[ 5 ] = ( 1 - ( xx + zz ) ) * sy;
         te[ 6 ] = ( yz + wx ) * sy;
-        te[ 7 ] = 0.0
+        te[ 7 ] = 0f
 
         te[ 8 ] = ( xz + wy ) * sz;
         te[ 9 ] = ( yz - wx ) * sz;
         te[ 10 ] = ( 1 - ( xx + yy ) ) * sz;
-        te[ 11 ] = 0.0
+        te[ 11 ] = 0f
 
         te[ 12 ] = position.x;
         te[ 13 ] = position.y;
         te[ 14 ] = position.z;
-        te[ 15 ] = 1.0
+        te[ 15 ] = 1f
 
         return this
     }
@@ -790,9 +791,9 @@ class Matrix4(
         // scale the rotation part
         matrix.copy(this);
 
-        val invSX = 1.0 / sx;
-        val invSY = 1.0 / sy;
-        val invSZ = 1.0 / sz;
+        val invSX = 1f / sx;
+        val invSY = 1f / sy;
+        val invSZ = 1f / sz;
 
         matrix.elements[0] *= invSX;
         matrix.elements[1] *= invSX;
@@ -819,12 +820,12 @@ class Matrix4(
      * Creates a perspective projection matrix.
      */
     fun makePerspective(
-        left: Double,
-        right: Double,
-        top: Double,
-        bottom: Double,
-        near: Double,
-        far: Double
+        left: Float,
+        right: Float,
+        top: Float,
+        bottom: Float,
+        near: Float,
+        far: Float
     ): Matrix4 {
         val te = this.elements
         val x = 2 * near / (right - left)
@@ -835,10 +836,10 @@ class Matrix4(
         val c = -(far + near) / (far - near)
         val d = -2 * far * near / (far - near)
 
-        te[0] = x; te[4] = 0.0; te[8] = a; te[12] = 0.0
-        te[1] = 0.0; te[5] = y; te[9] = b; te[13] = 0.0
-        te[2] = 0.0; te[6] = 0.0; te[10] = c; te[14] = d
-        te[3] = 0.0; te[7] = 0.0; te[11] = -1.0; te[15] = 0.0
+        te[0] = x; te[4] = 0f; te[8] = a; te[12] = 0f
+        te[1] = 0f; te[5] = y; te[9] = b; te[13] = 0f
+        te[2] = 0f; te[6] = 0f; te[10] = c; te[14] = d
+        te[3] = 0f; te[7] = 0f; te[11] = -1f; te[15] = 0f
 
         return this;
     }
@@ -847,39 +848,39 @@ class Matrix4(
      * Creates an orthographic projection matrix.
      */
     fun makeOrthographic(
-        left: Double,
-        right: Double,
-        top: Double,
-        bottom: Double,
-        near: Double,
-        far: Double
+        left: Float,
+        right: Float,
+        top: Float,
+        bottom: Float,
+        near: Float,
+        far: Float
     ): Matrix4 {
         val te = this.elements
-        val w = 1.0 / (right - left)
-        val h = 1.0 / (top - bottom)
-        val p = 1.0 / (far - near)
+        val w = 1f / (right - left)
+        val h = 1f / (top - bottom)
+        val p = 1f / (far - near)
 
         val x = (right + left) * w
         val y = (top + bottom) * h
         val z = (far + near) * p
 
         te[0] = 2 * w
-        te[4] = 0.0; te[8] = 0.0; te[12] = -x
-        te[1] = 0.0; te[5] = 2 * h; te[9] = 0.0; te[13] = -y
-        te[2] = 0.0; te[6] = 0.0; te[10] = -2 * p; te[14] = -z
-        te[3] = 0.0; te[7] = 0.0; te[11] = 0.0; te[15] = 1.0
+        te[4] = 0f; te[8] = 0f; te[12] = -x
+        te[1] = 0f; te[5] = 2 * h; te[9] = 0f; te[13] = -y
+        te[2] = 0f; te[6] = 0f; te[10] = -2 * p; te[14] = -z
+        te[3] = 0f; te[7] = 0f; te[11] = 0f; te[15] = 1f
 
         return this
     }
 
     @JvmOverloads
-    fun fromArray(array: DoubleArray, offset: Int = 0): Matrix4 {
+    fun fromArray(array: FloatArray, offset: Int = 0): Matrix4 {
         array.copyInto(elements, offset)
         return this
     }
 
     @JvmOverloads
-    fun toArray(array: DoubleArray = DoubleArray(16), offset: Int = 0): DoubleArray {
+    fun toArray(array: FloatArray = FloatArray(16), offset: Int = 0): FloatArray {
         return elements.copyInto(array, offset)
     }
 

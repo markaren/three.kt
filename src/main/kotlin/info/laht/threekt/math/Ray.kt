@@ -17,7 +17,7 @@ class Ray @JvmOverloads constructor(
         TODO()
     }
 
-    fun at(t: Double, target: Vector3): Vector3 {
+    fun at(t: Float, target: Vector3): Vector3 {
         TODO()
     }
 
@@ -25,7 +25,7 @@ class Ray @JvmOverloads constructor(
         TODO()
     }
 
-    fun recast(t: Double): Ray {
+    fun recast(t: Float): Ray {
         TODO()
     }
 
@@ -33,20 +33,20 @@ class Ray @JvmOverloads constructor(
         TODO()
     }
 
-    fun distanceToPoint(point: Vector3): Double {
+    fun distanceToPoint(point: Vector3): Float {
         TODO()
     }
 
-    fun distanceSqToPoint(point: Vector3): Double {
+    fun distanceSqToPoint(point: Vector3): Float {
         TODO()
     }
 
     fun distanceSqToSegment(
         v0: Vector3,
         v1: Vector3,
-        optionalPointOnRay: Vector3?,
-        optionalPointOnSegment: Vector3?
-    ): Double {
+        optionalPointOnRay: Vector3? = null,
+        optionalPointOnSegment: Vector3? = null
+    ): Float {
         TODO()
     }
 
@@ -58,7 +58,7 @@ class Ray @JvmOverloads constructor(
         TODO()
     }
 
-    fun distanceToPlane(plane: Plane): Double {
+    fun distanceToPlane(plane: Plane): Float {
         TODO()
     }
 

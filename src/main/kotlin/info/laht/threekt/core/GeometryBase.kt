@@ -14,7 +14,7 @@ abstract class GeometryBase<E>: EventDispatcher() {
 
     abstract fun applyMatrix(matrix: Matrix4): E
 
-    fun rotateX(angle: Double): E {
+    fun rotateX(angle: Float): E {
 
         // rotate geometry around world x-axis
         val m1 = Matrix4()
@@ -25,7 +25,7 @@ abstract class GeometryBase<E>: EventDispatcher() {
 
     }
 
-    fun rotateY(angle: Double): E {
+    fun rotateY(angle: Float): E {
 
         // rotate geometry around world y-axis
         val m1 = Matrix4()
@@ -36,7 +36,7 @@ abstract class GeometryBase<E>: EventDispatcher() {
 
     }
 
-    fun rotateZ(angle: Double): E {
+    fun rotateZ(angle: Float): E {
 
         // rotate geometry around world z-axis
         val m1 = Matrix4()
@@ -47,7 +47,7 @@ abstract class GeometryBase<E>: EventDispatcher() {
 
     }
 
-    fun translate(x: Double, y: Double, z: Double): E {
+    fun translate(x: Float, y: Float, z: Float): E {
 
         // translate geometry
         val m1 = Matrix4()
@@ -58,7 +58,7 @@ abstract class GeometryBase<E>: EventDispatcher() {
 
     }
 
-    fun scale(x: Double, y: Double, z: Double): E {
+    fun scale(x: Float, y: Float, z: Float): E {
 
         // scale geometry
         val m1 = Matrix4()
@@ -96,14 +96,14 @@ abstract class GeometryBase<E>: EventDispatcher() {
         val center = this.boundingSphere!!.center
         val radius = this.boundingSphere!!.radius
 
-        val s = if (radius == 0.0) 1.0 else 1.0 / radius
+        val s = if (radius == 0.toFloat()) 1.toFloat() else 1.toFloat() / radius
 
         val matrix = Matrix4()
         matrix.set(
-            s, 0.0, 0.0, -s * center.x,
-            0.0, s, 0.0, -s * center.y,
-            0.0, 0.0, s, -s * center.z,
-            0.0, 0.0, 0.0, 1.0
+            s, 0.toFloat(), 0.toFloat(), -s * center.x,
+            0.toFloat(), s, 0.toFloat(), -s * center.y,
+            0.toFloat(), 0.toFloat(), s, -s * center.z,
+            0.toFloat(), 0.toFloat(), 0.toFloat(), 1.toFloat()
         );
 
         this.applyMatrix(matrix)
@@ -115,6 +115,5 @@ abstract class GeometryBase<E>: EventDispatcher() {
     abstract fun computeBoundingBox()
 
     abstract fun computeBoundingSphere()
-
 
 }

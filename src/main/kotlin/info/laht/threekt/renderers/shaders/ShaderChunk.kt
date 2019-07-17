@@ -1,4 +1,4 @@
-package info.laht.threekt.renderers.renderers.shaders
+package info.laht.threekt.renderers.shaders
 
 object ShaderChunk {
 

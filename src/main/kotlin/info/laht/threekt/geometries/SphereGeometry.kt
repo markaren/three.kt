@@ -1,24 +1,23 @@
 package info.laht.threekt.geometries
 
-import info.laht.threekt.core.BufferGeometry
+import info.laht.threekt.core.*
 import java.util.ArrayList
-import info.laht.threekt.core.DoubleBufferAttribute
 import info.laht.threekt.math.Vector3
 import kotlin.math.cos
 import kotlin.math.sin
-import info.laht.threekt.core.BufferAttribute
-import info.laht.threekt.core.IntBufferAttribute
 import info.laht.threekt.math.Sphere
+import info.laht.threekt.math.TWO_PI
 
+typealias SphereGeometry = SphereBufferGeometry
 
 class SphereBufferGeometry(
-    val radius: Double,
-    val widthSegments: Int,
-    val heightSegments: Int,
-    val phiStart: Double,
-    val phiLength: Double,
-    val thetaStart: Double,
-    val thetaLength: Double
+    val radius: Float = 1.toFloat(),
+    val widthSegments: Int = 8,
+    val heightSegments: Int = 6,
+    val phiStart: Float = 0.toFloat(),
+    val phiLength: Float = TWO_PI,
+    val thetaStart: Float =0.toFloat(),
+    val thetaLength: Float = Math.PI.toFloat()
 ): BufferGeometry() {
 
     init {
@@ -37,18 +36,18 @@ class SphereBufferGeometry(
     private inner class SphereBufferGeometryHelper {
 
         internal var indices: MutableList<Int>
-        internal var positions: DoubleBufferAttribute
-        internal var normals: DoubleBufferAttribute
-        internal var uvs: DoubleBufferAttribute
+        internal var positions: FloatBufferAttribute
+        internal var normals: FloatBufferAttribute
+        internal var uvs: FloatBufferAttribute
 
         init {
             val thetaEnd = thetaStart + thetaLength
 
             val vertexCount = (widthSegments + 1) * (heightSegments + 1)
 
-            positions = DoubleBufferAttribute(DoubleArray(vertexCount * 3), 3)
-            normals = DoubleBufferAttribute(DoubleArray(vertexCount * 3), 3)
-            uvs = DoubleBufferAttribute(DoubleArray(vertexCount * 2), 2)
+            positions = FloatBufferAttribute(FloatArray(vertexCount * 3), 3)
+            normals = FloatBufferAttribute(FloatArray(vertexCount * 3), 3)
+            uvs = FloatBufferAttribute(FloatArray(vertexCount * 2), 2)
 
             var index = 0
             val normal = Vector3()
@@ -58,11 +57,11 @@ class SphereBufferGeometry(
             for (y in 0..heightSegments) {
 
                 val verticesRow = ArrayList<Int>()
-                val v = y.toDouble() / heightSegments
+                val v = y.toFloat() / heightSegments
 
                 for (x in 0..widthSegments) {
 
-                    val u = x.toDouble() / widthSegments
+                    val u = x.toFloat() / widthSegments
 
                     val px =
                         -radius * cos(phiStart + u * phiLength) * sin(thetaStart + v * thetaLength)

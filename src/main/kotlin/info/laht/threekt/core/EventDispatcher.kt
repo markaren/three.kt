@@ -1,6 +1,15 @@
 package info.laht.threekt.core
 
-typealias EventLister = () -> Unit
+class Event(
+    val type: String,
+    val target: Any?
+)
+
+interface EventLister {
+
+    fun onEvent(evt: Event)
+
+}
 
 open class EventDispatcher {
 
@@ -23,7 +32,7 @@ open class EventDispatcher {
      * @param listener The function that gets called when the event is fired.
      */
     fun hasEventListener( type: String, listener: EventLister ): Boolean {
-        return listeners[type]?.contains { listener } == true
+        return listeners[type]?.contains (listener) == true
     }
 
     /**
@@ -32,15 +41,15 @@ open class EventDispatcher {
      * @param listener The listener function that gets removed.
      */
     fun removeEventListener( type: String, listener: EventLister ) {
-        listeners[type]?.remove { listener }
+        listeners[type]?.remove (listener)
     }
 
     /**
      * Fire an event type.
      */
-    fun dispatchEvent( type: String ) {
+    fun dispatchEvent( type: String, target: Any? ) {
         listeners[type]?.forEach {
-            it.invoke()
+            it.onEvent(Event(type, target))
         }
     }
 

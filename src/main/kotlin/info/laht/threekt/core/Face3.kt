@@ -13,7 +13,7 @@ class Face3 private constructor(
     val vertexNormals: MutableList<Vector3>,
     val vertexColors: MutableList<Color>,
     private var materialIndex: Int
-) {
+): Cloneable {
 
     constructor(
         a: Int,
@@ -33,8 +33,8 @@ class Face3 private constructor(
         materialIndex: Int = 0
     ) : this(a, b, c, Vector3(), Color(), vertexNormals, vertexColors, materialIndex)
 
-    fun clone(): Face3 {
-        TODO()
+    override fun clone(): Face3 {
+        return Face3(a, b, c).copy(this)
     }
 
     fun copy(source: Face3): Face3 {

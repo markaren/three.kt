@@ -1,27 +1,28 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.cameras.Camera
-import info.laht.threekt.core.DoubleBufferAttribute
+import info.laht.threekt.core.Cloneable
+import info.laht.threekt.core.FloatBufferAttribute
 import kotlin.math.abs
 import kotlin.math.acos
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class Vector3(
-    var x: Double,
-    var y: Double,
-    var z: Double
-) {
+    var x: Float,
+    var y: Float,
+    var z: Float
+): Cloneable {
 
-    constructor() : this(0.0, 0.0, 0.0)
+    constructor() : this(0.toFloat(), 0.toFloat(), 0.toFloat())
 
     /**
      * Sets value of Vector3 vector.
      */
     fun set(x: Number, y: Number, z: Number): Vector3 {
-        this.x = x.toDouble()
-        this.y = y.toDouble()
-        this.z = z.toDouble()
+        this.x = x.toFloat()
+        this.y = y.toFloat()
+        this.z = z.toFloat()
         return this
     }
 
@@ -32,7 +33,7 @@ class Vector3(
         return set(s, s, s)
     }
 
-    fun setComponent(index: Int, value: Double): Vector3 {
+    fun setComponent(index: Int, value: Float): Vector3 {
         when (index) {
             0 -> x = value
             1 -> y = value
@@ -41,7 +42,7 @@ class Vector3(
         return this
     }
 
-    fun getComponent(index: Int): Double {
+    fun getComponent(index: Int): Float {
         return when (index) {
             0 -> x
             1 -> y
@@ -52,7 +53,7 @@ class Vector3(
     /**
      * Clones Vector3 vector.
      */
-    fun clone(): Vector3 {
+    override fun clone(): Vector3 {
         return Vector3(x, y, z)
     }
 
@@ -60,7 +61,7 @@ class Vector3(
      * Copies value of v to Vector3 vector.
      */
     fun copy(v: Vector3): Vector3 {
-        return set(x, y, z)
+        return set(v.x, v.y, v.z)
     }
 
     /**
@@ -74,7 +75,7 @@ class Vector3(
         return this
     }
 
-    fun addScalar(s: Double): Vector3 {
+    fun addScalar(s: Float): Vector3 {
         this.x += s
         this.y += s
         this.z += s
@@ -82,7 +83,7 @@ class Vector3(
         return this
     }
 
-    fun addScaledVector(v: Vector3, s: Double): Vector3 {
+    fun addScaledVector(v: Vector3, s: Float): Vector3 {
         this.x += v.x * s
         this.y += v.y * s
         this.z += v.z * s
@@ -112,7 +113,7 @@ class Vector3(
         return this
     }
 
-    fun subScalar(s: Double): Vector3 {
+    fun subScalar(s: Float): Vector3 {
         this.x -= s
         this.y -= s
         this.z -= s
@@ -142,7 +143,7 @@ class Vector3(
     /**
      * Multiplies Vector3 vector by scalar s.
      */
-    fun multiplyScalar(s: Double): Vector3 {
+    fun multiplyScalar(s: Float): Vector3 {
         this.x *= s
         this.y *= s
         this.z *= s
@@ -163,7 +164,7 @@ class Vector3(
         TODO()
     }
 
-    fun applyAxisAngle(axis: Vector3, angle: Double): Vector3 {
+    fun applyAxisAngle(axis: Vector3, angle: Float): Vector3 {
         TODO()
     }
 
@@ -212,8 +213,8 @@ class Vector3(
      * Divides Vector3 vector by scalar s.
      * Set vector to ( 0, 0, 0 ) if s == 0.
      */
-    fun divideScalar(s: Double): Vector3 {
-        return this.multiplyScalar(1.0 / s)
+    fun divideScalar(s: Float): Vector3 {
+        return this.multiplyScalar(1.toFloat() / s)
     }
 
     fun min(v: Vector3): Vector3 {
@@ -240,7 +241,7 @@ class Vector3(
         return this
     }
 
-    fun clampScalar(min: Double, max: Double): Vector3 {
+    fun clampScalar(min: Float, max: Float): Vector3 {
         this.x = kotlin.math.max(min, kotlin.math.min(max, this.x))
         this.y = kotlin.math.max(min, kotlin.math.min(max, this.y))
         this.z = kotlin.math.max(min, kotlin.math.min(max, this.z))
@@ -248,9 +249,9 @@ class Vector3(
         return this
     }
 
-    fun clampLength(min: Double, max: Double): Vector3 {
+    fun clampLength(min: Float, max: Float): Vector3 {
         var length = this.length();
-        if (length.isNaN()) length = 1.0
+        if (length.isNaN()) length = 1.toFloat()
         return this.divideScalar(length).multiplyScalar(kotlin.math.max(min, kotlin.math.min(max, length)))
     }
 
@@ -271,9 +272,9 @@ class Vector3(
     }
 
     fun round(): Vector3 {
-        this.x = this.x.roundToInt().toDouble()
-        this.y = this.y.roundToInt().toDouble()
-        this.z = this.z.roundToInt().toDouble()
+        this.x = this.x.roundToInt().toFloat()
+        this.y = this.y.roundToInt().toFloat()
+        this.z = this.z.roundToInt().toFloat()
 
         return this;
     }
@@ -299,32 +300,32 @@ class Vector3(
     /**
      * Computes dot product of Vector3 vector and v.
      */
-    fun dot(v: Vector3): Double {
+    fun dot(v: Vector3): Float {
         return this.x * v.x + this.y * v.y + this.z * v.z;
     }
 
     /**
      * Computes squared length of Vector3 vector.
      */
-    fun lengthSq(): Double {
+    fun lengthSq(): Float {
         return this.x * this.x + this.y * this.y + this.z * this.z;
     }
 
     /**
      * Computes length of Vector3 vector.
      */
-    fun length(): Double {
+    fun length(): Float {
         return sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
     /**
      * Computes the Manhattan length of Vector3 vector.
      *
-     * @return {Double}
+     * @return {Float}
      *
      * @see {@link http://en.wikipedia.org/wiki/Taxicab_geometry|Wikipedia: Taxicab Geometry}
      */
-    fun manhattanLength(): Double {
+    fun manhattanLength(): Float {
         return abs(this.x) + abs(this.y) + abs(this.z);
     }
 
@@ -333,11 +334,11 @@ class Vector3(
      *
      * @param {Vector3} v
      *
-     * @return {Double}
+     * @return {Float}
      *
      * @see {@link http://en.wikipedia.org/wiki/Taxicab_geometry|Wikipedia: Taxicab Geometry}
      */
-    fun manhattanDistanceTo(v: Vector3): Double {
+    fun manhattanDistanceTo(v: Vector3): Float {
         return abs(this.x - v.x) + abs(this.y - v.y) + abs(this.z - v.z);
     }
 
@@ -346,18 +347,18 @@ class Vector3(
      */
     fun normalize(): Vector3 {
         var length = length()
-        if (length.isNaN()) length = 1.0
+        if (length.isNaN()) length = 1.toFloat()
         return this.divideScalar(length);
     }
 
     /**
      * Normalizes Vector3 vector and multiplies it by l.
      */
-    fun setLength(length: Double): Vector3 {
+    fun setLength(length: Float): Vector3 {
         return this.normalize().multiplyScalar(length);
     }
 
-    fun lerp(v: Vector3, alpha: Double): Vector3 {
+    fun lerp(v: Vector3, alpha: Float): Vector3 {
         this.x += (v.x - this.x) * alpha;
         this.y += (v.y - this.y) * alpha;
         this.z += (v.z - this.z) * alpha;
@@ -365,7 +366,7 @@ class Vector3(
         return this;
     }
 
-    fun lerpVectors(v1: Vector3, v2: Vector3, alpha: Double): Vector3 {
+    fun lerpVectors(v1: Vector3, v2: Vector3, alpha: Float): Vector3 {
         return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1)
     }
 
@@ -410,7 +411,7 @@ class Vector3(
         return this.sub(v1.copy(normal).multiplyScalar(2 * this.dot(normal)));
     }
 
-    fun angleTo(v: Vector3): Double {
+    fun angleTo(v: Vector3): Float {
         val theta = this.dot(v) / (sqrt(this.lengthSq() * v.lengthSq()));
         // clamp, to handle numerical problems
         return acos(clamp(theta, -1.0, 1.0));
@@ -419,14 +420,14 @@ class Vector3(
     /**
      * Computes distance of Vector3 vector to v.
      */
-    fun distanceTo(v: Vector3): Double {
+    fun distanceTo(v: Vector3): Float {
         return sqrt(this.distanceToSquared(v));
     }
 
     /**
      * Computes squared distance of Vector3 vector to v.
      */
-    fun distanceToSquared(v: Vector3): Double {
+    fun distanceToSquared(v: Vector3): Float {
         val dx = this.x - v.x
         val dy = this.y - v.y
         val dz = this.z - v.z
@@ -461,7 +462,7 @@ class Vector3(
         return this.fromArray(m.elements, index * 4);
     }
 
-    fun fromArray(array: DoubleArray, offset: Int = 0): Vector3 {
+    fun fromArray(array: FloatArray, offset: Int = 0): Vector3 {
         this.x = array[offset]
         this.y = array[offset + 1]
         this.z = array[offset + 2]
@@ -476,7 +477,7 @@ class Vector3(
      * @return The created or provided array.
      */
     @JvmOverloads
-    fun toArray(array: DoubleArray = DoubleArray(2), offset: Int = 0): DoubleArray {
+    fun toArray(array: FloatArray = FloatArray(2), offset: Int = 0): FloatArray {
         array[offset] = this.x;
         array[offset + 1] = this.y;
         array[offset + 2] = this.z;
@@ -484,7 +485,7 @@ class Vector3(
         return array;
     }
 
-    fun fromBufferAttribute( attribute: DoubleBufferAttribute, index: Int): Vector3 {
+    fun fromBufferAttribute( attribute: FloatBufferAttribute, index: Int): Vector3 {
         this.x = attribute.getX( index )
         this.y = attribute.getY( index )
         this.z = attribute.getZ( index )
@@ -518,9 +519,9 @@ class Vector3(
 
     companion object {
 
-        val X = Vector3(1.0, 0.0, 0.0)
-        val Y = Vector3(0.0, 1.0, 0.0)
-        val Z = Vector3(0.0, 0.0, 1.0)
+        val X = Vector3(1.toFloat(), 0.toFloat(), 0.toFloat())
+        val Y = Vector3(0.toFloat(), 1.toFloat(), 0.toFloat())
+        val Z = Vector3(0.toFloat(), 0.toFloat(), 1.toFloat())
 
     }
 

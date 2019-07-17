@@ -6,9 +6,11 @@ import info.laht.threekt.math.Matrix3
 import info.laht.threekt.math.Vector2i
 import info.laht.threekt.math.generateUUID
 import java.awt.image.BufferedImage
+import java.nio.ByteBuffer
 
-class Texture(
-    var image: BufferedImage? = null,
+
+open class Texture(
+    var image: ByteBuffer? = null,
     mapping: Int? = null,
     wrapS: Int? = null,
     wrapT: Int? = null,
@@ -24,7 +26,7 @@ class Texture(
     val id = textureId++
     val uuid = generateUUID()
 
-    val mipmaps = mutableListOf<BufferedImage>()
+    val mipmaps = mutableListOf<ByteBuffer>()
 
     var mapping = mapping ?: UVMapping
 
@@ -36,7 +38,7 @@ class Texture(
 
     var anisotropy = anisotropy ?: 1
 
-    var format = format ?: RGBAFormat
+    open var format = format ?: RGBAFormat
     var type = type ?: UnsignedByteType
 
     val offset = Vector2i(0, 0)
@@ -54,7 +56,15 @@ class Texture(
 
     var encoding = encoding ?: LinearEncoding
 
-    var version = 0
+    internal var version = 0
+
+    internal val properties by lazy {
+        mutableMapOf<String, Any>()
+    }
+
+    internal inline operator fun <reified T> get(name: String): T? {
+        return properties[name] as T?
+    }
 
     fun needsUpdate(flag: Boolean) {
         if (flag) {
@@ -105,7 +115,7 @@ class Texture(
     }
 
     fun dispose() {
-        dispatchEvent("dispose")
+        dispatchEvent("dispose", this)
     }
 
     companion object {

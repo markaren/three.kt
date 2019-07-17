@@ -15,7 +15,7 @@ sealed class BufferAttribute(
     internal var version = 0
 
     abstract val size: Int
-    
+
     internal val count: Int
         get() = size / itemSize
 
@@ -24,7 +24,7 @@ sealed class BufferAttribute(
 
     internal var onUploadCallback: Runnable? = null
 
-    var needsUpdate by Delegates.observable(false) { property, oldValue, newValue ->
+    var needsUpdate by Delegates.observable(false) { _, _, newValue ->
         if (newValue) version++
     }
 
@@ -92,6 +92,7 @@ class IntBufferAttribute(
     }
 
     fun setXY(index: Int, x: Int, y: Int): IntBufferAttribute {
+        @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
         array[index + 0] = x
@@ -101,6 +102,7 @@ class IntBufferAttribute(
     }
 
     fun setXYZ(index: Int, x: Int, y: Int, z: Int): IntBufferAttribute {
+        @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
         array[index + 0] = x
@@ -111,6 +113,7 @@ class IntBufferAttribute(
     }
 
     fun setXYZW(index: Int, x: Int, y: Int, z: Int, w: Int): IntBufferAttribute {
+        @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
         array[index + 0] = x
@@ -121,19 +124,20 @@ class IntBufferAttribute(
         return this
     }
 
-    fun copy( source: IntBufferAttribute ): IntBufferAttribute {
+    fun copy(source: IntBufferAttribute): IntBufferAttribute {
         super.copy(this)
         array = source.array.clone()
         return this
     }
 
-    fun copyAt ( index1: Int, attribute: IntBufferAttribute, index2: Int ): IntBufferAttribute {
+    @Suppress("NAME_SHADOWING")
+    fun copyAt(index1: Int, attribute: IntBufferAttribute, index2: Int): IntBufferAttribute {
 
         val index1 = index1 * this.itemSize;
         val index2 = index2 * attribute.itemSize;
 
-        for ( i in 0 until itemSize ) {
-            array[ index1 + i ] = attribute.array[ index2 + i ];
+        for (i in 0 until itemSize) {
+            array[index1 + i] = attribute.array[index2 + i];
         }
 
         return this
@@ -186,7 +190,9 @@ class FloatBufferAttribute(
         return this
     }
 
+
     fun setXY(index: Int, x: Float, y: Float): FloatBufferAttribute {
+        @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
         array[index + 0] = x
@@ -196,6 +202,7 @@ class FloatBufferAttribute(
     }
 
     fun setXYZ(index: Int, x: Float, y: Float, z: Float): FloatBufferAttribute {
+        @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
         array[index + 0] = x
@@ -206,6 +213,7 @@ class FloatBufferAttribute(
     }
 
     fun setXYZW(index: Int, x: Float, y: Float, z: Float, w: Float): FloatBufferAttribute {
+        @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
         array[index + 0] = x
@@ -216,31 +224,70 @@ class FloatBufferAttribute(
         return this
     }
 
-    fun copyColorsArray ( colors: List<Color> ): FloatBufferAttribute {
+    fun copyColorsArray(colors: List<Color>): FloatBufferAttribute {
 
         var offset = 0
         colors.forEach { color ->
-            array[ offset ++ ] = color.r
-            array[ offset ++ ] = color.g
-            array[ offset ++ ] = color.b
+            array[offset++] = color.r
+            array[offset++] = color.g
+            array[offset++] = color.b
         }
 
         return this
     }
 
-    fun copy( source: FloatBufferAttribute ): FloatBufferAttribute {
+
+    fun copyVector2sArray(vectors: List<Vector2>): FloatBufferAttribute {
+
+        var offset = 0
+        vectors.forEach { vector ->
+            array[offset++] = vector.x
+            array[offset++] = vector.y
+        }
+
+        return this
+
+    }
+
+    fun copyVector3sArray(vectors: List<Vector3>): FloatBufferAttribute {
+
+        var offset = 0
+        vectors.forEach { vector ->
+            array[offset++] = vector.x
+            array[offset++] = vector.y
+            array[offset++] = vector.z
+        }
+
+        return this
+    }
+
+    fun copyVector4sArray(vectors: List<Vector4>): FloatBufferAttribute {
+
+        var offset = 0
+        vectors.forEach { vector ->
+            array[offset++] = vector.x
+            array[offset++] = vector.y
+            array[offset++] = vector.z
+            array[offset++] = vector.w
+        }
+
+        return this
+    }
+
+    fun copy(source: FloatBufferAttribute): FloatBufferAttribute {
         super.copy(this)
         array = source.array.clone()
         return this
     }
 
-    fun copyAt ( index1: Int, attribute: FloatBufferAttribute, index2: Int ): FloatBufferAttribute {
+    @Suppress("NAME_SHADOWING")
+    fun copyAt(index1: Int, attribute: FloatBufferAttribute, index2: Int): FloatBufferAttribute {
 
         val index1 = index1 * this.itemSize;
         val index2 = index2 * attribute.itemSize;
 
-        for ( i in 0 until itemSize ) {
-            array[ index1 + i ] = attribute.array[ index2 + i ];
+        for (i in 0 until itemSize) {
+            array[index1 + i] = attribute.array[index2 + i];
         }
 
         return this
@@ -294,6 +341,7 @@ class DoubleBufferAttribute(
     }
 
     fun setXY(index: Int, x: Double, y: Double): DoubleBufferAttribute {
+        @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
         array[index + 0] = x
@@ -303,6 +351,7 @@ class DoubleBufferAttribute(
     }
 
     fun setXYZ(index: Int, x: Double, y: Double, z: Double): DoubleBufferAttribute {
+        @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
         array[index + 0] = x
@@ -313,6 +362,7 @@ class DoubleBufferAttribute(
     }
 
     fun setXYZW(index: Int, x: Double, y: Double, z: Double, w: Double): DoubleBufferAttribute {
+        @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
         array[index + 0] = x
@@ -323,56 +373,20 @@ class DoubleBufferAttribute(
         return this
     }
 
-    fun copyVector2sArray ( vectors: List<Vector2> ): DoubleBufferAttribute {
-
-        var offset = 0
-        vectors.forEach { vector ->
-            array[ offset ++ ] = vector.x
-            array[ offset ++ ] = vector.y
-        }
-
-        return this
-
-    }
-
-    fun copyVector3sArray ( vectors: List<Vector3> ): DoubleBufferAttribute {
-
-        var offset = 0
-        vectors.forEach { vector ->
-            array[ offset ++ ] = vector.x
-            array[ offset ++ ] = vector.y
-            array[ offset ++ ] = vector.z
-        }
-
-        return this
-    }
-
-    fun copyVector4sArray ( vectors: List<Vector4> ): DoubleBufferAttribute {
-
-        var offset = 0
-        vectors.forEach { vector ->
-            array[ offset ++ ] = vector.x
-            array[ offset ++ ] = vector.y
-            array[ offset ++ ] = vector.z
-            array[ offset ++ ] = vector.w
-        }
-
-        return this
-    }
-
-    fun copy( source: DoubleBufferAttribute ): DoubleBufferAttribute {
+    fun copy(source: DoubleBufferAttribute): DoubleBufferAttribute {
         super.copy(this)
         array = source.array.clone()
         return this
     }
 
-    fun copyAt ( index1: Int, attribute: DoubleBufferAttribute, index2: Int ): DoubleBufferAttribute {
+    @Suppress("NAME_SHADOWING")
+    fun copyAt(index1: Int, attribute: DoubleBufferAttribute, index2: Int): DoubleBufferAttribute {
 
         val index1 = index1 * this.itemSize;
         val index2 = index2 * attribute.itemSize;
 
-        for ( i in 0 until itemSize ) {
-            array[ index1 + i ] = attribute.array[ index2 + i ];
+        for (i in 0 until itemSize) {
+            array[index1 + i] = attribute.array[index2 + i];
         }
 
         return this
@@ -380,11 +394,13 @@ class DoubleBufferAttribute(
 
 }
 
-class BufferAttributes: HashMap<String, BufferAttribute>() {
+class BufferAttributes : HashMap<String, BufferAttribute>() {
 
     val index = get("index") as IntBufferAttribute?
-    val position = get("position") as DoubleBufferAttribute?
-    val normal = get("normal") as DoubleBufferAttribute?
+    val position = get("position") as FloatBufferAttribute?
+    val normal = get("normal") as FloatBufferAttribute?
+    val uv = get("uv") as IntBufferAttribute?
     val color = get("color") as FloatBufferAttribute?
-    val tangent = get("tangent")
+//    val tangent = get("tangent") as IntBufferAttribute?
+
 }

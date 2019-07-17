@@ -1,4 +1,4 @@
-package info.laht.threekt.renderers.renderers.gl
+package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.*
 import org.lwjgl.opengl.GL11

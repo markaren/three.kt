@@ -27,7 +27,7 @@ class Points(
         TODO()
     }
 
-    fun clone(): Points {
+    override fun clone(): Points {
         return Points(geometry, material).copy(this) as Points
     }
 

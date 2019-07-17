@@ -1,13 +1,14 @@
 package info.laht.threekt.geometries
 
 import info.laht.threekt.core.BufferGeometry
-import info.laht.threekt.core.DoubleBufferAttribute
+import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.core.IntBufferAttribute
 
+typealias PlaneGeometry = PlaneBufferGeometry
 
 class PlaneBufferGeometry(
-    val width: Double = 1.0,
-    val height: Double = 1.0,
+    val width: Float = 1.toFloat(),
+    val height: Float = 1.toFloat(),
     val widthSegments: Int = 1,
     val heightSegments: Int = 1
 ) : BufferGeometry() {
@@ -17,18 +18,18 @@ class PlaneBufferGeometry(
         val helper = PlaneBufferGeometryHelper()
 
         this.setIndex(IntBufferAttribute(helper.indices, 1))
-        this.addAttribute("position", DoubleBufferAttribute(helper.vertices, 3))
-        this.addAttribute("normal", DoubleBufferAttribute(helper.normals, 3))
-        this.addAttribute("uv", DoubleBufferAttribute(helper.uvs, 2))
+        this.addAttribute("position", FloatBufferAttribute(helper.vertices, 3))
+        this.addAttribute("normal", FloatBufferAttribute(helper.normals, 3))
+        this.addAttribute("uv", FloatBufferAttribute(helper.uvs, 2))
 
     }
 
     private inner class PlaneBufferGeometryHelper {
 
         internal var indices: IntArray
-        internal var vertices: DoubleArray
-        internal var normals: DoubleArray
-        internal var uvs: DoubleArray
+        internal var vertices: FloatArray
+        internal var normals: FloatArray
+        internal var uvs: FloatArray
 
         init {
 
@@ -44,9 +45,9 @@ class PlaneBufferGeometry(
             val segment_width = width / gridX
             val segment_height = height / gridY
 
-            vertices = DoubleArray(gridX1 * gridY1 * 3)
-            normals = DoubleArray(gridX1 * gridY1 * 3)
-            uvs = DoubleArray(gridX1 * gridY1 * 2)
+            vertices = FloatArray(gridX1 * gridY1 * 3)
+            normals = FloatArray(gridX1 * gridY1 * 3)
+            uvs = FloatArray(gridX1 * gridY1 * 2)
 
             var offset = 0
             var offset2 = 0
@@ -62,10 +63,10 @@ class PlaneBufferGeometry(
                     vertices[offset] = x
                     vertices[offset + 1] = -y
 
-                    normals[offset + 2] = 1.0
+                    normals[offset + 2] = 1.toFloat()
 
-                    uvs[offset2] = (ix / gridX).toDouble()
-                    uvs[offset2 + 1] = (1 - iy / gridY).toDouble()
+                    uvs[offset2] = (ix / gridX).toFloat()
+                    uvs[offset2 + 1] = (1 - iy / gridY).toFloat()
 
                     offset += 3
                     offset2 += 2

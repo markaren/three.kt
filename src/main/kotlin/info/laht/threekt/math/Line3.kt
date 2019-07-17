@@ -24,26 +24,26 @@ class Line3 @JvmOverloads constructor(
     }
 
     fun getCenter(target: Vector3): Vector3 {
-        return target.addVectors(this.start, this.end).multiplyScalar(0.5)
+        return target.addVectors(this.start, this.end).multiplyScalar(0.5.toFloat())
     }
 
     fun delta(target: Vector3): Vector3 {
         return target.subVectors(this.end, this.start)
     }
 
-    fun distanceSq(): Double {
+    fun distanceSq(): Float {
         return this.start.distanceToSquared(this.end)
     }
 
-    fun distance(): Double {
+    fun distance(): Float {
         return this.start.distanceTo(this.end)
     }
 
-    fun at(t: Double, target: Vector3): Vector3 {
+    fun at(t: Float, target: Vector3): Vector3 {
         return this.delta(target).multiplyScalar(t).add(this.start)
     }
 
-    fun closestPointToPointParameter(point: Vector3, clampToLine: Boolean = false): Double {
+    fun closestPointToPointParameter(point: Vector3, clampToLine: Boolean = false): Float {
         val startP = Vector3()
         val startEnd = Vector3()
 

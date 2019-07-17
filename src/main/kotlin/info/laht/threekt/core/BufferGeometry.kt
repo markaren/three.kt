@@ -10,10 +10,10 @@ import kotlin.math.sqrt
 
 open class BufferGeometry : GeometryBase<BufferGeometry>() {
 
-    val id = geometryIdCount.getAndAdd(2)
+    internal val id = geometryIdCount.getAndAdd(2)
 
     var index: IntBufferAttribute? = null
-    private set
+        private set
 
     val attributes = BufferAttributes()
 
@@ -145,13 +145,13 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
             // second, try to find a boundingSphere with a radius smaller than the
             // boundingSphere of the boundingBox: sqrt(3) smaller in the best case
 
-            var maxRadiusSq = 0.0
+            var maxRadiusSq = 0.toFloat()
             for (i in 0 until position.count) {
                 vector.fromBufferAttribute(position, i)
                 maxRadiusSq = max(maxRadiusSq, center.distanceToSquared(vector));
             }
 
-            this.boundingSphere!!.radius = sqrt(maxRadiusSq)
+            this.boundingSphere!!.radius = sqrt(maxRadiusSq).toFloat()
 
             if (this.boundingSphere!!.radius.isNaN()) {
                 println("THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The 'position' attribute is likely to have NaN values.");
@@ -181,7 +181,7 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
                 // reset existing normals to zero
                 val array = attributes.normal.array;
                 for (i in 0 until array.size) {
-                    array[i] = 0.0
+                    array[i] = 0.toFloat()
                 }
 
             }
@@ -271,18 +271,18 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
     fun merge(geometry: BufferGeometry, offset: Int = 0): BufferGeometry {
 
         for (key in attributes.keys) {
-            if ( geometry.attributes[ key ] ==  null ) {
+            if (geometry.attributes[key] == null) {
                 continue
             }
 
-            val attribute1 = attributes[ key ]!!
+            val attribute1 = attributes[key]!!
             val l1 = when (attribute1) {
                 is IntBufferAttribute -> attribute1.size
                 is FloatBufferAttribute -> attribute1.size
                 is DoubleBufferAttribute -> attribute1.size
             }
 
-            val attribute2 = geometry.attributes[ key ]!!
+            val attribute2 = geometry.attributes[key]!!
             val l2 = when (attribute2) {
                 is IntBufferAttribute -> attribute2.size
                 is FloatBufferAttribute -> attribute2.size
@@ -290,10 +290,10 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
             }
 
             val attributeOffset = attribute2.itemSize * offset
-            val length = min( l2, l1 - attributeOffset )
+            val length = min(l2, l1 - attributeOffset)
 
             var j = attributeOffset
-            for ( i in 0 until length ) {
+            for (i in 0 until length) {
                 when (attribute1) {
                     is IntBufferAttribute -> attribute1.array[j] = (attribute2 as IntBufferAttribute).array[i]
                     is FloatBufferAttribute -> attribute1.array[j] = (attribute2 as FloatBufferAttribute).array[i]

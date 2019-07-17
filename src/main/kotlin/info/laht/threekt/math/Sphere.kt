@@ -1,12 +1,16 @@
 package info.laht.threekt.math
 
-class Sphere(
-    var center: Vector3 = Vector3(),
-    var radius: Double = 0.0
-) {
+import info.laht.threekt.core.Cloneable
 
-    fun set(center: Vector3, radius: Double): Sphere {
-        TODO()
+class Sphere(
+    val center: Vector3 = Vector3(),
+    var radius: Float = 0f
+): Cloneable {
+
+    fun set(center: Vector3, radius: Float): Sphere {
+        this.center.copy(center)
+        this.radius = radius
+        return this
     }
 
     @JvmOverloads
@@ -22,7 +26,7 @@ class Sphere(
         TODO()
     }
 
-    fun distanceToPoint(point: Vector3): Double {
+    fun distanceToPoint(point: Vector3): Float {
         TODO()
     }
 
@@ -54,12 +58,14 @@ class Sphere(
         TODO()
     }
 
-    fun clone(): Sphere {
-        TODO()
+    override fun clone(): Sphere {
+        return Sphere().copy(this)
     }
 
     fun copy(sphere: Sphere): Sphere {
-        TODO()
+        this.center.copy(sphere.center)
+        this.radius = sphere.radius
+        return this
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1,14 +1,13 @@
-package info.laht.threekt.renderers.renderers.gl
+package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.lights.AmbientLight
 import info.laht.threekt.lights.Light
-import info.laht.threekt.math.Color
-import info.laht.threekt.math.Matrix4
-import info.laht.threekt.math.Vector2
-import info.laht.threekt.math.Vector3
+import info.laht.threekt.lights.LightShadow
+import info.laht.threekt.lights.PointLight
+import info.laht.threekt.math.*
 
-typealias Uniforms = Map<String, Any>
+private typealias Uniforms = Map<String, Any>
 
 class GLLights {
 
@@ -20,13 +19,13 @@ class GLLights {
     private var matrix4 = Matrix4()
     private var matrix42 = Matrix4()
 
-    fun setup(lights: List<Light>, shadows: List<Any>, camera: Camera) {
+    fun setup(lights: List<Light>, shadows: List<LightShadow>, camera: Camera) {
 
         var r = 0f
         var g = 0f
         var b = 0f
 
-        state.probe.forEach { it.set(0,0,0) }
+        state.probe.forEach { it.set(0, 0, 0) }
 
         var directionalLength = 0
         var pointLength = 0
@@ -49,18 +48,19 @@ class GLLights {
 
         }
 
-        state.ambient[ 0 ] = r
-        state.ambient[ 1 ] = g
-        state.ambient[ 2 ] = b
+        state.ambient[0] = r
+        state.ambient[1] = g
+        state.ambient[2] = b
 
-        var hash = state.hash
+        val hash = state.hash
 
-        if ( hash.directionalLength !== directionalLength ||
-            hash.pointLength !== pointLength ||
-            hash.spotLength !== spotLength ||
-            hash.rectAreaLength !== rectAreaLength ||
-            hash.hemiLength !== hemiLength ||
-            hash.shadowsLength !== shadows.size ) {
+        if (hash.directionalLength != directionalLength ||
+            hash.pointLength != pointLength ||
+            hash.spotLength != spotLength ||
+            hash.rectAreaLength != rectAreaLength ||
+            hash.hemiLength != hemiLength ||
+            hash.shadowsLength != shadows.size
+        ) {
 
 //            state.directional.length = directionalLength;
 //            state.spot.length = spotLength;
@@ -75,7 +75,7 @@ class GLLights {
             hash.hemiLength = hemiLength;
             hash.shadowsLength = shadows.size;
 
-            state.version = nextVersion ++;
+            state.version = nextVersion++;
 
         }
 
@@ -98,11 +98,11 @@ class GLLights {
 
         internal inner class Hash {
             var directionalLength = -1
-            var pointLength = - 1
-            var spotLength = - 1
-            var rectAreaLength = - 1
-            var hemiLength = - 1
-            var shadowsLength = - 1
+            var pointLength = -1
+            var spotLength = -1
+            var rectAreaLength = -1
+            var hemiLength = -1
+            var shadowsLength = -1
         }
 
     }
@@ -123,7 +123,10 @@ class GLLights {
                         "shadow" to false,
                         "shadowBias" to 0,
                         "shadowRadius" to 1f,
-                        "shadowMapSize" to Vector2()
+                        "shadowMapSize" to Vector2i()
+                    )
+                    is PointLight -> mapOf(
+                        TODO()
                     )
                 }
 

@@ -6,8 +6,8 @@ import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3
 
 class Intersection(
-    val distance: Double,
-    val distanceToRay: Double?,
+    val distance: Float,
+    val distanceToRay: Float?,
     val point: Vector3,
     val index: Int?,
     val face: Face3?,
@@ -20,8 +20,8 @@ class Intersection(
 class Raycaster(
     origin: Vector3,
     direction: Vector3,
-    val near: Double = 0.0,
-    val far: Double = Double.POSITIVE_INFINITY
+    val near: Float = 0.toFloat(),
+    val far: Float = Float.POSITIVE_INFINITY
 
 ) {
 

@@ -8,7 +8,7 @@ class MeshBasicMaterial(
     parameters: MeshBasicMaterialParameters? = null
 ): Material(parameters) {
 
-    var color = Color.fromHex(0xffffff)
+    val color = Color.fromHex(0xffffff)
 
     var map: Texture? = null
 

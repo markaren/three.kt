@@ -1,4 +1,4 @@
-package info.laht.threekt.renderers.renderers.gl
+package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.*
 import info.laht.threekt.materials.Material
@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL13
 import org.lwjgl.opengl.GL14
 
 
-class GLState {
+class GLState internal constructor() {
 
     val colorBuffer = GLColorBuffer().apply {
         setClear(0f, 0f, 0f, 1f)
@@ -61,7 +61,7 @@ class GLState {
     var currentScissor = Vector4i()
     var currentViewport = Vector4i()
 
-    val emptyTextures = mapOf<Int, Int>(
+    private val emptyTextures = mapOf(
         GL11.GL_TEXTURE_2D to createTexture(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_2D, 1),
         GL13.GL_TEXTURE_CUBE_MAP to createTexture(GL13.GL_TEXTURE_CUBE_MAP, GL13.GL_TEXTURE_CUBE_MAP, 6)
     )
@@ -72,6 +72,11 @@ class GLState {
 
         enable(GL11.GL_CULL_FACE)
         setBlending(NoBlending)
+    }
+    fun initAttributes() {
+        for (i in 0 until newAttributes.size) {
+            newAttributes[i] = 0
+        }
     }
 
     fun createTexture(type: Int, target: Int, count: Int): Int {
@@ -105,6 +110,7 @@ class GLState {
         }
     }
 
+    @Suppress("NAME_SHADOWING")
     fun setBlending(
         blending: Int,
         blendEquation: Int? = null,
@@ -188,7 +194,10 @@ class GLState {
 
         if ( blendEquation != currentBlendEquation || blendEquationAlpha != currentBlendEquationAlpha ) {
 
-            GL20.glBlendEquationSeparate( utils.convert( blendEquation ), utils.convert( blendEquationAlpha ) )
+            GL20.glBlendEquationSeparate(
+                utils.convert(blendEquation),
+                utils.convert(blendEquationAlpha)
+            )
 
             currentBlendEquation = blendEquation
             currentBlendEquationAlpha = blendEquationAlpha
@@ -197,7 +206,12 @@ class GLState {
 
         if ( blendSrc != currentBlendSrc || blendDst != currentBlendDst || blendSrcAlpha != currentBlendSrcAlpha || blendDstAlpha != currentBlendDstAlpha ) {
 
-            GL14.glBlendFuncSeparate( utils.convert( blendSrc ), utils.convert( blendDst ), utils.convert( blendSrcAlpha ), utils.convert( blendDstAlpha ) );
+            GL14.glBlendFuncSeparate(
+                utils.convert(blendSrc),
+                utils.convert(blendDst),
+                utils.convert(blendSrcAlpha),
+                utils.convert(blendDstAlpha)
+            );
 
             currentBlendSrc = blendSrc
             currentBlendDst = blendDst
@@ -241,18 +255,14 @@ class GLState {
     }
     
 
-    fun setFlipSided( flipSided: Boolean ) {
+    private fun setFlipSided(flipSided: Boolean ) {
 
         if ( currentFlipSided != flipSided ) {
 
             if ( flipSided ) {
-
                 GL11.glFrontFace( GL11.GL_CW );
-
             } else {
-
                 GL11.glFrontFace( GL11.GL_CCW );
-
             }
 
             currentFlipSided = flipSided;
@@ -269,18 +279,10 @@ class GLState {
 
             if ( cullFace != currentCullFace ) {
 
-                if ( cullFace == CullFaceBack ) {
-
-                    GL11.glCullFace( GL11.GL_BACK )
-
-                } else if ( cullFace == CullFaceFront ) {
-
-                    GL11.glCullFace( GL11.GL_FRONT )
-
-                } else {
-
-                    GL11.glCullFace( GL11.GL_FRONT_AND_BACK )
-
+                when (cullFace) {
+                    CullFaceBack -> GL11.glCullFace( GL11.GL_BACK )
+                    CullFaceFront -> GL11.glCullFace( GL11.GL_FRONT )
+                    else -> GL11.glCullFace( GL11.GL_FRONT_AND_BACK )
                 }
 
             }
@@ -307,7 +309,7 @@ class GLState {
 
     }
 
-    fun setPolygonOffset( polygonOffset: Boolean, factor: Float, units: Float ) {
+    private fun setPolygonOffset(polygonOffset: Boolean, factor: Float, units: Float ) {
 
         if ( polygonOffset ) {
 
@@ -335,8 +337,9 @@ class GLState {
         }
     }
 
-    fun activeTexture(glSlot: Int? = null ) {
+    private fun activeTexture(glSlot: Int? = null ) {
 
+        @Suppress("NAME_SHADOWING")
         val glSlot = glSlot ?: GL13.GL_TEXTURE0 + maxTextures - 1;
 
         if ( currentTextureSlot != glSlot ) {
@@ -360,7 +363,7 @@ class GLState {
 
         if ( boundTexture == null ) {
 
-            boundTexture = BoundTexture( type = null, texture = null )
+            boundTexture = BoundTexture(type = null, texture = null)
             currentBoundTextures[ currentTextureSlot ] = boundTexture;
 
         }
@@ -427,14 +430,13 @@ class GLState {
 
     }
 
-
     inner class GLColorBuffer {
 
-        var locked = false
+        internal var locked = false
 
         private var color = Vector4()
         private var currentColorMask: Boolean? = null
-        private var currentColorClear = Vector4(0.0, 0.0, 0.0, 0.0)
+        private var currentColorClear = Vector4(0.toFloat(), 0.toFloat(), 0.toFloat(), 0.toFloat())
 
         fun setMask(colorMask: Boolean) {
             if (currentColorMask != colorMask && !locked) {
@@ -445,6 +447,7 @@ class GLState {
             }
         }
 
+        @Suppress("NAME_SHADOWING")
         fun setClear(r: Float, g: Float, b: Float, a: Float, premultipliedAlpha: Boolean? = null) {
 
             var r = r
@@ -452,18 +455,14 @@ class GLState {
             var b = b
 
             if (premultipliedAlpha == true) {
-
-                r *= a; g *= a; b *= a;
-
+                r *= a; g *= a; b *= a
             }
 
-            color.set(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble());
+            color.set(r, g, b, a)
 
             if (currentColorClear != color) {
-
-                GL11.glClearColor(r, g, b, a);
-                currentColorClear.copy(color);
-
+                GL11.glClearColor(r, g, b, a)
+                currentColorClear.copy(color)
             }
         }
 
@@ -471,14 +470,14 @@ class GLState {
             locked = false
 
             currentColorMask = null
-            currentColorClear.set(-1.0, 0.0, 0.0, 0.0); // set to invalid state
+            currentColorClear.set((-1).toFloat(), 0.toFloat(), 0.toFloat(), 0.toFloat()); // set to invalid state
         }
 
     }
 
     inner class GLDepthBuffer {
 
-        var locked = false;
+        internal var locked = false
 
         private var currentDepthMask: Boolean? = null
         private var currentDepthFunc: Int? = null
@@ -486,22 +485,16 @@ class GLState {
 
         fun setTest(depthTest: Boolean) {
             if (depthTest) {
-
                 enable(GL11.GL_DEPTH_TEST);
-
             } else {
-
                 disable(GL11.GL_DEPTH_TEST);
-
             }
         }
 
         fun setMask(depthMask: Boolean) {
             if (currentDepthMask != depthMask && !locked) {
-
                 GL11.glDepthMask(depthMask);
                 currentDepthMask = depthMask;
-
             }
         }
 
@@ -526,8 +519,8 @@ class GLState {
         fun setClear(depth: Double) {
             if (currentDepthClear != depth) {
 
-                GL11.glClearDepth(depth);
-                currentDepthClear = depth;
+                GL11.glClearDepth(depth)
+                currentDepthClear = depth
 
             }
         }
@@ -544,7 +537,7 @@ class GLState {
 
     inner class GLStencilBuffer {
 
-        var locked = false;
+        internal var locked = false
 
         var currentStencilMask: Int? = null
         var currentStencilFunc: Int? = null
@@ -557,23 +550,16 @@ class GLState {
 
         fun setTest(stencilTest: Boolean) {
             if (stencilTest) {
-
                 enable(GL11.GL_STENCIL_TEST)
-
             } else {
-
                 disable(GL11.GL_STENCIL_TEST)
-
             }
-
         }
 
         fun setMask(stencilMask: Int) {
             if (currentStencilMask != stencilMask && !locked) {
-
                 GL11.glStencilMask(stencilMask)
                 currentStencilMask = stencilMask
-
             }
         }
 
@@ -617,16 +603,16 @@ class GLState {
         }
 
         fun reset() {
-            locked = false;
+            locked = false
 
-            currentStencilMask = null;
-            currentStencilFunc = null;
-            currentStencilRef = null;
-            currentStencilFuncMask = null;
-            currentStencilFail = null;
-            currentStencilZFail = null;
-            currentStencilZPass = null;
-            currentStencilClear = null;
+            currentStencilMask = null
+            currentStencilFunc = null
+            currentStencilRef = null
+            currentStencilFuncMask = null
+            currentStencilFail = null
+            currentStencilZFail = null
+            currentStencilZPass = null
+            currentStencilClear = null
         }
 
     }

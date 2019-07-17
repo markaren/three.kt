@@ -1,42 +1,59 @@
 package info.laht.threekt.math
 
+import info.laht.threekt.core.Cloneable
 import java.lang.IllegalArgumentException
 import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.atan2
 
 class Euler(
-    internal var x: Double = 0.0,
-    internal var y: Double = 0.0,
-    internal var z: Double = 0.0,
-    internal var order: EulerOrder = EulerOrder.defaultOrder
-) {
+    x: Float = 0f,
+    y: Float = 0f,
+    z: Float = 0f,
+    order: EulerOrder = EulerOrder.defaultOrder
+) : Cloneable {
+
+    var x = x
+        set(value) {
+            field = value
+            onChangeCallback?.invoke()
+        }
+
+    var y = y
+        set(value) {
+            field = value
+            onChangeCallback?.invoke()
+        }
+
+    var z = z
+        set(value) {
+            field = value
+            onChangeCallback?.invoke()
+        }
+
+    var order = order
+        set(value) {
+            field = value
+            onChangeCallback?.invoke()
+        }
 
     internal var onChangeCallback: (() -> Unit)? = null
 
     fun set(x: Number, y: Number, z: Number, order: EulerOrder?): Euler {
-        this.x = x.toDouble()
-        this.y = x.toDouble()
-        this.z = x.toDouble()
-        order?.also {
-            this.order = it
-        }
+        this.x = x.toFloat()
+        this.y = x.toFloat()
+        this.z = x.toFloat()
+        this.order = order ?: this.order
+        this.onChangeCallback?.invoke()
         return this
     }
 
-    fun clone(): Euler {
+    override fun clone(): Euler {
         return Euler().copy(this)
     }
 
     fun copy(euler: Euler): Euler {
-        this.x = euler.x
-        this.y = euler.y
-        this.z = euler.z
-        this.order = euler.order
-
-        this.onChangeCallback?.invoke()
-
-        return this;
+        return set(euler.x, euler.y, euler.z, euler.order)
     }
 
     fun setFromRotationMatrix(m: Matrix4, order: EulerOrder? = null, update: Boolean = true): Euler {
@@ -68,7 +85,7 @@ class Euler(
             } else {
 
                 this.x = atan2(m32, m22);
-                this.z = 0.0
+                this.z = 0f
 
             }
 
@@ -84,7 +101,7 @@ class Euler(
             } else {
 
                 this.y = atan2(-m31, m11);
-                this.z = 0.0
+                this.z = 0f
 
             }
 
@@ -99,7 +116,7 @@ class Euler(
 
             } else {
 
-                this.y = 0.0
+                this.y = 0f
                 this.z = atan2(m21, m11);
 
             }
@@ -115,7 +132,7 @@ class Euler(
 
             } else {
 
-                this.x = 0.0
+                this.x = 0f
                 this.z = atan2(-m12, m22);
 
             }
@@ -131,7 +148,7 @@ class Euler(
 
             } else {
 
-                this.x = 0.0
+                this.x = 0f
                 this.y = atan2(m13, m33);
 
             }
@@ -148,7 +165,7 @@ class Euler(
             } else {
 
                 this.x = atan2(-m23, m33);
-                this.y = 0.0
+                this.y = 0f
 
             }
 
@@ -164,7 +181,7 @@ class Euler(
             this.onChangeCallback?.invoke()
         }
 
-        return this;
+        return this
     }
 
     fun setFromQuaternion(q: Quaternion, order: EulerOrder? = null, update: Boolean = true): Euler {
