@@ -362,19 +362,133 @@ object ShaderChunk {
         load("uv_vertex")
     }
 
-    val worldpos_vertex by lazy {
-        load("worldpos_vertex")
+    val background_frag by lazy {
+        load("background_frag")
     }
 
-    @JvmStatic
-    operator fun get(name: String): String? {
-        return ShaderChunk.javaClass.getField(name)?.let {
-            it.get(null) as String
-        }
+    val background_vert by lazy {
+        load("background_vert")
     }
+
+    val cube_frag by lazy {
+        load("cube_frag")
+    }
+
+    val cube_vert by lazy {
+        load("cube_vert")
+    }
+
+    val depth_frag by lazy {
+        load("depth_frag")
+    }
+
+    val depth_vert by lazy {
+        load("depth_vert")
+    }
+
+    val distanceRGBA_frag by lazy {
+        load("distanceRGBA_frag")
+    }
+
+    val equirect_frag by lazy {
+        load("equirect_frag")
+    }
+
+    val equirect_vert by lazy {
+        load("equirect_vert")
+    }
+
+    val linedashed_frag by lazy {
+        load("linedashed_frag")
+    }
+
+    val linedashed_vert by lazy {
+        load("linedashed_vert")
+    }
+
+    val meshbasic_frag by lazy {
+        load("meshbasic_frag")
+    }
+    val meshbasic_vert by lazy {
+        load("meshbasic_vert")
+    }
+
+    val meshlambert_frag by lazy {
+        load("meshlambert_frag")
+    }
+
+    val meshlambert_vert by lazy {
+        load("meshlambert_vert")
+    }
+
+    val meshmatcap_frag by lazy {
+        load("meshmatcap_frag")
+    }
+
+    val meshmatcap_vert by lazy {
+        load("meshmatcap_vert")
+    }
+
+    val meshphong_frag by lazy {
+        load("meshphong_frag")
+    }
+
+    val meshphong_vert by lazy {
+        load("meshphong_vert")
+    }
+
+    val meshphysical_frag by lazy {
+        load("meshphysical_frag")
+    }
+
+    val meshphysical_vert by lazy {
+        load("meshphysical_vert")
+    }
+
+    val normal_frag by lazy {
+        load("normal_frag")
+    }
+
+    val normal_vert by lazy {
+        load("normal_vert")
+    }
+
+    val points_frag by lazy {
+        load("points_frag")
+    }
+
+    val points_vert by lazy {
+        load("points_vert")
+    }
+
+    val shadow_frag by lazy {
+        load("shadow_frag")
+    }
+
+    val shadow_vert by lazy {
+        load("shadow_vert")
+    }
+
+    val sprite_frag by lazy {
+        load("sprite_frag")
+    }
+
+    val sprite_vert by lazy {
+        load("sprite_vert")
+    }
+
+//    operator fun get(name: String): String? {
+//
+//        return try {
+//            ShaderChunk::class.java.getDeclaredField(name).get(null) as String
+//        } catch (ex: Exception) {
+//            null
+//        }
+//
+//    }
 
     private fun load(name: String): String {
-        return ShaderChunk.javaClass.classLoader.getResourceAsStream("shaders/chunk/$name.glsl")
+        return ShaderChunk::class.java.classLoader.getResourceAsStream("shaders/lib/$name.glsl")
             .bufferedReader().use {
                 it.readText()
             }

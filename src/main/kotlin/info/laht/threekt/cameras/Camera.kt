@@ -10,8 +10,7 @@ abstract class Camera: Object3D() {
     val projectionMatrix = Matrix4()
     val projectionMatrixInverse = Matrix4()
 
-    @JvmOverloads
-    fun copy( source: Camera, recursive: Boolean = true ): Camera {
+    fun copy( source: Camera, recursive: Boolean): Camera {
 
         super.copy(source, recursive)
 

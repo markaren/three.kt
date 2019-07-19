@@ -3,9 +3,22 @@ package info.laht.threekt.core
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.lights.Light
 import info.laht.threekt.materials.Material
+import info.laht.threekt.materials.MeshDepthMaterial
+import info.laht.threekt.materials.MeshDistanceMaterial
 import info.laht.threekt.math.*
+import info.laht.threekt.objects.Group
+import info.laht.threekt.renderers.GLRenderer
+import info.laht.threekt.scenes.Scene
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Predicate
+
+interface GeometryObject {
+    val geometry: BufferGeometry
+}
+
+interface MaterialObject {
+    val material: Material
+}
 
 open class Object3D : Cloneable, EventDispatcher() {
 
@@ -36,12 +49,20 @@ open class Object3D : Cloneable, EventDispatcher() {
     var matrixAutoUpdate = true
     var matrixWorldNeedsUpdate = true
 
+    val layers = Layers()
     var visible = true
+
     var castShadow = true
     var receiveShadow = true
-    var frustumCulled = true
 
+    var frustumCulled = true
     var renderOrder = 0
+
+    var customDepthMaterial: MeshDepthMaterial? = null
+    var customDistanceMaterial: MeshDistanceMaterial? = null
+
+    internal var onBeforeRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, Group) -> Unit)? = null
+    internal var onAfterRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, Group) -> Unit)? = null
 
     private fun onRotationChange() {
         quaternion.setFromEuler(rotation, false)
@@ -403,11 +424,13 @@ open class Object3D : Cloneable, EventDispatcher() {
     /**
      * Updates global transform of the object and its children.
      */
-    open fun updateMatrixWorld(force: Boolean) {
+    open fun updateMatrixWorld(force: Boolean = false) {
+
         if (this.matrixAutoUpdate) {
             this.updateMatrix()
         }
 
+        @Suppress("NAME_SHADOWING")
         var force = force
         val parent = this.parent
 
@@ -458,12 +481,40 @@ open class Object3D : Cloneable, EventDispatcher() {
     }
 
     override fun clone(): Object3D {
-        return clone(true)
+        return Object3D().copy(this, true)
     }
 
-    @JvmOverloads
-    open fun copy(source: Object3D, recursive: Boolean = true): Object3D {
-        TODO()
+    open fun copy(source: Object3D, recursive: Boolean): Object3D {
+        this.name = source.name
+
+        this.up.copy( source.up )
+
+        this.position.copy( source.position )
+        this.quaternion.copy( source.quaternion )
+        this.scale.copy( source.scale )
+
+        this.matrix.copy( source.matrix )
+        this.matrixWorld.copy( source.matrixWorld )
+
+        this.matrixAutoUpdate = source.matrixAutoUpdate
+        this.matrixWorldNeedsUpdate = source.matrixWorldNeedsUpdate
+
+        this.layers.mask = source.layers.mask
+        this.visible = source.visible
+
+        this.castShadow = source.castShadow
+        this.receiveShadow = source.receiveShadow
+
+        this.frustumCulled = source.frustumCulled
+        this.renderOrder = source.renderOrder
+
+        if ( recursive ) {
+            children.forEach { child ->
+                this.add( child.clone() )
+            }
+        }
+
+        return this
     }
 
     companion object {

@@ -65,8 +65,8 @@ class GLRenderStates internal constructor() {
 
     private inner class OnSceneDispose : EventLister {
 
-        override fun onEvent(evt: Event) {
-            val scene = evt.target as Scene
+        override fun onEvent(event: Event) {
+            val scene = event.target as Scene
             scene.removeEventListener("dispose", this)
             renderStates.remove(scene.id)
         }

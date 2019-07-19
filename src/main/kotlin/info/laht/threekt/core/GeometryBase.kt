@@ -2,13 +2,14 @@ package info.laht.threekt.core
 
 import info.laht.threekt.math.*
 
-abstract class GeometryBase<E>: EventDispatcher() {
+abstract class GeometryBase<E> : EventDispatcher(), Cloneable {
 
     var name = ""
     val uuid = generateUUID()
 
     var boundingBox: Box3? = null
         protected set
+
     var boundingSphere: Sphere? = null
         protected set
 
@@ -81,8 +82,8 @@ abstract class GeometryBase<E>: EventDispatcher() {
     fun center(): E {
         val offset = Vector3()
 
-        this.computeBoundingBox();
-        this.boundingBox!!.getCenter(offset).negate()
+        this.computeBoundingBox()
+        boundingBox!!.getCenter(offset).negate()
 
         this.translate(offset.x, offset.y, offset.z)
 
@@ -93,8 +94,8 @@ abstract class GeometryBase<E>: EventDispatcher() {
     fun normalize(): E {
         this.computeBoundingSphere()
 
-        val center = this.boundingSphere!!.center
-        val radius = this.boundingSphere!!.radius
+        val center = boundingSphere!!.center
+        val radius = boundingSphere!!.radius
 
         val s = if (radius == 0.toFloat()) 1.toFloat() else 1.toFloat() / radius
 
@@ -104,7 +105,7 @@ abstract class GeometryBase<E>: EventDispatcher() {
             0.toFloat(), s, 0.toFloat(), -s * center.y,
             0.toFloat(), 0.toFloat(), s, -s * center.z,
             0.toFloat(), 0.toFloat(), 0.toFloat(), 1.toFloat()
-        );
+        )
 
         this.applyMatrix(matrix)
 

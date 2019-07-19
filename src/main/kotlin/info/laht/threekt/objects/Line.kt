@@ -7,10 +7,10 @@ import info.laht.threekt.math.Vector3
 
 class Line(
 
-    val geometry: BufferGeometry = BufferGeometry(),
-    val material: Material = LineBasicMaterial()
+    override val geometry: BufferGeometry = BufferGeometry(),
+    override val material: Material = LineBasicMaterial()
 
-): Object3D() {
+): Object3D(), GeometryObject, MaterialObject {
 
     fun computeLineDistances(): Line {
 

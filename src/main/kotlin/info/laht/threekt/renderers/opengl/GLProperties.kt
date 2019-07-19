@@ -2,11 +2,14 @@ package info.laht.threekt.renderers.opengl
 
 import java.util.*
 
-class GLProperties {
+internal typealias Properties = MutableMap<String, Any>
 
-    private val properties = WeakHashMap<Any, MutableMap<Any, Any>>()
+class GLProperties internal constructor() {
 
-    operator fun get(`object`: Any): Any {
+    private val properties = WeakHashMap<Any, Properties>()
+
+    operator fun get(`object`: Any): Properties {
+
         return properties.computeIfAbsent(`object`) {
             mutableMapOf()
         }
@@ -16,7 +19,7 @@ class GLProperties {
         properties.remove(`object`)
     }
 
-    fun update(`object`: Any, key: Any, value: Any) {
+    fun update(`object`: Any, key: String, value: Any) {
         properties[`object`]?.set(key, value) ?: throw IllegalStateException("No such key: $`object`")
     }
 

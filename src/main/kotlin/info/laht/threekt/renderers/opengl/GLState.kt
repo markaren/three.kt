@@ -1,13 +1,17 @@
 package info.laht.threekt.renderers.opengl
 
+
 import info.laht.threekt.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector4
 import info.laht.threekt.math.Vector4i
+import info.laht.threekt.textures.Image
+import info.laht.threekt.textures.Texture
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL13
 import org.lwjgl.opengl.GL14
+import java.nio.ByteBuffer
 
 
 class GLState internal constructor() {
@@ -73,6 +77,7 @@ class GLState internal constructor() {
         enable(GL11.GL_CULL_FACE)
         setBlending(NoBlending)
     }
+
     fun initAttributes() {
         for (i in 0 until newAttributes.size) {
             newAttributes[i] = 0
@@ -121,10 +126,10 @@ class GLState internal constructor() {
         blendDstAlpha: Int? = null,
         premultipliedAlpha: Boolean? = null
     ) {
-        if ( blending == NoBlending ) {
+        if (blending == NoBlending) {
 
-            if ( currentBlendingEnabled == true ) {
-                disable( GL11.GL_BLEND )
+            if (currentBlendingEnabled == true) {
+                disable(GL11.GL_BLEND)
                 currentBlendingEnabled = false
             }
 
@@ -132,42 +137,62 @@ class GLState internal constructor() {
 
         }
 
-        if ( currentBlendingEnabled == true ) {
-            enable( GL11.GL_BLEND )
+        if (currentBlendingEnabled == true) {
+            enable(GL11.GL_BLEND)
             currentBlendingEnabled = true
         }
 
-        if ( blending != CustomBlending ) {
+        if (blending != CustomBlending) {
 
-            if ( blending != currentBlending || premultipliedAlpha != currentPremultipledAlpha ) {
+            if (blending != currentBlending || premultipliedAlpha != currentPremultipledAlpha) {
 
-                if ( currentBlendEquation != AddEquation || currentBlendEquationAlpha != AddEquation ) {
+                if (currentBlendEquation != AddEquation || currentBlendEquationAlpha != AddEquation) {
 
-                    GL14.glBlendEquation( GL14.GL_FUNC_ADD )
+                    GL14.glBlendEquation(GL14.GL_FUNC_ADD)
 
                     currentBlendEquation = AddEquation;
                     currentBlendEquationAlpha = AddEquation
 
                 }
 
-                if ( premultipliedAlpha == true ) {
+                if (premultipliedAlpha == true) {
 
-                    when ( blending ) {
-                        NormalBlending -> GL14.glBlendFuncSeparate( GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA )
-                        AdditiveBlending -> GL11.glBlendFunc( GL11.GL_ONE, GL11.GL_ONE )
-                        SubtractiveBlending -> GL14.glBlendFuncSeparate( GL11.GL_ZERO, GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_ONE_MINUS_SRC_ALPHA )
-                        MultiplyBlending -> GL14.glBlendFuncSeparate( GL11.GL_ZERO, GL11.GL_SRC_COLOR, GL11.GL_ZERO, GL11.GL_SRC_ALPHA )
-                        else  ->  System.err.println( "THREE.WebGLState: Invalid blending: $blending" )
+                    when (blending) {
+                        NormalBlending -> GL14.glBlendFuncSeparate(
+                            GL11.GL_ONE,
+                            GL11.GL_ONE_MINUS_SRC_ALPHA,
+                            GL11.GL_ONE,
+                            GL11.GL_ONE_MINUS_SRC_ALPHA
+                        )
+                        AdditiveBlending -> GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE)
+                        SubtractiveBlending -> GL14.glBlendFuncSeparate(
+                            GL11.GL_ZERO,
+                            GL11.GL_ZERO,
+                            GL11.GL_ONE_MINUS_SRC_COLOR,
+                            GL11.GL_ONE_MINUS_SRC_ALPHA
+                        )
+                        MultiplyBlending -> GL14.glBlendFuncSeparate(
+                            GL11.GL_ZERO,
+                            GL11.GL_SRC_COLOR,
+                            GL11.GL_ZERO,
+                            GL11.GL_SRC_ALPHA
+                        )
+                        else -> System.err.println("THREE.WebGLState: Invalid blending: $blending")
                     }
 
                 } else {
 
-                    when ( blending ) {
-                        NormalBlending -> GL14.glBlendFuncSeparate( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA )
-                        AdditiveBlending -> GL14.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE )
-                        SubtractiveBlending -> GL11.glBlendFunc( GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR )
-                        MultiplyBlending -> GL14.glBlendFunc( GL11.GL_ZERO, GL11.GL_SRC_COLOR )
-                        else  ->  System.err.println( "THREE.WebGLState: Invalid blending: $blending" )
+                    when (blending) {
+                        NormalBlending -> GL14.glBlendFuncSeparate(
+                            GL11.GL_SRC_ALPHA,
+                            GL11.GL_ONE_MINUS_SRC_ALPHA,
+                            GL11.GL_ONE,
+                            GL11.GL_ONE_MINUS_SRC_ALPHA
+                        )
+                        AdditiveBlending -> GL14.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE)
+                        SubtractiveBlending -> GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR)
+                        MultiplyBlending -> GL14.glBlendFunc(GL11.GL_ZERO, GL11.GL_SRC_COLOR)
+                        else -> System.err.println("THREE.WebGLState: Invalid blending: $blending")
                     }
 
                 }
@@ -192,7 +217,7 @@ class GLState internal constructor() {
         val blendSrcAlpha = blendSrcAlpha ?: blendSrc
         val blendDstAlpha = blendDstAlpha ?: blendDst
 
-        if ( blendEquation != currentBlendEquation || blendEquationAlpha != currentBlendEquationAlpha ) {
+        if (blendEquation != currentBlendEquation || blendEquationAlpha != currentBlendEquationAlpha) {
 
             GL20.glBlendEquationSeparate(
                 utils.convert(blendEquation),
@@ -204,7 +229,7 @@ class GLState internal constructor() {
 
         }
 
-        if ( blendSrc != currentBlendSrc || blendDst != currentBlendDst || blendSrcAlpha != currentBlendSrcAlpha || blendDstAlpha != currentBlendDstAlpha ) {
+        if (blendSrc != currentBlendSrc || blendDst != currentBlendDst || blendSrcAlpha != currentBlendSrcAlpha || blendDstAlpha != currentBlendDstAlpha) {
 
             GL14.glBlendFuncSeparate(
                 utils.convert(blendSrc),
@@ -224,45 +249,54 @@ class GLState internal constructor() {
         currentPremultipledAlpha = null
     }
 
-    fun setMaterial( material: Material, frontFaceCW: Boolean ) {
+    fun setMaterial(material: Material, frontFaceCW: Boolean) {
 
         if (material.side == DoubleSide) {
-            disable( GL11.GL_CULL_FACE )
+            disable(GL11.GL_CULL_FACE)
         } else {
-            enable( GL11.GL_CULL_FACE )
+            enable(GL11.GL_CULL_FACE)
         }
 
-        var flipSided =  material.side == BackSide
-        if ( frontFaceCW ) {
-            flipSided = ! flipSided
+        var flipSided = material.side == BackSide
+        if (frontFaceCW) {
+            flipSided = !flipSided
         }
 
-        setFlipSided( flipSided )
+        setFlipSided(flipSided)
 
         if (material.blending == NormalBlending && !material.transparent) {
-            setBlending( NoBlending )
+            setBlending(NoBlending)
         } else {
-            setBlending( material.blending, material.blendEquation, material.blendSrc, material.blendDst, material.blendEquationAlpha, material.blendSrcAlpha, material.blendDstAlpha, material.premultipliedAlpha )
+            setBlending(
+                material.blending,
+                material.blendEquation,
+                material.blendSrc,
+                material.blendDst,
+                material.blendEquationAlpha,
+                material.blendSrcAlpha,
+                material.blendDstAlpha,
+                material.premultipliedAlpha
+            )
         }
 
-        depthBuffer.setFunc( material.depthFunc );
-        depthBuffer.setTest( material.depthTest );
-        depthBuffer.setMask( material.depthWrite );
-        colorBuffer.setMask( material.colorWrite );
+        depthBuffer.setFunc(material.depthFunc);
+        depthBuffer.setTest(material.depthTest);
+        depthBuffer.setMask(material.depthWrite);
+        colorBuffer.setMask(material.colorWrite);
 
-        setPolygonOffset( material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits );
+        setPolygonOffset(material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits);
 
     }
-    
 
-    private fun setFlipSided(flipSided: Boolean ) {
 
-        if ( currentFlipSided != flipSided ) {
+    private fun setFlipSided(flipSided: Boolean) {
 
-            if ( flipSided ) {
-                GL11.glFrontFace( GL11.GL_CW );
+        if (currentFlipSided != flipSided) {
+
+            if (flipSided) {
+                GL11.glFrontFace(GL11.GL_CW);
             } else {
-                GL11.glFrontFace( GL11.GL_CCW );
+                GL11.glFrontFace(GL11.GL_CCW);
             }
 
             currentFlipSided = flipSided;
@@ -271,25 +305,25 @@ class GLState internal constructor() {
 
     }
 
-    fun setCullFace( cullFace: Int ) {
+    fun setCullFace(cullFace: Int) {
 
-        if ( cullFace != CullFaceNone ) {
+        if (cullFace != CullFaceNone) {
 
-            enable( GL11.GL_CULL_FACE )
+            enable(GL11.GL_CULL_FACE)
 
-            if ( cullFace != currentCullFace ) {
+            if (cullFace != currentCullFace) {
 
                 when (cullFace) {
-                    CullFaceBack -> GL11.glCullFace( GL11.GL_BACK )
-                    CullFaceFront -> GL11.glCullFace( GL11.GL_FRONT )
-                    else -> GL11.glCullFace( GL11.GL_FRONT_AND_BACK )
+                    CullFaceBack -> GL11.glCullFace(GL11.GL_BACK)
+                    CullFaceFront -> GL11.glCullFace(GL11.GL_FRONT)
+                    else -> GL11.glCullFace(GL11.GL_FRONT_AND_BACK)
                 }
 
             }
 
         } else {
 
-            disable( GL11.GL_CULL_FACE )
+            disable(GL11.GL_CULL_FACE)
 
         }
 
@@ -297,11 +331,11 @@ class GLState internal constructor() {
 
     }
 
-    fun setLineWidth( width: Float ) {
+    fun setLineWidth(width: Float) {
 
-        if ( width != currentLineWidth ) {
+        if (width != currentLineWidth) {
 
-            if ( lineWidthAvailable ) GL11.glLineWidth ( width )
+            if (lineWidthAvailable) GL11.glLineWidth(width)
 
             currentLineWidth = width
 
@@ -309,15 +343,15 @@ class GLState internal constructor() {
 
     }
 
-    private fun setPolygonOffset(polygonOffset: Boolean, factor: Float, units: Float ) {
+    private fun setPolygonOffset(polygonOffset: Boolean, factor: Float, units: Float) {
 
-        if ( polygonOffset ) {
+        if (polygonOffset) {
 
-            enable( GL11.GL_POLYGON_OFFSET_FILL )
+            enable(GL11.GL_POLYGON_OFFSET_FILL)
 
-            if ( currentPolygonOffsetFactor != factor || currentPolygonOffsetUnits != units ) {
+            if (currentPolygonOffsetFactor != factor || currentPolygonOffsetUnits != units) {
 
-                GL11.glPolygonOffset( factor, units )
+                GL11.glPolygonOffset(factor, units)
 
                 currentPolygonOffsetFactor = factor
                 currentPolygonOffsetUnits = units
@@ -325,52 +359,52 @@ class GLState internal constructor() {
             }
 
         } else {
-            disable( GL11.GL_POLYGON_OFFSET_FILL )
+            disable(GL11.GL_POLYGON_OFFSET_FILL)
         }
     }
 
-    fun setScissorTest( scissorTest: Boolean ) {
-        if ( scissorTest ) {
-            enable( GL11.GL_SCISSOR_TEST )
+    fun setScissorTest(scissorTest: Boolean) {
+        if (scissorTest) {
+            enable(GL11.GL_SCISSOR_TEST)
         } else {
-            disable( GL11.GL_SCISSOR_TEST )
+            disable(GL11.GL_SCISSOR_TEST)
         }
     }
 
-    private fun activeTexture(glSlot: Int? = null ) {
+    fun activeTexture(glSlot: Int? = null) {
 
         @Suppress("NAME_SHADOWING")
         val glSlot = glSlot ?: GL13.GL_TEXTURE0 + maxTextures - 1;
 
-        if ( currentTextureSlot != glSlot ) {
+        if (currentTextureSlot != glSlot) {
 
-            GL13.glActiveTexture( glSlot )
+            GL13.glActiveTexture(glSlot)
             currentTextureSlot = glSlot
 
         }
 
     }
 
-    fun bindTexture(glType: Int, glTexture: Int? ) {
+    fun bindTexture(glType: Int, glTexture: Int?) {
 
-        if ( currentTextureSlot == null ) {
+        if (currentTextureSlot == null) {
 
             activeTexture()
 
         }
 
-        var boundTexture = currentBoundTextures[ currentTextureSlot ]
+        var boundTexture = currentBoundTextures[currentTextureSlot]
 
-        if ( boundTexture == null ) {
+        if (boundTexture == null) {
 
             boundTexture = BoundTexture(type = null, texture = null)
-            currentBoundTextures[ currentTextureSlot ] = boundTexture;
+            currentBoundTextures[currentTextureSlot] = boundTexture;
 
         }
 
-        if ( boundTexture.type != glType || boundTexture.texture != glTexture ) {
+        if (boundTexture.type != glType || boundTexture.texture != glTexture) {
 
-            GL11.glBindTexture(glType, glTexture ?: emptyTextures[ glType ]!! )
+            GL11.glBindTexture(glType, glTexture ?: emptyTextures[glType]!!)
 
             boundTexture.type = glType
             boundTexture.texture = glTexture
@@ -379,23 +413,36 @@ class GLState internal constructor() {
 
     }
 
-    fun scissor( scissor: Vector4i ) {
+    fun texImage2D(
+        target: Int,
+        level: Int,
+        internalformat: Int,
+        width: Int,
+        height: Int,
+        format: Int,
+        type: Int,
+        data: ByteBuffer?
+    ) {
+        GL11.glTexImage2D(target, level, internalformat, width, height, 0, format, type, data)
+    }
 
-        if ( currentScissor != scissor ) {
+    fun scissor(scissor: Vector4i) {
 
-            GL11.glScissor( scissor.x, scissor.y, scissor.z, scissor.w )
-            currentScissor.copy( scissor );
+        if (currentScissor != scissor) {
+
+            GL11.glScissor(scissor.x, scissor.y, scissor.z, scissor.w)
+            currentScissor.copy(scissor);
 
         }
 
     }
 
-    fun viewport( viewport: Vector4i ) {
+    fun viewport(viewport: Vector4i) {
 
-        if ( currentViewport != viewport ) {
+        if (currentViewport != viewport) {
 
-            GL11.glViewport( viewport.x, viewport.y, viewport.z, viewport.w )
-            currentViewport.copy( viewport );
+            GL11.glViewport(viewport.x, viewport.y, viewport.z, viewport.w)
+            currentViewport.copy(viewport);
 
         }
 

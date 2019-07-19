@@ -2,8 +2,7 @@ package info.laht.threekt.core
 
 class Layers {
 
-    var mask = 1 or 0
-        private set
+    internal var mask = 1 or 0
 
     fun set(channel: Int) {
         this.mask = 1 shl channel

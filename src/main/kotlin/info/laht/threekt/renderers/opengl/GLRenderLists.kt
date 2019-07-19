@@ -31,7 +31,7 @@ class GLRenderList internal constructor(){
         material: Material,
         groupOrder: Int,
         z: Int,
-        group: Group
+        group: Group?
     ): RenderItem {
         return if (renderItemsIndex < renderItems.size) {
             renderItems[renderItemsIndex]
@@ -73,7 +73,7 @@ class GLRenderList internal constructor(){
         material: Material,
         groupOrder: Int,
         z: Int,
-        group: Group
+        group: Group?
     ) {
 
         val renderItem = getNextRenderItem(`object`, geometry, material, groupOrder, z, group)
@@ -120,7 +120,7 @@ class GLRenderList internal constructor(){
         val groupOrder: Int,
         val renderOrder: Int,
         var z: Int,
-        var group: Group
+        var group: Group?
     )
 
 }
@@ -156,8 +156,8 @@ class GLRenderLists {
 
     private inner class OnSceneDispose: EventLister {
 
-        override fun onEvent(evt: Event) {
-            val scene = evt.target as Scene
+        override fun onEvent(event: Event) {
+            val scene = event.target as Scene
             scene.removeEventListener("dispose", this)
         }
 

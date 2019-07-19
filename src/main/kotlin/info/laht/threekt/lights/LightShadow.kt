@@ -1,26 +1,25 @@
 package info.laht.threekt.lights
 
-import info.laht.threekt.cameras.Camera
+import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.math.Matrix4
 import info.laht.threekt.math.Vector2i
+import info.laht.threekt.renderers.GLRenderTarget
 
 open class LightShadow (
-    camera: Camera
+    val camera: PerspectiveCamera
 ) {
 
-    private var camera = camera
-
-    var bias = 0
-    var radius = 1
+    var bias = 0f
+    var radius = 1f
 
     var mapSize = Vector2i( 512, 512 )
 
-    var map = null
+    var map: GLRenderTarget? = null
     var matrix = Matrix4()
 
     fun copy( source: LightShadow ): LightShadow {
 
-        this.camera = source.camera.clone()
+        this.camera.copy(source.camera, true)
 
         this.bias = source.bias
         this.radius = source.radius

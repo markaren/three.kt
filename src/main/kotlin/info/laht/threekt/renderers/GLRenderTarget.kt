@@ -29,16 +29,9 @@ open class GLRenderTarget(
 
     var texture: Texture
 
-    private val properties by lazy {
-        mutableMapOf<String, Any>()
-    }
-
-    internal inline operator fun <reified T> get(name: String): T? {
-        return properties[name] as T?
-    }
-
     init {
 
+        @Suppress("NAME_SHADOWING")
         val options = options ?: Options()
 
         depthBuffer = options.depthBuffer ?: true
@@ -70,7 +63,8 @@ open class GLRenderTarget(
             this.width = width
             this.height = height
 
-            TODO()
+            this.texture.image?.width = width;
+            this.texture.image?.height = height;
 
             dispose()
 

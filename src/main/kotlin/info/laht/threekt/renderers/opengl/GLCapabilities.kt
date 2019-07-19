@@ -11,6 +11,8 @@ class GLCapabilities {
 
     val precision = "highp"
 
+//    var logarithmicDepthBuffer = parameters.logarithmicDepthBuffer == true;
+
     var maxTextures = GL11.glGetInteger(GL20.GL_MAX_TEXTURE_IMAGE_UNITS)
     var maxVertexTextures = GL11.glGetInteger(GL20.GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS)
     var maxTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE)

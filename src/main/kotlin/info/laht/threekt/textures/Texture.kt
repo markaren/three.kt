@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 
 
 open class Texture(
-    var image: ByteBuffer? = null,
+    var image: Image? = null,
     mapping: Int? = null,
     wrapS: Int? = null,
     wrapT: Int? = null,
@@ -26,7 +26,9 @@ open class Texture(
     val id = textureId++
     val uuid = generateUUID()
 
-    val mipmaps = mutableListOf<ByteBuffer>()
+    internal var version = 0
+
+    val mipmaps = mutableListOf<Image>()
 
     var mapping = mapping ?: UVMapping
 
@@ -44,32 +46,41 @@ open class Texture(
     val offset = Vector2i(0, 0)
     val repeat = Vector2i(1, 1)
     val center = Vector2i(0, 0)
-    var rotation = 0
+    var rotation = 0f
 
     var matrixAutoUpdate = true
     val matrix = Matrix3()
 
     var generateMipmaps = true
-    var premultiplyAlpha = false
-    var flipY = true
+
     var unpackAlignment = 4
 
     var encoding = encoding ?: LinearEncoding
 
-    internal var version = 0
+    internal val onUpdate: ((Texture) -> Unit)? = null
 
-    internal val properties by lazy {
-        mutableMapOf<String, Any>()
-    }
-
-    internal inline operator fun <reified T> get(name: String): T? {
-        return properties[name] as T?
-    }
-
-    fun needsUpdate(flag: Boolean) {
-        if (flag) {
-            version++
+    var needsUpdate: Boolean = false
+        set(value) {
+            if (value) {
+                version++
+            }
+            field = value
         }
+
+    fun updateMatrix() {
+        this.matrix.setUvTransform(
+            this.offset.x,
+            this.offset.y,
+            this.repeat.x,
+            this.repeat.y,
+            this.rotation,
+            this.center.x,
+            this.center.y
+        );
+    }
+
+    fun transformUv(uv: Vector2i): Vector2i {
+        TODO()
     }
 
     fun clone(): Texture {
@@ -106,8 +117,8 @@ open class Texture(
         this.rotation = source.rotation
 
         this.generateMipmaps = source.generateMipmaps
-        this.premultiplyAlpha = source.premultiplyAlpha
-        this.flipY = source.flipY
+//        this.premultiplyAlpha = source.premultiplyAlpha
+//        this.flipY = source.flipY
         this.unpackAlignment = source.unpackAlignment
         this.encoding = source.encoding
 
@@ -118,10 +129,26 @@ open class Texture(
         dispatchEvent("dispose", this)
     }
 
-    companion object {
+    private companion object {
 
         var textureId = 0
 
     }
+
+}
+
+class Image(
+    width: Int,
+    height: Int,
+    val data: ByteBuffer? = null
+) {
+
+    var width = width
+        internal set
+
+    var height = height
+        internal set
+
+    internal var complete: Boolean? = null
 
 }

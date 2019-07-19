@@ -7,7 +7,7 @@ class Event(
 
 interface EventLister {
 
-    fun onEvent(evt: Event)
+    fun onEvent(event: Event)
 
 }
 

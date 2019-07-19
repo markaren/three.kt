@@ -8,7 +8,7 @@ import kotlin.properties.Delegates
 sealed class BufferAttribute(
     internal var itemSize: Int,
     internal var normalized: Boolean = false
-) {
+): Cloneable {
 
     var name = ""
 
@@ -43,6 +43,8 @@ sealed class BufferAttribute(
         return this
 
     }
+
+    abstract override fun clone(): BufferAttribute
 
 }
 
@@ -141,6 +143,11 @@ class IntBufferAttribute(
         }
 
         return this
+    }
+
+
+    override fun clone(): IntBufferAttribute {
+        return IntBufferAttribute(array.clone(), itemSize, normalized)
     }
 
 }
@@ -293,6 +300,10 @@ class FloatBufferAttribute(
         return this
     }
 
+    override fun clone(): FloatBufferAttribute {
+        return FloatBufferAttribute(array.clone(), itemSize, normalized)
+    }
+
 }
 
 class DoubleBufferAttribute(
@@ -392,6 +403,10 @@ class DoubleBufferAttribute(
         return this
     }
 
+    override fun clone(): DoubleBufferAttribute {
+        return DoubleBufferAttribute(array.clone(), itemSize, normalized)
+    }
+
 }
 
 class BufferAttributes : HashMap<String, BufferAttribute>() {
@@ -401,6 +416,6 @@ class BufferAttributes : HashMap<String, BufferAttribute>() {
     val normal = get("normal") as FloatBufferAttribute?
     val uv = get("uv") as IntBufferAttribute?
     val color = get("color") as FloatBufferAttribute?
-//    val tangent = get("tangent") as IntBufferAttribute?
+    val tangent = get("tangent") as FloatBufferAttribute?
 
 }

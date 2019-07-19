@@ -39,7 +39,6 @@ class DepthTexture(
         this.magFilter = magFilter ?: NearestFilter
         this.minFilter = minFilter ?: NearestFilter
 
-        this.flipY = false
         this.generateMipmaps = false
 
     }

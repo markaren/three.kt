@@ -1,10 +1,12 @@
 package info.laht.threekt.renderers.opengl
 
+import info.laht.threekt.textures.CubeTexture
+import info.laht.threekt.textures.Texture
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20
 
 
-class GLUniforms(
+class GLUniforms internal constructor(
     program: Int
 ) {
 
@@ -31,12 +33,75 @@ class GLUniforms(
     private fun parseUniform(activeInfo: ActiveUniformInfo, addr: Int) {
         val path = activeInfo.name
         val pathLength = path.length
-
+        TODO()
     }
 
-    companion object {
+    private companion object {
 
-        private val RePathPart = "([\\w\\d_]+)(\\])?(\\[|\\.)?"
+        var emptyTexture = Texture()
+        var emptyCubeTexture = CubeTexture()
+
+        val arrayCacheF32 = mutableListOf<FloatArray>()
+        val arrayCacheI32 = mutableListOf<IntArray>()
+
+        val mat4array = FloatArray(16)
+        val mat3array = FloatArray(9)
+        val mat2array = FloatArray(4)
+
+        fun flatten(array: FloatArray, nBlocks: Int, blockSize: Int): FloatArray {
+            val firstElem = array[0];
+
+            if (firstElem <= 0 || firstElem > 0) return array;
+            // unoptimized: ! isNaN( firstElem )
+            // see http://jacksondunstan.com/articles/983
+
+            val n = nBlocks * blockSize
+            var r = if (n < arrayCacheF32.size) arrayCacheF32[n] else null
+
+            if (r == null) {
+
+                r = FloatArray(n)
+                arrayCacheF32[n] = r
+
+            }
+
+            if (nBlocks != 0) {
+
+                System.arraycopy(firstElem, 0, r, 0, n)
+
+                var offset = 0
+                for (i in 0..nBlocks) {
+
+                    offset += blockSize;
+                    System.arraycopy(array[i], 0, r, offset, n)
+
+                }
+
+            }
+
+            return r;
+        }
+
+        fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
+
+            var r = if (n < arrayCacheI32.size) arrayCacheI32[n] else null
+
+            if (r == null) {
+
+                r = IntArray(n)
+                arrayCacheI32[n] = r
+
+            }
+
+            for (i in 0..n)
+                r[i] = textures.allocateTextureUnit();
+
+            return r
+
+        }
+
+
+        val RePathPart = "([\\w\\d_]+)(\\])?(\\[|\\.)?"
 
 //        fun upload(seq: List<UniformObject>, values: Map)
 

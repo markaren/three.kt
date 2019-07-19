@@ -19,6 +19,26 @@ data class Vector2i(
     }
 
     /**
+     * If this vector's x or y value is greater than v's x or y value, replace that value with the corresponding min value.
+     */
+    fun min( v: Vector2i ): Vector2i {
+        this.x = min(this.x, v.x)
+        this.y = min(this.y, v.y)
+
+        return this
+    }
+
+    /**
+     * If this vector's x or y value is less than v's x or y value, replace that value with the corresponding max value.
+     */
+    fun max( v: Vector2i ): Vector2i {
+        this.x = max(this.x, v.x)
+        this.y = max(this.y, v.y)
+
+        return this
+    }
+
+    /**
      * Returns a new Vector2 instance with the same `x` and `y` values.
      */
     override fun clone(): Vector2i {

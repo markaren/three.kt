@@ -2,12 +2,8 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.*
 import info.laht.threekt.core.Object3D
-import info.laht.threekt.lights.Light
-import info.laht.threekt.lights.LightShadow
-import info.laht.threekt.materials.Material
-import info.laht.threekt.materials.MeshDepthMaterial
+import info.laht.threekt.materials.*
 import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.scenes.Fog
 import info.laht.threekt.scenes.FogExp2
 import info.laht.threekt.scenes._Fog
 import info.laht.threekt.textures.Texture
@@ -17,7 +13,7 @@ class GLPrograms internal constructor(
     private val capabilities: GLCapabilities
 ) {
 
-    val programs = mutableListOf<Int>()
+    val programs = mutableListOf<GLProgram>()
 
     val shaderIds = ShaderIds()
 
@@ -83,19 +79,97 @@ class GLPrograms internal constructor(
         TODO()
     }
 
-    fun getTextureEncodingFromMap( map: Texture?, gammaOverrideLinear: Boolean): Int {
+    fun getTextureEncodingFromMap(map: Texture?, gammaOverrideLinear: Boolean): Int {
 
-        var encoding = if (map == null) {
-            LinearEncoding
-        } else {
-            map.encoding
-        }
+        var encoding = map?.encoding ?: LinearEncoding
 
         if (encoding == LinearEncoding && gammaOverrideLinear) {
             encoding = GammaEncoding
         }
 
         return encoding
+
+    }
+
+    fun getProgramCode(material: ShaderMaterial, parameters: Parameters): String {
+
+        val array = mutableListOf<String>();
+
+        if (parameters.shaderID != null) {
+
+            array.add(parameters.shaderID);
+
+        } else {
+
+            array.add(material.fragmentShader);
+            array.add(material.vertexShader);
+
+        }
+
+        for ((name, value) in material.defines) {
+
+            array.add(name)
+            array.add(value.toString())
+
+        }
+
+        array.addAll(parameterNames)
+
+        //TODO
+//        array.add( material.onBeforeCompile.toString() );
+
+        array.add(renderer.gammaOutput.toString());
+
+        array.add(renderer.gammaFactor.toString());
+
+        return array.joinToString(",")
+
+    };
+
+    fun acquireProgram(material: ShaderMaterial, shader: GLShader, parameters: Parameters, code: String): GLProgram {
+
+        var program: GLProgram? = null
+
+        // Check if code has been already compiled
+        for (i in 0 until programs.size) {
+
+            val programInfo = programs[i]
+
+            if (programInfo.code == code) {
+
+                program = programInfo;
+                ++program.usedTimes;
+
+                break
+
+            }
+
+        }
+
+        if (program == null) {
+
+            program = GLProgram(renderer, code, material, shader, parameters, capabilities);
+            programs.add(program)
+
+        }
+
+        return program;
+
+    };
+
+    fun releaseProgram(program: GLProgram) {
+
+        if (--program.usedTimes == 0) {
+
+            // Remove from unordered set
+            val i = programs.indexOf(program);
+            programs[i] = programs[programs.size - 1];
+            programs.removeAt(programs.size - 1) //pop
+
+            // Free WebGL resources
+            program.destroy();
+
+        }
 
     }
 
@@ -119,8 +193,8 @@ class GLPrograms internal constructor(
             "SpriteMaterial" to "sprite"
         )
 
-        operator fun get(key: String): String {
-            return map[key] ?: throw IllegalArgumentException("No such key: '$key' in ${map.keys} ")
+        operator fun get(key: String): String? {
+            return map[key]
         }
 
         val MeshDepthMaterial: String = "depth"
@@ -143,70 +217,70 @@ class GLPrograms internal constructor(
 
     inner class Parameters(
         material: Material,
-        lights: List<Light>,
-        shadows: List<LightShadow>,
-        fog: _Fog,
+        lights: GLLights.GLLightsState,
+        shadows: List<GLShadowMap>,
+        fog: _Fog?,
         nClipPlanes: Int,
         nClipIntersection: Int,
         `object`: Object3D
     ) {
 
-        val shaderId = shaderIds[material::class.java.simpleName]
+        val shaderID = shaderIds[material::class.java.simpleName]
 
         val maxBones = 0 // TODO
         var precision = capabilities.precision
             private set
 
         val supportsVertexTextures = capabilities.vertexTextures
-        val outputEncoding = getTextureEncodingFromMap( renderer.getRenderTarget()?.texture, renderer.gammaOutput )
+        val outputEncoding = getTextureEncodingFromMap(renderer.getRenderTarget()?.texture, renderer.gammaOutput)
 
-//        val map = material.map != null
-//        val mapEncoding = getTextureEncodingFromMap( material.map, renderer.gammaInput )
-//        val matcap = !! material.matcap
-//        val matcapEncoding = getTextureEncodingFromMap( material.matcap, renderer.gammaInput )
-//        val envMap = !! material.envMap
-//        val envMapMode = material.envMap && material.envMap.mapping
-//        val envMapEncoding = getTextureEncodingFromMap( material.envMap, renderer.gammaInput )
-//        val envMapCubeUV = ( !! material.envMap ) && ( ( material.envMap.mapping == CubeUVReflectionMapping ) || ( material.envMap.mapping == CubeUVRefractionMapping ) )
-//        val lightMap = !! material.lightMap
-//        val aoMap = !! material.aoMap
-//        val emissiveMap = !! material.emissiveMap
-//        val emissiveMapEncoding = getTextureEncodingFromMap( material.emissiveMap, renderer.gammaInput )
-//        val bumpMap = !! material.bumpMap
-//        val normalMap = !! material.normalMap
-//        val objectSpaceNormalMap = material.normalMapType == ObjectSpaceNormalMap
-//        val displacementMap = !! material.displacementMap
-//        val roughnessMap = !! material.roughnessMap
-//        val metalnessMap = !! material.metalnessMap
-//        val specularMap = !! material.specularMap
-//        val alphaMap = !! material.alphaMap
-//
-//        val gradientMap = material.gradientMap != null
-//
-//        val combine = material.combine
-//
-//        val vertexTangents = ( material.normalMap && material.vertexTangents )
-        val  vertexColors = material.vertexColors
+        val map = material.map != null
+        val mapEncoding = getTextureEncodingFromMap(material.map, renderer.gammaInput)
+        val matcap = material.matcap != null
+        val matcapEncoding = getTextureEncodingFromMap(material.matcap, renderer.gammaInput)
+        val envMap = material.envMap != null
+        val envMapMode = envMap && material.envMap?.mapping != null
+        val envMapEncoding = getTextureEncodingFromMap(material.envMap, renderer.gammaInput)
+        val envMapCubeUV =
+            (envMap) && ((material.envMap?.mapping == CubeUVReflectionMapping) || (material.envMap?.mapping == CubeUVRefractionMapping))
+        val lightMap = material.lightMap != null
+        val aoMap = material.aoMap != null
+        val emissiveMap = material.emissiveMap != null
+        val emissiveMapEncoding = getTextureEncodingFromMap(material.emissiveMap, renderer.gammaInput)
+        val bumpMap = material.bumpMap != null
+        val normalMap = material.normalMap != null
+        val objectSpaceNormalMap = material.normalMapType == ObjectSpaceNormalMap
+        val displacementMap = material.displacementMap != null
+        val roughnessMap = material.roughnessMap != null
+        val metalnessMap = material.metalnessMap != null
+        val specularMap = material.specularMap != null
+        val alphaMap = material.alphaMap != null
+        val gradientMap = material.gradientMap != null
+
+        val combine = material.combine
+
+        val vertexTangents = (material.normalMap != null && material.vertexTangents)
+        val vertexColors = material.vertexColors
 
         val fog: Boolean = fog != null
         val useFog = material.fog
-        val fogExp = ( this.fog && ( fog is FogExp2 ) )
+        val fogExp = (this.fog && (fog is FogExp2))
 
         val flatShading = material.flatShading
 
-//        val sizeAttenuation = material.sizeAttenuation
+        val sizeAttenuation = if (material is MaterialWithSizeAttenuation) material.sizeAttenuation else false
 //        val logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer
-//
-//        val skinning = material.skinning && maxBones > 0
+
+        val skinning = (material is MaterialWithSkinning && material.skinning && maxBones > 0)
         val useVertexTexture = capabilities.floatVertexTextures
 
-//        val morphTargets = material.morphTargets
-//        val  morphNormals = material.morphNormals
+        val morphTargets = if (material is MaterialWithMorphTarget) material.morphTargets else false
+        val morphNormals = if (material is MaterialWithMorphNormals) material.morphNormals else false
         val maxMorphTargets = renderer.maxMorphTargets
         val maxMorphNormals = renderer.maxMorphNormals
-//
+        //
 //        val numDirLights = lights.directional.size
-//        val numPointLights = lights.point.size
+        val numPointLights = lights.point.size
 //        val numSpotLights = lights.spot.size
 //        val numRectAreaLights = lights.rectArea.size
 //        val numHemiLights = lights.hemi.size
@@ -216,8 +290,8 @@ class GLPrograms internal constructor(
 
         val dithering = material.dithering
 
-//        val shadowMapEnabled = renderer.shadowMap.enabled && `object`.receiveShadow && shadows.size > 0
-//        val shadowMapType = renderer.shadowMap.type
+        val shadowMapEnabled = renderer.shadowMap.enabled && `object`.receiveShadow && shadows.isNotEmpty()
+        val shadowMapType = renderer.shadowMap.type
 
         val toneMapping = renderer.toneMapping
         val physicallyCorrectLights = renderer.physicallyCorrectLights
@@ -228,7 +302,7 @@ class GLPrograms internal constructor(
         val doubleSided = material.side == DoubleSide
         val flipSided = material.side == BackSide
 
-        val depthPacking =  if ( material is MeshDepthMaterial ) material.depthPacking else false
+        val depthPacking = if (material is MeshDepthMaterial) material.depthPacking else false
 
         init {
 

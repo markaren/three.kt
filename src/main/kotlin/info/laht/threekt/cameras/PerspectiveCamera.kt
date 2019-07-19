@@ -181,20 +181,20 @@ class PerspectiveCamera(
     fun copy(source: PerspectiveCamera, recursive: Boolean): PerspectiveCamera {
         super.copy(source, recursive)
 
-        this.fov = source.fov;
-        this.zoom = source.zoom;
+        this.fov = source.fov
+        this.zoom = source.zoom
 
-        this.near = source.near;
-        this.far = source.far;
-        this.focus = source.focus;
+        this.near = source.near
+        this.far = source.far
+        this.focus = source.focus
 
-        this.aspect = source.aspect;
+        this.aspect = source.aspect
         this.view = source.view?.copy()
 
-        this.filmGauge = source.filmGauge;
-        this.filmOffset = source.filmOffset;
+        this.filmGauge = source.filmGauge
+        this.filmOffset = source.filmOffset
 
-        return this;
+        return this
     }
 
     override fun clone(): PerspectiveCamera {

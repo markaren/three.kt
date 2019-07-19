@@ -1,17 +1,16 @@
 package info.laht.threekt.core
 
 class Uniform(
-    var value: Any?
+    var value: Any?,
+    private val properties: MutableMap<String, Any> = mutableMapOf()
 ) {
 
-    private val additionalDetails = mutableMapOf<String, Any>()
-
-    operator fun set(key: String, value: Any) {
-        additionalDetails[key] = value
+    internal operator fun set(key: String, value: Any) {
+        properties[key] = value
     }
 
     operator fun get( key: String ): Any {
-        return additionalDetails[key] ?: throw IllegalArgumentException("No such key $key in ${additionalDetails.keys}")
+        return properties[key] ?: throw IllegalArgumentException("No such key $key in ${properties.keys}")
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -25,7 +24,7 @@ class Uniform(
             Uniform(value)
         }
 
-        additionalDetails.forEach { (key, value) ->
+        properties.forEach { (key, value) ->
             if (value is Cloneable) {
                 clone[key] = value.clone()
             } else {
@@ -36,5 +35,10 @@ class Uniform(
         return clone
 
     }
+
+    override fun toString(): String {
+        return "Uniform(value=$value, properties=$properties)"
+    }
+
 
 }

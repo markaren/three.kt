@@ -62,12 +62,12 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
      * Bakes matrix transform directly into vertex coordinates.
      */
     override fun applyMatrix(matrix: Matrix4): BufferGeometry {
-        this.attributes["position"]?.also { position ->
+        this.attributes.position?.also { position ->
             matrix.applyToBufferAttribute(position)
             position.needsUpdate = true
         }
 
-        this.attributes["normal"]?.also { normal ->
+        this.attributes.normal?.also { normal ->
             val normalMatrix = Matrix3().getNormalMatrix(matrix)
 
             normalMatrix.applyToBufferAttribute(normal)
@@ -75,20 +75,20 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
         }
 
 
-        this.attributes["tangent"]?.also { tangent ->
+        this.attributes.tangent?.also { tangent ->
             val normalMatrix = Matrix3().getNormalMatrix(matrix);
 
             // Tangent is vec4, but the '.w' component is a sign value (+1/-1).
-            normalMatrix.applyToBufferAttribute(tangent);
-            tangent.needsUpdate = true;
+            normalMatrix.applyToBufferAttribute(tangent)
+            tangent.needsUpdate = true
         }
 
         if (this.boundingBox != null) {
-            this.computeBoundingBox();
+            this.computeBoundingBox()
         }
 
         if (this.boundingSphere != null) {
-            this.computeBoundingSphere();
+            this.computeBoundingSphere()
         }
 
         return this;
@@ -100,23 +100,26 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
      */
     override fun computeBoundingBox() {
 
-        if (this.boundingBox == null) {
-            this.boundingBox = Box3()
+        if (boundingBox == null) {
+            boundingBox = Box3()
         }
 
-        val boundingBox = this.boundingBox!!
+        val bb = boundingBox ?: Box3()
 
         val position = this.attributes.position;
         if (position != null) {
-            boundingBox.setFromBufferAttribute(position);
+            bb.setFromBufferAttribute(position)
 
         } else {
-            boundingBox.makeEmpty();
+            bb.makeEmpty()
         }
 
-        if (boundingBox.min.x.isNaN() || boundingBox.min.y.isNaN() || boundingBox.min.z.isNaN()) {
-            println("THREE.BufferGeometry.computeBoundingBox: Computed min/max have NaN values. The 'position' attribute is likely to have NaN values.")
+        if (bb.min.x.isNaN() || bb.min.y.isNaN() || bb.min.z.isNaN()) {
+            println("BufferGeometry.computeBoundingBox: Computed min/max have NaN values. The 'position' attribute is likely to have NaN values.")
         }
+
+        boundingBox = bb
+
     }
 
     /**
@@ -125,19 +128,17 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
      */
     override fun computeBoundingSphere() {
 
+        val sphere = boundingSphere ?: Sphere()
+
         val box = Box3()
         val boxMorphTargets = Box3()
         val vector = Vector3()
-
-        if (this.boundingSphere == null) {
-            this.boundingSphere = Sphere()
-        }
 
         val position = this.attributes.position
         if (position != null) {
 
             // first, find the center of the bounding sphere
-            val center = this.boundingSphere!!.center;
+            val center = sphere.center;
 
             box.setFromBufferAttribute(position)
             box.getCenter(center)
@@ -151,13 +152,16 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
                 maxRadiusSq = max(maxRadiusSq, center.distanceToSquared(vector));
             }
 
-            this.boundingSphere!!.radius = sqrt(maxRadiusSq).toFloat()
+            sphere.radius = sqrt(maxRadiusSq).toFloat()
 
-            if (this.boundingSphere!!.radius.isNaN()) {
+            if (sphere.radius.isNaN()) {
                 println("THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The 'position' attribute is likely to have NaN values.");
             }
 
         }
+
+        boundingSphere = sphere
+
     }
 
     /**
@@ -323,7 +327,104 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
 
         }
 
+    }
 
+    fun copy( source: BufferGeometry ): BufferGeometry {
+
+
+        // reset
+
+        this.index = null;
+        this.attributes.clear()
+//        this.morphAttributes = {};
+        this.groups.clear()
+        this.boundingBox = null;
+        this.boundingSphere = null;
+
+        // name
+
+        this.name = source.name;
+
+        // index
+
+        source.index?.also {
+            this.setIndex( it.clone() )
+        }
+
+
+        // attributes
+
+        val attributes = source.attributes;
+        for ( name in attributes.keys ) {
+
+            attributes[ name ]?.also { attribute ->
+                this.addAttribute(name, attribute.clone())
+            }
+
+        }
+
+        // morph attributes
+
+//        val morphAttributes = source.morphAttributes;
+//
+//        for ( name in morphAttributes ) {
+//
+//            var array = [];
+//            var morphAttribute = morphAttributes[ name ]; // morphAttribute: array of Float32BufferAttributes
+//
+//            for ( i = 0, l = morphAttribute.length; i < l; i ++ ) {
+//
+//                array.push( morphAttribute[ i ].clone() );
+//
+//            }
+//
+//            this.morphAttributes[ name ] = array;
+//
+//        }
+
+        // groups
+        source.groups.forEach { group ->
+
+            this.addGroup( group.start, group.count, group.materialIndex )
+
+        }
+
+        val boundingBox = source.boundingBox
+
+        if ( boundingBox != null ) {
+
+            this.boundingBox = boundingBox.clone()
+
+        }
+
+        // bounding sphere
+
+        val boundingSphere = source.boundingSphere;
+
+        if ( boundingSphere != null ) {
+
+            this.boundingSphere = boundingSphere.clone()
+
+        }
+
+
+        // draw range
+
+        this.drawRange.start = source.drawRange.start
+        this.drawRange.count = source.drawRange.count
+
+        // user data
+
+        return this;
+
+    }
+
+    override fun clone(): BufferGeometry {
+        return BufferGeometry().copy(this)
+    }
+
+    fun dispose() {
+        dispatchEvent("dispose", this)
     }
 
     private companion object {

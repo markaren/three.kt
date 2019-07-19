@@ -11,12 +11,12 @@ import info.laht.threekt.math.TWO_PI
 typealias SphereGeometry = SphereBufferGeometry
 
 class SphereBufferGeometry(
-    val radius: Float = 1.toFloat(),
+    val radius: Float = 1f,
     val widthSegments: Int = 8,
     val heightSegments: Int = 6,
-    val phiStart: Float = 0.toFloat(),
+    val phiStart: Float = 0f,
     val phiLength: Float = TWO_PI,
-    val thetaStart: Float =0.toFloat(),
+    val thetaStart: Float = 0f,
     val thetaLength: Float = Math.PI.toFloat()
 ): BufferGeometry() {
 
@@ -29,7 +29,7 @@ class SphereBufferGeometry(
         addAttribute("normal", helper.normals)
         addAttribute("uvs", helper.uvs)
 
-        this.boundingSphere = Sphere(Vector3(), radius)
+        boundingSphere = Sphere(Vector3(), radius)
 
     }
 

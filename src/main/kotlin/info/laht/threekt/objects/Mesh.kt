@@ -1,27 +1,46 @@
 package info.laht.threekt.objects
 
 import info.laht.threekt.TrianglesDrawMode
-import info.laht.threekt.core.BufferGeometry
-import info.laht.threekt.core.Intersection
-import info.laht.threekt.core.Object3D
-import info.laht.threekt.core.Raycaster
+import info.laht.threekt.core.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.*
 
 
-class Mesh(
-    val geometry: BufferGeometry = BufferGeometry(),
-    val material: Material = MeshBasicMaterial()
-): Object3D() {
+open class Mesh(
+    override val geometry: BufferGeometry = BufferGeometry(),
+    override val material: Material = MeshBasicMaterial()
+): Object3D(), GeometryObject, MaterialObject {
 
     var drawMode = TrianglesDrawMode
 
     private val raycastHelper by lazy { RaycastHelper() }
 
     init {
-       // updateMorphTargets()
+        updateMorphTargets()
     }
+
+    override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
+        TODO()
+    }
+
+    fun updateMorphTargets() {
+        TODO()
+    }
+
+    fun copy( source: Mesh ): Mesh {
+        super.copy(source, true)
+
+        this.drawMode = source.drawMode
+
+        return this
+
+    }
+
+    override fun clone(): Mesh {
+        return Mesh(geometry, material).copy(this)
+    }
+
 
     private inner class RaycastHelper {
 
@@ -49,4 +68,5 @@ class Mesh(
         internal var intersectionPointWorld = Vector3()
 
     }
+
 }

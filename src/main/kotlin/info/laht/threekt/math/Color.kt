@@ -1,5 +1,7 @@
 package info.laht.threekt.math
 
+import kotlin.math.max
+
 
 class Color(
     var r: Float,
@@ -29,6 +31,46 @@ class Color(
         val g = (hex shr 8 and 255).toFloat() / 255
         val b = (hex and 255).toFloat() / 255
         return set(r, g, b)
+    }
+
+    fun addScalar ( s: Float ): Color {
+
+        this.r += s
+        this.g += s
+        this.b += s
+
+        return this
+
+    }
+
+    fun sub ( color: Color ): Color {
+
+        this.r = max(0f, this.r - color.r)
+        this.g = max(0f, this.g - color.g)
+        this.b = max(0f, this.b - color.b)
+
+        return this
+
+    }
+
+    fun multiply ( color: Color ): Color {
+
+        this.r *= color.r
+        this.g *= color.g
+        this.b *= color.b
+
+        return this
+
+    }
+
+    fun multiplyScalar ( s: Float ): Color {
+
+        this.r *= s
+        this.g *= s
+        this.b *= s
+
+        return this
+
     }
 
     fun copy(c: Color): Color {

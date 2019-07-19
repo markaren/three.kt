@@ -5,13 +5,11 @@ import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.EventDispatcher
 import info.laht.threekt.math.Plane
 import info.laht.threekt.math.generateUUID
-import java.util.concurrent.atomic.AtomicInteger
+import info.laht.threekt.textures.Texture
 
-open class Material(
-    parameters: MaterialParameters? = null
-) : Cloneable, EventDispatcher() {
+open class Material : Cloneable, EventDispatcher() {
 
-    internal val program: Int? = null
+    internal var program: Int? = null
 
     /**
      * Material name. Default is an empty string.
@@ -125,6 +123,7 @@ open class Material(
      */
     var opacity = 1f
 
+
     var precision: String? = null // override the renderer's default precision for this material
 
     /**
@@ -163,6 +162,7 @@ open class Material(
      */
     var side = FrontSide
 
+
     var shadowSide: Int? = null
 
     /**
@@ -189,54 +189,43 @@ open class Material(
 
     var defines = mutableMapOf<String, Boolean>()
 
-    init {
+    internal open var map: Texture? = null
 
-        parameters?.also { source ->
-            source.name?.also { this.name = it }
+    internal open var matcap: Texture? = null
 
-            source.fog?.also { this.fog = it }
-            source.lights?.also { this.lights = it }
+    internal open var alphaMap: Texture? = null
 
-            source.blending?.also { this.blending = it }
-            source.side?.also { this.side = it }
-            source.shadowSide?.also { this.shadowSide = it }
-            source.flatShading?.also { this.flatShading = it }
-            source.vertexColors?.also { this.vertexColors = it }
+    internal open var lightMap: Texture? = null
+    internal open var lightMapIntensity = 0f
 
-            source.opacity?.also { this.opacity = it }
-            source.transparent?.also { this.transparent = it }
+    internal open var aoMap: Texture? = null
+    internal open var aoMapIntensity = 0f
 
-            source.blendSrc?.also { this.blendSrc = it }
-            source.blendDst?.also { this.blendDst = it }
-            source.blendEquation?.also { this.blendEquation = it }
-            source.blendSrcAlpha?.also { this.blendSrcAlpha = it }
-            source.blendDstAlpha?.also { this.blendDstAlpha = it }
-            source.blendEquationAlpha?.also { this.blendEquationAlpha = it }
+    internal open var bumpMap: Texture? = null
+    internal open var bumpScale = 0f
 
-            source.depthFunc?.also { this.depthFunc = it }
-            source.depthTest?.also { this.depthTest = it }
-            source.depthWrite?.also { this.depthWrite = it }
+    internal open var normalMap: Texture? = null
+    internal open var normalMapType: Int? = null
 
-            source.colorWrite?.also { this.colorWrite = it }
+    internal open var displacementMap: Texture? = null
+    internal open var displacementScale = 0f
+    internal open var displacementBias = 0f
 
-            source.polygonOffset?.also { this.polygonOffset = it }
-            source.polygonOffsetFactor?.also { this.polygonOffsetFactor = it }
-            source.polygonOffsetUnits?.also { this.polygonOffsetUnits = it }
+    internal open var roughnessMap: Texture? = null
 
-            source.dithering?.also { this.dithering = it }
+    internal open var metalnessMap: Texture? = null
 
-            source.alphaTest?.also { this.alphaTest = it }
-            source.premultipliedAlpha?.also { this.premultipliedAlpha = it }
+    internal open var emissiveMap: Texture? = null
 
-            source.visible?.also { this.visible = it }
+    internal open var specularMap: Texture? = null
 
-            source.clippingPlanes?.also { it -> this.clippingPlanes = it.map { p -> p.clone() } }
-            source.clipShadows?.also { this.clipShadows = it }
-            source.clipIntersection?.also { this.clipIntersection = it }
+    internal open var envMap: Texture? = null
 
-        }
+    internal open var gradientMap: Texture? = null
 
-    }
+    internal open var combine: Int = MultiplyOperation
+
+    internal val onBeforeCompile: (() -> Unit)? = null
 
     /**
      * Return a new material with the same parameters as this material.
@@ -301,41 +290,22 @@ open class Material(
         dispatchEvent("dispose", this)
     }
 
+    internal inline operator fun <reified T> get(field: String): T? {
+        return getFieldInHiarchy(javaClass, field)?.let {
+            it.isAccessible = true
+            it.get(this) as T
+        }
+    }
+
+    internal inline operator fun <reified T> set(field: String, value: T) {
+        javaClass.getDeclaredField(field)?.also {
+            it.isAccessible = true
+            it.set(this, value)
+        }
+    }
+
     private companion object {
         var materialId = 0
     }
 
-}
-
-open class MaterialParameters {
-    var alphaTest: Float? = null
-    var blendDst: Int? = null
-    var blendDstAlpha: Int? = null
-    var blendEquation: Int? = null
-    var blendEquationAlpha: Int? = null
-    var blending: Int? = null
-    var blendSrc: Int? = null
-    var blendSrcAlpha: Int? = null
-    var clipIntersection: Boolean? = null
-    var clippingPlanes: List<Plane>? = null
-    var clipShadows: Boolean? = null
-    var colorWrite: Boolean? = null
-    var depthFunc: Int? = null
-    var depthTest: Boolean? = null
-    var depthWrite: Boolean? = null
-    var fog: Boolean? = null
-    var lights: Boolean? = null
-    var name: String? = null
-    var opacity: Float? = null
-    var polygonOffset: Boolean? = null
-    var polygonOffsetFactor: Float? = null
-    var polygonOffsetUnits: Float? = null
-    var premultipliedAlpha: Boolean? = null
-    var dithering: Boolean? = null
-    var flatShading: Boolean? = null
-    var side: Int? = null
-    var shadowSide: Int? = null
-    var transparent: Boolean? = null
-    var vertexColors: Int? = null
-    var visible: Boolean? = null
 }

@@ -1,33 +1,32 @@
 package info.laht.threekt.materials
 
+import info.laht.threekt.core.Uniform
 import info.laht.threekt.renderers.shaders.ShaderChunk
 
-open class ShaderMaterial(
+open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals {
 
-) : Material() {
+    var type = "ShaderMaterial"
+
+    var uniforms: Map<String, Uniform> = emptyMap()
+        internal set
 
     var vertexShader = ShaderChunk.default_vertex
     var fragmentShader = ShaderChunk.default_fragment
 
-    var linewidth = 1
+    var linewidth = 1f
 
     var wireframe = false
-    var wireframeLinewidth = 1
+    var wireframeLinewidth = 1f
 
     var clipping = false // set to use user-defined clipping planes
 
-    var skinning = false // set to use skinning attribute streams
-    var morphTargets = false // set to use morph targets
-    var morphNormals = false // set to use morph normals
+    override var skinning = false // set to use skinning attribute streams
+    override var morphTargets = false // set to use morph targets
+    override var morphNormals = false // set to use morph normals
 
-    internal var extensions = mapOf(
-        "derivatives" to false,
-        "fragDepth" to false,
-        "drawBuffers" to false,
-        "shaderTextureLOD" to false
-    )
+    val extensions = Extensions()
 
-    val uniformsNeedUpdate = false
+    var uniformsNeedUpdate = false
 
     init {
 
@@ -37,6 +36,7 @@ open class ShaderMaterial(
     }
 
     fun copy(source: ShaderMaterial): ShaderMaterial {
+
         super.copy(source)
 
         this.fragmentShader = source.fragmentShader
@@ -53,9 +53,27 @@ open class ShaderMaterial(
         this.morphTargets = source.morphTargets
         this.morphNormals = source.morphNormals
 
-        this.extensions = source.extensions
+        this.extensions.copy(source.extensions)
 
         return this
     }
 
+    class Extensions(
+        var derivatives: Boolean = false,
+        var fragDepth: Boolean = false,
+        var drawBuffers: Boolean = false,
+        var shaderTextureLOD: Boolean = false
+    ) {
+        fun copy(source: Extensions): Extensions {
+            this.derivatives = source.derivatives
+            this.fragDepth = source.fragDepth
+            this.drawBuffers = source.drawBuffers
+            this.shaderTextureLOD = source.shaderTextureLOD
+
+            return this
+        }
+    }
+
 }
+
+class RawShaderMaterial : ShaderMaterial()

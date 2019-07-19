@@ -1,26 +1,25 @@
 package info.laht.threekt.materials
 
 import info.laht.threekt.BasicDepthPacking
+import info.laht.threekt.textures.Texture
 
-class MeshDepthMaterial(
-    parameters: MaterialParameters? = null
-): Material(parameters) {
+class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinning {
 
-    val depthPacking = BasicDepthPacking
+    var depthPacking = BasicDepthPacking
 
-    val skinning = false
-    val morphTargets = false
+    override var skinning = false
+    override var morphTargets = false
 
-    val map = null
+    public override var map: Texture? = null
 
-    val alphaMap = null
+    public override var alphaMap: Texture? = null
 
-    val displacementMap = null
-    val displacementScale = 1
-    val displacementBias = 0
+    public override var displacementMap: Texture? = null
+    public override var displacementScale = 1f
+    public override var displacementBias = 0f
 
-    val wireframe = false
-    val wireframeLinewidth = 1
+    var wireframe = false
+    var wireframeLinewidth = 1f
 
     init {
 
