@@ -1,6 +1,5 @@
 package info.laht.threekt.math
 
-import info.laht.threekt.core.BufferAttribute
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.FloatBufferAttribute
 import java.lang.IllegalStateException
@@ -8,8 +7,14 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class Matrix3(
-    val elements: FloatArray = FloatArray(9)
-) : Cloneable {
+    val elements: FloatArray =  floatArrayOf(
+        1f,0f,0f,
+        0f,1f,0f,
+        0f,0f,1f
+    )
+) : Cloneable, Flattable {
+
+    override val size = 9
 
     fun set(
         n11: Float, n12: Float, n13: Float,
@@ -18,9 +23,9 @@ class Matrix3(
     ): Matrix3 {
         val te = this.elements;
 
-        te[0] = n11; te[1] = n21; te[2] = n31;
-        te[3] = n12; te[4] = n22; te[5] = n32;
-        te[6] = n13; te[7] = n23; te[8] = n33;
+        te[0] = n11; te[1] = n21; te[2] = n31
+        te[3] = n12; te[4] = n22; te[5] = n32
+        te[6] = n13; te[7] = n23; te[8] = n33
 
         return this;
     }
@@ -146,15 +151,15 @@ class Matrix3(
     fun determinant(): Float {
         val te = this.elements;
 
-        val a = te[ 0 ];
-        val b = te[ 1 ]
-        val c = te[ 2 ]
-        val d = te[ 3 ]
-        val e = te[ 4 ]
-        val f = te[ 5 ]
-        val g = te[ 6 ]
-        val h = te[ 7 ]
-        val i = te[ 8 ]
+        val a = te[0];
+        val b = te[1]
+        val c = te[2]
+        val d = te[3]
+        val e = te[4]
+        val f = te[5]
+        val g = te[6]
+        val h = te[7]
+        val i = te[8]
 
         return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
     }
@@ -252,62 +257,62 @@ class Matrix3(
         return this
     }
 
-    fun setUvTransform ( tx: Int, ty: Int, sx: Int, sy: Int, rotation: Float, cx: Int, cy: Int ) {
+    fun setUvTransform(tx: Float, ty: Float, sx: Float, sy: Float, rotation: Float, cx: Float, cy: Float) {
 
         val c = cos(rotation);
         val s = sin(rotation);
 
         this.set(
-            sx * c, sx * s, - sx * ( c * cx + s * cy ) + cx + tx,
-            - sy * s, sy * c, - sy * ( - s * cx + c * cy ) + cy + ty,
+            sx * c, sx * s, -sx * (c * cx + s * cy) + cx + tx,
+            -sy * s, sy * c, -sy * (-s * cx + c * cy) + cy + ty,
             0f, 0f, 1f
         );
 
     }
 
-    fun scale ( sx: Float, sy: Float ): Matrix3 {
+    fun scale(sx: Float, sy: Float): Matrix3 {
 
         val te = this.elements;
 
-        te[ 0 ] *= sx; te[ 3 ] *= sx; te[ 6 ] *= sx;
-        te[ 1 ] *= sy; te[ 4 ] *= sy; te[ 7 ] *= sy;
+        te[0] *= sx; te[3] *= sx; te[6] *= sx;
+        te[1] *= sy; te[4] *= sy; te[7] *= sy;
 
         return this;
 
     }
 
-    fun rotate ( theta: Float ): Matrix3 {
+    fun rotate(theta: Float): Matrix3 {
 
         val c = cos(theta);
         val s = sin(theta);
 
         val te = this.elements;
 
-        val a11 = te[ 0 ]
-        val a12 = te[ 3 ]
-        val a13 = te[ 6 ]
-        val a21 = te[ 1 ]
-        val a22 = te[ 4 ]
-        val a23 = te[ 7 ]
+        val a11 = te[0]
+        val a12 = te[3]
+        val a13 = te[6]
+        val a21 = te[1]
+        val a22 = te[4]
+        val a23 = te[7]
 
-        te[ 0 ] = c * a11 + s * a21;
-        te[ 3 ] = c * a12 + s * a22;
-        te[ 6 ] = c * a13 + s * a23;
+        te[0] = c * a11 + s * a21;
+        te[3] = c * a12 + s * a22;
+        te[6] = c * a13 + s * a23;
 
-        te[ 1 ] = - s * a11 + c * a21;
-        te[ 4 ] = - s * a12 + c * a22;
-        te[ 7 ] = - s * a13 + c * a23;
+        te[1] = -s * a11 + c * a21;
+        te[4] = -s * a12 + c * a22;
+        te[7] = -s * a13 + c * a23;
 
         return this;
 
     }
 
-    fun translate ( tx: Float, ty: Float ): Matrix3 {
+    fun translate(tx: Float, ty: Float): Matrix3 {
 
         val te = this.elements;
 
-        te[ 0 ] += tx * te[ 2 ]; te[ 3 ] += tx * te[ 5 ]; te[ 6 ] += tx * te[ 8 ];
-        te[ 1 ] += ty * te[ 2 ]; te[ 4 ] += ty * te[ 5 ]; te[ 7 ] += ty * te[ 8 ];
+        te[0] += tx * te[2]; te[3] += tx * te[5]; te[6] += tx * te[8];
+        te[1] += ty * te[2]; te[4] += ty * te[5]; te[7] += ty * te[8];
 
         return this
 
@@ -319,8 +324,8 @@ class Matrix3(
         return this
     }
 
-    fun toArray(): FloatArray {
-        return elements.clone()
+    override fun toArray(array: FloatArray?, offset: Int): FloatArray {
+        return elements.copyInto(array ?: FloatArray(9), offset)
     }
 
     override fun equals(other: Any?): Boolean {

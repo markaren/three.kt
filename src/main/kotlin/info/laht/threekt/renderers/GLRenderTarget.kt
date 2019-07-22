@@ -2,7 +2,7 @@ package info.laht.threekt.renderers
 
 import info.laht.threekt.LinearFilter
 import info.laht.threekt.core.EventDispatcher
-import info.laht.threekt.math.Vector4i
+import info.laht.threekt.math.Vector4
 import info.laht.threekt.textures.DepthTexture
 import info.laht.threekt.textures.Texture
 
@@ -18,10 +18,10 @@ open class GLRenderTarget(
     var height = height
         private set
 
-    val scissor = Vector4i(0, 0, width, height)
+    val scissor = Vector4(0, 0, width, height)
     var scissorTest = false
 
-    val viewport = Vector4i(0, 0, width, height)
+    val viewport = Vector4(0, 0, width, height)
 
     var depthBuffer: Boolean
     var stencilBuffer: Boolean
@@ -93,7 +93,7 @@ open class GLRenderTarget(
     }
 
     fun dispose() {
-        dispatchEvent("dispose", this)
+        dispatchEvent("dispose")
     }
 
     data class Options(

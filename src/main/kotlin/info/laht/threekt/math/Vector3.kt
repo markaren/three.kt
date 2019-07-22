@@ -12,9 +12,13 @@ class Vector3(
     var x: Float,
     var y: Float,
     var z: Float
-): Cloneable {
+): Cloneable, Flattable {
+
+    override val size = 3
 
     constructor() : this(0.toFloat(), 0.toFloat(), 0.toFloat())
+
+    constructor(x: Int, y: Int, z: Int): this(x.toFloat(), y.toFloat(), z.toFloat())
 
     /**
      * Sets value of Vector3 vector.
@@ -37,6 +41,7 @@ class Vector3(
         when (index) {
             0 -> x = value
             1 -> y = value
+            2 -> z = value
             else -> throw IndexOutOfBoundsException()
         }
         return this
@@ -46,6 +51,7 @@ class Vector3(
         return when (index) {
             0 -> x
             1 -> y
+            2 -> z
             else -> throw IndexOutOfBoundsException()
         }
     }
@@ -137,7 +143,7 @@ class Vector3(
         this.y *= v.y
         this.z *= v.z
 
-        return this;
+        return this
     }
 
     /**
@@ -161,42 +167,84 @@ class Vector3(
 
     fun applyEuler(euler: Euler): Vector3 {
         val quaternion = Quaternion()
-        TODO()
+        return this.applyQuaternion( quaternion.setFromEuler( euler ) )
     }
 
     fun applyAxisAngle(axis: Vector3, angle: Float): Vector3 {
-        TODO()
+        val quaternion = Quaternion()
+        return this.applyQuaternion( quaternion.setFromAxisAngle( axis, angle ) )
     }
 
     fun applyMatrix3(m: Matrix3): Vector3 {
-        TODO()
+        val x = this.x
+        val y = this.y
+        val z = this.z
+        val e = m.elements
+
+        this.x = e[ 0 ] * x + e[ 3 ] * y + e[ 6 ] * z
+        this.y = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ] * z
+        this.z = e[ 2 ] * x + e[ 5 ] * y + e[ 8 ] * z
+
+        return this
     }
 
     fun applyMatrix4(m: Matrix4): Vector3 {
-        TODO()
+        val x = this.x
+        val y = this.y
+        val z = this.z
+        val e = m.elements
+
+        val w = 1 / ( e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ] )
+
+        this.x = ( e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ] ) * w
+        this.y = ( e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ] ) * w
+        this.z = ( e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] ) * w
+
+        return this
     }
 
     fun applyQuaternion(q: Quaternion): Vector3 {
-        TODO()
+        val x = this.x
+        val y = this.y
+        val z = this.z
+        val qx = q.x
+        val qy = q.y
+        val qz = q.z
+        val qw = q.w
+
+        // calculate quat * vector
+
+        val ix = qw * x + qy * z - qz * y
+        val iy = qw * y + qz * x - qx * z
+        val iz = qw * z + qx * y - qy * x
+        val iw = - qx * x - qy * y - qz * z
+
+        // calculate result * inverse quat
+
+        this.x = ix * qw + iw * - qx + iy * - qz - iz * - qy
+        this.y = iy * qw + iw * - qy + iz * - qx - ix * - qz
+        this.z = iz * qw + iw * - qz + ix * - qy - iy * - qx
+
+        return this
     }
 
     fun project(camera: Camera): Vector3 {
-        TODO()
+        return this.applyMatrix4( camera.matrixWorldInverse ).applyMatrix4( camera.projectionMatrix )
     }
 
     fun unproject(camera: Camera): Vector3 {
-        TODO()
+        return this.applyMatrix4( camera.projectionMatrixInverse ).applyMatrix4( camera.matrixWorld )
     }
 
     fun transformDirection(m: Matrix4): Vector3 {
         val x = this.x
         val y = this.y
         val z = this.z
-        val e = m.elements;
+        val e = m.elements
 
-        this.x = e[0] * x + e[4] * y + e[8] * z;
-        this.y = e[1] * x + e[5] * y + e[9] * z;
-        this.z = e[2] * x + e[6] * y + e[10] * z;
+        this.x = e[0] * x + e[4] * y + e[8] * z
+        this.y = e[1] * x + e[5] * y + e[9] * z
+        this.z = e[2] * x + e[6] * y + e[10] * z
 
         return this.normalize()
     }
@@ -206,7 +254,7 @@ class Vector3(
         this.y /= v.y
         this.z /= v.z
 
-        return this;
+        return this
     }
 
     /**
@@ -250,7 +298,7 @@ class Vector3(
     }
 
     fun clampLength(min: Float, max: Float): Vector3 {
-        var length = this.length();
+        var length = this.length()
         if (length.isNaN()) length = 1.toFloat()
         return this.divideScalar(length).multiplyScalar(kotlin.math.max(min, kotlin.math.min(max, length)))
     }
@@ -260,7 +308,7 @@ class Vector3(
         this.y = kotlin.math.floor(this.y)
         this.z = kotlin.math.floor(this.z)
 
-        return this;
+        return this
     }
 
     fun ceil(): Vector3 {
@@ -268,7 +316,7 @@ class Vector3(
         this.y = kotlin.math.ceil(this.y)
         this.z = kotlin.math.ceil(this.z)
 
-        return this;
+        return this
     }
 
     fun round(): Vector3 {
@@ -276,7 +324,7 @@ class Vector3(
         this.y = this.y.roundToInt().toFloat()
         this.z = this.z.roundToInt().toFloat()
 
-        return this;
+        return this
     }
 
     fun roundToZero(): Vector3 {
@@ -301,21 +349,21 @@ class Vector3(
      * Computes dot product of Vector3 vector and v.
      */
     fun dot(v: Vector3): Float {
-        return this.x * v.x + this.y * v.y + this.z * v.z;
+        return this.x * v.x + this.y * v.y + this.z * v.z
     }
 
     /**
      * Computes squared length of Vector3 vector.
      */
     fun lengthSq(): Float {
-        return this.x * this.x + this.y * this.y + this.z * this.z;
+        return this.x * this.x + this.y * this.y + this.z * this.z
     }
 
     /**
      * Computes length of Vector3 vector.
      */
     fun length(): Float {
-        return sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        return sqrt(this.x * this.x + this.y * this.y + this.z * this.z)
     }
 
     /**
@@ -326,7 +374,7 @@ class Vector3(
      * @see {@link http://en.wikipedia.org/wiki/Taxicab_geometry|Wikipedia: Taxicab Geometry}
      */
     fun manhattanLength(): Float {
-        return abs(this.x) + abs(this.y) + abs(this.z);
+        return abs(this.x) + abs(this.y) + abs(this.z)
     }
 
     /**
@@ -339,7 +387,7 @@ class Vector3(
      * @see {@link http://en.wikipedia.org/wiki/Taxicab_geometry|Wikipedia: Taxicab Geometry}
      */
     fun manhattanDistanceTo(v: Vector3): Float {
-        return abs(this.x - v.x) + abs(this.y - v.y) + abs(this.z - v.z);
+        return abs(this.x - v.x) + abs(this.y - v.y) + abs(this.z - v.z)
     }
 
     /**
@@ -348,22 +396,22 @@ class Vector3(
     fun normalize(): Vector3 {
         var length = length()
         if (length.isNaN()) length = 1.toFloat()
-        return this.divideScalar(length);
+        return this.divideScalar(length)
     }
 
     /**
      * Normalizes Vector3 vector and multiplies it by l.
      */
     fun setLength(length: Float): Vector3 {
-        return this.normalize().multiplyScalar(length);
+        return this.normalize().multiplyScalar(length)
     }
 
     fun lerp(v: Vector3, alpha: Float): Vector3 {
-        this.x += (v.x - this.x) * alpha;
-        this.y += (v.y - this.y) * alpha;
-        this.z += (v.z - this.z) * alpha;
+        this.x += (v.x - this.x) * alpha
+        this.y += (v.y - this.y) * alpha
+        this.z += (v.z - this.z) * alpha
 
-        return this;
+        return this
     }
 
     fun lerpVectors(v1: Vector3, v2: Vector3, alpha: Float): Vector3 {
@@ -374,7 +422,7 @@ class Vector3(
      * Sets Vector3 vector to cross product of itself and v.
      */
     fun cross(v: Vector3): Vector3 {
-        return this.crossVectors(this, v);
+        return this.crossVectors(this, v)
     }
 
     /**
@@ -396,8 +444,8 @@ class Vector3(
     }
 
     fun projectOnVector(v: Vector3): Vector3 {
-        val scalar = v.dot(this) / v.lengthSq();
-        return this.copy(v).multiplyScalar(scalar);
+        val scalar = v.dot(this) / v.lengthSq()
+        return this.copy(v).multiplyScalar(scalar)
     }
 
     fun projectOnPlane(planeNormal: Vector3): Vector3 {
@@ -408,20 +456,20 @@ class Vector3(
 
     fun reflect(normal: Vector3): Vector3 {
         val v1 = Vector3()
-        return this.sub(v1.copy(normal).multiplyScalar(2 * this.dot(normal)));
+        return this.sub(v1.copy(normal).multiplyScalar(2 * this.dot(normal)))
     }
 
     fun angleTo(v: Vector3): Float {
-        val theta = this.dot(v) / (sqrt(this.lengthSq() * v.lengthSq()));
+        val theta = this.dot(v) / (sqrt(this.lengthSq() * v.lengthSq()))
         // clamp, to handle numerical problems
-        return acos(clamp(theta, -1.0, 1.0));
+        return acos(clamp(theta, -1.0, 1.0))
     }
 
     /**
      * Computes distance of Vector3 vector to v.
      */
     fun distanceTo(v: Vector3): Float {
-        return sqrt(this.distanceToSquared(v));
+        return sqrt(this.distanceToSquared(v))
     }
 
     /**
@@ -437,29 +485,29 @@ class Vector3(
     //    fun setFromSpherical( s: Spherical ): Vector3
 //    fun setFromCylindrical( s: Cylindrical ): Vector3
     fun setFromMatrixPosition(m: Matrix4): Vector3 {
-        val e = m.elements;
+        val e = m.elements
 
-        this.x = e[12];
-        this.y = e[13];
-        this.z = e[14];
+        this.x = e[12]
+        this.y = e[13]
+        this.z = e[14]
 
-        return this;
+        return this
     }
 
     fun setFromMatrixScale(m: Matrix4): Vector3 {
-        val sx = this.setFromMatrixColumn(m, 0).length();
-        val sy = this.setFromMatrixColumn(m, 1).length();
-        val sz = this.setFromMatrixColumn(m, 2).length();
+        val sx = this.setFromMatrixColumn(m, 0).length()
+        val sy = this.setFromMatrixColumn(m, 1).length()
+        val sz = this.setFromMatrixColumn(m, 2).length()
 
-        this.x = sx;
-        this.y = sy;
-        this.z = sz;
+        this.x = sx
+        this.y = sy
+        this.z = sz
 
-        return this;
+        return this
     }
 
     fun setFromMatrixColumn(m: Matrix4, index: Int): Vector3 {
-        return this.fromArray(m.elements, index * 4);
+        return this.fromArray(m.elements, index * 4)
     }
 
     fun fromArray(array: FloatArray, offset: Int = 0): Vector3 {
@@ -467,7 +515,7 @@ class Vector3(
         this.y = array[offset + 1]
         this.z = array[offset + 2]
 
-        return this;
+        return this
     }
 
     /**
@@ -476,13 +524,16 @@ class Vector3(
      * @param offset (optional) optional offset into the array.
      * @return The created or provided array.
      */
-    @JvmOverloads
-    fun toArray(array: FloatArray = FloatArray(2), offset: Int = 0): FloatArray {
-        array[offset] = this.x;
-        array[offset + 1] = this.y;
-        array[offset + 2] = this.z;
+    override fun toArray(array: FloatArray?, offset: Int): FloatArray {
 
-        return array;
+        @Suppress("NAME_SHADOWING")
+        val array = array ?: FloatArray(3)
+
+        array[offset] = this.x
+        array[offset + 1] = this.y
+        array[offset + 2] = this.z
+
+        return array
     }
 
     fun fromBufferAttribute( attribute: FloatBufferAttribute, index: Int): Vector3 {
@@ -519,9 +570,9 @@ class Vector3(
 
     companion object {
 
-        val X = Vector3(1.toFloat(), 0.toFloat(), 0.toFloat())
-        val Y = Vector3(0.toFloat(), 1.toFloat(), 0.toFloat())
-        val Z = Vector3(0.toFloat(), 0.toFloat(), 1.toFloat())
+        val X = Vector3(1f, 0f, 0f)
+        val Y = Vector3(0f, 1f, 0f)
+        val Z = Vector3(0f, 0f, 1f)
 
     }
 

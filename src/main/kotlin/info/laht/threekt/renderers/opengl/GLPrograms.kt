@@ -2,8 +2,11 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.*
 import info.laht.threekt.core.Object3D
+import info.laht.threekt.lights.LightShadow
 import info.laht.threekt.materials.*
 import info.laht.threekt.renderers.GLRenderer
+import info.laht.threekt.renderers.shaders.ShaderLib
+import info.laht.threekt.scenes.Fog
 import info.laht.threekt.scenes.FogExp2
 import info.laht.threekt.scenes._Fog
 import info.laht.threekt.textures.Texture
@@ -13,7 +16,7 @@ class GLPrograms internal constructor(
     private val capabilities: GLCapabilities
 ) {
 
-    val programs = mutableListOf<GLProgram>()
+    private val programs = mutableListOf<GLProgram>()
 
     val shaderIds = ShaderIds()
 
@@ -91,7 +94,19 @@ class GLPrograms internal constructor(
 
     }
 
-    fun getProgramCode(material: ShaderMaterial, parameters: Parameters): String {
+    fun getParameters( material: Material, lights: GLLights.GLLightsState, shadows: List<Object3D>, fog: _Fog?, nClipPlanes: Int, nClipIntersection: Int, `object`: Object3D ): Parameters {
+        return Parameters(
+            material,
+            lights,
+            shadows,
+            fog,
+            nClipPlanes,
+            nClipIntersection,
+            `object`
+        )
+    }
+
+    fun getProgramCode(material: Material, parameters: Parameters): String {
 
         val array = mutableListOf<String>();
 
@@ -115,7 +130,7 @@ class GLPrograms internal constructor(
 
         array.addAll(parameterNames)
 
-        //TODO
+
 //        array.add( material.onBeforeCompile.toString() );
 
         array.add(renderer.gammaOutput.toString());
@@ -124,9 +139,9 @@ class GLPrograms internal constructor(
 
         return array.joinToString(",")
 
-    };
+    }
 
-    fun acquireProgram(material: ShaderMaterial, shader: GLShader, parameters: Parameters, code: String): GLProgram {
+    fun acquireProgram(material: Material, shader: ShaderLib.Shader, parameters: Parameters, code: String): GLProgram {
 
         var program: GLProgram? = null
 
@@ -148,14 +163,14 @@ class GLPrograms internal constructor(
 
         if (program == null) {
 
-            program = GLProgram(renderer, code, material, shader, parameters, capabilities);
+            program = GLProgram(renderer, code, material, shader, parameters);
             programs.add(program)
 
         }
 
         return program;
 
-    };
+    }
 
     fun releaseProgram(program: GLProgram) {
 
@@ -166,7 +181,7 @@ class GLPrograms internal constructor(
             programs[i] = programs[programs.size - 1];
             programs.removeAt(programs.size - 1) //pop
 
-            // Free WebGL resources
+            // Free GL resources
             program.destroy();
 
         }
@@ -218,7 +233,7 @@ class GLPrograms internal constructor(
     inner class Parameters(
         material: Material,
         lights: GLLights.GLLightsState,
-        shadows: List<GLShadowMap>,
+        shadows: List<Object3D>,
         fog: _Fog?,
         nClipPlanes: Int,
         nClipIntersection: Int,
@@ -228,8 +243,7 @@ class GLPrograms internal constructor(
         val shaderID = shaderIds[material::class.java.simpleName]
 
         val maxBones = 0 // TODO
-        var precision = capabilities.precision
-            private set
+        val precision: String
 
         val supportsVertexTextures = capabilities.vertexTextures
         val outputEncoding = getTextureEncodingFromMap(renderer.getRenderTarget()?.texture, renderer.gammaOutput)
@@ -281,7 +295,7 @@ class GLPrograms internal constructor(
         //
 //        val numDirLights = lights.directional.size
         val numPointLights = lights.point.size
-//        val numSpotLights = lights.spot.size
+        val numSpotLights = lights.spot.size
 //        val numRectAreaLights = lights.rectArea.size
 //        val numHemiLights = lights.hemi.size
 
@@ -306,15 +320,18 @@ class GLPrograms internal constructor(
 
         init {
 
-            material.precision?.also {
-                precision = capabilities.getMaxPrecision(it)
+            val materialPrecision = material.precision
+            if (materialPrecision != null) {
 
-                if (precision != it) {
-                    println("GLProgram.Parameters: $it not supported, using '$precision' instead.")
+                precision = capabilities.getMaxPrecision(materialPrecision)
+
+                if (precision != materialPrecision) {
+                    println("GLProgram.Parameters: $materialPrecision not supported, using '$precision' instead.")
                 }
 
+            } else {
+                precision = capabilities.precision
             }
-
 
         }
 

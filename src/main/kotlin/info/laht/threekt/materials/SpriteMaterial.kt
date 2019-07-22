@@ -3,9 +3,9 @@ package info.laht.threekt.materials
 import info.laht.threekt.math.Color
 import info.laht.threekt.textures.Texture
 
-class SpriteMaterial: Material(), MaterialWithSizeAttenuation {
+class SpriteMaterial : Material(), MaterialWithSizeAttenuation, MaterialWithColor {
 
-    val color = Color( 0xffffff )
+    override val color = Color(0xffffff)
 
     override var map: Texture? = null
 

@@ -3,6 +3,7 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Event
 import info.laht.threekt.core.EventLister
+import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.Light
 import info.laht.threekt.lights.LightShadow
 import info.laht.threekt.scenes.Scene
@@ -12,7 +13,7 @@ class GLRenderState internal constructor() {
     internal val lights = GLLights()
 
     internal val lightsArray = mutableListOf<Light>()
-    internal val shadowsArray = mutableListOf<LightShadow>()
+    internal val shadowsArray = mutableListOf<Object3D>()
 
     fun init() {
         lightsArray.clear()
@@ -23,7 +24,7 @@ class GLRenderState internal constructor() {
         lightsArray.add(light)
     }
 
-    fun pushShadow(shadow: LightShadow) {
+    fun pushShadow(shadow: Object3D) {
         shadowsArray.add(shadow)
     }
 

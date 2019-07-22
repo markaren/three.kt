@@ -1,15 +1,20 @@
 package info.laht.threekt.math
 
-import info.laht.threekt.core.BufferAttribute
 import info.laht.threekt.core.Cloneable
-import kotlin.math.cos
-import kotlin.math.max
-import kotlin.math.sin
-import kotlin.math.sqrt
+import info.laht.threekt.core.FloatBufferAttribute
+import kotlin.math.*
 
 class Matrix4(
-    val elements: FloatArray = FloatArray(16)
-): Cloneable {
+    val elements: FloatArray = floatArrayOf(
+        1f,0f,0f,0f,
+        0f,1f,0f,0f,
+        0f,0f,1f,0f,
+        0f,0f,0f,1f
+    )
+) : Cloneable, Flattable {
+
+    override val size = 16
+
 
     /**
      * Sets all fields of this matrix.
@@ -57,7 +62,7 @@ class Matrix4(
     }
 
     override fun clone(): Matrix4 {
-        TODO()
+        return Matrix4(elements.clone())
     }
 
     fun copy(m: Matrix4): Matrix4 {
@@ -274,25 +279,77 @@ class Matrix4(
     }
 
     fun makeRotationFromQuaternion(q: Quaternion): Matrix4 {
-        TODO()
+        val zero = Vector3(0f, 0f, 0f);
+        val one = Vector3(1f, 1f, 1f);
+
+        return this.compose(zero, q, one);
+
+
     }
 
     /**
      * Constructs a rotation matrix, looking from eye towards center with defined up vector.
      */
     fun lookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix4 {
-        TODO()
+        val x = Vector3();
+        val y = Vector3();
+        val z = Vector3();
+
+        val te = this.elements;
+
+        z.subVectors(eye, target);
+
+        if (z.lengthSq() == 0f) {
+
+            // eye and target are in the same position
+
+            z.z = 1f;
+
+        }
+
+        z.normalize();
+        x.crossVectors(up, z);
+
+        if (x.lengthSq() == 0f) {
+
+            // up and z are parallel
+
+            if (abs(up.z) == 1f) {
+
+                z.x += 0.0001f;
+
+            } else {
+
+                z.z += 0.0001f;
+
+            }
+
+            z.normalize();
+            x.crossVectors(up, z);
+
+        }
+
+        x.normalize();
+        y.crossVectors(z, x);
+
+        te[0] = x.x; te[4] = y.x; te[8] = z.x;
+        te[1] = x.y; te[5] = y.y; te[9] = z.y;
+        te[2] = x.z; te[6] = y.z; te[10] = z.z;
+
+        return this;
+
+
     }
 
     /**
      * Multiplies this matrix by m.
      */
     fun multiply(m: Matrix4): Matrix4 {
-        TODO()
+        return this.multiplyMatrices( this, m );
     }
 
     fun premultiply(m: Matrix4): Matrix4 {
-        TODO()
+        return this.multiplyMatrices( m, this );
     }
 
     /**
@@ -375,9 +432,21 @@ class Matrix4(
     }
 
 
-    fun applyToBufferAttribute(attribute: BufferAttribute): BufferAttribute {
+    fun applyToBufferAttribute(attribute: FloatBufferAttribute): FloatBufferAttribute {
         val v1 = Vector3()
-        TODO()
+        for ( i in 0 until attribute.count ) {
+
+            v1.x = attribute.getX( i );
+            v1.y = attribute.getY( i );
+            v1.z = attribute.getZ( i );
+
+            v1.applyMatrix4( this );
+
+            attribute.setXYZ( i, v1.x, v1.y, v1.z );
+
+        }
+
+        return attribute;
     }
 
     /**
@@ -488,7 +557,7 @@ class Matrix4(
      */
     @JvmOverloads
     fun getInverse(m: Matrix4, throwOnDegeneratee: Boolean = false): Matrix4 {
-        var te = this.elements
+        val te = this.elements
         val me = m.elements
 
         val n11 = me[0];
@@ -729,34 +798,42 @@ class Matrix4(
         val z = quaternion.z
         val w = quaternion.w
 
-        val x2 = x + x; val	y2 = y + y; val z2 = z + z;
-        val xx = x * x2; val xy = x * y2; val xz = x * z2;
-        val yy = y * y2; val yz = y * z2; val zz = z * z2;
-        val wx = w * x2; val wy = w * y2; val wz = w * z2;
+        val x2 = x + x;
+        val y2 = y + y;
+        val z2 = z + z;
+        val xx = x * x2;
+        val xy = x * y2;
+        val xz = x * z2;
+        val yy = y * y2;
+        val yz = y * z2;
+        val zz = z * z2;
+        val wx = w * x2;
+        val wy = w * y2;
+        val wz = w * z2;
 
         val sx = scale.x
         val sy = scale.y
         val sz = scale.z;
 
-        te[ 0 ] = ( 1 - ( yy + zz ) ) * sx;
-        te[ 1 ] = ( xy + wz ) * sx;
-        te[ 2 ] = ( xz - wy ) * sx;
-        te[ 3 ] = 0f
+        te[0] = (1 - (yy + zz)) * sx;
+        te[1] = (xy + wz) * sx;
+        te[2] = (xz - wy) * sx;
+        te[3] = 0f
 
-        te[ 4 ] = ( xy - wz ) * sy;
-        te[ 5 ] = ( 1 - ( xx + zz ) ) * sy;
-        te[ 6 ] = ( yz + wx ) * sy;
-        te[ 7 ] = 0f
+        te[4] = (xy - wz) * sy;
+        te[5] = (1 - (xx + zz)) * sy;
+        te[6] = (yz + wx) * sy;
+        te[7] = 0f
 
-        te[ 8 ] = ( xz + wy ) * sz;
-        te[ 9 ] = ( yz - wx ) * sz;
-        te[ 10 ] = ( 1 - ( xx + yy ) ) * sz;
-        te[ 11 ] = 0f
+        te[8] = (xz + wy) * sz;
+        te[9] = (yz - wx) * sz;
+        te[10] = (1 - (xx + yy)) * sz;
+        te[11] = 0f
 
-        te[ 12 ] = position.x;
-        te[ 13 ] = position.y;
-        te[ 14 ] = position.z;
-        te[ 15 ] = 1f
+        te[12] = position.x;
+        te[13] = position.y;
+        te[14] = position.z;
+        te[15] = 1f
 
         return this
     }
@@ -879,9 +956,8 @@ class Matrix4(
         return this
     }
 
-    @JvmOverloads
-    fun toArray(array: FloatArray = FloatArray(16), offset: Int = 0): FloatArray {
-        return elements.copyInto(array, offset)
+    override fun toArray(array: FloatArray?, offset: Int): FloatArray {
+        return elements.copyInto(array ?: FloatArray(16), offset)
     }
 
 }

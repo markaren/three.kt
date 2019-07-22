@@ -8,16 +8,20 @@ import info.laht.threekt.math.*
 
 
 open class Mesh(
-    override val geometry: BufferGeometry = BufferGeometry(),
-    override val material: Material = MeshBasicMaterial()
-): Object3D(), GeometryObject, MaterialObject {
+    override val geometry: BufferGeometry,
+    override val materials: MutableList<Material>
+) : Object3D(), GeometryObject, MaterialObject {
+
+    constructor(geometry: BufferGeometry, material: Material)
+            : this(geometry, mutableListOf(material))
 
     var drawMode = TrianglesDrawMode
 
     private val raycastHelper by lazy { RaycastHelper() }
 
     init {
-        updateMorphTargets()
+
+//        updateMorphTargets()
     }
 
     override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
@@ -28,7 +32,7 @@ open class Mesh(
         TODO()
     }
 
-    fun copy( source: Mesh ): Mesh {
+    fun copy(source: Mesh): Mesh {
         super.copy(source, true)
 
         this.drawMode = source.drawMode

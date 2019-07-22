@@ -216,7 +216,12 @@ class Box3 @JvmOverloads constructor(
     }
 
     fun intersectsSphere(sphere: Sphere): Boolean {
-        TODO()
+        val closestPoint = Vector3();
+        // Find the point on the AABB closest to the sphere center.
+        this.clampPoint( sphere.center, closestPoint );
+
+        // If that point is inside the sphere, the AABB and sphere intersect.
+        return closestPoint.distanceToSquared( sphere.center ) <= ( sphere.radius * sphere.radius );
     }
 
     fun intersectsPlane(plane: Plane): Boolean {

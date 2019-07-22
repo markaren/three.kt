@@ -3,9 +3,9 @@ package info.laht.threekt.math
 import java.util.*
 import kotlin.math.*
 
-val LN2 = ln(2.0)
-const val DEG2RAD = PI / 180.toFloat()
-const val RAD2DEG =  180 / PI.toFloat()
+val LN2 = ln(2.0).toFloat()
+const val DEG2RAD = (PI / 180.0).toFloat()
+const val RAD2DEG =  (180.0 / PI).toFloat()
 
 const val TWO_PI = (PI * 2).toFloat()
 

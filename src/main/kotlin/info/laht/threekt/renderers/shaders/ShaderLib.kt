@@ -46,7 +46,7 @@ object ShaderLib {
                 UniformsLib.normalmap,
                 UniformsLib.displacementmap,
                 UniformsLib.fog,
-                mapOf(
+                mutableMapOf(
                     "matcap" to Uniform(null)
                 )
             )
@@ -71,7 +71,7 @@ object ShaderLib {
             listOf(
                 UniformsLib.common,
                 UniformsLib.fog,
-                mapOf(
+                mutableMapOf(
                     "scale" to Uniform(1f),
                     "dashSize" to Uniform(1f),
                     "totalSize" to Uniform(2f)
@@ -100,7 +100,7 @@ object ShaderLib {
                 UniformsLib.bumpmap,
                 UniformsLib.normalmap,
                 UniformsLib.displacementmap,
-                mapOf(
+                mutableMapOf(
                     "opacity" to Uniform(1f)
                 )
             )
@@ -121,7 +121,7 @@ object ShaderLib {
     )
 
     val background = Shader(
-        mapOf(
+        mutableMapOf(
             "uvTransform" to Uniform(Matrix3()),
             "t2D" to Uniform(null)
         ),
@@ -130,7 +130,7 @@ object ShaderLib {
     )
 
     val cube = Shader(
-        mapOf(
+        mutableMapOf(
             "tCube" to Uniform(null),
             "tFlip" to Uniform(-1),
             "opacity" to Uniform(1f)
@@ -139,20 +139,27 @@ object ShaderLib {
         ShaderChunk.cube_frag
     )
 
-    operator fun get(name: String): Shader? {
+    operator fun get(name: String): Shader {
 
-        return try {
-            ShaderLib::class.java.getDeclaredField(name).get(null) as Shader
-        } catch (ex: Exception) {
-            null
-        }
+//        return try {
+            return ShaderLib::class.java.getDeclaredField(name).get(this) as Shader
+//        } catch (ex: Exception) {
+//            null
+//        }
 
     }
 
     class Shader(
-        val uniforms: Map<String, Uniform>,
+        val name: String,
+        val uniforms: MutableMap<String, Uniform>,
         val vertexShader: String,
         val fragmentShader: String
-    )
+    ) {
+
+        constructor (uniforms: MutableMap<String, Uniform>,
+                     vertexShader: String,
+                     fragmentShader: String): this("", uniforms, vertexShader, fragmentShader)
+
+    }
     
 }

@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test
 class TestMaterial {
 
     @Test
+    fun testType() {
+        Assertions.assertEquals("ShaderMaterial", ShaderMaterial().type)
+    }
+
+    @Test
     fun testReflection() {
 
         val mat = MeshDepthMaterial() as Material

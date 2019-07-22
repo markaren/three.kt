@@ -3,7 +3,7 @@ package info.laht.threekt.materials
 import info.laht.threekt.BasicDepthPacking
 import info.laht.threekt.textures.Texture
 
-class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinning {
+class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithWireframe {
 
     var depthPacking = BasicDepthPacking
 
@@ -18,8 +18,8 @@ class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
     public override var displacementScale = 1f
     public override var displacementBias = 0f
 
-    var wireframe = false
-    var wireframeLinewidth = 1f
+    override var wireframe = false
+    override var wireframeLinewidth = 1f
 
     init {
 

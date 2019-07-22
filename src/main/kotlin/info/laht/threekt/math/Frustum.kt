@@ -1,6 +1,7 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
+import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.objects.Sprite
@@ -79,19 +80,20 @@ class Frustum @JvmOverloads constructor(
 
     fun intersectsObject(`object`: Object3D): Boolean {
 
-        TODO()
+        val sphere = Sphere()
 
-//        val sphere = Sphere()
-//
-//        val geometry = `object`.geometry
-//
-//        if (geometry.boundingSphere === null)
-//            geometry.computeBoundingSphere()
-//
-//        sphere.copy(geometry.boundingSphere)
-//            .applyMatrix4(`object`.matrixWorld)
-//
-//        return this.intersectsSphere(sphere)
+        `object` as GeometryObject
+
+        val geometry = `object`.geometry
+
+        if (geometry.boundingSphere == null) {
+            geometry.computeBoundingSphere()
+        }
+
+        sphere.copy(geometry.boundingSphere!!)
+            .applyMatrix4(`object`.matrixWorld)
+
+        return this.intersectsSphere(sphere)
 
     }
 
@@ -104,7 +106,6 @@ class Frustum @JvmOverloads constructor(
         sphere.applyMatrix4(sprite.matrixWorld)
 
         return this.intersectsSphere(sphere)
-
 
     }
 

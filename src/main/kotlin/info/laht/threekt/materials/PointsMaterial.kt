@@ -3,14 +3,14 @@ package info.laht.threekt.materials
 import info.laht.threekt.math.Color
 import info.laht.threekt.textures.Texture
 
-class PointsMaterial : Material(), MaterialWithMorphTarget, MaterialWithSizeAttenuation {
+class PointsMaterial : Material(), MaterialWithMorphTarget, MaterialWithSizeAttenuation, MaterialWithColor {
 
-    val color = Color(0xffffff)
-
-    override var map: Texture? = null
+    override val color = Color(0xffffff)
 
     var size = 1
     override var sizeAttenuation = true
+
+    override var map: Texture? = null
 
     override var morphTargets = false
 

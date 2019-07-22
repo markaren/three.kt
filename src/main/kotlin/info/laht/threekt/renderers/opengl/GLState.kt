@@ -2,16 +2,14 @@ package info.laht.threekt.renderers.opengl
 
 
 import info.laht.threekt.*
+import info.laht.threekt.core.BufferAttribute
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector4
-import info.laht.threekt.math.Vector4i
 import info.laht.threekt.textures.Image
 import info.laht.threekt.textures.Texture
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL20
-import org.lwjgl.opengl.GL13
-import org.lwjgl.opengl.GL14
+import org.lwjgl.opengl.*
 import java.nio.ByteBuffer
+import kotlin.math.roundToInt
 
 
 class GLState internal constructor() {
@@ -62,8 +60,8 @@ class GLState internal constructor() {
     var currentTextureSlot: Int? = null
     var currentBoundTextures = mutableMapOf<Int?, BoundTexture>()
 
-    var currentScissor = Vector4i()
-    var currentViewport = Vector4i()
+    var currentScissor = Vector4()
+    var currentViewport = Vector4()
 
     private val emptyTextures = mapOf(
         GL11.GL_TEXTURE_2D to createTexture(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_2D, 1),
@@ -83,6 +81,48 @@ class GLState internal constructor() {
             newAttributes[i] = 0
         }
     }
+
+    fun enableAttribute( attribute: Int ) {
+
+        enableAttributeAndDivisor( attribute, 0 );
+
+    }
+
+    fun enableAttributeAndDivisor( attribute: Int, meshPerAttribute: Int ) {
+
+        newAttributes[ attribute ] = 1;
+
+        if ( enabledAttributes[ attribute ] == 0 ) {
+
+            GL20.glEnableVertexAttribArray( attribute );
+            enabledAttributes[ attribute ] = 1;
+
+        }
+
+        if ( attributeDivisors[ attribute ] != meshPerAttribute ) {
+
+            GL33.glVertexAttribDivisor(attribute, meshPerAttribute)
+            attributeDivisors[ attribute ] = meshPerAttribute;
+
+        }
+
+    }
+
+    fun disableUnusedAttributes() {
+
+        for ( i in 0 until enabledAttributes.size ) {
+
+            if ( enabledAttributes[ i ] != newAttributes[ i ] ) {
+
+                GL20.glDisableVertexAttribArray( i );
+                enabledAttributes[ i ] = 0;
+
+            }
+
+        }
+
+    }
+
 
     fun createTexture(type: Int, target: Int, count: Int): Int {
 
@@ -113,6 +153,22 @@ class GLState internal constructor() {
             GL11.glDisable(id)
             enabledCapabilities[id] = false
         }
+    }
+
+    fun useProgram( program: Int ): Boolean {
+
+        if ( currentProgram != program ) {
+
+            GL20.glUseProgram( program );
+
+            currentProgram = program;
+
+            return true;
+
+        }
+
+        return false;
+
     }
 
     @Suppress("NAME_SHADOWING")
@@ -343,7 +399,7 @@ class GLState internal constructor() {
 
     }
 
-    private fun setPolygonOffset(polygonOffset: Boolean, factor: Float, units: Float) {
+    fun setPolygonOffset(polygonOffset: Boolean, factor: Float? = null, units: Float? = null) {
 
         if (polygonOffset) {
 
@@ -351,7 +407,7 @@ class GLState internal constructor() {
 
             if (currentPolygonOffsetFactor != factor || currentPolygonOffsetUnits != units) {
 
-                GL11.glPolygonOffset(factor, units)
+                GL11.glPolygonOffset(factor!!, units!!)
 
                 currentPolygonOffsetFactor = factor
                 currentPolygonOffsetUnits = units
@@ -426,22 +482,22 @@ class GLState internal constructor() {
         GL11.glTexImage2D(target, level, internalformat, width, height, 0, format, type, data)
     }
 
-    fun scissor(scissor: Vector4i) {
+    fun scissor(scissor: Vector4) {
 
         if (currentScissor != scissor) {
 
-            GL11.glScissor(scissor.x, scissor.y, scissor.z, scissor.w)
+            GL11.glScissor(scissor.x.roundToInt(), scissor.y.roundToInt(), scissor.z.roundToInt(), scissor.w.roundToInt())
             currentScissor.copy(scissor);
 
         }
 
     }
 
-    fun viewport(viewport: Vector4i) {
+    fun viewport(viewport: Vector4) {
 
         if (currentViewport != viewport) {
 
-            GL11.glViewport(viewport.x, viewport.y, viewport.z, viewport.w)
+            GL11.glViewport(viewport.x.roundToInt(), viewport.y.roundToInt(), viewport.z.roundToInt(), viewport.w.roundToInt())
             currentViewport.copy(viewport);
 
         }
@@ -458,8 +514,6 @@ class GLState internal constructor() {
         }
 
         enabledCapabilities.clear()
-
-//        compressedTextureFormats = null;
 
         currentTextureSlot = null
         currentBoundTextures.clear()

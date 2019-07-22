@@ -1,23 +1,22 @@
 package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.cameras.Camera
-import info.laht.threekt.core.BufferGeometry
-import info.laht.threekt.core.Event
-import info.laht.threekt.core.EventLister
-import info.laht.threekt.core.Object3D
+import info.laht.threekt.core.*
+import info.laht.threekt.core.GeometryGroup
 import info.laht.threekt.materials.Material
 import info.laht.threekt.objects.Group
 import info.laht.threekt.scenes.Scene
+import kotlin.math.roundToInt
 
-class GLRenderList internal constructor(){
+class GLRenderList internal constructor() {
 
     private val renderItems = mutableListOf<RenderItem>()
     private var renderItemsIndex = 0
 
-    private val opaque = mutableListOf<RenderItem>()
-    private val transparent = mutableListOf<RenderItem>()
+    val opaque = mutableListOf<RenderItem>()
+    val transparent = mutableListOf<RenderItem>()
 
-    var defaultProgram = -1
+    private var defaultProgram = -1
 
     fun init() {
         renderItemsIndex = 0
@@ -25,37 +24,42 @@ class GLRenderList internal constructor(){
         transparent.clear()
     }
 
-    fun getNextRenderItem(
+    private fun getNextRenderItem(
         `object`: Object3D,
         geometry: BufferGeometry,
         material: Material,
         groupOrder: Int,
-        z: Int,
-        group: Group?
+        z: Float,
+        group: GeometryGroup?
     ): RenderItem {
-        return if (renderItemsIndex < renderItems.size) {
-            renderItems[renderItemsIndex]
-        } else {
-            RenderItem(
-                `object`.id,
-                `object`,
-                geometry,
-                material,
-                material.program ?: defaultProgram,
-                groupOrder,
-                `object`.renderOrder,
-                z,
-                group
-            ).also {
-                renderItems[renderItemsIndex] = it
-            }
-        }.also {
-            renderItemsIndex++;
+        val renderItem = renderItems.getOrNull(renderItemsIndex) ?: RenderItem(
+            `object`.id,
+            `object`,
+            geometry,
+            material,
+            material.program?.program ?: defaultProgram,
+            groupOrder,
+            `object`.renderOrder,
+            z,
+            group
+        ).also {
+            renderItems.add(it)
         }
+
+        renderItemsIndex++;
+
+        return renderItem
 
     }
 
-    fun push(`object`: Object3D, geometry: BufferGeometry, material: Material, groupOrder: Int, z: Int, group: Group) {
+    fun push(
+        `object`: Object3D,
+        geometry: BufferGeometry,
+        material: Material,
+        groupOrder: Int,
+        z: Float,
+        group: GeometryGroup?
+    ) {
 
         val renderItem = getNextRenderItem(`object`, geometry, material, groupOrder, z, group)
 
@@ -72,8 +76,8 @@ class GLRenderList internal constructor(){
         geometry: BufferGeometry,
         material: Material,
         groupOrder: Int,
-        z: Int,
-        group: Group?
+        z: Float,
+        group: GeometryGroup?
     ) {
 
         val renderItem = getNextRenderItem(`object`, geometry, material, groupOrder, z, group)
@@ -94,7 +98,7 @@ class GLRenderList internal constructor(){
                     a.renderOrder != b.renderOrder -> a.renderOrder - b.renderOrder
                     //        a.program != b.program -> a.program.id - b.program.id
                     a.material.id != b.material.id -> a.material.id - b.material.id
-                    a.z != b.z -> a.z - b.z
+                    a.z != b.z -> (a.z - b.z).roundToInt()
                     else -> a.id - b.id
                 }
             })
@@ -104,7 +108,7 @@ class GLRenderList internal constructor(){
                 when {
                     a.groupOrder != b.groupOrder -> a.groupOrder - b.groupOrder
                     a.renderOrder != b.renderOrder -> a.renderOrder - b.renderOrder
-                    a.z != b.z -> b.z - a.z
+                    a.z != b.z -> (b.z - a.z).roundToInt()
                     else -> a.id - b.id
                 }
             })
@@ -119,8 +123,8 @@ class GLRenderList internal constructor(){
         val program: Int,
         val groupOrder: Int,
         val renderOrder: Int,
-        var z: Int,
-        var group: Group?
+        var z: Float,
+        var group: GeometryGroup?
     )
 
 }
@@ -154,7 +158,7 @@ class GLRenderLists {
         lists.clear()
     }
 
-    private inner class OnSceneDispose: EventLister {
+    private inner class OnSceneDispose : EventLister {
 
         override fun onEvent(event: Event) {
             val scene = event.target as Scene

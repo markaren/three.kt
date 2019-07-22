@@ -9,18 +9,16 @@ import info.laht.threekt.materials.ShaderMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix3
 import info.laht.threekt.objects.Mesh
-import info.laht.threekt.renderers.GLRenderTargetCube
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.renderers.shaders.ShaderLib
 import info.laht.threekt.renderers.shaders.cloneUniforms
 import info.laht.threekt.scenes.*
 import info.laht.threekt.textures.Texture
-import java.lang.IllegalStateException
 
 class GLBackground internal constructor(
-    val renderer: GLRenderer,
-    val state: GLState,
-    val objects: GLObjects
+    private val renderer: GLRenderer,
+    private val state: GLState,
+    private val objects: GLObjects
 ) {
 
     val clearColor = Color(0x000000)
@@ -38,12 +36,23 @@ class GLBackground internal constructor(
 
     fun render(renderList: GLRenderList, scene: Scene, camera: Camera, forceClear: Boolean) {
 
+        @Suppress("NAME_SHADOWING")
+        var forceClear = forceClear
         val background = scene.background
 
         if (background == null) {
+
             setClear(clearColor, clearAlpha)
             currentBackground = null
             currentBackgroundVersion = 0
+
+        } else if (background is ColorBackground) {
+
+            setClear(background.color, 1f)
+            forceClear = true
+            currentBackground = null
+            currentBackgroundVersion = 0
+
         }
 
         if (renderer.autoClear || forceClear) {
@@ -70,11 +79,12 @@ class GLBackground internal constructor(
             boxMesh.geometry.removeAttribute("normal")
             boxMesh.geometry.removeAttribute("uv")
 
-            boxMesh.onBeforeRender = { _, _, camera, _, _, _ ->
-
-                boxMesh.matrixWorld.copyPosition(camera.matrixWorld);
-
-            }
+            TODO()
+//            boxMesh.onBeforeRender = { _, _, camera, _, _, _ ->
+//
+//                boxMesh.matrixWorld.copyPosition(camera.matrixWorld);
+//
+//            }
 
             val material = boxMesh.material as ShaderMaterial
             material.map = material.uniforms["tCube"]?.value as Texture
@@ -102,7 +112,7 @@ class GLBackground internal constructor(
             }
 
             // push to the pre-sorted opaque render list
-            renderList.unshift(boxMesh, boxMesh.geometry, boxMesh.material, 0, 0, null);
+            renderList.unshift(boxMesh, boxMesh.geometry, boxMesh.material, 0, 0f, null);
 
         } else if (background is TextureBackground) {
 
@@ -155,7 +165,7 @@ class GLBackground internal constructor(
 
 
             // push to the pre-sorted opaque render list
-            renderList.unshift(planeMesh, planeMesh.geometry, planeMesh.material, 0, 0, null);
+            renderList.unshift(planeMesh, planeMesh.geometry, planeMesh.material, 0, 0f, null);
 
         }
 

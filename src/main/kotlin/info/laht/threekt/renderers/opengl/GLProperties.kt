@@ -1,17 +1,16 @@
 package info.laht.threekt.renderers.opengl
 
 import java.util.*
+import kotlin.collections.HashMap
 
-internal typealias Properties = MutableMap<String, Any>
 
 class GLProperties internal constructor() {
 
     private val properties = WeakHashMap<Any, Properties>()
 
     operator fun get(`object`: Any): Properties {
-
         return properties.computeIfAbsent(`object`) {
-            mutableMapOf()
+            Properties()
         }
     }
 
@@ -25,6 +24,14 @@ class GLProperties internal constructor() {
 
     fun dispose() {
         properties.clear()
+    }
+
+}
+
+class Properties: HashMap<String, Any?>() {
+
+    inline fun <reified T> getAs( key: String): T? {
+        return get(key) as T
     }
 
 }

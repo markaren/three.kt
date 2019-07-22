@@ -253,7 +253,7 @@ class GLTextures internal constructor(
 
     }
 
-    private fun initTexture(textureProperties: MutableMap<String, Any>, texture: Texture) {
+    private fun initTexture(textureProperties: Properties, texture: Texture) {
 
         if (textureProperties["__webglInit"] == null) {
 
@@ -350,48 +350,6 @@ class GLTextures internal constructor(
                 null
             );
 
-        } else if (texture is DataTexture) {
-
-            // use manually created mipmaps if available
-            // if there are no manual mipmaps
-            // set 0 level mipmap and then use GL to generate other mipmap levels
-
-            if (mipmaps.size > 0 && supportsMips) {
-
-                mipmaps.forEachIndexed { i, mipmap ->
-
-                    state.texImage2D(
-                        GL11.GL_TEXTURE_2D,
-                        i,
-                        glInternalFormat,
-                        mipmap.width,
-                        mipmap.height,
-                        glFormat,
-                        glType,
-                        mipmap.data
-                    );
-
-                }
-
-                texture.generateMipmaps = false;
-                textureProperties["__maxMipLevel"] = mipmaps.size - 1;
-
-            } else {
-
-                state.texImage2D(
-                    GL11.GL_TEXTURE_2D,
-                    0,
-                    glInternalFormat,
-                    image.width,
-                    image.height,
-                    glFormat,
-                    glType,
-                    image.data
-                );
-                textureProperties["__maxMipLevel"] = 0;
-
-            }
-
         } else {
 
             // regular Texture (image, video, canvas)
@@ -452,6 +410,146 @@ class GLTextures internal constructor(
 
     }
 
+    private fun setupFrameBufferTexture(
+        framebuffer: Int,
+        renderTarget: GLRenderTarget,
+        attachment: Int,
+        textureTarget: Int
+    ) {
+
+        val glFormat = utils.convert(renderTarget.texture.format);
+        val glType = utils.convert(renderTarget.texture.type);
+        val glInternalFormat = getInternalFormat(glFormat, glType);
+        state.texImage2D(
+            textureTarget,
+            0,
+            glInternalFormat,
+            renderTarget.width,
+            renderTarget.height,
+            glFormat,
+            glType,
+            null
+        );
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, framebuffer);
+        GL30.glFramebufferTexture2D(
+            GL30.GL_FRAMEBUFFER,
+            attachment,
+            textureTarget,
+            properties[renderTarget.texture]["__webglTexture"] as Int,
+            0
+        );
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+
+    }
+
+    private fun setupRenderBufferStorage(
+        renderbuffer: Int,
+        renderTarget: GLRenderTarget,
+        isMultisample: Boolean = false
+    ) {
+
+        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderbuffer);
+
+        if (renderTarget.depthBuffer && !renderTarget.stencilBuffer) {
+
+            if (isMultisample) {
+
+                val samples = getRenderTargetSamples(renderTarget);
+
+                GL30.glRenderbufferStorageMultisample(
+                    GL30.GL_RENDERBUFFER,
+                    samples,
+                    GL14.GL_DEPTH_COMPONENT16,
+                    renderTarget.width,
+                    renderTarget.height
+                );
+
+            } else {
+
+                GL30.glRenderbufferStorage(
+                    GL30.GL_RENDERBUFFER,
+                    GL14.GL_DEPTH_COMPONENT16,
+                    renderTarget.width,
+                    renderTarget.height
+                );
+
+            }
+
+            GL30.glFramebufferRenderbuffer(
+                GL30.GL_FRAMEBUFFER,
+                GL30.GL_DEPTH_ATTACHMENT,
+                GL30.GL_RENDERBUFFER,
+                renderbuffer
+            );
+
+        } else if (renderTarget.depthBuffer && renderTarget.stencilBuffer) {
+
+            if (isMultisample) {
+
+                val samples = getRenderTargetSamples(renderTarget);
+
+                GL30.glRenderbufferStorageMultisample(
+                    GL30.GL_RENDERBUFFER,
+                    samples,
+                    GL30.GL_DEPTH24_STENCIL8,
+                    renderTarget.width,
+                    renderTarget.height
+                );
+
+            } else {
+
+                GL30.glRenderbufferStorage(
+                    GL30.GL_RENDERBUFFER,
+                    GL30C.GL_DEPTH_STENCIL,
+                    renderTarget.width,
+                    renderTarget.height
+                );
+
+            }
+
+
+            GL30.glFramebufferRenderbuffer(
+                GL30.GL_FRAMEBUFFER,
+                GL30.GL_DEPTH_STENCIL_ATTACHMENT,
+                GL30.GL_RENDERBUFFER,
+                renderbuffer
+            );
+
+        } else {
+
+            val glFormat = utils.convert(renderTarget.texture.format);
+            val glType = utils.convert(renderTarget.texture.type);
+            val glInternalFormat = getInternalFormat(glFormat, glType);
+
+            if (isMultisample) {
+
+                val samples = getRenderTargetSamples(renderTarget);
+
+                GL30.glRenderbufferStorageMultisample(
+                    GL30.GL_RENDERBUFFER,
+                    samples,
+                    glInternalFormat,
+                    renderTarget.width,
+                    renderTarget.height
+                );
+
+            } else {
+
+                GL30.glRenderbufferStorage(
+                    GL30.GL_RENDERBUFFER,
+                    glInternalFormat,
+                    renderTarget.width,
+                    renderTarget.height
+                );
+
+            }
+
+        }
+
+        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, 0);
+
+    }
+
     private fun setupDepthTexture(framebuffer: Int, renderTarget: GLRenderTarget) {
 
 
@@ -465,9 +563,10 @@ class GLTextures internal constructor(
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, framebuffer)
 
         // upload an empty depth renderTargetCube with framebuffer size
-        if ( properties[depthTexture]["__webglTexture"] != null ||
+        if (properties[depthTexture]["__webglTexture"] != null ||
             image.width != renderTarget.width ||
-            image.height != renderTarget.height ) {
+            image.height != renderTarget.height
+        ) {
 
             image.width = renderTarget.width
             image.height = renderTarget.height
@@ -480,11 +579,163 @@ class GLTextures internal constructor(
     }
 
     fun setupDepthRenderbuffer(renderTarget: GLRenderTarget) {
-        TODO()
+        val renderTargetProperties = properties.get(renderTarget);
+
+        val isCube = (renderTarget is GLRenderTargetCube);
+
+        if (renderTarget.depthTexture != null) {
+
+            if (isCube) throw Error("target.depthTexture not supported in Cube render targets");
+
+            setupDepthTexture(renderTargetProperties["__webglFramebuffer"] as Int, renderTarget);
+
+        } else {
+
+            if (isCube) {
+
+                renderTargetProperties["__webglDepthbuffer"] = IntArray(6)
+
+                for (i in 0 until 6) {
+
+                    GL30.glBindFramebuffer(
+                        GL30.GL_FRAMEBUFFER,
+                        renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i]
+                    );
+                    renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i] = GL45.glCreateRenderbuffers();
+                    setupRenderBufferStorage(
+                        renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i],
+                        renderTarget
+                    );
+
+                }
+
+            } else {
+
+                GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, renderTargetProperties["__webglFramebuffer"] as Int);
+                renderTargetProperties["__webglDepthbuffer"] = GL45.glCreateRenderbuffers();
+                setupRenderBufferStorage(renderTargetProperties["__webglDepthbuffer"] as Int, renderTarget);
+
+            }
+
+        }
+
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
     fun setupRenderTarget(renderTarget: GLRenderTarget) {
-        TODO()
+
+        val renderTargetProperties = properties[renderTarget]
+        val textureProperties = properties[renderTarget.texture]
+
+        renderTarget.addEventListener("dispose", onRenderTargetDispose)
+
+        textureProperties["__webglTexture"] = GL11.glGenTextures()
+
+        info.memory.textures++;
+
+        val isCube = (renderTarget is GLRenderTargetCube)
+        val isMultisample = (renderTarget is GLMultisampleRenderTarget)
+        val supportsMips = true
+
+        if (isCube) {
+
+            renderTargetProperties["__webglFramebuffer"] = IntArray(6)
+
+            for (i in 0 until 6) {
+
+                renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i] = (GL45.glCreateFramebuffers());
+
+            }
+
+        } else {
+
+            renderTargetProperties["__webglFramebuffer"] = GL45.glCreateFramebuffers();
+
+            if (isMultisample) {
+
+                TODO()
+//                    renderTargetProperties["__webglMultisampledFramebuffer"] = GL45.glCreateFramebuffers();
+//                    renderTargetProperties["__webglColorRenderbuffer"] = GL45.glCreateFramebuffers();
+//
+//                    GL30.glBindRenderbuffer( GL30.GL_RENDERBUFFER, renderTargetProperties.__webglColorRenderbuffer );
+//                    var glFormat = utils.convert( renderTarget.texture.format );
+//                    var glType = utils.convert( renderTarget.texture.type );
+//                    var glInternalFormat = getInternalFormat( glFormat, glType );
+//                    var samples = getRenderTargetSamples( renderTarget );
+//                    GL30.GL_RENDERBUFFERStorageMultisample( GL30.GL_RENDERBUFFER, samples, glInternalFormat, renderTarget.width, renderTarget.height );
+//
+//                    _gl.bindFramebuffer( GL30.GL_FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer );
+//                    _gl.framebufferRenderbuffer( GL30.GL_FRAMEBUFFER, _gl.COLOR_ATTACHMENT0, GL30.GL_RENDERBUFFER, renderTargetProperties.__webglColorRenderbuffer );
+//                    _gl.bindRenderbuffer( GL30.GL_FRAMEBUFFER, null );
+//
+//                    if ( renderTarget.depthBuffer ) {
+//
+//                        renderTargetProperties["__webglDepthRenderbuffer"] = GL45.glCreateRenderbuffers();
+//                        setupRenderBufferStorage( renderTargetProperties.__webglDepthRenderbuffer, renderTarget, true );
+//
+//                    }
+//
+//                    GL30.glBindFramebuffer( GL30.GL_FRAMEBUFFER, null );
+
+
+            }
+
+        }
+
+        // Setup color buffer
+
+        if (isCube) {
+
+            state.bindTexture(GL13.GL_TEXTURE_CUBE_MAP, textureProperties["__webglTexture"] as Int);
+            setTextureParameters(GL13.GL_TEXTURE_CUBE_MAP, renderTarget.texture, supportsMips);
+
+            for (i in 0 until 6) {
+
+                setupFrameBufferTexture(
+                    renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i],
+                    renderTarget,
+                    GL30.GL_COLOR_ATTACHMENT0,
+                    GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i
+                );
+
+            }
+
+            if (textureNeedsGenerateMipmaps(renderTarget.texture, supportsMips)) {
+
+                generateMipmap(GL13.GL_TEXTURE_CUBE_MAP, renderTarget.texture, renderTarget.width, renderTarget.height);
+
+            }
+
+            state.bindTexture(GL13.GL_TEXTURE_CUBE_MAP, null);
+
+        } else {
+
+            state.bindTexture(GL11.GL_TEXTURE_2D, textureProperties["__webglTexture"] as Int);
+            setTextureParameters(GL11.GL_TEXTURE_2D, renderTarget.texture, supportsMips);
+            setupFrameBufferTexture(
+                renderTargetProperties["__webglFramebuffer"] as Int,
+                renderTarget,
+                GL30.GL_COLOR_ATTACHMENT0,
+                GL11.GL_TEXTURE_2D
+            );
+
+            if (textureNeedsGenerateMipmaps(renderTarget.texture, supportsMips)) {
+
+                generateMipmap(GL11.GL_TEXTURE_2D, renderTarget.texture, renderTarget.width, renderTarget.height);
+
+            }
+
+            state.bindTexture(GL11.GL_TEXTURE_2D, null);
+
+        }
+
+        // Setup depth and stencil buffers
+
+        if (renderTarget.depthBuffer) {
+
+            setupDepthRenderbuffer(renderTarget);
+
+        }
     }
 
 
@@ -513,13 +764,9 @@ class GLTextures internal constructor(
 
 
     private fun getRenderTargetSamples(renderTarget: GLRenderTarget): Int {
-        return if (renderTarget is GLMultisampleRenderTarget) {
-            min(capabilities.maxSamples, renderTarget.samples)
-        } else {
-            0
-        }
-    }
+        return if (renderTarget !is GLMultisampleRenderTarget) 0 else min(capabilities.maxSamples, renderTarget.samples)
 
+    }
 
     private inner class OnTextureDispose : EventLister {
 

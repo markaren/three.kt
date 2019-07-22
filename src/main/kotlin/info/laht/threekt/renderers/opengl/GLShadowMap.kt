@@ -3,7 +3,6 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.*
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.PerspectiveCamera
-import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.*
@@ -12,10 +11,10 @@ import info.laht.threekt.math.*
 import info.laht.threekt.objects.Line
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.objects.Points
-import info.laht.threekt.objects.SkinnedMesh
 import info.laht.threekt.renderers.GLRenderTarget
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
+import kotlin.math.roundToInt
 
 class GLShadowMap internal constructor(
     private val renderer: GLRenderer,
@@ -26,16 +25,11 @@ class GLShadowMap internal constructor(
     private val frustum = Frustum()
     private val projScreenMatrix = Matrix4()
 
-    private val shadowMapSize = Vector2i()
-    private val maxShadowMapSize = Vector2i(maxTextureSize, maxTextureSize)
+    private val shadowMapSize = Vector2()
+    private val maxShadowMapSize = Vector2(maxTextureSize, maxTextureSize)
 
     private val lookTarget = Vector3()
     private val lightPositionWorld = Vector3()
-
-    private val MorphingFlag = 1
-    private val SkinningFlag = 2
-
-    private val NumberOfMaterialVariants = (MorphingFlag or SkinningFlag) + 1
 
     private val depthMaterials = mutableListOf<MeshDepthMaterial>()
     private val distanceMaterials = mutableListOf<MeshDistanceMaterial>()
@@ -44,19 +38,19 @@ class GLShadowMap internal constructor(
 
     private val shadowSide = mapOf(0 to BackSide, 1 to FrontSide, 2 to DoubleSide)
 
-    var cubeDirections = listOf(
+    private var cubeDirections = listOf(
         Vector3(1f, 0f, 0f), Vector3(-1f, 0f, 0f), Vector3(0f, 0f, 1f),
         Vector3(0f, 0f, -1f), Vector3(0f, 1f, 0f), Vector3(0f, -1f, 0f)
     )
 
-    var cubeUps = listOf(
+    private var cubeUps = listOf(
         Vector3(0f, 1f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 1f, 0f),
         Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f), Vector3(0f, 0f, -1f)
     )
 
-    var cube2DViewPorts = listOf(
-        Vector4i(), Vector4i(), Vector4i(),
-        Vector4i(), Vector4i(), Vector4i()
+    private var cube2DViewPorts = listOf(
+        Vector4(), Vector4(), Vector4(),
+        Vector4(), Vector4(), Vector4()
     )
 
     var enabled = false
@@ -67,6 +61,10 @@ class GLShadowMap internal constructor(
     var type = PCFShadowMap
 
     init {
+
+        val MorphingFlag = 1
+        val SkinningFlag = 2
+        val NumberOfMaterialVariants = (MorphingFlag or SkinningFlag) + 1
 
         for (i in 0 until NumberOfMaterialVariants) {
             val useMorphing = (i and MorphingFlag) != 0
@@ -81,7 +79,7 @@ class GLShadowMap internal constructor(
 
             }
 
-            depthMaterials[i] = depthMaterial
+            depthMaterials.add(depthMaterial)
 
 
             val distanceMaterial = MeshDistanceMaterial().apply {
@@ -91,12 +89,12 @@ class GLShadowMap internal constructor(
 
             }
 
-            distanceMaterials[i] = distanceMaterial
+            distanceMaterials.add(distanceMaterial)
         }
 
     }
 
-    fun render(lights: List<Light>, scene: Scene, camera: Camera) {
+    fun render(lights: List<Object3D>, scene: Scene, camera: Camera) {
 
         if (!enabled) return
         if (!(autoUpdate || needsUpdate)) return
@@ -117,21 +115,13 @@ class GLShadowMap internal constructor(
 
         // render depth map
 
-        var faceCount = 0
+        var faceCount: Int
 
-        for (i in 0 until lights.size) {
+        lights.forEach { light ->
 
-            val light = lights[i]
-            if (light is HasShadow) {
+            if (light is LightWithShadow) {
                 val shadow = light.shadow
                 val isPointLight = light is PointLight
-
-//                if (shadow == null) {
-//
-//                    println("WebGLShadowMap: $light has no shadow.")
-//                    continue
-//
-//                }
 
                 val shadowCamera = shadow.camera
 
@@ -159,15 +149,15 @@ class GLShadowMap internal constructor(
                     // positive X
                     cube2DViewPorts[0].set(vpWidth * 2, vpHeight, vpWidth, vpHeight)
                     // negative X
-                    cube2DViewPorts[1].set(0, vpHeight, vpWidth, vpHeight)
+                    cube2DViewPorts[1].set(0f, vpHeight, vpWidth, vpHeight)
                     // positive Z
                     cube2DViewPorts[2].set(vpWidth * 3, vpHeight, vpWidth, vpHeight)
                     // negative Z
                     cube2DViewPorts[3].set(vpWidth, vpHeight, vpWidth, vpHeight)
                     // positive Y
-                    cube2DViewPorts[4].set(vpWidth * 3, 0, vpWidth, vpHeight)
+                    cube2DViewPorts[4].set(vpWidth * 3, 0f, vpWidth, vpHeight)
                     // negative Y
-                    cube2DViewPorts[5].set(vpWidth, 0, vpWidth, vpHeight)
+                    cube2DViewPorts[5].set(vpWidth, 0f, vpWidth, vpHeight)
 
                     shadowMapSize.x *= 4
                     shadowMapSize.y *= 2
@@ -177,7 +167,7 @@ class GLShadowMap internal constructor(
                 if (shadow.map == null) {
 
                     shadow.map = GLRenderTarget(
-                        shadowMapSize.x, shadowMapSize.y, GLRenderTarget.Options(
+                        shadowMapSize.x.roundToInt(), shadowMapSize.y.roundToInt(), GLRenderTarget.Options(
                             minFilter = NearestFilter,
                             magFilter = NearestFilter,
                             format = RGBAFormat
@@ -189,11 +179,11 @@ class GLShadowMap internal constructor(
 
                 }
 
-//                if (shadow.isSpotLightShadow) {
-//
-//                    shadow.update(light);
-//
-//                }
+                if (shadow is SpotLightShadow) {
+
+                    shadow.update(light as SpotLight);
+
+                }
 
                 val shadowMap = shadow.map
                 val shadowMatrix = shadow.matrix
@@ -212,7 +202,7 @@ class GLShadowMap internal constructor(
 
                 } else {
 
-                    light as HasTarget
+                    light as LightWithTarget
 
                     faceCount = 1
 

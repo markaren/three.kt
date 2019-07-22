@@ -13,11 +13,20 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Predicate
 
 interface GeometryObject {
+
     val geometry: BufferGeometry
+
 }
 
 interface MaterialObject {
+
     val material: Material
+        get() = materials.getOrNull(0) ?: throw IllegalStateException("No material set!")
+
+    val isMultiMaterial
+        get() = materials.size > 1
+
+    val materials: MutableList<Material>
 }
 
 open class Object3D : Cloneable, EventDispatcher() {
@@ -38,7 +47,7 @@ open class Object3D : Cloneable, EventDispatcher() {
     val quaternion = Quaternion().also {
         it.onChangeCallback = { onRotationChange() }
     }
-    val scale = Vector3(1.toFloat(), 1.toFloat(), 1.toFloat())
+    val scale = Vector3(1f, 1f, 1f)
 
     val modelViewMatrix = Matrix4()
     val normalMatrix = Matrix3()
@@ -61,8 +70,8 @@ open class Object3D : Cloneable, EventDispatcher() {
     var customDepthMaterial: MeshDepthMaterial? = null
     var customDistanceMaterial: MeshDistanceMaterial? = null
 
-    internal var onBeforeRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, Group) -> Unit)? = null
-    internal var onAfterRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, Group) -> Unit)? = null
+//    internal var onBeforeRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, Group) -> Unit)? = null
+//    internal var onAfterRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, Group) -> Unit)? = null
 
     private fun onRotationChange() {
         quaternion.setFromEuler(rotation, false)
@@ -272,7 +281,7 @@ open class Object3D : Cloneable, EventDispatcher() {
             it.parent?.remove(it)
             it.parent = this
             children.add(it)
-            it.dispatchEvent("added", this)
+            it.dispatchEvent("added")
         }
 
         return this
@@ -286,7 +295,7 @@ open class Object3D : Cloneable, EventDispatcher() {
         objects.forEach {
             if (children.remove(it)) {
                 it.parent = null
-                it.dispatchEvent("removed", this)
+                it.dispatchEvent("removed")
             }
         }
 
@@ -355,13 +364,13 @@ open class Object3D : Cloneable, EventDispatcher() {
         return null
     }
 
-    fun getWorldPosition(target: Vector3): Vector3 {
+    fun getWorldPosition(target: Vector3 = Vector3()): Vector3 {
         this.updateMatrixWorld(true)
 
         return target.setFromMatrixPosition(this.matrixWorld)
     }
 
-    fun getWorldQuaternion(target: Quaternion): Quaternion {
+    fun getWorldQuaternion(target: Quaternion = Quaternion()): Quaternion {
         this.updateMatrixWorld(true)
 
         this.matrixWorld.decompose(position, target, scale)
@@ -369,7 +378,7 @@ open class Object3D : Cloneable, EventDispatcher() {
         return target
     }
 
-    fun getWorldScale(target: Vector3): Vector3 {
+    fun getWorldScale(target: Vector3 = Vector3()): Vector3 {
         this.updateMatrixWorld(true)
 
         this.matrixWorld.decompose(position, quaternion, target)
@@ -487,14 +496,14 @@ open class Object3D : Cloneable, EventDispatcher() {
     open fun copy(source: Object3D, recursive: Boolean): Object3D {
         this.name = source.name
 
-        this.up.copy( source.up )
+        this.up.copy(source.up)
 
-        this.position.copy( source.position )
-        this.quaternion.copy( source.quaternion )
-        this.scale.copy( source.scale )
+        this.position.copy(source.position)
+        this.quaternion.copy(source.quaternion)
+        this.scale.copy(source.scale)
 
-        this.matrix.copy( source.matrix )
-        this.matrixWorld.copy( source.matrixWorld )
+        this.matrix.copy(source.matrix)
+        this.matrixWorld.copy(source.matrixWorld)
 
         this.matrixAutoUpdate = source.matrixAutoUpdate
         this.matrixWorldNeedsUpdate = source.matrixWorldNeedsUpdate
@@ -508,9 +517,9 @@ open class Object3D : Cloneable, EventDispatcher() {
         this.frustumCulled = source.frustumCulled
         this.renderOrder = source.renderOrder
 
-        if ( recursive ) {
+        if (recursive) {
             children.forEach { child ->
-                this.add( child.clone() )
+                this.add(child.clone())
             }
         }
 
@@ -521,7 +530,7 @@ open class Object3D : Cloneable, EventDispatcher() {
 
         private val object3DId = AtomicInteger()
 
-        var defaultUp = Vector3.Z.clone()
+        var defaultUp = Vector3.Y.clone()
 
     }
 

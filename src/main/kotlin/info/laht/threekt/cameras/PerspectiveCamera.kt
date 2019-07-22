@@ -8,11 +8,16 @@ import kotlin.math.min
 import kotlin.math.tan
 
 class PerspectiveCamera(
-    var fov: Int = 50,
-    var aspect: Float = 1.toFloat(),
-    var near: Float = 0.1.toFloat(),
-    var far: Float = 2000.toFloat()
+    fov: Number = 50,
+    aspect: Number = 1,
+    near: Number = 0.1,
+    far: Number = 2000
 ) : Camera() {
+
+    var fov: Float = fov.toFloat()
+    var aspect: Float = aspect.toFloat()
+    var near: Float = near.toFloat()
+    var far: Float = far.toFloat()
 
     var zoom = 1
     var focus = 10
@@ -20,6 +25,10 @@ class PerspectiveCamera(
     var filmOffset = 0 // horizontal film offset (same unit as gauge)
 
     var view: View? = null
+
+    init {
+        updateProjectionMatrix()
+    }
 
     /**
      * Sets the FOV by focal length in respect to the current .filmGauge.
@@ -34,7 +43,7 @@ class PerspectiveCamera(
         // see http://www.bobatkins.com/photography/technical/field_of_view.html
         val vExtentSlope = 0.5.toFloat() * this.getFilmHeight() / focalLength;
 
-        this.fov = (RAD2DEG * 2 * atan(vExtentSlope)).toInt()
+        this.fov = RAD2DEG * 2 * atan(vExtentSlope)
         this.updateProjectionMatrix();
 
     }
@@ -157,7 +166,7 @@ class PerspectiveCamera(
         var top = near * tan( DEG2RAD * 0.5 * this.fov ).toFloat() / this.zoom
         var height = 2 * top
         var width = this.aspect * height
-        var left = (-0.5).toFloat() * width
+        var left = -0.5f * width
 
         view?.also {
             if (it.enabled) {

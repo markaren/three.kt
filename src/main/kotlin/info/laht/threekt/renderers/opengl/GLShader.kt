@@ -3,27 +3,18 @@ package info.laht.threekt.renderers.opengl
 import org.lwjgl.opengl.GL20
 
 
-class GLShader(
-    val name: String,
-    val uniforms: GLUniforms,
-    val vertexShader: String,
-    val fragmentShader: String
-) {
+fun createShader(
+    type: Int,
+    source: String
+): Int {
 
-    companion object {
+    val shader = GL20.glCreateShader(type)
+    GL20.glShaderSource(shader, source)
+    GL20.glCompileShader(shader)
 
-        fun create(
-            type: Int,
-            source: String
-        ): Int {
+//    println(source)
+//    println(GL20.glGetShaderInfoLog(shader))
 
-            val shader = GL20.glCreateShader(type)
-            GL20.glShaderSource(shader, source)
-            GL20.glCompileShader(shader)
-            return shader
-
-        }
-
-    }
+    return shader
 
 }

@@ -13,6 +13,8 @@ class Points(
     override val material: PointsMaterial = PointsMaterial()
 ): Object3D(), GeometryObject, MaterialObject {
 
+    override val materials = mutableListOf<Material>()
+
     private val raycastHelper by lazy { RaycastHelper() }
 
     override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
@@ -24,9 +26,9 @@ class Points(
         TODO()
     }
 
-//    override fun clone(): Points {
-//        return Points(geometry, material).copy(this, true) as Points
-//    }
+    override fun clone(): Points {
+        return Points(geometry, material).copy(this, true) as Points
+    }
 
     private inner class RaycastHelper {
 

@@ -1,6 +1,6 @@
 package info.laht.threekt.renderers.shaders
 
-object ShaderChunk {
+internal object ShaderChunk {
 
     val alphamap_fragment by lazy {
         load("alphamap_fragment")
@@ -338,6 +338,18 @@ object ShaderChunk {
         load("tonemapping_pars_fragment")
     }
 
+    val uv_pars_fragment by lazy {
+        load("uv_pars_fragment")
+    }
+
+    val uv_pars_vertex by lazy {
+        load("uv_pars_vertex")
+    }
+
+    val uv_vertex by lazy {
+        load("uv_vertex")
+    }
+
     val uv2_pars_fragment by lazy {
         load("uv2_pars_fragment")
     }
@@ -350,17 +362,10 @@ object ShaderChunk {
         load("uv2_vertex")
     }
 
-    val uv_pars_fragment by lazy {
-        load("uv_pars_fragment")
+    val worldpos_vertex by lazy {
+        load("worldpos_vertex")
     }
 
-    val uv_pars_vertex by lazy {
-        load("uv_pars_vertex")
-    }
-
-    val uv_vertex by lazy {
-        load("uv_vertex")
-    }
 
     val background_frag by lazy {
         load("background_frag")
@@ -477,21 +482,33 @@ object ShaderChunk {
         load("sprite_vert")
     }
 
-//    operator fun get(name: String): String? {
-//
-//        return try {
-//            ShaderChunk::class.java.getDeclaredField(name).get(null) as String
-//        } catch (ex: Exception) {
-//            null
-//        }
-//
-//    }
+    operator fun get(name: String): String? {
+
+        return try {
+
+            val method = ShaderChunk::class.java.getDeclaredMethod("get${name.capitalize()}")
+            method.invoke(this) as String
+
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            null
+        }
+
+    }
 
     private fun load(name: String): String {
-        return ShaderChunk::class.java.classLoader.getResourceAsStream("shaders/lib/$name.glsl")
+
+        val path = if (name.endsWith("vert") || name.endsWith("frag")) {
+            "shaders/lib/$name.glsl"
+        } else {
+            "shaders/chunk/$name.glsl"
+        }
+
+        return ShaderChunk::class.java.classLoader.getResourceAsStream(path)
             .bufferedReader().use {
                 it.readText()
             }
+
     }
 
 }

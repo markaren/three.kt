@@ -47,21 +47,21 @@ class Line3 @JvmOverloads constructor(
         val startP = Vector3()
         val startEnd = Vector3()
 
-        startP.subVectors(point, this.start);
-        startEnd.subVectors(this.end, this.start);
+        startP.subVectors(point, this.start)
+        startEnd.subVectors(this.end, this.start)
 
-        val startEnd2 = startEnd.dot(startEnd);
-        val startEnd_startP = startEnd.dot(startP);
+        val startEnd2 = startEnd.dot(startEnd)
+        val startEnd_startP = startEnd.dot(startP)
 
-        var t = startEnd_startP / startEnd2;
+        var t = startEnd_startP / startEnd2
 
         if (clampToLine) {
 
-            t = clamp(t, 0, 1);
+            t = clamp(t, 0, 1)
 
         }
 
-        return t;
+        return t
     }
 
     fun closestPointToPoint(
@@ -69,13 +69,16 @@ class Line3 @JvmOverloads constructor(
         clampToLine: Boolean,
         target: Vector3
     ): Vector3 {
-        TODO()
+        val t = this.closestPointToPointParameter(point, clampToLine)
+        return this.delta(target).multiplyScalar(t).add(this.start)
     }
 
     fun applyMatrix4(matrix: Matrix4): Line3 {
-        TODO()
-    }
+        this.start.applyMatrix4(matrix)
+        this.end.applyMatrix4(matrix)
 
+        return this
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

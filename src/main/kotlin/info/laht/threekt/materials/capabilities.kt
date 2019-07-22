@@ -1,5 +1,13 @@
 package info.laht.threekt.materials
 
+import info.laht.threekt.math.Color
+
+interface MaterialWithColor {
+
+    val color: Color
+
+}
+
 interface MaterialWithMorphTarget {
 
     val morphTargets: Boolean
@@ -18,8 +26,28 @@ interface MaterialWithSkinning {
 
 }
 
+interface MaterialWithClipping {
+
+    val clipping: Boolean
+
+}
+
 interface MaterialWithSizeAttenuation {
 
     val sizeAttenuation: Boolean
+
+}
+
+interface MaterialWithEmissive {
+
+    val emissive: Color
+    var emissiveIntensity: Float
+
+}
+
+interface MaterialWithWireframe {
+
+    var wireframe: Boolean
+    var wireframeLinewidth: Float
 
 }

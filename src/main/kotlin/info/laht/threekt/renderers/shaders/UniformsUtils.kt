@@ -2,7 +2,7 @@ package info.laht.threekt.renderers.shaders
 
 import info.laht.threekt.core.Uniform
 
-internal fun cloneUniforms (src: Map<String, Uniform>): Map<String, Uniform> {
+internal fun cloneUniforms (src: Map<String, Uniform>): MutableMap<String, Uniform> {
 
     val dst = mutableMapOf<String, Uniform>()
 
@@ -16,7 +16,7 @@ internal fun cloneUniforms (src: Map<String, Uniform>): Map<String, Uniform> {
 
 }
 
-internal fun mergeUniforms (uniforms: List<Map<String, Uniform>>): Map<String, Uniform> {
+internal fun mergeUniforms (uniforms: List<Map<String, Uniform>>): MutableMap<String, Uniform> {
 
     val merged = mutableMapOf<String, Uniform>()
 

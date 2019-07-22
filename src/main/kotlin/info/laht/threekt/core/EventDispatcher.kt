@@ -47,9 +47,9 @@ open class EventDispatcher {
     /**
      * Fire an event type.
      */
-    fun dispatchEvent( type: String, target: Any? ) {
+    fun dispatchEvent( type: String ) {
         listeners[type]?.forEach {
-            it.onEvent(Event(type, target))
+            it.onEvent(Event(type, this))
         }
     }
 

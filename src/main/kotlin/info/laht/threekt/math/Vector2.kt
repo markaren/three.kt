@@ -1,71 +1,42 @@
 package info.laht.threekt.math
 
-import info.laht.threekt.core.BufferAttribute
 import info.laht.threekt.core.Cloneable
+import info.laht.threekt.core.FloatBufferAttribute
+import info.laht.threekt.core.IntBufferAttribute
 import kotlin.math.*
 
-data class Vector2i(
-    var x: Int,
-    var y: Int
-): Cloneable {
 
-    constructor() : this(0, 0)
-
-    fun set(x: Int, y: Int): Vector2i {
-        this.x = x
-        this.y = y
-
-        return this
-    }
-
-    /**
-     * If this vector's x or y value is greater than v's x or y value, replace that value with the corresponding min value.
-     */
-    fun min( v: Vector2i ): Vector2i {
-        this.x = min(this.x, v.x)
-        this.y = min(this.y, v.y)
-
-        return this
-    }
-
-    /**
-     * If this vector's x or y value is less than v's x or y value, replace that value with the corresponding max value.
-     */
-    fun max( v: Vector2i ): Vector2i {
-        this.x = max(this.x, v.x)
-        this.y = max(this.y, v.y)
-
-        return this
-    }
-
-    /**
-     * Returns a new Vector2 instance with the same `x` and `y` values.
-     */
-    override fun clone(): Vector2i {
-        return Vector2i(x, y)
-    }
-
-    /**
-     * Copies value of v to this vector.
-     */
-    fun copy( v: Vector2i ): Vector2i {
-        return set(v.x, v.y)
-    }
-
-}
-
-
-data class Vector2(
+class Vector2(
     var x: Float,
     var y: Float
-) {
+) : Cloneable, Flattable {
 
-    constructor(): this(0.toFloat(), 0.toFloat())
+    override val size = 2
+
+    constructor() : this(0.toFloat(), 0.toFloat())
+
+    constructor(x: Int, y: Int) : this(x.toFloat(), y.toFloat())
+
+    var width: Float
+        get() {
+            return x
+        }
+        set(value) {
+            x = value
+        }
+
+    var height: Float
+        get() {
+            return y
+        }
+        set(value) {
+            y = value
+        }
 
     /**
      * Sets value of this vector.
      */
-    fun set( x: Float, y: Float ): Vector2 {
+    fun set(x: Float, y: Float): Vector2 {
         this.x = x
         this.y = y
 
@@ -75,15 +46,15 @@ data class Vector2(
     /**
      * Sets the x and y values of this vector both equal to scalar.
      */
-    fun setScalar( scalar: Float ): Vector2 {
+    fun setScalar(scalar: Float): Vector2 {
         return set(scalar, scalar)
     }
 
     /**
      * Sets a component of this vector.
      */
-    fun setComponent( index: Int, value: Float ): Vector2 {
-        when(index) {
+    fun setComponent(index: Int, value: Float): Vector2 {
+        when (index) {
             0 -> x = value
             1 -> y = value
             else -> throw IndexOutOfBoundsException("")
@@ -95,8 +66,8 @@ data class Vector2(
     /**
      * Gets a component of this vector.
      */
-    fun getComponent( index: Int ): Float {
-        return when(index) {
+    fun getComponent(index: Int): Float {
+        return when (index) {
             0 -> x
             1 -> y
             else -> throw IndexOutOfBoundsException("")
@@ -106,21 +77,21 @@ data class Vector2(
     /**
      * Returns a new Vector2 instance with the same `x` and `y` values.
      */
-    fun clone(): Vector2 {
+    override fun clone(): Vector2 {
         return Vector2(x, y)
     }
 
     /**
      * Copies value of v to this vector.
      */
-    fun copy( v: Vector2 ): Vector2 {
+    fun copy(v: Vector2): Vector2 {
         return set(v.x, v.y)
     }
 
     /**
      * Adds v to this vector.
      */
-    fun add( v: Vector2 ): Vector2 {
+    fun add(v: Vector2): Vector2 {
         this.x += v.x
         this.y += v.y
 
@@ -130,7 +101,7 @@ data class Vector2(
     /**
      * Adds the scalar value s to this vector's x and y values.
      */
-    fun  addScalar( s: Float ): Vector2 {
+    fun addScalar(s: Float): Vector2 {
         this.x += s
         this.y += s
 
@@ -140,7 +111,7 @@ data class Vector2(
     /**
      * Sets this vector to a + b.
      */
-    fun addVectors(a: Vector2, b: Vector2 ): Vector2 {
+    fun addVectors(a: Vector2, b: Vector2): Vector2 {
         this.x = a.x + b.x
         this.y = a.y + b.y
 
@@ -150,7 +121,7 @@ data class Vector2(
     /**
      * Adds the multiple of v and s to this vector.
      */
-    fun addScaledVector(v: Vector2, s: Float ): Vector2 {
+    fun addScaledVector(v: Vector2, s: Float): Vector2 {
         this.x += v.x * s
         this.y += v.y * s
 
@@ -160,7 +131,7 @@ data class Vector2(
     /**
      * Subtracts v from this vector.
      */
-    fun sub( v: Vector2 ): Vector2 {
+    fun sub(v: Vector2): Vector2 {
         this.x -= v.x
         this.y -= v.y
 
@@ -170,7 +141,7 @@ data class Vector2(
     /**
      * Subtracts s from this vector's x and y components.
      */
-    fun subScalar( s: Float ): Vector2 {
+    fun subScalar(s: Float): Vector2 {
         this.x -= s
         this.y -= s
 
@@ -180,7 +151,7 @@ data class Vector2(
     /**
      * Sets this vector to a - b.
      */
-    fun subVectors(a: Vector2, b: Vector2 ): Vector2 {
+    fun subVectors(a: Vector2, b: Vector2): Vector2 {
         this.x = a.x - b.x
         this.y = a.y - b.y
 
@@ -190,7 +161,7 @@ data class Vector2(
     /**
      * Multiplies this vector by v.
      */
-    fun multiply( v: Vector2 ): Vector2 {
+    fun multiply(v: Vector2): Vector2 {
         this.x *= v.x
         this.y *= v.y
 
@@ -200,7 +171,7 @@ data class Vector2(
     /**
      * Multiplies this vector by scalar s.
      */
-    fun multiplyScalar( scalar: Float ): Vector2 {
+    fun multiplyScalar(scalar: Float): Vector2 {
         this.x *= scalar
         this.y *= scalar
 
@@ -210,7 +181,7 @@ data class Vector2(
     /**
      * Divides this vector by v.
      */
-    fun divide( v: Vector2 ): Vector2 {
+    fun divide(v: Vector2): Vector2 {
         this.x /= v.x
         this.y /= v.y
 
@@ -221,20 +192,20 @@ data class Vector2(
      * Divides this vector by scalar s.
      * Set vector to ( 0, 0 ) if s == 0.
      */
-    fun divideScalar( s: Float ): Vector2 {
-        return this.multiplyScalar( 1.toFloat() / s )
+    fun divideScalar(s: Float): Vector2 {
+        return this.multiplyScalar(1.toFloat() / s)
     }
 
     /**
      * Multiplies this vector (with an implicit 1 as the 3rd component) by m.
      */
-    fun applyMatrix3( m: Matrix3 ): Vector2 {
+    fun applyMatrix3(m: Matrix3): Vector2 {
         val x = this.x
         val y = this.y
         val e = m.elements
 
-        this.x = e[ 0 ] * x + e[ 3 ] * y + e[ 6 ]
-        this.y = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ]
+        this.x = e[0] * x + e[3] * y + e[6]
+        this.y = e[1] * x + e[4] * y + e[7]
 
         return this
     }
@@ -242,7 +213,7 @@ data class Vector2(
     /**
      * If this vector's x or y value is greater than v's x or y value, replace that value with the corresponding min value.
      */
-    fun min( v: Vector2 ): Vector2 {
+    fun min(v: Vector2): Vector2 {
         this.x = min(this.x, v.x)
         this.y = min(this.y, v.y)
 
@@ -252,7 +223,7 @@ data class Vector2(
     /**
      * If this vector's x or y value is less than v's x or y value, replace that value with the corresponding max value.
      */
-    fun max( v: Vector2 ): Vector2 {
+    fun max(v: Vector2): Vector2 {
         this.x = max(this.x, v.x)
         this.y = max(this.y, v.y)
 
@@ -265,7 +236,7 @@ data class Vector2(
      * @param min the minimum x and y values.
      * @param max the maximum x and y values in the desired range.
      */
-    fun clamp(min: Vector2, max: Vector2 ): Vector2 {
+    fun clamp(min: Vector2, max: Vector2): Vector2 {
         this.x = max(min.x, min(max.x, this.x))
         this.y = max(min.y, min(max.y, this.y))
 
@@ -278,9 +249,9 @@ data class Vector2(
      * @param min the minimum value the components will be clamped to.
      * @param max the maximum value the components will be clamped to.
      */
-    fun clampScalar( min: Float, max: Float ): Vector2 {
-        this.x = max( min, min( max, this.x ) )
-        this.y = max( min, min( max, this.y ) )
+    fun clampScalar(min: Float, max: Float): Vector2 {
+        this.x = max(min, min(max, this.x))
+        this.y = max(min, min(max, this.y))
 
         return this
     }
@@ -291,8 +262,11 @@ data class Vector2(
      * @param min the minimum value the length will be clamped to.
      * @param max the maximum value the length will be clamped to.
      */
-    fun  clampLength( min: Float, max: Float ): Vector2 {
-        TODO()
+    fun clampLength(min: Float, max: Float): Vector2 {
+        var length = this.length()
+        if (length.isNaN()) length = 1f
+
+        return this.divideScalar( length ).multiplyScalar( max( min, min( max, length ) ) )
     }
 
     /**
@@ -329,8 +303,8 @@ data class Vector2(
      * The components of the vector are rounded towards zero (up if negative, down if positive) to an integer value.
      */
     fun roundToZero(): Vector2 {
-        this.x = if ( this.x < 0 ) ceil(this.x) else floor(this.x)
-        this.y = if ( this.y < 0 ) ceil(this.y) else floor(this.y)
+        this.x = if (this.x < 0) ceil(this.x) else floor(this.x)
+        this.y = if (this.y < 0) ceil(this.y) else floor(this.y)
 
         return this
     }
@@ -339,8 +313,8 @@ data class Vector2(
      * Inverts this vector.
      */
     fun negate(): Vector2 {
-        this.x = - this.x
-        this.y = - this.y
+        this.x = -this.x
+        this.y = -this.y
 
         return this
     }
@@ -348,14 +322,14 @@ data class Vector2(
     /**
      * Computes dot product of this vector and v.
      */
-    fun dot( v: Vector2 ): Float {
+    fun dot(v: Vector2): Float {
         return this.x * v.x + this.y * v.y
     }
 
     /**
      * Computes cross product of this vector and v.
      */
-    fun cross( v: Vector2 ): Float {
+    fun cross(v: Vector2): Float {
         return this.x * v.y - this.y * v.x
     }
 
@@ -370,7 +344,7 @@ data class Vector2(
      * Computes length of this vector.
      */
     fun length(): Float {
-        return sqrt( this.x * this.x + this.y * this.y )
+        return sqrt(this.x * this.x + this.y * this.y)
     }
 
     /**
@@ -392,7 +366,7 @@ data class Vector2(
         if (length.isNaN()) {
             length = 1.toFloat()
         }
-        this.divideScalar(  length )
+        this.divideScalar(length)
 
         return this
     }
@@ -402,7 +376,7 @@ data class Vector2(
      */
     fun angle(): Float {
         var angle = atan2(this.y, this.x)
-        if ( angle < 0 ) {
+        if (angle < 0) {
             angle += 2 * PI.toFloat()
         }
         return angle
@@ -411,14 +385,14 @@ data class Vector2(
     /**
      * Computes distance of this vector to v.
      */
-    fun distanceTo( v: Vector2 ): Float {
-        return sqrt( this.distanceToSquared( v ) )
+    fun distanceTo(v: Vector2): Float {
+        return sqrt(this.distanceToSquared(v))
     }
 
     /**
      * Computes squared distance of this vector to v.
      */
-    fun distanceToSquared( v: Vector2 ): Float {
+    fun distanceToSquared(v: Vector2): Float {
         val dx = this.x - v.x
         val dy = this.y - v.y
         return dx * dx + dy * dy
@@ -433,16 +407,16 @@ data class Vector2(
      *
      * @see {@link http://en.wikipedia.org/wiki/Taxicab_geometry|Wikipedia: Taxicab Geometry}
      */
-    fun manhattanDistanceTo( v: Vector2 ): Float {
+    fun manhattanDistanceTo(v: Vector2): Float {
         return abs(this.x - v.x) + abs(this.y - v.y)
     }
 
     /**
      * Normalizes this vector and multiplies it by l.
      */
-    fun setLength( length: Float ) {
+    fun setLength(length: Float) {
         this.normalize().also {
-            multiplyScalar( length )
+            multiplyScalar(length)
         }
     }
 
@@ -451,9 +425,9 @@ data class Vector2(
      * @param v vector to interpolate towards.
      * @param alpha interpolation factor in the closed interval [0, 1].
      */
-    fun lerp(v: Vector2, alpha: Float ): Vector2 {
-        this.x += ( v.x - this.x ) * alpha
-        this.y += ( v.y - this.y ) * alpha
+    fun lerp(v: Vector2, alpha: Float): Vector2 {
+        this.x += (v.x - this.x) * alpha
+        this.y += (v.y - this.y) * alpha
 
         return this
     }
@@ -464,8 +438,8 @@ data class Vector2(
      * @param v2 vector to interpolate towards.
      * @param alpha interpolation factor in the closed interval [0, 1].
      */
-    fun lerpVectors(v1: Vector2, v2: Vector2, alpha: Float ) {
-        TODO()
+    fun lerpVectors(v1: Vector2, v2: Vector2, alpha: Float): Vector2 {
+        return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
     }
 
     /**
@@ -473,8 +447,11 @@ data class Vector2(
      * @param array the source array.
      * @param offset (optional) offset into the array. Default is 0.
      */
-    fun fromArray( array: FloatArray, offset: Int = 0 ) {
-        TODO()
+    fun fromArray(array: FloatArray, offset: Int = 0): Vector2 {
+        this.x = array[offset];
+        this.y = array[offset + 1];
+
+        return this;
     }
 
     /**
@@ -483,8 +460,12 @@ data class Vector2(
      * @param offset (optional) optional offset into the array.
      * @return The created or provided array.
      */
-    @JvmOverloads
-    fun toArray(array: FloatArray = FloatArray(2), offset: Int = 0 ): FloatArray {
+
+    override fun toArray(array: FloatArray?, offset: Int): FloatArray {
+
+        @Suppress("NAME_SHADOWING")
+        val array = array ?: FloatArray(2)
+
         return array.also {
             array[0] = x
             array[1] = y
@@ -496,8 +477,11 @@ data class Vector2(
      * @param attribute the source attribute.
      * @param index index in the attribute.
      */
-    fun fromBufferAttribute( attribute: BufferAttribute, index: Float ) {
-        TODO()
+    fun fromBufferAttribute(attribute: FloatBufferAttribute, index: Int): Vector2 {
+        this.x = attribute.getX(index)
+        this.y = attribute.getY(index)
+
+        return this
     }
 
     /**
@@ -505,7 +489,7 @@ data class Vector2(
      * @param center the point around which to rotate.
      * @param angle the angle to rotate, in radians.
      */
-    fun rotateAround(center: Vector2, angle: Float ): Vector2 {
+    fun rotateAround(center: Vector2, angle: Float): Vector2 {
         val c = cos(angle)
         val s = sin(angle)
 

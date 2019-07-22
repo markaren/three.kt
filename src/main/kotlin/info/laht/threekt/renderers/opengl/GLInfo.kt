@@ -7,6 +7,8 @@ class GLInfo internal constructor() {
     val memory = Memory()
     val render = Render()
 
+    var autoReset = true
+
     fun update(count: Int, mode: Int, instanceCount: Int = 1) {
         render.calls++
 

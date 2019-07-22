@@ -3,7 +3,7 @@ package info.laht.threekt.renderers.opengl
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.*
 
-class GLCapabilities {
+class GLCapabilities internal constructor(){
 
     val maxAnisotropy by lazy {
         GL11.glGetInteger(GL46.GL_MAX_TEXTURE_MAX_ANISOTROPY)

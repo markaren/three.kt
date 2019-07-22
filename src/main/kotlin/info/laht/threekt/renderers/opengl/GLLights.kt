@@ -1,13 +1,14 @@
 package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.cameras.Camera
-import info.laht.threekt.cameras.PerspectiveCamera
+import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.*
 import info.laht.threekt.math.*
 import info.laht.threekt.textures.Texture
+import kotlin.math.cos
 
 
-class GLLights {
+class GLLights internal constructor() {
 
     private val cache = UniformsCache()
 
@@ -17,7 +18,7 @@ class GLLights {
     private var matrix4 = Matrix4()
     private var matrix42 = Matrix4()
 
-    fun setup(lights: List<Light>, shadows: List<LightShadow>, camera: Camera) {
+    fun setup(lights: List<Light>, shadows: List<Object3D>, camera: Camera) {
 
         var r = 0f
         var g = 0f
@@ -38,6 +39,10 @@ class GLLights {
             val color = light.color
             val intensity = light.intensity
 
+            val shadowMap = if (light is LightWithShadow && light.shadow.map != null) {
+                light.shadow.map!!.texture
+            } else null
+
             when (light) {
                 is AmbientLight -> {
                     r += color.r * intensity
@@ -46,7 +51,7 @@ class GLLights {
                 }
                 is LightProbe -> {
                     for (i in 0 until 9) {
-                        state.probe[ i ].addScaledVector( light.sh.coefficients[ i ], intensity )
+                        state.probe[i].addScaledVector(light.sh.coefficients[i], intensity)
                     }
                 }
                 is PointLight -> {
@@ -73,13 +78,48 @@ class GLLights {
 
                     }
 
-                    val shadowMap = light.shadow.map?.texture
-
                     state.pointShadowMap[pointLength] = shadowMap
                     state.pointShadowMatrix[pointLength] = light.shadow.matrix
                     state.point[pointLength] = uniforms
 
                     pointLength++
+                }
+                is SpotLight -> {
+                    val distance = light.distance
+                    val uniforms = cache[light] as SpotLightUniforms
+
+                    uniforms.position.setFromMatrixPosition( light.matrixWorld )
+                    uniforms.position.applyMatrix4( viewMatrix )
+
+                    uniforms.color.copy( color ).multiplyScalar( intensity )
+                    uniforms.distance = distance
+
+                    uniforms.direction.setFromMatrixPosition( light.matrixWorld )
+                    vector3.setFromMatrixPosition( light.target.matrixWorld )
+                    uniforms.direction.sub( vector3 )
+                    uniforms.direction.transformDirection( viewMatrix )
+
+                    uniforms.coneCos = cos(light.angle)
+                    uniforms.penumbraCos = cos( light.angle * ( 1 - light.penumbra ) )
+                    uniforms.decay = light.decay
+
+                    uniforms.shadow = light.castShadow
+
+                    if ( light.castShadow ) {
+
+                        val shadow = light.shadow
+
+                        uniforms.shadowBias = shadow.bias
+                        uniforms.shadowRadius = shadow.radius
+                        uniforms.shadowMapSize.copy(shadow.mapSize)
+
+                    }
+
+                    state.spotShadowMap[ spotLength ] = shadowMap
+                    state.spotShadowMatrix[ spotLength ] = light.shadow.matrix
+                    state.spot[ spotLength ] = uniforms
+
+                    spotLength ++
                 }
             }
 
@@ -135,11 +175,11 @@ class GLLights {
         val directional = mutableListOf<Any>()
         val directionalShadowMap = mutableListOf<Texture?>()
         val directionalShadowMatrix = mutableListOf<Matrix4>()
-        val spot = mutableListOf<Any>()
+        val spot = mutableListOf<SpotLightUniforms>()
         val spotShadowMap = mutableListOf<Texture?>()
         val spotShadowMatrix = mutableListOf<Matrix4>()
         val rectArea = mutableListOf<Any>()
-        val point = mutableListOf<Any>()
+        val point = mutableListOf<PointLightUniforms>()
         val pointShadowMap = mutableListOf<Texture?>()
         val pointShadowMatrix = mutableListOf<Matrix4>()
         val hemi = mutableListOf<Any>()
@@ -166,6 +206,7 @@ class GLLights {
                 when (light) {
                     is AmbientLight -> AmbientLightUniforms()
                     is PointLight -> PointLightUniforms()
+                    is SpotLight -> SpotLightUniforms()
                     else -> throw IllegalArgumentException("")
                 }
 
@@ -177,19 +218,19 @@ class GLLights {
 
 }
 
-private sealed class LightUniforms
+sealed class LightUniforms
 
-private class AmbientLightUniforms : LightUniforms() {
+class AmbientLightUniforms : LightUniforms() {
     val direction = Vector3()
     val color = Color()
 
     var shadow = false
     var shadowBias = 0f
     var shadowRadius = 1f
-    val shadowMapSize = Vector2i()
+    val shadowMapSize = Vector2()
 }
 
-private class PointLightUniforms : LightUniforms() {
+class PointLightUniforms : LightUniforms() {
     val position = Vector3()
     val color = Color()
     var distance = 0f
@@ -198,7 +239,22 @@ private class PointLightUniforms : LightUniforms() {
     var shadow = false
     var shadowBias = 0f
     var shadowRadius = 1f
-    var shadowMapSize = Vector2i()
+    var shadowMapSize = Vector2()
     var shadowCameraNear = 1f
     var shadowCameraFar = 1000f
+}
+
+class SpotLightUniforms : LightUniforms() {
+    val position = Vector3()
+    val direction = Vector3()
+    val color = Color()
+    var distance = 0f
+    var coneCos = 0f
+    var penumbraCos = 0f
+    var decay = 0f
+
+    var shadow = false
+    var shadowBias = 0f
+    var shadowRadius = 1f
+    val shadowMapSize = Vector2()
 }

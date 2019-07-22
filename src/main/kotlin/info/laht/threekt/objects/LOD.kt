@@ -10,7 +10,7 @@ class LOD: Object3D() {
 
     private val levels = mutableListOf<Level>()
 
-    val autoUpdate = true
+    var autoUpdate = true
 
     fun copy( source: LOD ): LOD {
 

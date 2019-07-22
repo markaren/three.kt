@@ -4,7 +4,6 @@ import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix3
 import info.laht.threekt.math.Vector2
-import info.laht.threekt.math.Vector2i
 
 object UniformsLib {
 
@@ -58,7 +57,7 @@ object UniformsLib {
     val normalmap = mapOf(
 
         "normalMap" to Uniform(null),
-        "normalScale" to Uniform(Vector2i(1, 1))
+        "normalScale" to Uniform(Vector2(1, 1))
     )
 
     val displacementmap = mapOf(

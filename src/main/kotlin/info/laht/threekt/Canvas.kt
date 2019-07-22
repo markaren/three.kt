@@ -4,6 +4,13 @@ import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
 import java.io.Closeable
 import org.lwjgl.glfw.GLFWErrorCallback
+import org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose
+import org.lwjgl.glfw.GLFW.GLFW_RELEASE
+import org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE
+import java.awt.SystemColor.window
+import org.lwjgl.glfw.GLFW.glfwSetKeyCallback
+
+
 
 
 class Canvas(
@@ -12,7 +19,7 @@ class Canvas(
     private val title: String = "Untitled"
 ): Closeable {
 
-    internal val pointer: Long
+    private val pointer: Long
 
     init {
         val errorCallback = GLFWErrorCallback.createPrint(System.err)
@@ -32,12 +39,21 @@ class Canvas(
     }
 
     private fun createWindow(): Long {
-        // In order to see anything, we create a new pointer using GLFW's glfwCreateWindow().
+        // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
         val window = glfwCreateWindow(width, height, title, 0, 0)
 
+        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
+        glfwSetKeyCallback(window) { window, key, scancode, action, mods ->
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+                glfwSetWindowShouldClose(window, true) // We will detect this in the rendering loop
+        }
+
         // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
         glfwMakeContextCurrent(window)
+
+        // Enable v-sync
+        glfwSwapInterval(1);
 
         // Tell LWJGL 3 that an OpenGL context is current in this thread. This will result in LWJGL 3 querying function
         // pointers for various OpenGL functions.
@@ -45,6 +61,11 @@ class Canvas(
 
         // Return the handle to the created pointer.
         return window
+    }
+
+    fun tick() {
+        glfwSwapBuffers(pointer)
+        glfwPollEvents()
     }
 
 }

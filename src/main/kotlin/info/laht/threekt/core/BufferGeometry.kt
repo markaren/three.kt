@@ -104,7 +104,7 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
             boundingBox = Box3()
         }
 
-        val bb = boundingBox ?: Box3()
+        val bb = boundingBox!!
 
         val position = this.attributes.position;
         if (position != null) {
@@ -117,8 +117,6 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
         if (bb.min.x.isNaN() || bb.min.y.isNaN() || bb.min.z.isNaN()) {
             println("BufferGeometry.computeBoundingBox: Computed min/max have NaN values. The 'position' attribute is likely to have NaN values.")
         }
-
-        boundingBox = bb
 
     }
 
@@ -174,18 +172,18 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
 
         if (attributes.position != null) {
 
-            val positions = attributes.position.array
+            val positions = attributes.position!!.array
 
             if (attributes.normal == null) {
 
-                this.addAttribute("normal", DoubleBufferAttribute(DoubleArray(positions.size), 3));
+                this.addAttribute("normal", FloatBufferAttribute(FloatArray(positions.size), 3));
 
             } else {
 
                 // reset existing normals to zero
-                val array = attributes.normal.array;
+                val array = attributes.normal!!.array;
                 for (i in 0 until array.size) {
-                    array[i] = 0.toFloat()
+                    array[i] = 0f
                 }
 
             }
@@ -266,7 +264,7 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
 
             this.normalizeNormals()
 
-            attributes.normal.needsUpdate = true
+            attributes.normal!!.needsUpdate = true
 
         }
     }
@@ -283,14 +281,12 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
             val l1 = when (attribute1) {
                 is IntBufferAttribute -> attribute1.size
                 is FloatBufferAttribute -> attribute1.size
-                is DoubleBufferAttribute -> attribute1.size
             }
 
             val attribute2 = geometry.attributes[key]!!
             val l2 = when (attribute2) {
                 is IntBufferAttribute -> attribute2.size
                 is FloatBufferAttribute -> attribute2.size
-                is DoubleBufferAttribute -> attribute2.size
             }
 
             val attributeOffset = attribute2.itemSize * offset
@@ -301,7 +297,6 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
                 when (attribute1) {
                     is IntBufferAttribute -> attribute1.array[j] = (attribute2 as IntBufferAttribute).array[i]
                     is FloatBufferAttribute -> attribute1.array[j] = (attribute2 as FloatBufferAttribute).array[i]
-                    is DoubleBufferAttribute -> attribute1.array[j] = (attribute2 as DoubleBufferAttribute).array[i]
                 }
                 j++
             }
@@ -424,7 +419,7 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
     }
 
     fun dispose() {
-        dispatchEvent("dispose", this)
+        dispatchEvent("dispose")
     }
 
     private companion object {

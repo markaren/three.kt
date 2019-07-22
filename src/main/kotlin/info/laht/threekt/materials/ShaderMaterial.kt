@@ -3,28 +3,31 @@ package info.laht.threekt.materials
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.renderers.shaders.ShaderChunk
 
-open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals {
+open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithClipping {
 
-    var type = "ShaderMaterial"
+    public override var uniforms: MutableMap<String, Uniform> = mutableMapOf()
 
-    var uniforms: Map<String, Uniform> = emptyMap()
-        internal set
-
-    var vertexShader = ShaderChunk.default_vertex
-    var fragmentShader = ShaderChunk.default_fragment
+    public override var vertexShader = ShaderChunk.default_vertex
+    public override var fragmentShader = ShaderChunk.default_fragment
 
     var linewidth = 1f
 
     var wireframe = false
     var wireframeLinewidth = 1f
 
-    var clipping = false // set to use user-defined clipping planes
+    override var clipping = false // set to use user-defined clipping planes
 
     override var skinning = false // set to use skinning attribute streams
     override var morphTargets = false // set to use morph targets
     override var morphNormals = false // set to use morph normals
 
     val extensions = Extensions()
+
+    val defaultAttributeValues = mutableMapOf<String, Any>(
+        "color" to floatArrayOf(1f, 1f, 1f),
+        "uv" to floatArrayOf(0f, 0f),
+        "uv2" to floatArrayOf(0f, 0f)
+    )
 
     var uniformsNeedUpdate = false
 

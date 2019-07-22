@@ -25,7 +25,7 @@ abstract class Camera: Object3D() {
 
     abstract override fun clone(): Camera
 
-    override fun getWorldDirection(target: Vector3 ): Vector3 {
+    override fun getWorldDirection( target: Vector3 ): Vector3 {
 
         this.updateMatrixWorld( true )
 

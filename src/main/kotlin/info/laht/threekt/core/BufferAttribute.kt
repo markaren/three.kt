@@ -8,7 +8,7 @@ import kotlin.properties.Delegates
 sealed class BufferAttribute(
     internal var itemSize: Int,
     internal var normalized: Boolean = false
-): Cloneable {
+) : Cloneable {
 
     var name = ""
 
@@ -22,14 +22,10 @@ sealed class BufferAttribute(
     var dynamic: Boolean = false
     internal var updateRange = UpdateRange(0, -1)
 
-    internal var onUploadCallback: Runnable? = null
+    internal var onUploadCallback: (() -> Unit)? = null
 
     var needsUpdate by Delegates.observable(false) { _, _, newValue ->
         if (newValue) version++
-    }
-
-    fun onUpload(callback: Runnable) {
-        onUploadCallback = callback
     }
 
     fun copy(source: BufferAttribute): BufferAttribute {
@@ -306,116 +302,13 @@ class FloatBufferAttribute(
 
 }
 
-class DoubleBufferAttribute(
-    internal var array: DoubleArray,
-    itemSize: Int,
-    normalized: Boolean = false
-) : BufferAttribute(itemSize, normalized) {
-
-    override val size: Int
-        get() = array.size
-
-    fun getX(index: Int): Double {
-        return array[index * itemSize]
-    }
-
-    fun setX(index: Int, value: Double): DoubleBufferAttribute {
-        array[index * itemSize] = value
-        return this
-    }
-
-    fun getY(index: Int): Double {
-        return array[index * itemSize + 1]
-    }
-
-    fun setY(index: Int, value: Double): DoubleBufferAttribute {
-        array[index * itemSize + 1] = value
-        return this
-    }
-
-    fun getZ(index: Int): Double {
-        return array[index * itemSize + 2]
-    }
-
-    fun setZ(index: Int, value: Double): DoubleBufferAttribute {
-        array[index * itemSize + 2] = value
-        return this
-    }
-
-    fun getW(index: Int): Double {
-        return array[index * itemSize + 3]
-    }
-
-    fun setW(index: Int, value: Double): DoubleBufferAttribute {
-        array[index * itemSize + 3] = value
-        return this
-    }
-
-    fun setXY(index: Int, x: Double, y: Double): DoubleBufferAttribute {
-        @Suppress("NAME_SHADOWING")
-        val index = index * itemSize
-
-        array[index + 0] = x
-        array[index + 1] = y
-
-        return this
-    }
-
-    fun setXYZ(index: Int, x: Double, y: Double, z: Double): DoubleBufferAttribute {
-        @Suppress("NAME_SHADOWING")
-        val index = index * itemSize
-
-        array[index + 0] = x
-        array[index + 1] = y
-        array[index + 2] = z
-
-        return this
-    }
-
-    fun setXYZW(index: Int, x: Double, y: Double, z: Double, w: Double): DoubleBufferAttribute {
-        @Suppress("NAME_SHADOWING")
-        val index = index * itemSize
-
-        array[index + 0] = x
-        array[index + 1] = y
-        array[index + 2] = z
-        array[index + 3] = w
-
-        return this
-    }
-
-    fun copy(source: DoubleBufferAttribute): DoubleBufferAttribute {
-        super.copy(this)
-        array = source.array.clone()
-        return this
-    }
-
-    @Suppress("NAME_SHADOWING")
-    fun copyAt(index1: Int, attribute: DoubleBufferAttribute, index2: Int): DoubleBufferAttribute {
-
-        val index1 = index1 * this.itemSize;
-        val index2 = index2 * attribute.itemSize;
-
-        for (i in 0 until itemSize) {
-            array[index1 + i] = attribute.array[index2 + i];
-        }
-
-        return this
-    }
-
-    override fun clone(): DoubleBufferAttribute {
-        return DoubleBufferAttribute(array.clone(), itemSize, normalized)
-    }
-
-}
-
 class BufferAttributes : HashMap<String, BufferAttribute>() {
 
-    val index = get("index") as IntBufferAttribute?
-    val position = get("position") as FloatBufferAttribute?
-    val normal = get("normal") as FloatBufferAttribute?
-    val uv = get("uv") as IntBufferAttribute?
-    val color = get("color") as FloatBufferAttribute?
-    val tangent = get("tangent") as FloatBufferAttribute?
+    val index get() = get("index") as IntBufferAttribute?
+    val position get() = get("position") as FloatBufferAttribute?
+    val normal get() = get("normal") as FloatBufferAttribute?
+    val uv get() = get("uv") as IntBufferAttribute?
+    val color get() = get("color") as FloatBufferAttribute?
+    val tangent get() = get("tangent") as FloatBufferAttribute?
 
 }

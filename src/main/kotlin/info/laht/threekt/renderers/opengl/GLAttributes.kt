@@ -1,7 +1,6 @@
 package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.core.BufferAttribute
-import info.laht.threekt.core.DoubleBufferAttribute
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.core.IntBufferAttribute
 import org.lwjgl.opengl.GL11
@@ -12,7 +11,7 @@ class GLAttributes internal constructor() {
 
     private val buffers = WeakHashMap<BufferAttribute, Buffer>()
 
-    fun createBuffer(attribute: BufferAttribute, bufferType: Int): Buffer {
+    private fun createBuffer(attribute: BufferAttribute, bufferType: Int): Buffer {
 
         val usage = if (attribute.dynamic) GL15.GL_DYNAMIC_DRAW else GL15.GL_STATIC_DRAW
 
@@ -28,17 +27,13 @@ class GLAttributes internal constructor() {
                 GL15.glBufferData(bufferType, attribute.array, usage)
                 GL11.GL_FLOAT to 4
             }
-            is DoubleBufferAttribute -> {
-                GL15.glBufferData(bufferType, attribute.array, usage)
-                GL11.GL_DOUBLE to 8
-            }
         }
 
         return Buffer(buffer, type, bytesPerElement, attribute.version)
 
     }
 
-    fun updateBuffer(buffer: Int, attribute: BufferAttribute, bufferType: Int) {
+    private fun updateBuffer(buffer: Int, attribute: BufferAttribute, bufferType: Int, bytesPerElement: Int) {
 
         val updateRange = attribute.updateRange;
 
@@ -53,24 +48,20 @@ class GLAttributes internal constructor() {
             is IntBufferAttribute -> {
                 if (!attribute.dynamic) GL15.glBufferData(bufferType, attribute.array, GL15.GL_STATIC_DRAW)
                 else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.array)
+                else if (updateRange.count == 0) println("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
                 else {
-                    TODO()
+                    val sub = attribute.array.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
+                    GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
                     updateRange.count = -1
                 }
             }
             is FloatBufferAttribute -> {
                 if (!attribute.dynamic) GL15.glBufferData(bufferType, attribute.array, GL15.GL_STATIC_DRAW)
                 else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.array)
+                else if (updateRange.count == 0) println("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
                 else {
-                    TODO()
-                    updateRange.count = -1
-                }
-            }
-            is DoubleBufferAttribute -> {
-                if (!attribute.dynamic) GL15.glBufferData(bufferType, attribute.array, GL15.GL_STATIC_DRAW)
-                else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.array)
-                else {
-                    TODO()
+                    val sub = attribute.array.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
+                    GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
                     updateRange.count = -1
                 }
             }
@@ -79,7 +70,7 @@ class GLAttributes internal constructor() {
     }
 
     fun get(attribute: BufferAttribute): Buffer {
-        return buffers[attribute]!!
+        return buffers[attribute] ?: throw IllegalStateException("")
     }
 
     fun remove(attribute: BufferAttribute) {
@@ -95,7 +86,7 @@ class GLAttributes internal constructor() {
         if (data == null) {
             buffers[attribute] = createBuffer(attribute, bufferType)
         } else if (data.version < attribute.version) {
-            updateBuffer(data.buffer, attribute, bufferType)
+            updateBuffer(data.buffer, attribute, bufferType, data.bytesPerElement)
             data.version = attribute.version
         }
 

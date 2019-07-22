@@ -7,14 +7,14 @@ class Scene: Object3D() {
 
     var background: Background? = null
 
-    var fog: Fog? = null
+    var fog: _Fog? = null
 
     var overrideMaterial: Material? = null
 
     var autoUpdate = true
 
     fun dispose() {
-        dispatchEvent("dispose", this)
+        dispatchEvent("dispose")
     }
 
     fun copy( source: Scene, recursive: Boolean ): Scene {

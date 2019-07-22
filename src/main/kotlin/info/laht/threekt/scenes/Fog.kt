@@ -9,6 +9,8 @@ sealed class _Fog(
 
     var name = ""
 
+    abstract override fun clone(): _Fog
+
 }
 
 class Fog(

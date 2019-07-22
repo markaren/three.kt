@@ -1,6 +1,7 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
+import info.laht.threekt.core.FloatBufferAttribute
 
 
 class Vector4(
@@ -8,15 +9,19 @@ class Vector4(
     var y: Float,
     var z: Float,
     var w: Float
-) : Cloneable {
+) : Cloneable, Flattable {
+
+    override val size = 4
 
     constructor() : this(0.toFloat(), 0.toFloat(), 0.toFloat(), 0.toFloat())
 
-    fun set(x: Float, y: Float, z: Float, w: Float): Vector4 {
-        this.x = x
-        this.y = y
-        this.z = z
-        this.w = w
+    constructor(x: Int, y: Int, z: Int, w: Int) : this(x.toFloat(), y.toFloat(), z.toFloat(), w.toFloat())
+
+    fun set(x: Number, y: Number, z: Number, w: Number): Vector4 {
+        this.x = x.toFloat()
+        this.y = y.toFloat()
+        this.z = z.toFloat()
+        this.w = w.toFloat()
 
         return this
     }
@@ -27,6 +32,17 @@ class Vector4(
         this.y *= scalar.toFloat()
         this.z *= scalar.toFloat()
         this.w *= scalar.toFloat()
+
+        return this
+
+    }
+
+    fun floor (): Vector4 {
+
+        this.x = kotlin.math.floor( this.x )
+        this.y = kotlin.math.floor( this.y )
+        this.z = kotlin.math.floor( this.z )
+        this.w = kotlin.math.floor( this.w )
 
         return this
 
@@ -47,6 +63,47 @@ class Vector4(
 
         return this
 
+    }
+
+    fun fromBufferAttribute(attribute: FloatBufferAttribute, index: Int): Vector4 {
+
+        this.x = attribute.getX(index)
+        this.y = attribute.getY(index)
+        this.z = attribute.getZ(index)
+        this.w = attribute.getW(index)
+
+        return this
+
+    }
+
+    fun fromArray(array: FloatArray, offset: Int = 0): Vector4 {
+
+        this.x = array[offset]
+        this.y = array[offset + 1]
+        this.z = array[offset + 2]
+        this.w = array[offset + 3]
+
+        return this
+
+    }
+
+    /**
+     * Returns an array [x, y, z], or copies x, y and z into the provided array.
+     * @param array (optional) array to store the vector to. If Vector3 is not provided, a new array will be created.
+     * @param offset (optional) optional offset into the array.
+     * @return The created or provided array.
+     */
+    override fun toArray(array: FloatArray?, offset: Int): FloatArray {
+
+        @Suppress("NAME_SHADOWING")
+        val array = array ?: FloatArray(4)
+
+        array[offset] = this.x
+        array[offset + 1] = this.y
+        array[offset + 2] = this.z
+        array[offset + 3] = this.w
+
+        return array
     }
 
     override fun clone(): Vector4 {

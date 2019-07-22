@@ -14,7 +14,7 @@ class GLObjects(
 
     fun update(`object`: Object3D): BufferGeometry {
 
-        if (!(`object` is GeometryObject)) throw IllegalArgumentException("Object does not have a geometry!")
+        if (`object` !is GeometryObject) throw IllegalArgumentException("Object does not have a geometry!")
 
         val frame = info.render.frame
 

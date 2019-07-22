@@ -9,7 +9,11 @@ sealed class Background
 
 class ColorBackground(
     val color: Color
-): Background()
+): Background() {
+
+    constructor(hex: Int): this(Color(hex))
+
+}
 
 class TextureBackground(
     val texture: Texture

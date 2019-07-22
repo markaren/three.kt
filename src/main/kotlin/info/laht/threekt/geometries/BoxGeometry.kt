@@ -6,13 +6,15 @@ import info.laht.threekt.math.Vector3
 typealias BoxGeometry = BoxBufferGeometry
 
 class BoxBufferGeometry(
-    val width: Float = 1.toFloat(),
-    val height: Float = 1.toFloat(),
-    val depth: Float = 1.toFloat(),
+    val width: Float = 1f,
+    val height: Float = 1f,
+    val depth: Float = 1f,
     val widthSegments: Int = 1,
     val heightSegments: Int = 1,
     val depthSegments: Int = 1
 ): BufferGeometry() {
+
+    constructor(extents: Float): this(extents, extents, extents)
 
     init {
 
@@ -105,9 +107,9 @@ class BoxBufferGeometry(
                     vertices[vertexBufferOffset + 2] = vector.z
 
                     // set values to correct vector component
-                    vector.setComponent(u, 0.toFloat())
-                    vector.setComponent(v, 0.toFloat())
-                    vector.setComponent(w, if (depth > 0) 1.toFloat() else (-1).toFloat())
+                    vector.setComponent(u, 0f)
+                    vector.setComponent(v, 0f)
+                    vector.setComponent(w, if (depth > 0) 1f else -1f)
 
                     // now apply vector to normal buffer
                     normals[vertexBufferOffset] = vector.x

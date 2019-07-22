@@ -3,9 +3,8 @@ package info.laht.threekt.textures
 import info.laht.threekt.*
 import info.laht.threekt.core.EventDispatcher
 import info.laht.threekt.math.Matrix3
-import info.laht.threekt.math.Vector2i
+import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.generateUUID
-import java.awt.image.BufferedImage
 import java.nio.ByteBuffer
 
 
@@ -43,9 +42,9 @@ open class Texture(
     open var format = format ?: RGBAFormat
     var type = type ?: UnsignedByteType
 
-    val offset = Vector2i(0, 0)
-    val repeat = Vector2i(1, 1)
-    val center = Vector2i(0, 0)
+    val offset = Vector2(0, 0)
+    val repeat = Vector2(1, 1)
+    val center = Vector2(0, 0)
     var rotation = 0f
 
     var matrixAutoUpdate = true
@@ -76,10 +75,10 @@ open class Texture(
             this.rotation,
             this.center.x,
             this.center.y
-        );
+        )
     }
 
-    fun transformUv(uv: Vector2i): Vector2i {
+    fun transformUv(uv: Vector2): Vector2 {
         TODO()
     }
 
@@ -117,8 +116,7 @@ open class Texture(
         this.rotation = source.rotation
 
         this.generateMipmaps = source.generateMipmaps
-//        this.premultiplyAlpha = source.premultiplyAlpha
-//        this.flipY = source.flipY
+
         this.unpackAlignment = source.unpackAlignment
         this.encoding = source.encoding
 
@@ -126,7 +124,7 @@ open class Texture(
     }
 
     fun dispose() {
-        dispatchEvent("dispose", this)
+        dispatchEvent("dispose")
     }
 
     private companion object {

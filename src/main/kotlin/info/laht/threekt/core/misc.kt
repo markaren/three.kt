@@ -1,16 +1,16 @@
 package info.laht.threekt.core
 
-internal class DrawRange(
+class DrawRange(
     var start: Int,
     var count: Int
 )
 
-internal class UpdateRange(
+class UpdateRange(
     var offset: Int,
     var count: Int
 )
 
-internal class GeometryGroup(
+class GeometryGroup(
     var start: Int,
     var count: Int,
     var materialIndex: Int = 0

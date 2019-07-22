@@ -2,9 +2,9 @@ package info.laht.threekt.materials
 
 import info.laht.threekt.math.Color
 
-class LineBasicMaterial: Material() {
+open class LineBasicMaterial: Material(), MaterialWithColor {
 
-    val color = Color( 0xffffff )
+    override val color = Color( 0xffffff )
 
     var linewidth = 1f
     var linecap = "round"
