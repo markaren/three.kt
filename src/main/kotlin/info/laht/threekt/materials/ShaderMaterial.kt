@@ -3,7 +3,7 @@ package info.laht.threekt.materials
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.renderers.shaders.ShaderChunk
 
-open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithClipping {
+open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithClipping, MaterialWithWireframe {
 
     public override var uniforms: MutableMap<String, Uniform> = mutableMapOf()
 
@@ -12,8 +12,8 @@ open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphT
 
     var linewidth = 1f
 
-    var wireframe = false
-    var wireframeLinewidth = 1f
+    override var wireframe = false
+    override var wireframeLinewidth = 1f
 
     override var clipping = false // set to use user-defined clipping planes
 

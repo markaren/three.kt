@@ -495,10 +495,10 @@ class GLProgram internal constructor(
 
         }
 
-        fun generateDefines(defines: Map<String, Boolean>): String {
+        fun generateDefines(defines: Map<String, Any>): String {
 
             return defines.mapNotNull { (key, value) ->
-                if (!value) null else "#define $key $value"
+                "#define $key $value"
             }.joinToString { "\n" }
 
         }

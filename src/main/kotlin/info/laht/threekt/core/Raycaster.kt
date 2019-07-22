@@ -20,7 +20,7 @@ class Intersection(
 class Raycaster(
     origin: Vector3,
     direction: Vector3,
-    val near: Float = 0.toFloat(),
+    val near: Float = 0f,
     val far: Float = Float.POSITIVE_INFINITY
 
 ) {

@@ -16,7 +16,6 @@ class GLPrograms internal constructor(
     private val capabilities: GLCapabilities
 ) {
 
-    val shaderIds = ShaderIds()
     private val programs = mutableListOf<GLProgram>()
 
     private val parameterNames = listOf(
@@ -76,10 +75,6 @@ class GLPrograms internal constructor(
         "depthPacking",
         "dithering"
     )
-
-    fun allocateBones(`object`: Object3D) {
-        TODO()
-    }
 
     fun getTextureEncodingFromMap(map: Texture?, gammaOverrideLinear: Boolean): Int {
 
@@ -186,7 +181,7 @@ class GLPrograms internal constructor(
 
     }
 
-    inner class ShaderIds {
+    object ShaderIds {
 
         private val map = mapOf(
             "MeshDepthMaterial" to "depth",
@@ -210,22 +205,6 @@ class GLPrograms internal constructor(
             return map[key]
         }
 
-        val MeshDepthMaterial: String = "depth"
-        val MeshDistanceMaterial: String = "distanceRGBA"
-        val MeshNormalMaterial: String = "normal"
-        val MeshBasicMaterial: String = "basic"
-        val MeshLambertMaterial: String = "lambert"
-        val MeshPhongMaterial: String = "phong"
-        val MeshToonMaterial: String = "phong"
-        val MeshStandardMaterial: String = "physical"
-        val MeshPhysicalMaterial: String = "physical"
-        val MeshMatcapMaterial: String = "matcap"
-        val LineBasicMaterial: String = "basic"
-        val LineDashedMaterial: String = "dashed"
-        val PointsMaterial: String = "points"
-        val ShadowMaterial: String = "shadow"
-        val SpriteMaterial: String = "sprite"
-
     }
 
     inner class Parameters(
@@ -238,10 +217,10 @@ class GLPrograms internal constructor(
         `object`: Object3D
     ) {
 
-        val shaderID = shaderIds[material::class.java.simpleName]
+        val shaderID = ShaderIds[material::class.java.simpleName]
 
         val maxBones = 0 // TODO
-        val precision: String
+        val precision ="highp"
 
         val supportsVertexTextures = capabilities.vertexTextures
         val outputEncoding = getTextureEncodingFromMap(renderer.getRenderTarget()?.texture, renderer.gammaOutput)
@@ -281,7 +260,7 @@ class GLPrograms internal constructor(
         val flatShading = material.flatShading
 
         val sizeAttenuation = if (material is MaterialWithSizeAttenuation) material.sizeAttenuation else false
-//        val logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer
+        val logarithmicDepthBuffer = false
 
         val skinning = (material is MaterialWithSkinning && material.skinning && maxBones > 0)
         val useVertexTexture = capabilities.floatVertexTextures
@@ -315,23 +294,6 @@ class GLPrograms internal constructor(
         val flipSided = material.side == BackSide
 
         val depthPacking = if (material is MeshDepthMaterial) material.depthPacking else false
-
-        init {
-
-            val materialPrecision = material.precision
-            if (materialPrecision != null) {
-
-                precision = capabilities.getMaxPrecision(materialPrecision)
-
-                if (precision != materialPrecision) {
-                    println("GLProgram.Parameters: $materialPrecision not supported, using '$precision' instead.")
-                }
-
-            } else {
-                precision = capabilities.precision
-            }
-
-        }
 
     }
 

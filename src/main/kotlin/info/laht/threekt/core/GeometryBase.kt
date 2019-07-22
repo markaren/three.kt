@@ -97,14 +97,14 @@ abstract class GeometryBase<E> : EventDispatcher(), Cloneable {
         val center = boundingSphere!!.center
         val radius = boundingSphere!!.radius
 
-        val s = if (radius == 0.toFloat()) 1.toFloat() else 1.toFloat() / radius
+        val s = if (radius == 0f) 1f else 1f / radius
 
         val matrix = Matrix4()
         matrix.set(
-            s, 0.toFloat(), 0.toFloat(), -s * center.x,
-            0.toFloat(), s, 0.toFloat(), -s * center.y,
-            0.toFloat(), 0.toFloat(), s, -s * center.z,
-            0.toFloat(), 0.toFloat(), 0.toFloat(), 1.toFloat()
+            s, 0f, 0f, -s * center.x,
+            0f, s, 0f, -s * center.y,
+            0f, 0f, s, -s * center.z,
+            0f, 0f, 0f, 1f
         )
 
         this.applyMatrix(matrix)

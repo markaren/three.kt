@@ -4,7 +4,6 @@ import info.laht.threekt.textures.Image
 import org.lwjgl.BufferUtils
 import java.io.File
 import javax.imageio.ImageIO
-import jdk.nashorn.internal.objects.ArrayBufferView.buffer
 
 
 object ImageLoader {

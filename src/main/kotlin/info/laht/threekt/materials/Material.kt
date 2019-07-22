@@ -128,8 +128,6 @@ open class Material : Cloneable, EventDispatcher() {
     var opacity = 1f
 
 
-    var precision: String? = null // override the renderer's default precision for this material
-
     /**
      * Whether to use polygon offset. Default is false. This corresponds to the POLYGON_OFFSET_FILL WebGL feature.
      */
@@ -191,7 +189,7 @@ open class Material : Cloneable, EventDispatcher() {
      */
     var visible = true
 
-    var defines = mutableMapOf<String, Boolean>()
+    val defines = mutableMapOf<String, Any>()
 
     internal open var map: Texture? = null
 
@@ -209,7 +207,7 @@ open class Material : Cloneable, EventDispatcher() {
     internal open var bumpScale = 0f
 
     internal open var normalMap: Texture? = null
-    internal open var normalMapType: Int? = null
+    internal open var normalMapType = 0
 
     internal open var displacementMap: Texture? = null
     internal open var displacementScale = 0f

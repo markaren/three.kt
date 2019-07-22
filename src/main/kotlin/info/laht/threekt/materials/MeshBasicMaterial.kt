@@ -74,24 +74,3 @@ class MeshBasicMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
     }
 
 }
-
-//class MeshBasicMaterialParameters: MaterialParameters() {
-//
-//    var color: Color? = null
-//    var map: Texture? = null
-//    var aoMap: Texture? = null
-//    var aoMapIntensity: Float? = null
-//    var specularMap: Texture? = null
-//    var alphaMap: Texture? = null
-//    var envMap: Texture? = null
-//    var combine: Int? = null
-//    var reflectivity: Float? = null
-//    var refractionRatio: Float? = null
-//    var wireframe: Boolean? = null;
-//    var wireframeLinewidth: Float? = null
-//    var wireframeLinecap: String? = null
-//    var wireframeLinejoin: String? = null
-//    var skinning: Boolean? = null
-//    var morphTargets: Boolean? = null
-//
-//}

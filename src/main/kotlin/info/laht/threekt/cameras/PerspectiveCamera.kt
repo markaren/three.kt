@@ -19,7 +19,7 @@ class PerspectiveCamera(
     var near: Float = near.toFloat()
     var far: Float = far.toFloat()
 
-    var zoom = 1
+    var zoom = 1f
     var focus = 10
     var filmGauge = 35 // width of the film (default in millimeters)
     var filmOffset = 0 // horizontal film offset (same unit as gauge)
@@ -41,7 +41,7 @@ class PerspectiveCamera(
     fun setFocalLength(focalLength: Int) {
 
         // see http://www.bobatkins.com/photography/technical/field_of_view.html
-        val vExtentSlope = 0.5.toFloat() * this.getFilmHeight() / focalLength;
+        val vExtentSlope = 0.5f * this.getFilmHeight() / focalLength;
 
         this.fov = RAD2DEG * 2 * atan(vExtentSlope)
         this.updateProjectionMatrix();
@@ -54,13 +54,13 @@ class PerspectiveCamera(
     fun getFocalLength(): Float {
 
         val vExtentSlope = tan(DEG2RAD * 0.5.toFloat() * this.fov).toFloat()
-        return 0.5.toFloat() * this.getFilmHeight() / vExtentSlope;
+        return 0.5f * this.getFilmHeight() / vExtentSlope;
 
     }
 
     fun getEffectiveFOV(): Float {
 
-        return RAD2DEG * 2 * atan(tan(DEG2RAD * 0.5.toFloat() * this.fov).toFloat() / this.zoom);
+        return RAD2DEG * 2 * atan(tan(DEG2RAD * 0.5f * this.fov) / this.zoom);
 
     }
 
@@ -74,7 +74,7 @@ class PerspectiveCamera(
     fun getFilmHeight(): Float {
 
         // film not completely covered in landscape format (aspect > 1)
-        return this.filmGauge / max(this.aspect, 1.toFloat())
+        return this.filmGauge / max(this.aspect, 1f)
 
     }
 
