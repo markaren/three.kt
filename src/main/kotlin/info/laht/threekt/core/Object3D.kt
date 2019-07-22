@@ -42,10 +42,10 @@ open class Object3D : Cloneable, EventDispatcher() {
 
     val position = Vector3()
     val rotation = Euler().also {
-        it.onChangeCallback = { onQuaternionChange() }
+        it.onChangeCallback = { onRotationChange() }
     }
     val quaternion = Quaternion().also {
-        it.onChangeCallback = { onRotationChange() }
+        it.onChangeCallback = { onQuaternionChange() }
     }
     val scale = Vector3(1f, 1f, 1f)
 

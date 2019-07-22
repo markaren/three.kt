@@ -56,7 +56,7 @@ private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): Float
 
     }
 
-    return r;
+    return r
 }
 
 private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
@@ -71,7 +71,7 @@ private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
     }
 
     for (i in 0..n)
-        r[i] = textures.allocateTextureUnit();
+        r[i] = textures.allocateTextureUnit()
 
     return r
 
@@ -92,9 +92,9 @@ private fun parseUniform(activeInfo: ActiveUniformInfo, addr: Int, container: Co
 
     RePathPart.findAll(path).forEach {
 
-        val match = it.groups.map { it?.value }
+        val match = it.groups.mapNotNull { it?.value }
 
-        var id: String = match[1]!!
+        var id: String = match[1]
         val idIsIndex = match.getOrNull(2) == "]"
         val subscript: Any? = match.getOrNull(3)
 
@@ -108,6 +108,8 @@ private fun parseUniform(activeInfo: ActiveUniformInfo, addr: Int, container: Co
                 PureArrayUniform(id, activeInfo, addr)
             }
             addUniform(container, uniform)
+
+            return@forEach
 
         } else {
 
@@ -139,7 +141,7 @@ class GLUniforms internal constructor(
 
         val n = GL20.glGetProgrami(program, GL20.GL_ACTIVE_UNIFORMS)
 
-        for (i in 0 until n) {
+        for (i in 0 until  n) {
             val info = ActiveUniformInfo(program, i)
             val addr = GL20.glGetUniformLocation(program, info.name)
             parseUniform(info, addr, this)
@@ -152,10 +154,6 @@ class GLUniforms internal constructor(
         if (u != null) {
             u.setValue(value)
         }
-    }
-
-    fun setOptional(`object`: Object3D, name: String) {
-        TODO()
     }
 
     companion object {
@@ -175,17 +173,12 @@ class GLUniforms internal constructor(
 
         fun seqWithValue(seq: List<UniformObject>, values: Map<String, Uniform>): List<UniformObject> {
 
-            val r = mutableListOf<UniformObject>()
+            return seq.mapNotNull { u ->
 
-            seq.forEach { u ->
-
-                if (u.id in values.keys) {
-                    r.add(u)
-                }
+                if (u.id in values.keys) u else null
 
             }
 
-            return r
         }
 
     }
@@ -209,6 +202,10 @@ private class ActiveUniformInfo(
         size = sizeBuffer.get()
         type = typeBuffer.get()
 
+    }
+
+    override fun toString(): String {
+        return "ActiveUniformInfo(name='$name', size=$size, type=$type)"
     }
 
 }
@@ -376,8 +373,8 @@ private class PureArrayUniform(
                 )
             } // _MAT4
 
-            0x8b5e -> { v -> TODO() } // SAMPLER_2D
-            0x8b60 -> { v -> TODO() } // SAMPLER_CUBE
+//            0x8b5e -> { v -> TODO() } // SAMPLER_2D
+//            0x8b60 -> { v -> TODO() } // SAMPLER_CUBE
 
             0x1404, 0x8b56 -> { v -> GL20.glUniform1iv(addr, v as IntArray) } // INT, BOOL
             0x8b53, 0x8b57 -> { v -> GL20.glUniform2iv(addr, v as IntArray) } // _VEC2
@@ -389,7 +386,6 @@ private class PureArrayUniform(
         }
 
     }
-
 
 }
 
@@ -405,7 +401,7 @@ private class StructuredUniform(
         value as Map<String, Any>
 
         seq.forEach { u ->
-            u.setValue(value[u.id]!!)
+            u.setValue(value[u.id] ?: error("No such key: ${u.id}"))
         }
     }
 }

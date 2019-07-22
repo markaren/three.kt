@@ -1,6 +1,5 @@
 package info.laht.threekt.renderers
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match
 import info.laht.threekt.*
 import info.laht.threekt.Canvas
 import info.laht.threekt.cameras.Camera
@@ -18,7 +17,6 @@ import info.laht.threekt.renderers.shaders.cloneUniforms
 import info.laht.threekt.scenes.FogExp2
 import info.laht.threekt.scenes._Fog
 import info.laht.threekt.textures.CubeTexture
-import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL13
 import org.lwjgl.opengl.GL15
@@ -32,6 +30,7 @@ class GLRenderer(
     private val canvas: Canvas
 ) {
 
+    var checkShaderErrors = false
     private val capabilities = GLCapabilities()
     internal val state = GLState()
     private val info: GLInfo = GLInfo()
@@ -206,16 +205,6 @@ class GLRenderer(
 
         }
 
-//        if ( object.morphTargetInfluences ) {
-//
-//            morphtargets.update( object, geometry, material, program );
-//
-//            updateBuffers = true;
-//
-//        }
-
-        //
-
         var index = geometry.index
         val position = geometry.attributes.position
         var rangeFactor = 1
@@ -382,7 +371,6 @@ class GLRenderer(
 
                     val buffer = attribute.buffer
                     val type = attribute.type
-                    val bytesPerElement = attribute.bytesPerElement
 
                     state.enableAttribute(programAttribute)
 
@@ -568,6 +556,9 @@ class GLRenderer(
 
         val visible = `object`.layers.test(camera.layers)
 
+        val currentRenderState = this.currentRenderState!!
+        val currentRenderList = this.currentRenderList!!
+
         if (visible) {
 
             @Suppress("NAME_SHADOWING")
@@ -585,11 +576,11 @@ class GLRenderer(
 
             } else if (`object` is Light) {
 
-                currentRenderState!!.pushLight(`object`)
+                currentRenderState.pushLight(`object`)
 
                 if (`object`.castShadow) {
 
-                    currentRenderState!!.pushShadow(`object`)
+                    currentRenderState.pushShadow(`object`)
 
                 }
 
@@ -609,7 +600,7 @@ class GLRenderer(
 
                     if (material.visible) {
 
-                        currentRenderList!!.push(`object`, geometry, material, groupOrder, vector3.z, null)
+                        currentRenderList.push(`object`, geometry, material, groupOrder, vector3.z, null)
 
                     }
 
@@ -642,7 +633,7 @@ class GLRenderer(
 
                             if (groupMaterial != null && groupMaterial.visible) {
 
-                                currentRenderList!!.push(
+                                currentRenderList.push(
                                     `object`,
                                     geometry,
                                     groupMaterial,
@@ -657,7 +648,7 @@ class GLRenderer(
 
                     } else if (`object`.material.visible) {
 
-                        currentRenderList!!.push(`object`, geometry, `object`.material, groupOrder, vector3.z, null)
+                        currentRenderList.push(`object`, geometry, `object`.material, groupOrder, vector3.z, null)
 
                     }
 
@@ -790,21 +781,15 @@ class GLRenderer(
         var programChange = true
 
         when {
-            program == null -> // new material
-                material.addEventListener("dispose", onMaterialDispose)
-            program.code != code -> // changed glsl or parameters
-                releaseMaterialProgramReference(material)
+            program == null -> material.addEventListener("dispose", onMaterialDispose)
+            program.code != code -> releaseMaterialProgramReference(material)
             materialProperties["lightsStateVersion"] != lightsStateVersion -> {
-
                 materialProperties["lightsStateVersion"] = lightsStateVersion
-
                 programChange = false
-
             }
             parameters.shaderID != null -> // same glsl and uniform list
                 return
-            else -> // only rebuild uniform list
-                programChange = false
+            else -> programChange = false
         }
 
         if (programChange) {
@@ -843,43 +828,7 @@ class GLRenderer(
 
         }
 
-//        program as GLProgram
-
-//        val programAttributes = program.getAttributes();
-
-//        if ( material.morphTargets ) {
-//
-//            material.numSupportedMorphTargets = 0;
-//
-//            for ( var i = 0; i < _this.maxMorphTargets; i ++ ) {
-//
-//                if ( programAttributes[ "morphTarget" + i ] >= 0 ) {
-//
-//                    material.numSupportedMorphTargets ++;
-//
-//                }
-//
-//            }
-//
-//        }
-//
-//        if ( material.morphNormals ) {
-//
-//            material.numSupportedMorphNormals = 0;
-//
-//            for ( var i = 0; i < _this.maxMorphNormals; i ++ ) {
-//
-//                if ( programAttributes[ "morphNormal" + i ] >= 0 ) {
-//
-//                    material.numSupportedMorphNormals ++;
-//
-//                }
-//
-//            }
-//
-//        }
-//
-        val uniforms = (materialProperties["shader"] as Shader).uniforms
+        val uniforms = materialProperties.getAs<Shader>("shader")!!.uniforms
 
         if (material !is ShaderMaterial &&
             material !is RawShaderMaterial ||
@@ -919,7 +868,7 @@ class GLRenderer(
 
         }
 
-        val progUniforms = (materialProperties["program"] as GLProgram).getUniforms()
+        val progUniforms = materialProperties.getAs<GLProgram>("program")!!.getUniforms()
         val uniformsList = GLUniforms.seqWithValue(progUniforms.seq, uniforms)
 
         materialProperties["uniformsList"] = uniformsList
@@ -991,7 +940,7 @@ class GLRenderer(
 
         val program = materialProperties["program"] as GLProgram
         val p_uniforms = program.getUniforms()
-        val m_uniforms = (materialProperties["shader"] as Shader).uniforms
+        val m_uniforms = materialProperties.getAs<Shader>("shader")!!.uniforms
 
         if (state.useProgram(program.program)) {
 
@@ -1012,13 +961,6 @@ class GLRenderer(
         if (refreshProgram || currentCamera != camera) {
 
             p_uniforms.setValue("projectionMatrix", camera.projectionMatrix)
-
-//            if ( capabilities.logarithmicDepthBuffer ) {
-//
-//                p_uniforms.setValue( _gl, "logDepthBufFC",
-//                    2.0 / ( Math.log( camera.far + 1.0 ) / Math.LN2 ) );
-//
-//            }
 
             if (currentCamera != camera) {
 
@@ -1041,7 +983,9 @@ class GLRenderer(
                 material is MeshStandardMaterial ||
                 material.envMap != null
             ) {
-                TODO()
+
+                p_uniforms.map["cameraPosition"]?.setValue(
+                    vector3.setFromMatrixPosition( camera.matrixWorld ) )
             }
 
             if (material is MeshPhongMaterial ||
@@ -1501,7 +1445,6 @@ class GLRenderer(
 
         if (material.envMap != null) {
 
-            //uniforms["envMap"]?.value = material.envMap; // part of uniforms common
             uniforms["envMapIntensity"]?.value = material.get("envMapIntensity")
 
         }
@@ -1632,6 +1575,7 @@ class GLRenderer(
         override fun onEvent(event: Event) {
             val material = event.target as Material
             material.removeEventListener("dispose", this)
+            deallocateMaterial(material)
         }
     }
 

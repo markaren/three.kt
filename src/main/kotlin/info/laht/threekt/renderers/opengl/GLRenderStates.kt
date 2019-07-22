@@ -36,17 +36,19 @@ class GLRenderState internal constructor() {
 
 class GLRenderStates internal constructor() {
 
-    internal var renderStates = mutableMapOf<Int, MutableMap<Int, GLRenderState>>()
+    private var renderStates = mutableMapOf<Int, MutableMap<Int, GLRenderState>>()
 
     private val onSceneDispose = OnSceneDispose()
 
     fun get(scene: Scene, camera: Camera): GLRenderState {
 
         return if (renderStates[scene.id] == null) {
+
             GLRenderState().also { renderState ->
                 renderStates[scene.id] = mutableMapOf(camera.id to renderState)
                 scene.addEventListener("dispose", onSceneDispose)
             }
+
         } else {
 
             if (renderStates[scene.id]?.get(camera.id) == null) {
@@ -56,6 +58,7 @@ class GLRenderStates internal constructor() {
             } else {
                 renderStates[scene.id]!![camera.id]!!
             }
+
         }
 
     }

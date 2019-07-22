@@ -16,11 +16,10 @@ class GLPrograms internal constructor(
     private val capabilities: GLCapabilities
 ) {
 
+    val shaderIds = ShaderIds()
     private val programs = mutableListOf<GLProgram>()
 
-    val shaderIds = ShaderIds()
-
-    val parameterNames = listOf(
+    private val parameterNames = listOf(
         "precision",
         "supportsVertexTextures",
         "additionalDetails",
@@ -108,16 +107,16 @@ class GLPrograms internal constructor(
 
     fun getProgramCode(material: Material, parameters: Parameters): String {
 
-        val array = mutableListOf<String>();
+        val array = mutableListOf<String>()
 
         if (parameters.shaderID != null) {
 
-            array.add(parameters.shaderID);
+            array.add(parameters.shaderID)
 
         } else {
 
-            array.add(material.fragmentShader);
-            array.add(material.vertexShader);
+            array.add(material.fragmentShader)
+            array.add(material.vertexShader)
 
         }
 
@@ -130,12 +129,11 @@ class GLPrograms internal constructor(
 
         array.addAll(parameterNames)
 
-
 //        array.add( material.onBeforeCompile.toString() );
 
-        array.add(renderer.gammaOutput.toString());
+        array.add(renderer.gammaOutput.toString())
 
-        array.add(renderer.gammaFactor.toString());
+        array.add(renderer.gammaFactor.toString())
 
         return array.joinToString(",")
 
@@ -152,8 +150,8 @@ class GLPrograms internal constructor(
 
             if (programInfo.code == code) {
 
-                program = programInfo;
-                ++program.usedTimes;
+                program = programInfo
+                ++program.usedTimes
 
                 break
 
@@ -163,12 +161,12 @@ class GLPrograms internal constructor(
 
         if (program == null) {
 
-            program = GLProgram(renderer, code, material, shader, parameters);
+            program = GLProgram(renderer, code, material, shader, parameters)
             programs.add(program)
 
         }
 
-        return program;
+        return program
 
     }
 
@@ -177,12 +175,12 @@ class GLPrograms internal constructor(
         if (--program.usedTimes == 0) {
 
             // Remove from unordered set
-            val i = programs.indexOf(program);
-            programs[i] = programs[programs.size - 1];
+            val i = programs.indexOf(program)
+            programs[i] = programs[programs.size - 1]
             programs.removeAt(programs.size - 1) //pop
 
             // Free GL resources
-            program.destroy();
+            program.destroy()
 
         }
 
@@ -293,11 +291,11 @@ class GLPrograms internal constructor(
         val maxMorphTargets = renderer.maxMorphTargets
         val maxMorphNormals = renderer.maxMorphNormals
         //
-//        val numDirLights = lights.directional.size
+        val numDirLights = lights.directional.size
         val numPointLights = lights.point.size
         val numSpotLights = lights.spot.size
-//        val numRectAreaLights = lights.rectArea.size
-//        val numHemiLights = lights.hemi.size
+        val numRectAreaLights = lights.rectArea.size
+        val numHemiLights = lights.hemi.size
 
         val numClippingPlanes = nClipPlanes
         val numClipIntersection = nClipIntersection

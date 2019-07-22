@@ -43,7 +43,6 @@ class GLProgram internal constructor(
         var vertexShader = shader.vertexShader
         var fragmentShader = shader.fragmentShader
 
-
         val shadowMapTypeDefine = "SHADOWMAP_TYPE_BASIC"
 
         var envMapTypeDefine = "ENVMAP_TYPE_CUBE";
@@ -148,9 +147,6 @@ class GLProgram internal constructor(
                 if (parameters.shadowMapEnabled) "#define $shadowMapTypeDefine" else "",
 
                 if (parameters.sizeAttenuation) "#define USE_SIZEATTENUATION" else "",
-
-//                if (parameters.logarithmicDepthBuffer) "#define USE_LOGDEPTHBUF" else "",
-//                if (parameters.logarithmicDepthBuffer) "#define USE_LOGDEPTHBUF_EXT" else "",
 
                 "uniform mat4 modelMatrix;",
                 "uniform mat4 modelViewMatrix;",
@@ -342,7 +338,7 @@ class GLProgram internal constructor(
             ).joinToString("\n") + "\n" + prefixVertex
 
             prefixFragment = listOf(
-                "#version 300 es\n",
+                "#version 330 core\n",
                 "#define varying in",
                 if (isGLSL3ShaderMaterial) "" else "out highp vec4 pc_fragColor;",
                 if (isGLSL3ShaderMaterial) "" else "#define gl_FragColor pc_fragColor",
@@ -361,16 +357,40 @@ class GLProgram internal constructor(
             val vertexGlsl = prefixVertex + vertexShader;
             val fragmentGlsl = prefixFragment + fragmentShader;
 
-            glVertexShader = createShader(GL20.GL_VERTEX_SHADER, vertexGlsl );
-            glFragmentShader = createShader( GL20.GL_FRAGMENT_SHADER, fragmentGlsl );
+            glVertexShader = createShader(GL20.GL_VERTEX_SHADER, vertexGlsl);
+            glFragmentShader = createShader(GL20.GL_FRAGMENT_SHADER, fragmentGlsl);
 
-            GL20.glAttachShader( program, glVertexShader )
-            GL20.glAttachShader( program, glFragmentShader )
+            GL20.glAttachShader(program, glVertexShader)
+            GL20.glAttachShader(program, glFragmentShader)
 
             GL20.glLinkProgram(program)
 
-            GL20.glDeleteShader( glVertexShader );
-            GL20.glDeleteShader( glFragmentShader );
+//            println(addLineNumbers(GL20.glGetShaderSource(glVertexShader)))
+//            println()
+//            println(addLineNumbers(GL20.glGetShaderSource(glFragmentShader)))
+
+            if (renderer.checkShaderErrors) {
+
+                val programLog = GL20.glGetProgramInfoLog( program ).trim();
+//                val vertexLog = GL20.glGetShaderInfoLog( glVertexShader ).trim();
+//                val fragmentLog = GL20.glGetShaderInfoLog( glFragmentShader ).trim();
+
+                if ( GL20.glGetProgrami( program, GL20.GL_LINK_STATUS ) == GL11.GL_FALSE ) {
+
+                    val vertexErrors = getShaderErrors(glVertexShader, "vertex" );
+                    val fragmentErrors = getShaderErrors( glFragmentShader, "fragment" );
+
+                    println( "GLProgram: shader error: ${GL11.glGetError()} ${GL20.GL_VALIDATE_STATUS} ${ GL20.glGetProgrami( program, GL20.GL_VALIDATE_STATUS )} glGetProgramInfoLog  $programLog $vertexErrors $fragmentErrors" );
+
+                } else if ( programLog != "" ) {
+
+                    println( "GLProgram: gl.getProgramInfoLog() $programLog" );
+
+                }
+            }
+
+            GL20.glDeleteShader(glVertexShader);
+            GL20.glDeleteShader(glFragmentShader);
 
         }
 
@@ -433,7 +453,7 @@ class GLProgram internal constructor(
             return lines.joinToString("\n")
         }
 
-        fun getShaderErrors(shader: Int, type: Int): String {
+        fun getShaderErrors(shader: Int, type: String): String {
 
             val status = GL20.glGetShaderi(shader, GL20.GL_COMPILE_STATUS)
             val log = GL20.glGetShaderInfoLog(shader).trim()
@@ -500,11 +520,11 @@ class GLProgram internal constructor(
 
         fun replaceLightNums(string: String, parameters: GLPrograms.Parameters): String {
             return string
-//                .replace("NUM_DIR_LIGHTS".toRegex(), parameters.numDirLights)
-                .replace("NUM_SPOT_LIGHTS", "${parameters.numSpotLights}")
-//                .replace("NUM_RECT_AREA_LIGHTS", parameters.numRectAreaLights)
+                .replace("NUM_DIR_LIGHTS".toRegex(), "${parameters.numDirLights}")
+                .replace("NUM_SPOT_LIGHTS".toRegex(), "${parameters.numSpotLights}")
+                .replace("NUM_RECT_AREA_LIGHTS".toRegex(), "${parameters.numRectAreaLights}")
                 .replace("NUM_POINT_LIGHTS".toRegex(), "${parameters.numPointLights}")
-//                .replace("NUM_HEMI_LIGHTS", parameters.numHemiLights);
+                .replace("NUM_HEMI_LIGHTS".toRegex(), "${parameters.numHemiLights}");
         }
 
         fun replaceClippingPlaneNums(string: String, parameters: GLPrograms.Parameters): String {
@@ -524,24 +544,12 @@ class GLProgram internal constructor(
                 val include = m.groups[1]!!.value
 
                 parseIncludes(
-                    ShaderChunk[include] ?: throw IllegalArgumentException("Can not resolve #include < $include >"
-                    ))
-            }.also {
-//                println(it)
-            }
+                    ShaderChunk[include] ?: throw IllegalArgumentException(
+                        "Can not resolve #include < $include >"
+                    )
+                )
 
-//            val pattern = Pattern.compile("^[ \\t]*#include +<([\\w\\d./]+)>", Pattern.MULTILINE)
-//            val parse = string.replace(pattern) { m ->
-//
-//                val include = m.group(1)
-//                parseIncludes(
-//                    ShaderChunk[include] ?: throw IllegalArgumentException("Can not resolve #include < $include >"
-//                ))
-//
-//            }
-//
-//
-//            return parse
+            }
 
         }
 

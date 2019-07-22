@@ -8,23 +8,29 @@ import info.laht.threekt.math.Vector2
 object UniformsLib {
 
     val common = mapOf(
+
         "diffuse" to Uniform(Color.fromHex(0xeeeeee)),
         "opacity" to Uniform(1f),
         "additionalDetails" to Uniform(null),
         "uvTransform" to Uniform(Matrix3()),
         "alphaMap" to Uniform(null)
+
     )
 
     val specularmap = mapOf(
+
         "specularMap" to Uniform(null)
+
     )
 
     val envmap = mapOf(
+
         "envMap" to Uniform(null),
         "flipEnvMap" to Uniform(-1),
         "reflectivity" to Uniform(1f),
         "refractionRatio" to Uniform(0.98f),
         "maxMipLevel" to Uniform(0)
+
     )
 
     val aomap = mapOf(

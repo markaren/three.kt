@@ -7,6 +7,7 @@ import info.laht.threekt.math.Vector3
 abstract class Camera: Object3D() {
 
     val matrixWorldInverse = Matrix4()
+
     val projectionMatrix = Matrix4()
     val projectionMatrixInverse = Matrix4()
 

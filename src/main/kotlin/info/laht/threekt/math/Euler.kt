@@ -75,7 +75,7 @@ class Euler(
 
         if (order == EulerOrder.XYZ) {
 
-            this.y = asin(clamp(m13, -1, 1));
+            this.y = asin(clamp(m13, -1f, 1f));
 
             if (abs(m13) < 0.99999) {
 
