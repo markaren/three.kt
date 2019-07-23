@@ -81,9 +81,7 @@ class GLBackground internal constructor(
 
             TODO()
 //            boxMesh.onBeforeRender = { _, _, camera, _, _, _ ->
-//
 //                boxMesh.matrixWorld.copyPosition(camera.matrixWorld);
-//
 //            }
 
             val material = boxMesh.material as ShaderMaterial

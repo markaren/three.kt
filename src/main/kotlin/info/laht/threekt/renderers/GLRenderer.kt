@@ -816,8 +816,6 @@ class GLRenderer(
 
             }
 
-//            material.onBeforeCompile(materialProperties["shader"] as Shader, this)
-
             // Computing code again as onBeforeCompile may have changed the shaders
             code = programCache.getProgramCode(material, parameters)
 
@@ -851,20 +849,20 @@ class GLRenderer(
 
             // wire up the material to this renderer"s lighting state
 
-            uniforms["ambientLightColor"]?.value = lights.state.ambient
-            uniforms["lightProbe"]?.value = lights.state.probe
-            uniforms["directionalLights"]?.value = lights.state.directional
-            uniforms["spotLights"]?.value = lights.state.spot
-            uniforms["rectAreaLights"]?.value = lights.state.rectArea
-            uniforms["pointLights"]?.value = lights.state.point
-            uniforms["hemisphereLights"]?.value = lights.state.hemi
+            uniforms["ambientLightColor"]!!.value = lights.state.ambient
+            uniforms["lightProbe"]!!.value = lights.state.probe
+            uniforms["directionalLights"]!!.value = lights.state.directional
+            uniforms["spotLights"]!!.value = lights.state.spot
+            uniforms["rectAreaLights"]!!.value = lights.state.rectArea
+            uniforms["pointLights"]!!.value = lights.state.point
+            uniforms["hemisphereLights"]!!.value = lights.state.hemi
 
-            uniforms["directionalShadowMap"]?.value = lights.state.directionalShadowMap
-            uniforms["directionalShadowMatrix"]?.value = lights.state.directionalShadowMatrix
-            uniforms["spotShadowMap"]?.value = lights.state.spotShadowMap
-            uniforms["spotShadowMatrix"]?.value = lights.state.spotShadowMatrix
-            uniforms["pointShadowMap"]?.value = lights.state.pointShadowMap
-            uniforms["pointShadowMatrix"]?.value = lights.state.pointShadowMatrix
+            uniforms["directionalShadowMap"]!!.value = lights.state.directionalShadowMap
+            uniforms["directionalShadowMatrix"]!!.value = lights.state.directionalShadowMatrix
+            uniforms["spotShadowMap"]!!.value = lights.state.spotShadowMap
+            uniforms["spotShadowMatrix"]!!.value = lights.state.spotShadowMatrix
+            uniforms["pointShadowMap"]!!.value = lights.state.pointShadowMap
+            uniforms["pointShadowMatrix"]!!.value = lights.state.pointShadowMatrix
 
         }
 

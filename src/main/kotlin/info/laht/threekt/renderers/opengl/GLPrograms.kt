@@ -18,64 +18,6 @@ class GLPrograms internal constructor(
 
     private val programs = mutableListOf<GLProgram>()
 
-    private val parameterNames = listOf(
-        "precision",
-        "supportsVertexTextures",
-        "additionalDetails",
-        "mapEncoding",
-        "matcap",
-        "matcapEncoding",
-        "envMap",
-        "envMapMode",
-        "envMapEncoding",
-        "lightMap",
-        "aoMap",
-        "emissiveMap",
-        "emissiveMapEncoding",
-        "bumpMap",
-        "normalMap",
-        "objectSpaceNormalMap",
-        "displacementMap",
-        "specularMap",
-        "roughnessMap",
-        "metalnessMap",
-        "gradientMap",
-        "alphaMap",
-        "combine",
-        "vertexColors",
-        "vertexTangents",
-        "fog",
-        "useFog",
-        "fogExp",
-        "flatShading",
-        "sizeAttenuation",
-        "logarithmicDepthBuffer",
-        "skinning",
-        "maxBones",
-        "useVertexTexture",
-        "morphTargets",
-        "morphNormals",
-        "maxMorphTargets",
-        "maxMorphNormals",
-        "premultipliedAlpha",
-        "numDirLights",
-        "numPointLights",
-        "numSpotLights",
-        "numHemiLights",
-        "numRectAreaLights",
-        "shadowMapEnabled",
-        "shadowMapType",
-        "toneMapping",
-        "physicallyCorrectLights",
-        "alphaTest",
-        "doubleSided",
-        "flipSided",
-        "numClippingPlanes",
-        "numClipIntersection",
-        "depthPacking",
-        "dithering"
-    )
-
     fun getTextureEncodingFromMap(map: Texture?, gammaOverrideLinear: Boolean): Int {
 
         var encoding = map?.encoding ?: LinearEncoding
@@ -123,8 +65,6 @@ class GLPrograms internal constructor(
         }
 
         array.addAll(parameterNames)
-
-//        array.add( material.onBeforeCompile.toString() );
 
         array.add(renderer.gammaOutput.toString())
 
@@ -298,3 +238,61 @@ class GLPrograms internal constructor(
     }
 
 }
+
+private val parameterNames = listOf(
+        "precision",
+        "supportsVertexTextures",
+        "map",
+        "mapEncoding",
+        "matcap",
+        "matcapEncoding",
+        "envMap",
+        "envMapMode",
+        "envMapEncoding",
+        "lightMap",
+        "aoMap",
+        "emissiveMap",
+        "emissiveMapEncoding",
+        "bumpMap",
+        "normalMap",
+        "objectSpaceNormalMap",
+        "displacementMap",
+        "specularMap",
+        "roughnessMap",
+        "metalnessMap",
+        "gradientMap",
+        "alphaMap",
+        "combine",
+        "vertexColors",
+        "vertexTangents",
+        "fog",
+        "useFog",
+        "fogExp",
+        "flatShading",
+        "sizeAttenuation",
+        "logarithmicDepthBuffer",
+        "skinning",
+        "maxBones",
+        "useVertexTexture",
+        "morphTargets",
+        "morphNormals",
+        "maxMorphTargets",
+        "maxMorphNormals",
+        "premultipliedAlpha",
+        "numDirLights",
+        "numPointLights",
+        "numSpotLights",
+        "numHemiLights",
+        "numRectAreaLights",
+        "shadowMapEnabled",
+        "shadowMapType",
+        "toneMapping",
+        "physicallyCorrectLights",
+        "alphaTest",
+        "doubleSided",
+        "flipSided",
+        "numClippingPlanes",
+        "numClipIntersection",
+        "depthPacking",
+        "dithering"
+)

@@ -3,10 +3,10 @@ package info.laht.threekt.core
 
 class Uniform(
     var value: Any?,
-    private val properties: MutableMap<String, Any> = mutableMapOf()
+    private val properties: MutableMap<String, Any?> = mutableMapOf()
 ) {
 
-    internal var needsUpdate = false
+    internal var needsUpdate: Boolean? = null
 
     inline fun <reified T> value(): T? = value as T
 

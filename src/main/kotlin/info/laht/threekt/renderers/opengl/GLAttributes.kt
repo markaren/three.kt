@@ -21,7 +21,7 @@ class GLAttributes internal constructor() {
         val (type, bytesPerElement) = when (attribute) {
             is IntBufferAttribute -> {
                 GL15.glBufferData(bufferType, attribute.array, usage)
-                GL11.GL_INT to Int.SIZE_BYTES
+                GL11.GL_UNSIGNED_INT to 3
             }
             is FloatBufferAttribute -> {
                 GL15.glBufferData(bufferType, attribute.array, usage)
@@ -92,7 +92,7 @@ class GLAttributes internal constructor() {
 
     }
 
-    inner class Buffer(
+    class Buffer(
         val buffer: Int,
         val type: Int,
         val bytesPerElement: Int,

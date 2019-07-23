@@ -7,7 +7,7 @@ import java.util.regex.Pattern
 /**
  * Returns the first [Field] in the hierarchy for the specified name
  */
-fun getFieldInHiarchy(clazz: Class<*>?, name: String): Field? {
+internal fun getFieldInHiarchy(clazz: Class<*>?, name: String): Field? {
 
     @Suppress("NAME_SHADOWING")
     var clazz: Class<*>? = clazz
@@ -23,9 +23,13 @@ fun getFieldInHiarchy(clazz: Class<*>?, name: String): Field? {
     return field
 }
 
-inline fun <reified T> MutableList<T>.safeSet(index: Int, value: T, defaultValue: () ->T) {
-    while (index >= size ) {
-        add(defaultValue.invoke())
+internal fun List<*>.length() : Int = this.size
+
+internal inline fun <reified T> MutableList<T>.length(newLength: Int, noinline defaultValue: (() -> T)? = null) {
+    while (newLength > length()) {
+        add(defaultValue!!.invoke())
     }
-    set(index, value)
+    while (newLength < length()) {
+        removeAt(length()-1)
+    }
 }

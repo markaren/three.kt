@@ -4,7 +4,7 @@ import info.laht.threekt.core.Cloneable
 
 
 class Plane @JvmOverloads constructor(
-    val normal: Vector3 = Vector3(0.toFloat(), 0.toFloat(), 1.toFloat()),
+    val normal: Vector3 = Vector3(0f, 0f, 1f),
     constant: Float = 0f
 ) : Cloneable {
 

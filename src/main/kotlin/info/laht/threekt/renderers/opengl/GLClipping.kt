@@ -7,9 +7,9 @@ import info.laht.threekt.math.Plane
 
 class GLClipping internal constructor() {
 
-    private lateinit var globalState: FloatArray
+    private var globalState: FloatArray? = null
     private var numGlobalPlanes = 0
-    private var localClippingEnabled = true
+    private var localClippingEnabled = false
     private var renderingShadows = false
     private var plane = Plane()
     private var viewNormalMatrix = Matrix3()
@@ -23,7 +23,11 @@ class GLClipping internal constructor() {
 
     fun init(planes: List<Plane>, enableLocalClipping: Boolean, camera: Camera): Boolean {
 
-        val enabled = planes.isNotEmpty() || enableLocalClipping || numGlobalPlanes != 0 || localClippingEnabled
+        val enabled =
+                planes.isNotEmpty() ||
+                        enableLocalClipping ||
+                        numGlobalPlanes != 0 ||
+                        localClippingEnabled
 
         localClippingEnabled = enableLocalClipping
         globalState = projectPlanes(planes, camera, 0)
@@ -45,12 +49,12 @@ class GLClipping internal constructor() {
     }
 
     fun setState(
-        planes: List<Plane>?,
-        clipIntersection: Boolean,
-        clipShadows: Boolean,
-        camera: Camera,
-        cache: Properties,
-        fromCache: Boolean
+            planes: List<Plane>?,
+            clipIntersection: Boolean,
+            clipShadows: Boolean,
+            camera: Camera,
+            cache: Properties,
+            fromCache: Boolean
     ) {
         if (!localClippingEnabled || planes == null || planes.isEmpty() || renderingShadows && !clipShadows) {
 
@@ -70,7 +74,7 @@ class GLClipping internal constructor() {
 
         } else {
 
-            val nGlobal = if (renderingShadows) 0  else numGlobalPlanes
+            val nGlobal = if (renderingShadows) 0 else numGlobalPlanes
             val lGlobal = nGlobal * 4
 
             var dstArray = cache["clippingState"] as FloatArray?;
@@ -79,14 +83,14 @@ class GLClipping internal constructor() {
 
             dstArray = projectPlanes(planes, camera, lGlobal, fromCache);
 
-            for (i in 0 until lGlobal ) {
+            for (i in 0 until lGlobal) {
 
-                dstArray[i] = globalState[i];
+                dstArray[i] = globalState!!.get(i)
 
             }
 
             cache["clippingState"] = dstArray;
-            this.numIntersection = if (clipIntersection)  this.numPlanes else 0;
+            this.numIntersection = if (clipIntersection) this.numPlanes else 0;
             this.numPlanes += nGlobal;
 
         }

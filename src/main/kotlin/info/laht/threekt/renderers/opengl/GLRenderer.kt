@@ -3,10 +3,11 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.core.InstancedBufferGeometry
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL31
+import kotlin.properties.Delegates
 
 sealed class _GLRenderer {
 
-    var mode = 0
+    var mode by Delegates.notNull<Int>()
 
     abstract fun render(start: Int, count: Int)
 
@@ -27,8 +28,8 @@ class GLIndexedBufferRenderer internal constructor(
     private val info: GLInfo
 ): _GLRenderer() {
 
-    private var type = -1
-    private var bytesPerElement = -1
+    private var type by Delegates.notNull<Int>()
+    private var bytesPerElement by Delegates.notNull<Int>()
 
     fun setIndex( value: GLAttributes.Buffer) {
         type = value.type

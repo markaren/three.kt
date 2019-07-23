@@ -233,10 +233,8 @@ open class Material : Cloneable, EventDispatcher() {
 
     internal open val uniforms: MutableMap<String, Uniform> = mutableMapOf()
 
-    internal open lateinit var vertexShader: String
-    internal open lateinit var fragmentShader: String
-
-//    internal lateinit var onBeforeCompile: ((ShaderLib.Shader, GLRenderer) -> Unit)
+    internal open var vertexShader: String = ""
+    internal open var fragmentShader: String = ""
 
     /**
      * Return a new material with the same parameters as this material.

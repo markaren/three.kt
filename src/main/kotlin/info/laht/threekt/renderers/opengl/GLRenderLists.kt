@@ -16,8 +16,6 @@ class GLRenderList internal constructor() {
     val opaque = mutableListOf<RenderItem>()
     val transparent = mutableListOf<RenderItem>()
 
-    private var defaultProgram = -1
-
     fun init() {
         renderItemsIndex = 0
         opaque.clear()
@@ -25,26 +23,43 @@ class GLRenderList internal constructor() {
     }
 
     private fun getNextRenderItem(
-        `object`: Object3D,
-        geometry: BufferGeometry,
-        material: Material,
-        groupOrder: Int,
-        z: Float,
-        group: GeometryGroup?
+            `object`: Object3D,
+            geometry: BufferGeometry,
+            material: Material,
+            groupOrder: Int,
+            z: Float,
+            group: GeometryGroup?
     ): RenderItem {
-        val renderItem = renderItems.getOrNull(renderItemsIndex) ?: RenderItem(
-            `object`.id,
-            `object`,
-            geometry,
-            material,
-            material.program?.program ?: defaultProgram,
-            groupOrder,
-            `object`.renderOrder,
-            z,
-            group
-        ).also {
-            renderItems.add(it)
+        var renderItem = renderItems.getOrNull(renderItemsIndex)
+        if (renderItem == null) {
+            renderItem = RenderItem(
+                    `object`.id,
+                    `object`,
+                    geometry,
+                    material,
+                    material.program ?: GLProgramDefault,
+                    groupOrder,
+                    `object`.renderOrder,
+                    z,
+                    group
+            ).also {
+                renderItems.add(it)
+            }
+        } else {
+
+            renderItem.id = `object`.id;
+            renderItem.`object` = `object`;
+            renderItem.geometry = geometry;
+            renderItem.material = material;
+            renderItem.program = material.program ?: GLProgramDefault;
+            renderItem.groupOrder = groupOrder;
+            renderItem.renderOrder = `object`.renderOrder;
+            renderItem.z = z;
+            renderItem.group = group;
+
+
         }
+
 
         renderItemsIndex++;
 
@@ -53,12 +68,12 @@ class GLRenderList internal constructor() {
     }
 
     fun push(
-        `object`: Object3D,
-        geometry: BufferGeometry,
-        material: Material,
-        groupOrder: Int,
-        z: Float,
-        group: GeometryGroup?
+            `object`: Object3D,
+            geometry: BufferGeometry,
+            material: Material,
+            groupOrder: Int,
+            z: Float,
+            group: GeometryGroup?
     ) {
 
         val renderItem = getNextRenderItem(`object`, geometry, material, groupOrder, z, group)
@@ -72,12 +87,12 @@ class GLRenderList internal constructor() {
     }
 
     fun unshift(
-        `object`: Object3D,
-        geometry: BufferGeometry,
-        material: Material,
-        groupOrder: Int,
-        z: Float,
-        group: GeometryGroup?
+            `object`: Object3D,
+            geometry: BufferGeometry,
+            material: Material,
+            groupOrder: Int,
+            z: Float,
+            group: GeometryGroup?
     ) {
 
         val renderItem = getNextRenderItem(`object`, geometry, material, groupOrder, z, group)
@@ -96,7 +111,7 @@ class GLRenderList internal constructor() {
                 when {
                     a.groupOrder != b.groupOrder -> a.groupOrder - b.groupOrder
                     a.renderOrder != b.renderOrder -> a.renderOrder - b.renderOrder
-                    //        a.program != b.program -> a.program.id - b.program.id
+                    a.program.id != b.program.id -> a.program.id - b.program.id
                     a.material.id != b.material.id -> a.material.id - b.material.id
                     a.z != b.z -> (a.z - b.z).roundToInt()
                     else -> a.id - b.id
@@ -116,15 +131,15 @@ class GLRenderList internal constructor() {
     }
 
     class RenderItem(
-        val id: Int,
-        val `object`: Object3D,
-        val geometry: BufferGeometry,
-        val material: Material,
-        val program: Int,
-        val groupOrder: Int,
-        val renderOrder: Int,
-        var z: Float,
-        var group: GeometryGroup?
+            var id: Int,
+            var `object`: Object3D,
+            var geometry: BufferGeometry,
+            var material: Material,
+            var program: _GLProgram,
+            var groupOrder: Int,
+            var renderOrder: Int,
+            var z: Float,
+            var group: GeometryGroup?
     )
 
 }

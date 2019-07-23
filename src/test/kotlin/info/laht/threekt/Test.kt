@@ -14,6 +14,8 @@ import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Scene
 import org.junit.jupiter.api.Test
+import org.lwjgl.opengl.GLUtil
+import org.lwjgl.system.Callback
 
 class Test {
 
@@ -22,41 +24,41 @@ class Test {
 
         Canvas().use { canvas ->
 
+            val debugProc = GLUtil.setupDebugMessageCallback()!!
+
             val scene = Scene().apply {
                 background = ColorBackground(Color.aliceblue)
             }
 
-            val camera = PerspectiveCamera(50, canvas.width.toFloat() / canvas.height)
+            val camera = PerspectiveCamera(75, canvas.width.toFloat() / canvas.height, 0.1, 1000)
             val renderer = GLRenderer(canvas).apply {
                 checkShaderErrors = true
             }
 
-            val box = Mesh(BoxGeometry(1f), MeshStandardMaterial().apply {
+            val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
                 color.set(0x00ff00)
             }).also {
                 scene.add(it)
-                it.frustumCulled = false
             }
 
-            Mesh(SphereGeometry(1f), MeshBasicMaterial()).also {
+            val sphere = Mesh(SphereGeometry(0.5f), MeshBasicMaterial()).also {
+                it.position.y += 5f
                 scene.add(it)
-                it.frustumCulled = false
             }
 
             camera.position.z = 5f
-            camera.lookAt(box.position)
+
+//            val light = AmbientLight(Color.yellow)
+//            scene.add(light)
 
 
-            renderer.compile(scene, camera)
-            val clock = Clock(true)
+            val clock = Clock()
             while (!canvas.shouldClose()) {
                 renderer.render(scene, camera)
-//                val dt = clock.getDelta()
-//                println(dt)
-//                camera.rotation.x *= 0.1f*dt.toFloat()
-//                camera.rotation.y *= 0.2f*dt.toFloat()
-//                camera.rotation.z *= 0.3f*dt.toFloat()
+                box.rotation.x += 1f * clock.getDelta().toFloat()
             }
+
+            debugProc.free()
 
         }
 

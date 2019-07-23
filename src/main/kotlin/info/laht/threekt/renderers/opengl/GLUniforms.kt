@@ -1,9 +1,8 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.core.Object3D
+
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.*
-import info.laht.threekt.safeSet
 import info.laht.threekt.textures.CubeTexture
 import info.laht.threekt.textures.Texture
 import org.lwjgl.BufferUtils
@@ -70,7 +69,7 @@ private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
 
     }
 
-    for (i in 0..n)
+    for (i in 0 until  n)
         r[i] = textures.allocateTextureUnit()
 
     return r
@@ -163,7 +162,7 @@ class GLUniforms internal constructor(
             seq.forEach { u ->
 
                 val v = values[u.id] ?: throw IllegalStateException("No uniform with id ${u.id}!")
-                if (v.needsUpdate) {
+                if (v.needsUpdate != false) {
                     u.setValue(v.value!!)
                 }
 
@@ -221,7 +220,7 @@ sealed class UniformObject(
 private class SingleUniform(
     id: String,
     activeInfo: ActiveUniformInfo,
-    val addr: Int
+    private val addr: Int
 ) : UniformObject(id) {
 
     private val setValue = getSingularSetter(activeInfo.type)
@@ -335,12 +334,16 @@ private class SingleUniform(
         }
     }
 
+    override fun toString(): String {
+        return "SingleUniform(id=$id, addr=$addr)"
+    }
+
 }
 
 private class PureArrayUniform(
     id: String,
     activeInfo: ActiveUniformInfo,
-    addr: Int
+    private val addr: Int
 ) : UniformObject(id) {
 
     private val setValue = getPureArraySetter(activeInfo.type, addr, activeInfo.size)
@@ -385,6 +388,10 @@ private class PureArrayUniform(
 
         }
 
+    }
+
+    override fun toString(): String {
+        return "PureArrayUniform(id=$id, addr=$addr)"
     }
 
 }

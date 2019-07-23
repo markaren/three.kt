@@ -1,5 +1,6 @@
 package info.laht.threekt.math
 
+import info.laht.threekt.core.Cloneable
 import kotlin.math.max
 
 
@@ -7,7 +8,7 @@ class Color(
     var r: Float,
     var g: Float,
     var b: Float
-) {
+): Cloneable {
 
     constructor() : this(0f, 0f, 0f)
 
@@ -77,7 +78,7 @@ class Color(
         return set(c.r, c.g, c.b)
     }
 
-    fun clone(): Color {
+    override fun clone(): Color {
         return Color(r, g, b)
     }
 

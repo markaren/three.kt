@@ -2,6 +2,7 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Object3D
+import info.laht.threekt.length
 import info.laht.threekt.lights.*
 import info.laht.threekt.math.*
 import info.laht.threekt.textures.Texture
@@ -125,9 +126,9 @@ class GLLights internal constructor() {
 
         }
 
-        state.ambient[0] = r
-        state.ambient[1] = g
-        state.ambient[2] = b
+        state.ambient.r = r
+        state.ambient.g = g
+        state.ambient.b = b
 
         val hash = state.hash
 
@@ -139,7 +140,7 @@ class GLLights internal constructor() {
             hash.shadowsLength != shadows.size
         ) {
 
-//            state.directional.length = directionalLength
+//            state.directional.length(directionalLength)
 //            state.spot.length = spotLength
 //            state.rectArea.length = rectAreaLength
 //            state.point.length = pointLength
@@ -168,9 +169,9 @@ class GLLights internal constructor() {
 
         var version = 0
 
-        var hash = Hash()
+        val hash = Hash()
 
-        val ambient = floatArrayOf(0f, 0f, 0f)
+        val ambient = Color(0f, 0f, 0f)
         val probe = Array(9) { Vector3() }
         val directional = mutableListOf<Any>()
         val directionalShadowMap = mutableListOf<Texture?>()

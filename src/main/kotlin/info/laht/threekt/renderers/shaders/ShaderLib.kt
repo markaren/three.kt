@@ -31,8 +31,8 @@ object ShaderLib {
                             UniformsLib.aomap,
                             UniformsLib.lightmap,
                             UniformsLib.emissivemap,
-                            UniformsLib.fog
-//            UniformsLib.lights
+                            UniformsLib.fog,
+                            UniformsLib.lights
                     )
             ),
             ShaderChunk.meshlambert_vert,
@@ -53,7 +53,7 @@ object ShaderLib {
                     UniformsLib.roughnessmap,
                     UniformsLib.metalnessmap,
                     UniformsLib.fog,
-//        UniformsLib.lights,
+                    UniformsLib.lights,
                     mapOf(
                             "emissive" to Uniform(Color(0x000000)),
                             "roughness" to Uniform(0.5f),

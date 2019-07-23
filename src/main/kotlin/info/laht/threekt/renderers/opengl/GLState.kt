@@ -130,12 +130,13 @@ class GLState internal constructor() {
         val texture = GL11.glGenTextures()
 
         GL11.glBindTexture(type, texture);
-        GL11.glGetTexParameteriv(type, GL11.GL_TEXTURE_MIN_FILTER, intArrayOf(GL11.GL_NEAREST))
-        GL11.glGetTexParameteriv(type, GL11.GL_TEXTURE_MAG_FILTER, intArrayOf(GL11.GL_NEAREST))
+        GL11.glTexParameteri(type, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
+        GL11.glTexParameteri(type, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
 
-        for (i in 0 until count) {
-            GL11.glTexImage2D(target + 1, 0, GL11.GL_RGBA, 1, 1, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data)
-        }
+        //TDOD
+//        for (i in 0 until count) {
+//            GL11.glTexImage2D(target + 1, 0, GL11.GL_RGBA, 1, 1, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data)
+//        }
 
         return texture;
 

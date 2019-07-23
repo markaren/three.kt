@@ -262,7 +262,7 @@ class Vector3(
      * Set vector to ( 0, 0, 0 ) if s == 0.
      */
     fun divideScalar(s: Float): Vector3 {
-        return this.multiplyScalar(1.toFloat() / s)
+        return this.multiplyScalar(1f / s)
     }
 
     fun min(v: Vector3): Vector3 {
@@ -299,7 +299,7 @@ class Vector3(
 
     fun clampLength(min: Float, max: Float): Vector3 {
         var length = this.length()
-        if (length.isNaN()) length = 1.toFloat()
+        if (length.isNaN()) length = 1f
         return this.divideScalar(length).multiplyScalar(kotlin.math.max(min, kotlin.math.min(max, length)))
     }
 
@@ -529,7 +529,7 @@ class Vector3(
         @Suppress("NAME_SHADOWING")
         val array = array ?: FloatArray(3)
 
-        array[offset] = this.x
+        array[offset + 0] = this.x
         array[offset + 1] = this.y
         array[offset + 2] = this.z
 

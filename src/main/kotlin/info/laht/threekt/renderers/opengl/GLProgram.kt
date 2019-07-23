@@ -12,6 +12,14 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20
 import java.util.regex.Pattern
 
+sealed class _GLProgram {
+    abstract val id: Int
+}
+
+object GLProgramDefault: _GLProgram() {
+    override val id = -1
+
+}
 
 class GLProgram internal constructor(
     renderer: GLRenderer,
@@ -19,9 +27,9 @@ class GLProgram internal constructor(
     material: Material,
     shader: ShaderLib.Shader,
     parameters: GLPrograms.Parameters
-) {
+): _GLProgram() {
 
-    val id = programIdCount++
+    override val id = programIdCount++
 
     var usedTimes = 1
 
@@ -257,8 +265,8 @@ class GLProgram internal constructor(
 
                 if (parameters.physicallyCorrectLights) "#define PHYSICALLY_CORRECT_LIGHTS" else "",
 
-//                if (parameters.logarithmicDepthBuffer) "#define USE_LOGDEPTHBUF" else "",
-//                if (parameters.logarithmicDepthBuffer && ( capabilities.isWebGL2 || extensions.get( "EXT_frag_depth" ) )) "#define USE_LOGDEPTHBUF_EXT" else "",
+                if (parameters.logarithmicDepthBuffer) "#define USE_LOGDEPTHBUF" else "",
+                if (parameters.logarithmicDepthBuffer) "#define USE_LOGDEPTHBUF_EXT" else "",
 
                 if (parameters.envMap) "#define TEXTURE_LOD_EXT" else "",
 
@@ -495,7 +503,7 @@ class GLProgram internal constructor(
 
         }
 
-        fun generateDefines(defines: Map<String, Any>): String {
+        private fun generateDefines(defines: Map<String, Any>): String {
 
             return defines.mapNotNull { (key, value) ->
                 "#define $key $value"
@@ -503,7 +511,7 @@ class GLProgram internal constructor(
 
         }
 
-        fun fetchAttributeLocations(program: Int): Map<String, Int> {
+        private fun fetchAttributeLocations(program: Int): Map<String, Int> {
             val attributes = mutableMapOf<String, Int>()
 
             val n = GL20.glGetProgrami(program, GL20.GL_ACTIVE_ATTRIBUTES)
@@ -518,7 +526,7 @@ class GLProgram internal constructor(
             return attributes
         }
 
-        fun replaceLightNums(string: String, parameters: GLPrograms.Parameters): String {
+        private fun replaceLightNums(string: String, parameters: GLPrograms.Parameters): String {
             return string
                 .replace("NUM_DIR_LIGHTS".toRegex(), "${parameters.numDirLights}")
                 .replace("NUM_SPOT_LIGHTS".toRegex(), "${parameters.numSpotLights}")
@@ -527,7 +535,7 @@ class GLProgram internal constructor(
                 .replace("NUM_HEMI_LIGHTS".toRegex(), "${parameters.numHemiLights}");
         }
 
-        fun replaceClippingPlaneNums(string: String, parameters: GLPrograms.Parameters): String {
+        private fun replaceClippingPlaneNums(string: String, parameters: GLPrograms.Parameters): String {
 
             return string
                 .replace("NUM_CLIPPING_PLANES", "${parameters.numClippingPlanes}")
@@ -535,14 +543,13 @@ class GLProgram internal constructor(
 
         }
 
-        fun parseIncludes(string: String): String {
+        private fun parseIncludes(string: String): String {
 
             val regex = "^[ \\t]*#include +<([\\w\\d./]+)>".toRegex(RegexOption.MULTILINE)
 
             return regex.replace(string) { m ->
 
                 val include = m.groups[1]!!.value
-
                 parseIncludes(
                     ShaderChunk[include] ?: throw IllegalArgumentException(
                         "Can not resolve #include < $include >"
