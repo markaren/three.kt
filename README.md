@@ -42,6 +42,7 @@ Canvas().use { canvas ->
         box.rotation.x += 1f * clock.getDelta().toFloat()
         box.rotation.y += 1f * clock.getDelta().toFloat()
     }
+    
 }
 
 ```
