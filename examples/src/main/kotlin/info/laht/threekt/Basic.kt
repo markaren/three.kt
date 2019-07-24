@@ -18,7 +18,9 @@ object Basic {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas().use { canvas ->
+        Canvas(CanvasOptions().apply {
+            antialiasing = 4
+        }).use { canvas ->
 
             val debugProc = GLUtil.setupDebugMessageCallback()!!
 
@@ -33,6 +35,13 @@ object Basic {
 
             val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
                 color.set(0x00ff00)
+            }).also {
+                scene.add(it)
+            }
+
+             Mesh(box.geometry.clone(), MeshBasicMaterial().apply {
+                color.set(0xffffff)
+                 wireframe = true
             }).also {
                 scene.add(it)
             }

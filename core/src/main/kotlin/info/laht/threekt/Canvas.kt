@@ -16,12 +16,21 @@ import org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback
 import org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback
 import org.lwjgl.glfw.GLFW.glfwSetScrollCallback
 
+class CanvasOptions {
+    var width: Int = 800
+    var height: Int = 600
 
-class Canvas(
-    val width: Int = 800,
-    val height: Int = 600,
-    private val title: String = "Three.kt"
+    var antialiasing: Int = 0
+
+    var title: String = "Three.kt"
+}
+
+class Canvas @JvmOverloads constructor(
+    options: CanvasOptions = CanvasOptions()
 ) : Closeable {
+
+    val width: Int = options.width
+    val height: Int = options.height
 
     private val pointer: Long
 
@@ -42,7 +51,7 @@ class Canvas(
         if (!glfwInit()) {
             throw IllegalStateException("Unable to initialize GLFW")
         }
-        pointer = createWindow()
+        pointer = createWindow(options.title, options.antialiasing)
     }
 
     fun shouldClose(): Boolean {
@@ -53,7 +62,12 @@ class Canvas(
         glfwTerminate()
     }
 
-    private fun createWindow(): Long {
+    private fun createWindow(title: String, antialias: Int): Long {
+
+        if (antialias > 0) {
+            glfwWindowHint(GLFW_SAMPLES, antialias);
+        }
+
         // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
         val window = glfwCreateWindow(width, height, title, 0, 0)
