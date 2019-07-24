@@ -20,7 +20,7 @@ import org.lwjgl.glfw.GLFW.glfwSetScrollCallback
 class Canvas(
     val width: Int = 800,
     val height: Int = 600,
-    private val title: String = "Untitled"
+    private val title: String = "Three.kt"
 ) : Closeable {
 
     private val pointer: Long
