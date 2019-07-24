@@ -1,5 +1,9 @@
 package info.laht.threekt
 
+import info.laht.threekt.input.KeyAction
+import info.laht.threekt.input.KeyEvent
+import info.laht.threekt.input.MouseEvent
+import info.laht.threekt.input.MouseWheelEvent
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
 import java.io.Closeable
@@ -7,20 +11,30 @@ import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose
 import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE
-import java.awt.SystemColor.window
 import org.lwjgl.glfw.GLFW.glfwSetKeyCallback
+import org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback
+import org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback
+import org.lwjgl.glfw.GLFW.glfwSetScrollCallback
 
 
 class Canvas(
     val width: Int = 800,
     val height: Int = 600,
     private val title: String = "Untitled"
-): Closeable {
+) : Closeable {
 
     private val pointer: Long
 
     val aspect: Float
         get() = width.toFloat() / height
+
+    var onKeyPressed: ((KeyEvent) -> Unit)? = null
+    var onMouseWheel: ((MouseWheelEvent) -> Unit)? = null
+    var onMouseDown: ((MouseEvent) -> Unit)? = null
+    var onMouseUp: ((MouseEvent) -> Unit)? = null
+    var onMouseMove: ((MouseEvent) -> Unit)? = null
+
+    private val mouseEvent = MouseEvent()
 
     init {
         val errorCallback = GLFWErrorCallback.createPrint(System.err)
@@ -46,8 +60,28 @@ class Canvas(
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window) { window, key, _, action, _ ->
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(window, true) // We will detect this in the rendering loop
+            } else {
+                onKeyPressed?.invoke(KeyEvent(key, action.toKeyAction()))
+            }
+        }
+
+        glfwSetMouseButtonCallback(window) { window, button, action, mods ->
+            mouseEvent.button = button
+            when (action) {
+                0 -> onMouseUp?.invoke(mouseEvent)
+                1 -> onMouseDown?.invoke(mouseEvent)
+            }
+        }
+
+        glfwSetCursorPosCallback(window) { window, xpos, ypos ->
+            mouseEvent.updateCoordinates(xpos.toInt(), ypos.toInt())
+            onMouseMove?.invoke(mouseEvent)
+        }
+
+        glfwSetScrollCallback(window){ window, xoffset, yoffset ->
+            onMouseWheel?.invoke(MouseWheelEvent(xoffset.toFloat(), yoffset.toFloat()))
         }
 
         // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
@@ -69,4 +103,13 @@ class Canvas(
         glfwPollEvents()
     }
 
+}
+
+private fun Int.toKeyAction(): KeyAction {
+    return when (this) {
+        GLFW_RELEASE -> KeyAction.RELEASE
+        GLFW_PRESS -> KeyAction.PRESS
+        GLFW_REPEAT -> KeyAction.REPEAT
+        else -> throw IllegalArgumentException()
+    }
 }

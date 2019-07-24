@@ -35,6 +35,8 @@ Canvas().use { canvas ->
     }
 
     camera.position.z = 5f
+    
+    val controls = OrbitControls(camera, canvas)
 
     val clock = Clock()
     while (!canvas.shouldClose()) {

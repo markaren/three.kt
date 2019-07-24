@@ -1,6 +1,7 @@
 package info.laht.threekt
 
 import info.laht.threekt.cameras.PerspectiveCamera
+import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
 import info.laht.threekt.geometries.SphereGeometry
@@ -38,6 +39,7 @@ object Basic {
 
             camera.position.z = 5f
 
+            val controls = OrbitControls(camera, canvas)
 
             val clock = Clock()
             while (!canvas.shouldClose()) {
@@ -45,8 +47,8 @@ object Basic {
                 renderer.render(scene, camera)
 
                 val dt =  clock.getDelta()
-                box.rotation.x += 1f * dt
-                box.rotation.y += 1f * dt
+//                box.rotation.x += 1f * dt
+//                box.rotation.y += 1f * dt
 
             }
 
