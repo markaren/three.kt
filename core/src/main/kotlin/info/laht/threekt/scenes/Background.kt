@@ -9,20 +9,22 @@ sealed class Background
 
 class ColorBackground(
     val color: Color
-): Background() {
+) : Background() {
 
-    constructor(hex: Int): this(Color(hex))
+    constructor(hex: Int) : this(Color(hex))
+
+    constructor(r: Float, g: Float, b: Float) : this(Color(r, g, b))
 
 }
 
 class TextureBackground(
     val texture: Texture
-): Background()
+) : Background()
 
 class CubeTextureBackground(
     val texture: CubeTexture
-): Background()
+) : Background()
 
 class GLRenderTargetCubeBackground(
     val renderTargetCube: GLRenderTargetCube
-): Background()
+) : Background()
