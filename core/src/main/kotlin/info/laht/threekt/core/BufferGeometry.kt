@@ -8,9 +8,18 @@ import kotlin.math.min
 import kotlin.math.sqrt
 
 
-open class BufferGeometry : GeometryBase<BufferGeometry>() {
+open class BufferGeometry : EventDispatcher(), Cloneable {
 
     internal val id = geometryIdCount.getAndAdd(2)
+
+    var name = ""
+    val uuid = generateUUID()
+
+    var boundingBox: Box3? = null
+        protected set
+
+    var boundingSphere: Sphere? = null
+        protected set
 
     var index: IntBufferAttribute? = null
         private set
@@ -58,10 +67,108 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
         this.drawRange.count = count;
     }
 
+    fun rotateX(angle: Float): BufferGeometry {
+
+        // rotate geometry around world x-axis
+        val m1 = Matrix4()
+        m1.makeRotationX(angle)
+        this.applyMatrix(m1)
+
+        return this
+
+    }
+
+    fun rotateY(angle: Float): BufferGeometry {
+
+        // rotate geometry around world y-axis
+        val m1 = Matrix4()
+        m1.makeRotationY(angle)
+        this.applyMatrix(m1)
+
+        return this
+
+    }
+
+    fun rotateZ(angle: Float): BufferGeometry {
+
+        // rotate geometry around world z-axis
+        val m1 = Matrix4()
+        m1.makeRotationZ(angle)
+        this.applyMatrix(m1)
+
+        return this
+
+    }
+
+    fun translate(x: Float, y: Float, z: Float): BufferGeometry {
+
+        // translate geometry
+        val m1 = Matrix4()
+        m1.makeTranslation(x, y, z)
+        this.applyMatrix(m1)
+
+        return this
+
+    }
+
+    fun scale(x: Float, y: Float, z: Float): BufferGeometry {
+
+        // scale geometry
+        val m1 = Matrix4()
+        m1.makeScale(x, y, z)
+        this.applyMatrix(m1)
+
+        return this
+
+    }
+
+    fun lookAt(vector: Vector3): BufferGeometry {
+        val obj = Object3D()
+        obj.lookAt(vector)
+        obj.updateMatrix()
+        this.applyMatrix(obj.matrix)
+
+        return this
+    }
+
+    fun center(): BufferGeometry {
+        val offset = Vector3()
+
+        this.computeBoundingBox()
+        boundingBox!!.getCenter(offset).negate()
+
+        this.translate(offset.x, offset.y, offset.z)
+
+        return this
+
+    }
+
+    fun normalize(): BufferGeometry {
+        this.computeBoundingSphere()
+
+        val center = boundingSphere!!.center
+        val radius = boundingSphere!!.radius
+
+        val s = if (radius == 0f) 1f else 1f / radius
+
+        val matrix = Matrix4()
+        matrix.set(
+            s, 0f, 0f, -s * center.x,
+            0f, s, 0f, -s * center.y,
+            0f, 0f, s, -s * center.z,
+            0f, 0f, 0f, 1f
+        )
+
+        this.applyMatrix(matrix)
+
+        return this
+    }
+
+
     /**
      * Bakes matrix transform directly into vertex coordinates.
      */
-    override fun applyMatrix(matrix: Matrix4): BufferGeometry {
+    fun applyMatrix(matrix: Matrix4): BufferGeometry {
         this.attributes.position?.also { position ->
             matrix.applyToBufferAttribute(position)
             position.needsUpdate = true
@@ -98,7 +205,7 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
      * Computes bounding box of the geometry, updating Geometry.boundingBox attribute.
      * Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are null.
      */
-    override fun computeBoundingBox() {
+    fun computeBoundingBox() {
 
         if (boundingBox == null) {
             boundingBox = Box3()
@@ -124,12 +231,12 @@ open class BufferGeometry : GeometryBase<BufferGeometry>() {
      * Computes bounding sphere of the geometry, updating Geometry.boundingSphere attribute.
      * Bounding spheres aren't' computed by default. They need to be explicitly computed, otherwise they are null.
      */
-    override fun computeBoundingSphere() {
+    fun computeBoundingSphere() {
 
         val sphere = boundingSphere ?: Sphere()
 
         val box = Box3()
-        val boxMorphTargets = Box3()
+//        val boxMorphTargets = Box3()
         val vector = Vector3()
 
         val position = this.attributes.position

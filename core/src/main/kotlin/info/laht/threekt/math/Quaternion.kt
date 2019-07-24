@@ -4,11 +4,39 @@ import info.laht.threekt.core.Cloneable
 import kotlin.math.*
 
 class Quaternion(
-    internal var x: Float = 0f,
-    internal var y: Float = 0f,
-    internal var z: Float = 0f,
-    internal var w: Float = 1f
+    private var _x: Float = 0f,
+    private var _y: Float = 0f,
+    private var _z: Float = 0f,
+    private var _w: Float = 1f
 ): Cloneable {
+
+    var x: Float
+        get() =  _x
+        set(value) {
+            _x = value
+            onChangeCallback?.invoke()
+        }
+
+    var y: Float
+        get() = _y
+        set(value) {
+            _y = value
+            onChangeCallback?.invoke()
+        }
+
+    var z: Float
+        get() = _z
+        set(value) {
+            _z = value
+            onChangeCallback?.invoke()
+        }
+
+    var w: Float
+        get() = _w
+        set(value) {
+            _w = value
+            onChangeCallback?.invoke()
+        }
 
     internal var onChangeCallback: (() -> Unit)? = null
 
@@ -16,10 +44,10 @@ class Quaternion(
      * Sets values of this quaternion.
      */
     fun set(x: Number, y: Number, z: Number, w: Number): Quaternion {
-        this.x = x.toFloat()
-        this.y = y.toFloat()
-        this.z = z.toFloat()
-        this.w = w.toFloat()
+        this._x = x.toFloat()
+        this._y = y.toFloat()
+        this._z = z.toFloat()
+        this._w = w.toFloat()
         this.onChangeCallback?.invoke()
         return this
     }
@@ -28,14 +56,14 @@ class Quaternion(
      * Clones this quaternion.
      */
     override fun clone(): Quaternion {
-        return Quaternion(x, y, z, w)
+        return Quaternion(_x, _y, _z, _w)
     }
 
     /**
      * Copies values of q to this quaternion.
      */
     fun copy(q: Quaternion): Quaternion {
-        return set(q.x, q.y, q.z, q.w)
+        return set(q._x, q._y, q._z, q._w)
     }
 
     /**
@@ -61,45 +89,45 @@ class Quaternion(
 
         if (euler.order == EulerOrder.XYZ) {
 
-            this.x = s1 * c2 * c3 + c1 * s2 * s3;
-            this.y = c1 * s2 * c3 - s1 * c2 * s3;
-            this.z = c1 * c2 * s3 + s1 * s2 * c3;
-            this.w = c1 * c2 * c3 - s1 * s2 * s3;
+            this._x = s1 * c2 * c3 + c1 * s2 * s3;
+            this._y = c1 * s2 * c3 - s1 * c2 * s3;
+            this._z = c1 * c2 * s3 + s1 * s2 * c3;
+            this._w = c1 * c2 * c3 - s1 * s2 * s3;
 
         } else if (euler.order == EulerOrder.YXZ) {
 
-            this.x = s1 * c2 * c3 + c1 * s2 * s3;
-            this.y = c1 * s2 * c3 - s1 * c2 * s3;
-            this.z = c1 * c2 * s3 - s1 * s2 * c3;
-            this.w = c1 * c2 * c3 + s1 * s2 * s3;
+            this._x = s1 * c2 * c3 + c1 * s2 * s3;
+            this._y = c1 * s2 * c3 - s1 * c2 * s3;
+            this._z = c1 * c2 * s3 - s1 * s2 * c3;
+            this._w = c1 * c2 * c3 + s1 * s2 * s3;
 
         } else if (euler.order == EulerOrder.ZXY) {
 
-            this.x = s1 * c2 * c3 - c1 * s2 * s3;
-            this.y = c1 * s2 * c3 + s1 * c2 * s3;
-            this.z = c1 * c2 * s3 + s1 * s2 * c3;
-            this.w = c1 * c2 * c3 - s1 * s2 * s3;
+            this._x = s1 * c2 * c3 - c1 * s2 * s3;
+            this._y = c1 * s2 * c3 + s1 * c2 * s3;
+            this._z = c1 * c2 * s3 + s1 * s2 * c3;
+            this._w = c1 * c2 * c3 - s1 * s2 * s3;
 
         } else if (euler.order == EulerOrder.ZYX) {
 
-            this.x = s1 * c2 * c3 - c1 * s2 * s3;
-            this.y = c1 * s2 * c3 + s1 * c2 * s3;
-            this.z = c1 * c2 * s3 - s1 * s2 * c3;
-            this.w = c1 * c2 * c3 + s1 * s2 * s3;
+            this._x = s1 * c2 * c3 - c1 * s2 * s3;
+            this._y = c1 * s2 * c3 + s1 * c2 * s3;
+            this._z = c1 * c2 * s3 - s1 * s2 * c3;
+            this._w = c1 * c2 * c3 + s1 * s2 * s3;
 
         } else if (euler.order == EulerOrder.YZX) {
 
-            this.x = s1 * c2 * c3 + c1 * s2 * s3;
-            this.y = c1 * s2 * c3 + s1 * c2 * s3;
-            this.z = c1 * c2 * s3 - s1 * s2 * c3;
-            this.w = c1 * c2 * c3 - s1 * s2 * s3;
+            this._x = s1 * c2 * c3 + c1 * s2 * s3;
+            this._y = c1 * s2 * c3 + s1 * c2 * s3;
+            this._z = c1 * c2 * s3 - s1 * s2 * c3;
+            this._w = c1 * c2 * c3 - s1 * s2 * s3;
 
         } else if (euler.order == EulerOrder.XZY) {
 
-            this.x = s1 * c2 * c3 - c1 * s2 * s3;
-            this.y = c1 * s2 * c3 - s1 * c2 * s3;
-            this.z = c1 * c2 * s3 + s1 * s2 * c3;
-            this.w = c1 * c2 * c3 + s1 * s2 * s3;
+            this._x = s1 * c2 * c3 - c1 * s2 * s3;
+            this._y = c1 * s2 * c3 - s1 * c2 * s3;
+            this._z = c1 * c2 * s3 + s1 * s2 * c3;
+            this._w = c1 * c2 * c3 + s1 * s2 * s3;
 
         }
 
@@ -114,10 +142,10 @@ class Quaternion(
         val halfAngle = angle / 2
         val s = sin(halfAngle);
 
-        this.x = axisX * s;
-        this.y = axisY * s;
-        this.z = axisZ * s;
-        this.w = cos(halfAngle);
+        this._x = axisX * s;
+        this._y = axisY * s;
+        this._z = axisZ * s;
+        this._w = cos(halfAngle);
 
         this.onChangeCallback?.invoke()
 
@@ -160,37 +188,37 @@ class Quaternion(
 
             s = 0.5.toFloat() / sqrt(trace + 1.toFloat());
 
-            this.w = 0.25.toFloat() / s;
-            this.x = (m32 - m23) * s;
-            this.y = (m13 - m31) * s;
-            this.z = (m21 - m12) * s;
+            this._w = 0.25.toFloat() / s;
+            this._x = (m32 - m23) * s;
+            this._y = (m13 - m31) * s;
+            this._z = (m21 - m12) * s;
 
         } else if (m11 > m22 && m11 > m33) {
 
             s = 2.toFloat() * sqrt(1.toFloat() + m11 - m22 - m33);
 
-            this.w = (m32 - m23) / s;
-            this.x = 0.25.toFloat() * s;
-            this.y = (m12 + m21) / s;
-            this.z = (m13 + m31) / s;
+            this._w = (m32 - m23) / s;
+            this._x = 0.25.toFloat() * s;
+            this._y = (m12 + m21) / s;
+            this._z = (m13 + m31) / s;
 
         } else if (m22 > m33) {
 
             s = 2.toFloat() * sqrt(1.toFloat() + m22 - m11 - m33);
 
-            this.w = (m13 - m31) / s;
-            this.x = (m12 + m21) / s;
-            this.y = 0.25.toFloat() * s;
-            this.z = (m23 + m32) / s;
+            this._w = (m13 - m31) / s;
+            this._x = (m12 + m21) / s;
+            this._y = 0.25.toFloat() * s;
+            this._z = (m23 + m32) / s;
 
         } else {
 
             s = 2.toFloat() * sqrt(1.toFloat() + m33 - m11 - m22);
 
-            this.w = (m21 - m12) / s;
-            this.x = (m13 + m31) / s;
-            this.y = (m23 + m32) / s;
-            this.z = 0.25.toFloat() * s;
+            this._w = (m21 - m12) / s;
+            this._x = (m13 + m31) / s;
+            this._y = (m23 + m32) / s;
+            this._z = 0.25.toFloat() * s;
 
         }
 
@@ -212,17 +240,17 @@ class Quaternion(
 
             if (abs(vFrom.x) > abs(vFrom.z)) {
 
-                this.x = -vFrom.y
-                this.y = vFrom.x
-                this.z = 0.toFloat()
-                this.w = r
+                this._x = -vFrom.y
+                this._y = vFrom.x
+                this._z = 0.toFloat()
+                this._w = r
 
             } else {
 
-                this.x = 0.toFloat()
-                this.y = -vFrom.z
-                this.z = vFrom.y
-                this.w = r
+                this._x = 0.toFloat()
+                this._y = -vFrom.z
+                this._z = vFrom.y
+                this._w = r
 
             }
 
@@ -230,10 +258,10 @@ class Quaternion(
 
             // crossVectors( vFrom, vTo ); // inlined to avoid cyclic dependency on Vector3
 
-            this.x = vFrom.y * vTo.z - vFrom.z * vTo.y
-            this.y = vFrom.z * vTo.x - vFrom.x * vTo.z
-            this.z = vFrom.x * vTo.y - vFrom.y * vTo.x
-            this.w = r
+            this._x = vFrom.y * vTo.z - vFrom.z * vTo.y
+            this._y = vFrom.z * vTo.x - vFrom.x * vTo.z
+            this._z = vFrom.x * vTo.y - vFrom.y * vTo.x
+            this._w = r
 
         }
 
@@ -264,9 +292,9 @@ class Quaternion(
     }
 
     fun conjugate(): Quaternion {
-        this.x *= -1
-        this.y *= -1
-        this.z *= -1
+        this._x *= -1
+        this._y *= -1
+        this._z *= -1
 
         this.onChangeCallback?.invoke()
 
@@ -274,18 +302,18 @@ class Quaternion(
     }
 
     fun dot(v: Quaternion): Float {
-        return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w
+        return this._x * v._x + this._y * v._y + this._z * v._z + this._w * v._w
     }
 
     fun lengthSq(): Float {
-        return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w
+        return this._x * this._x + this._y * this._y + this._z * this._z + this._w * this._w
     }
 
     /**
      * Computes length of this quaternion.
      */
     fun length(): Float {
-        return sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w)
+        return sqrt(this._x * this._x + this._y * this._y + this._z * this._z + this._w * this._w)
 
     }
 
@@ -297,19 +325,19 @@ class Quaternion(
 
         if (l == 0.toFloat()) {
 
-            this.x = 0.toFloat()
-            this.y = 0.toFloat()
-            this.z = 0.toFloat()
-            this.w = 1.toFloat()
+            this._x = 0.toFloat()
+            this._y = 0.toFloat()
+            this._z = 0.toFloat()
+            this._w = 1.toFloat()
 
         } else {
 
             l = 1.toFloat() / l
 
-            this.x = this.x * l
-            this.y = this.y * l
-            this.z = this.z * l
-            this.w = this.w * l
+            this._x = this._x * l
+            this._y = this._y * l
+            this._z = this._z * l
+            this._w = this._w * l
 
         }
 
@@ -334,19 +362,19 @@ class Quaternion(
      * Adapted from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm.
      */
     fun multiplyQuaternions(a: Quaternion, b: Quaternion): Quaternion {
-        val qax = a.x;
-        val qay = a.y;
-        val qaz = a.z;
-        val qaw = a.w;
-        val qbx = b.x;
-        val qby = b.y;
-        val qbz = b.z;
-        val qbw = b.w;
+        val qax = a._x;
+        val qay = a._y;
+        val qaz = a._z;
+        val qaw = a._w;
+        val qbx = b._x;
+        val qby = b._y;
+        val qbz = b._z;
+        val qbw = b._w;
 
-        this.x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
-        this.y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz;
-        this.z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
-        this.w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
+        this._x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
+        this._y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz;
+        this._z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
+        this._w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
 
         this.onChangeCallback?.invoke()
 
@@ -361,21 +389,21 @@ class Quaternion(
             return this.copy(qb)
         }
 
-        val x = this.x;
-        val y = this.y;
-        val z = this.z;
-        val w = this.w
+        val x = this._x;
+        val y = this._y;
+        val z = this._z;
+        val w = this._w
 
         // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
 
-        var cosHalfTheta = w * qb.w + x * qb.x + y * qb.y + z * qb.z
+        var cosHalfTheta = w * qb._w + x * qb._x + y * qb._y + z * qb._z
 
         if (cosHalfTheta < 0) {
 
-            this.w = -qb.w
-            this.x = -qb.x
-            this.y = -qb.y
-            this.z = -qb.z
+            this._w = -qb._w
+            this._x = -qb._x
+            this._y = -qb._y
+            this._z = -qb._z
 
             cosHalfTheta = -cosHalfTheta
 
@@ -387,10 +415,10 @@ class Quaternion(
 
         if (cosHalfTheta >= 1.0) {
 
-            this.w = w
-            this.x = x
-            this.y = y
-            this.z = z
+            this._w = w
+            this._x = x
+            this._y = y
+            this._z = z
 
             return this;
 
@@ -401,10 +429,10 @@ class Quaternion(
         if (sqrSinHalfTheta <= 1e-6) {
 
             val s = 1 - t
-            this.w = s * w + t * this.w
-            this.x = s * x + t * this.x
-            this.y = s * y + t * this.y
-            this.z = s * z + t * this.z
+            this._w = s * w + t * this._w
+            this._x = s * x + t * this._x
+            this._y = s * y + t * this._y
+            this._z = s * z + t * this._z
 
             this.normalize();
             this.onChangeCallback?.invoke()
@@ -418,10 +446,10 @@ class Quaternion(
         val ratioA = sin((1 - t) * halfTheta) / sinHalfTheta
         val ratioB = sin(t * halfTheta) / sinHalfTheta;
 
-        this.w = (w * ratioA + this.w * ratioB);
-        this.x = (x * ratioA + this.x * ratioB);
-        this.y = (y * ratioA + this.y * ratioB);
-        this.z = (z * ratioA + this.z * ratioB);
+        this._w = (w * ratioA + this._w * ratioB);
+        this._x = (x * ratioA + this._x * ratioB);
+        this._y = (y * ratioA + this._y * ratioB);
+        this._z = (z * ratioA + this._z * ratioB);
 
         this.onChangeCallback?.invoke()
 
@@ -431,19 +459,19 @@ class Quaternion(
 
     @JvmOverloads
     fun fromArray(array: FloatArray, offset: Int = 0): Quaternion {
-        x = array[offset + 0]
-        y = array[offset + 1]
-        z = array[offset + 2]
-        w = array[offset + 3]
+        _x = array[offset + 0]
+        _y = array[offset + 1]
+        _z = array[offset + 2]
+        _w = array[offset + 3]
         return this
     }
 
     @JvmOverloads
     fun toArray(array: FloatArray = FloatArray(4), offset: Int = 0): FloatArray {
-        array[offset + 0] = x
-        array[offset + 1] = y
-        array[offset + 2] = z
-        array[offset + 3] = w
+        array[offset + 0] = _x
+        array[offset + 1] = _y
+        array[offset + 2] = _z
+        array[offset + 3] = _w
         return array
     }
 
@@ -453,24 +481,24 @@ class Quaternion(
 
         other as Quaternion
 
-        if (x != other.x) return false
-        if (y != other.y) return false
-        if (z != other.z) return false
-        if (w != other.w) return false
+        if (_x != other._x) return false
+        if (_y != other._y) return false
+        if (_z != other._z) return false
+        if (_w != other._w) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = x.hashCode()
-        result = 31 * result + y.hashCode()
-        result = 31 * result + z.hashCode()
-        result = 31 * result + w.hashCode()
+        var result = _x.hashCode()
+        result = 31 * result + _y.hashCode()
+        result = 31 * result + _z.hashCode()
+        result = 31 * result + _w.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "Quaternion(x=$x, y=$y, z=$z, w=$w)"
+        return "Quaternion(_x=$_x, _y=$_y, _z=$_z, _w=$_w)"
     }
 
 }

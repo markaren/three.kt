@@ -23,7 +23,7 @@ Canvas().use { canvas ->
         background = ColorBackground(Color.aliceblue)
     }
 
-    val camera = PerspectiveCamera(75, canvas.width.toFloat() / canvas.height, 0.1, 1000)
+    val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)
     val renderer = GLRenderer(canvas).apply {
         checkShaderErrors = true
     }

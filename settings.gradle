@@ -1,7 +1,4 @@
 rootProject.name = 'threekt'
 
-
-enableFeaturePreview('GRADLE_METADATA')
-rootProject.name = 'threekt'
-rootProject.name = 'threekt'
-
+include 'core'
+include 'examples'

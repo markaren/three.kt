@@ -7,31 +7,34 @@ import kotlin.math.asin
 import kotlin.math.atan2
 
 class Euler(
-    x: Float = 0f,
-    y: Float = 0f,
-    z: Float = 0f,
-    order: EulerOrder = EulerOrder.defaultOrder
+    private var _x: Float = 0f,
+    private var _y: Float = 0f,
+    private var _z: Float = 0f,
+    private var _order: EulerOrder = EulerOrder.defaultOrder
 ) : Cloneable {
 
-    var x = x
+    var x: Float
+        get() =  _x
         set(value) {
-            field = value
+            _x = value
             onChangeCallback?.invoke()
         }
 
-    var y = y
+    var y: Float
+        get() = _y
         set(value) {
-            field = value
+            _y = value
             onChangeCallback?.invoke()
         }
 
-    var z = z
+    var z: Float
+        get() = _z
         set(value) {
-            field = value
+            _z = value
             onChangeCallback?.invoke()
         }
 
-    var order = order
+    var order = _order
         set(value) {
             field = value
             onChangeCallback?.invoke()
@@ -40,10 +43,10 @@ class Euler(
     internal var onChangeCallback: (() -> Unit)? = null
 
     fun set(x: Number, y: Number, z: Number, order: EulerOrder?): Euler {
-        this.x = x.toFloat()
-        this.y = x.toFloat()
-        this.z = x.toFloat()
-        this.order = order ?: this.order
+        this._x = x.toFloat()
+        this._y = y.toFloat()
+        this._z = z.toFloat()
+        this._order = order ?: this._order
         this.onChangeCallback?.invoke()
         return this
     }
@@ -53,7 +56,7 @@ class Euler(
     }
 
     fun copy(euler: Euler): Euler {
-        return set(euler.x, euler.y, euler.z, euler.order)
+        return set(euler._x, euler._y, euler._z, euler._order)
     }
 
     fun setFromRotationMatrix(m: Matrix4, order: EulerOrder? = null, update: Boolean = true): Euler {
@@ -71,101 +74,101 @@ class Euler(
         val m33 = te[10]
 
         @Suppress("NAME_SHADOWING")
-        val order = order ?: this.order
+        val order = order ?: this._order
 
         if (order == EulerOrder.XYZ) {
 
-            this.y = asin(clamp(m13, -1f, 1f));
+            this._y = asin(clamp(m13, -1f, 1f));
 
             if (abs(m13) < 0.99999) {
 
-                this.x = atan2(-m23, m33);
-                this.z = atan2(-m12, m11);
+                this._x = atan2(-m23, m33);
+                this._z = atan2(-m12, m11);
 
             } else {
 
-                this.x = atan2(m32, m22);
-                this.z = 0f
+                this._x = atan2(m32, m22);
+                this._z = 0f
 
             }
 
         } else if (order == EulerOrder.YXZ) {
 
-            this.x = asin(-clamp(m23, -1, 1));
+            this._x = asin(-clamp(m23, -1, 1));
 
             if (abs(m23) < 0.99999) {
 
-                this.y = atan2(m13, m33);
-                this.z = atan2(m21, m22);
+                this._y = atan2(m13, m33);
+                this._z = atan2(m21, m22);
 
             } else {
 
-                this.y = atan2(-m31, m11);
-                this.z = 0f
+                this._y = atan2(-m31, m11);
+                this._z = 0f
 
             }
 
         } else if (order == EulerOrder.ZXY) {
 
-            this.x = asin(clamp(m32, -1, 1));
+            this._x = asin(clamp(m32, -1, 1));
 
             if (abs(m32) < 0.99999) {
 
-                this.y = atan2(-m31, m33);
-                this.z = atan2(-m12, m22);
+                this._y = atan2(-m31, m33);
+                this._z = atan2(-m12, m22);
 
             } else {
 
-                this.y = 0f
-                this.z = atan2(m21, m11);
+                this._y = 0f
+                this._z = atan2(m21, m11);
 
             }
 
         } else if (order == EulerOrder.ZYX) {
 
-            this.y = asin(-clamp(m31, -1, 1));
+            this._y = asin(-clamp(m31, -1, 1));
 
             if (abs(m31) < 0.99999) {
 
-                this.x = atan2(m32, m33);
-                this.z = atan2(m21, m11);
+                this._x = atan2(m32, m33);
+                this._z = atan2(m21, m11);
 
             } else {
 
-                this.x = 0f
-                this.z = atan2(-m12, m22);
+                this._x = 0f
+                this._z = atan2(-m12, m22);
 
             }
 
         } else if (order == EulerOrder.YZX) {
 
-            this.z = asin(clamp(m21, -1, 1));
+            this._z = asin(clamp(m21, -1, 1));
 
             if (abs(m21) < 0.99999) {
 
-                this.x = atan2(-m23, m22);
-                this.y = atan2(-m31, m11);
+                this._x = atan2(-m23, m22);
+                this._y = atan2(-m31, m11);
 
             } else {
 
-                this.x = 0f
-                this.y = atan2(m13, m33);
+                this._x = 0f
+                this._y = atan2(m13, m33);
 
             }
 
         } else if (order == EulerOrder.XZY) {
 
-            this.z = asin(-clamp(m12, -1, 1));
+            this._z = asin(-clamp(m12, -1, 1));
 
             if (abs(m12) < 0.99999) {
 
-                this.x = atan2(m32, m22);
-                this.y = atan2(m13, m11);
+                this._x = atan2(m32, m22);
+                this._y = atan2(m13, m11);
 
             } else {
 
-                this.x = atan2(-m23, m33);
-                this.y = 0f
+                this._x = atan2(-m23, m33);
+                this._y = 0f
 
             }
 
@@ -175,7 +178,7 @@ class Euler(
 
         }
 
-        this.order = order;
+        this._order = order;
 
         if (update) {
             this.onChangeCallback?.invoke()
@@ -192,7 +195,7 @@ class Euler(
     }
 
     fun setFromVector3(v: Vector3, order: EulerOrder? = null): Euler {
-        return this.set(v.x, v.y, v.z, order ?: this.order);
+        return this.set(v.x, v.y, v.z, order ?: this._order);
     }
 
     fun reorder(newOrder: EulerOrder): Euler {
@@ -206,7 +209,7 @@ class Euler(
     }
 
     fun toVector3(optionalResult: Vector3 = Vector3()): Vector3 {
-        return optionalResult.set(x, y, z)
+        return optionalResult.set(_x, _y, _z)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -215,24 +218,24 @@ class Euler(
 
         other as Euler
 
-        if (x != other.x) return false
-        if (y != other.y) return false
-        if (z != other.z) return false
-        if (order != other.order) return false
+        if (_x != other._x) return false
+        if (_y != other._y) return false
+        if (_z != other._z) return false
+        if (_order != other._order) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = x.hashCode()
-        result = 31 * result + y.hashCode()
-        result = 31 * result + z.hashCode()
-        result = 31 * result + order.hashCode()
+        var result = _x.hashCode()
+        result = 31 * result + _y.hashCode()
+        result = 31 * result + _z.hashCode()
+        result = 31 * result + _order.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "Euler(x=$x, y=$y, z=$z, order=$order)"
+        return "Euler(x=$_x, y=$_y, z=$_z, order=$_order)"
     }
 
 }
