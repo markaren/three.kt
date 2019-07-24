@@ -30,7 +30,7 @@ class Test {
                 background = ColorBackground(Color.aliceblue)
             }
 
-            val camera = PerspectiveCamera(75, canvas.width.toFloat() / canvas.height, 0.1, 1000)
+            val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)
             val renderer = GLRenderer(canvas).apply {
                 checkShaderErrors = true
             }
@@ -41,21 +41,21 @@ class Test {
                 scene.add(it)
             }
 
-            val sphere = Mesh(SphereGeometry(0.5f), MeshBasicMaterial()).also {
-                it.position.y += 5f
+            val sphere = Mesh(SphereGeometry(0.5f), MeshBasicMaterial().apply {
+                color.set(Color.rebeccapurple)
+            }).also {
+                it.position.x += 2f
                 scene.add(it)
             }
 
             camera.position.z = 5f
-
-//            val light = AmbientLight(Color.yellow)
-//            scene.add(light)
 
 
             val clock = Clock()
             while (!canvas.shouldClose()) {
                 renderer.render(scene, camera)
                 box.rotation.x += 1f * clock.getDelta().toFloat()
+                box.rotation.y += 1f * clock.getDelta().toFloat()
             }
 
             debugProc.free()

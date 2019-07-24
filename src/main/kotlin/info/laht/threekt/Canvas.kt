@@ -11,8 +11,6 @@ import java.awt.SystemColor.window
 import org.lwjgl.glfw.GLFW.glfwSetKeyCallback
 
 
-
-
 class Canvas(
     val width: Int = 800,
     val height: Int = 600,
@@ -20,6 +18,9 @@ class Canvas(
 ): Closeable {
 
     private val pointer: Long
+
+    val aspect: Float
+        get() = width.toFloat() / height
 
     init {
         val errorCallback = GLFWErrorCallback.createPrint(System.err)
@@ -63,7 +64,7 @@ class Canvas(
         return window
     }
 
-    fun tick() {
+    internal fun tick() {
         glfwSwapBuffers(pointer)
         glfwPollEvents()
     }
