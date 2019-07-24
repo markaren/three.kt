@@ -1,4 +1,4 @@
-# three.kt (Work in progress - still not 100% functional)
+# three.kt (Work in progress)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/markaren/three.kt/issues)
@@ -7,11 +7,13 @@
 
 Kotlin/JVM port of the popular [three.js](http://threejs.org) 3D library ([r106](https://github.com/mrdoob/three.js/tree/r106)).
 
+Be warned, while the basics works, alot of features are still missing, like controls, textures, 3D model loaders etc.
+
 ## Looking for the Kotlin/JS wrapper project?
 It has been renamed and moved to [here](https://github.com/markaren/three-kt-wrapper).
 
 
-#### API
+#### API (subject to changes)
 
 ```kotlin
 
