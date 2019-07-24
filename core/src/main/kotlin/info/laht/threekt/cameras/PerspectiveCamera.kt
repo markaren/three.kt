@@ -12,14 +12,14 @@ class PerspectiveCamera(
     aspect: Number = 1,
     near: Number = 0.1,
     far: Number = 2000
-) : Camera() {
+) : Camera(), CameraWithZoom {
 
     var fov: Float = fov.toFloat()
     var aspect: Float = aspect.toFloat()
     var near: Float = near.toFloat()
     var far: Float = far.toFloat()
 
-    var zoom = 1f
+    override var zoom = 1f
     var focus = 10
     var filmGauge = 35 // width of the film (default in millimeters)
     var filmOffset = 0 // horizontal film offset (same unit as gauge)
@@ -211,18 +211,4 @@ class PerspectiveCamera(
     }
 }
 
-data class View(
-    var enabled: Boolean,
-    var fullWidth: Int,
-    var fullHeight: Int,
-    var offsetX: Int,
-    var offsetY: Int,
-    var width: Int,
-    var height: Int
-) {
 
-    override fun toString(): String {
-        return "View(enabled=$enabled, fullWidth=$fullWidth, fullHeight=$fullHeight, offsetX=$offsetX, offsetY=$offsetY, width=$width, height=$height)"
-    }
-
-}

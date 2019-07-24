@@ -4,6 +4,12 @@ import info.laht.threekt.core.Object3D
 import info.laht.threekt.math.Matrix4
 import info.laht.threekt.math.Vector3
 
+interface CameraWithZoom {
+
+    var zoom: Float
+
+}
+
 abstract class Camera: Object3D() {
 
     val matrixWorldInverse = Matrix4()
