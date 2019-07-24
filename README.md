@@ -34,20 +34,15 @@ Canvas().use { canvas ->
         scene.add(it)
     }
 
-    val sphere = Mesh(SphereGeometry(0.5f), MeshBasicMaterial().apply {
-        color.set(Color.rebeccapurple)
-    }).also {
-        it.position.x += 2f
-        scene.add(it)
-    }
-
     camera.position.z = 5f
 
     val clock = Clock()
     while (!canvas.shouldClose()) {
         renderer.render(scene, camera)
-        box.rotation.x += 1f * clock.getDelta().toFloat()
-        box.rotation.y += 1f * clock.getDelta().toFloat()
+        
+        val dt = clock.getDelta()
+        box.rotation.x += 1f * dt
+        box.rotation.y += 1f * dt
     }
     
 }
