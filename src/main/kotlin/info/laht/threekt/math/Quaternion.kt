@@ -1,5 +1,6 @@
 package info.laht.threekt.math
 
+import info.laht.threekt.core.Cloneable
 import kotlin.math.*
 
 class Quaternion(
