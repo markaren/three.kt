@@ -4,9 +4,9 @@ import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
-import info.laht.threekt.geometries.SphereGeometry
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.Color
+import info.laht.threekt.math.DEG2RAD
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.ColorBackground
@@ -36,6 +36,7 @@ object Basic {
             val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
                 color.set(0x00ff00)
             }).also {
+                it.rotation.y = DEG2RAD * 45
                 scene.add(it)
             }
 
@@ -43,7 +44,7 @@ object Basic {
                 color.set(0xffffff)
                  wireframe = true
             }).also {
-                scene.add(it)
+                 box.add(it)
             }
 
             camera.position.z = 5f
