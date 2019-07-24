@@ -28,7 +28,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
     internal val groups = mutableListOf<GeometryGroup>()
 
-    internal var drawRange = DrawRange(0, Int.MAX_VALUE)
+    internal var drawRange = DrawRange(0, Int.MAX_VALUE/2)
 
     fun setIndex(index: IntBufferAttribute) {
         this.index = index
