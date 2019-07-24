@@ -6,7 +6,7 @@ plugins {
 apply plugin: 'maven-publish'
 
 group 'info.laht'
-version 'r107-ALPHA'
+version 'r106-ALPHA'
 
 sourceCompatibility = 1.8
 
@@ -19,7 +19,18 @@ repositories {
 }
 
 project.ext.lwjglVersion = "3.2.2"
-project.ext.lwjglNatives = "natives-windows"
+
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+}
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -58,19 +69,3 @@ task cleanThreejs() {
         }
     }
 }
-//
-//task ts2kt() {
-//   doLast {
-//
-//       def sb = new StringBuilder()
-//
-//       new File("src/main/resources/shaders/chunk").listFiles().each { file ->
-//
-//            sb.append("val ${file.name.replace(".glsl", "")} by lazy {\n\tload(\"${file.name}\")\n}\n\n")
-//           
-//       }
-//
-//       println sb
-//
-//   }
-//}
