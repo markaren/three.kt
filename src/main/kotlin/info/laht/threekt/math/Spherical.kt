@@ -60,5 +60,8 @@ class Spherical(
 
     }
 
+    override fun toString(): String {
+        return "Spherical(radius=$radius, phi=$phi, theta=$theta)"
+    }
 
 }
