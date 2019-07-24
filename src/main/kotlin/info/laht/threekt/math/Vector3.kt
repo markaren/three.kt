@@ -3,10 +3,7 @@ package info.laht.threekt.math
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.FloatBufferAttribute
-import kotlin.math.abs
-import kotlin.math.acos
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
+import kotlin.math.*
 
 class Vector3(
     var x: Float,
@@ -16,7 +13,7 @@ class Vector3(
 
     override val size = 3
 
-    constructor() : this(0.toFloat(), 0.toFloat(), 0.toFloat())
+    constructor() : this(0f, 0f, 0f)
 
     constructor(x: Int, y: Int, z: Int): this(x.toFloat(), y.toFloat(), z.toFloat())
 
@@ -388,6 +385,40 @@ class Vector3(
      */
     fun manhattanDistanceTo(v: Vector3): Float {
         return abs(this.x - v.x) + abs(this.y - v.y) + abs(this.z - v.z)
+    }
+
+    fun setFromSpherical ( s: Spherical ): Vector3 {
+
+        return this.setFromSphericalCoords( s.radius, s.phi, s.theta );
+
+    }
+
+    fun setFromSphericalCoords ( radius: Float, phi: Float, theta: Float ): Vector3 {
+
+        var sinPhiRadius = sin( phi ) * radius;
+
+        this.x = sinPhiRadius * sin( theta );
+        this.y = cos( phi ) * radius;
+        this.z = sinPhiRadius * cos( theta );
+
+        return this;
+
+    }
+
+    fun setFromCylindrical ( c: Cylindrical ): Vector3 {
+
+        return this.setFromCylindricalCoords( c.radius, c.theta, c.y );
+
+    }
+
+    fun setFromCylindricalCoords ( radius: Float, theta: Float, y: Float ): Vector3 {
+
+        this.x = radius * sin( theta );
+        this.y = y;
+        this.z = radius * cos( theta );
+
+        return this;
+
     }
 
     /**
