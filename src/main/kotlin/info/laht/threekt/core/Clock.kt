@@ -6,7 +6,7 @@ class Clock(
 
     private var startTime = 0L
     private var oldTime = 0L
-    private var elapsedTime = 0.0
+    private var elapsedTime = 0f
 
     var running = false
         private set
@@ -14,7 +14,7 @@ class Clock(
     fun start() {
         startTime = System.currentTimeMillis()
         oldTime = startTime
-        elapsedTime = 0.0
+        elapsedTime = 0f
         running = true
     }
 
@@ -24,23 +24,23 @@ class Clock(
         autoStart = false
     }
 
-    fun getElapsedTime(): Double {
+    fun getElapsedTime(): Float {
         getDelta()
         return elapsedTime
     }
 
-    fun getDelta(): Double {
-        var diff = 0.0
+    fun getDelta(): Float {
+        var diff = 0f
 
         if ( this.autoStart && ! this.running ) {
             start()
-            return 0.0
+            return 0f
         }
 
         if ( this.running ) {
 
             val newTime = System.currentTimeMillis()
-            diff = ( newTime - this.oldTime ).toDouble() / 1000.0
+            diff = ( newTime - this.oldTime ).toFloat() / 1000f
             this.oldTime = newTime;
 
             elapsedTime += diff;

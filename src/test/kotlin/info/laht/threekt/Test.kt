@@ -54,8 +54,8 @@ class Test {
             val clock = Clock()
             while (!canvas.shouldClose()) {
                 renderer.render(scene, camera)
-                box.rotation.x += 1f * clock.getDelta().toFloat()
-                box.rotation.y += 1f * clock.getDelta().toFloat()
+                box.rotation.x += 1f * clock.getDelta()
+                box.rotation.y += 1f * clock.getDelta()
             }
 
             debugProc.free()
