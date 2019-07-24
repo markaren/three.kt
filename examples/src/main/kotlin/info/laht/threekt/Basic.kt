@@ -4,6 +4,7 @@ import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
+import info.laht.threekt.geometries.PlaneGeometry
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
@@ -33,6 +34,15 @@ object Basic {
                 checkShaderErrors = true
             }
 
+            Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
+                color.set(Color.gray)
+                side = DoubleSide
+            }).also {
+                it.rotation.x = DEG2RAD * -90
+                it.translateZ(-1f)
+                scene.add(it)
+            }
+
             val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
                 color.set(0x00ff00)
             }).also {
@@ -40,14 +50,14 @@ object Basic {
                 scene.add(it)
             }
 
-             Mesh(box.geometry.clone(), MeshBasicMaterial().apply {
+            Mesh(box.geometry.clone(), MeshBasicMaterial().apply {
                 color.set(0xffffff)
-                 wireframe = true
+                wireframe = true
             }).also {
-                 box.add(it)
+                box.add(it)
             }
 
-            camera.position.z = 5f
+            camera.position.z = 10f
 
             val controls = OrbitControls(camera, canvas)
 
@@ -56,9 +66,9 @@ object Basic {
 
                 renderer.render(scene, camera)
 
-                val dt =  clock.getDelta()
-//                box.rotation.x += 1f * dt
-//                box.rotation.y += 1f * dt
+                val dt = clock.getDelta()
+                box.rotation.x += 0.5f * dt
+                box.rotation.y += 0.5f * dt
 
             }
 
