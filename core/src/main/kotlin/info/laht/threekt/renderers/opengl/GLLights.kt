@@ -79,9 +79,9 @@ class GLLights internal constructor() {
 
                     }
 
-                    state.pointShadowMap[pointLength] = shadowMap
-                    state.pointShadowMatrix[pointLength] = light.shadow.matrix
-                    state.point[pointLength] = uniforms
+                    state.pointShadowMap.add(shadowMap)
+                    state.pointShadowMatrix.add(light.shadow.matrix)
+                    state.point.add(uniforms)
 
                     pointLength++
                 }
@@ -165,7 +165,7 @@ class GLLights internal constructor() {
 
     }
 
-    inner class GLLightsState {
+    internal inner class GLLightsState {
 
         var version = 0
 
@@ -219,9 +219,9 @@ class GLLights internal constructor() {
 
 }
 
-sealed class LightUniforms
+internal sealed class LightUniforms
 
-class AmbientLightUniforms : LightUniforms() {
+internal class AmbientLightUniforms : LightUniforms() {
     val direction = Vector3()
     val color = Color()
 
@@ -231,7 +231,7 @@ class AmbientLightUniforms : LightUniforms() {
     val shadowMapSize = Vector2()
 }
 
-class PointLightUniforms : LightUniforms() {
+internal class PointLightUniforms : LightUniforms() {
     val position = Vector3()
     val color = Color()
     var distance = 0f
@@ -245,7 +245,7 @@ class PointLightUniforms : LightUniforms() {
     var shadowCameraFar = 1000f
 }
 
-class SpotLightUniforms : LightUniforms() {
+internal class SpotLightUniforms : LightUniforms() {
     val position = Vector3()
     val direction = Vector3()
     val color = Color()

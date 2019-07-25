@@ -30,7 +30,7 @@ class GLPrograms internal constructor(
 
     }
 
-    fun getParameters( material: Material, lights: GLLights.GLLightsState, shadows: List<Object3D>, fog: _Fog?, nClipPlanes: Int, nClipIntersection: Int, `object`: Object3D ): Parameters {
+    internal fun getParameters( material: Material, lights: GLLights.GLLightsState, shadows: List<Object3D>, fog: _Fog?, nClipPlanes: Int, nClipIntersection: Int, `object`: Object3D ): Parameters {
         return Parameters(
             material,
             lights,
@@ -42,7 +42,7 @@ class GLPrograms internal constructor(
         )
     }
 
-    fun getProgramCode(material: Material, parameters: Parameters): String {
+    internal fun getProgramCode(material: Material, parameters: Parameters): String {
 
         val array = mutableListOf<String>()
 
@@ -74,7 +74,7 @@ class GLPrograms internal constructor(
 
     }
 
-    fun acquireProgram(material: Material, shader: ShaderLib.Shader, parameters: Parameters, code: String): GLProgram {
+    internal fun acquireProgram(material: Material, shader: ShaderLib.Shader, parameters: Parameters, code: String): GLProgram {
 
         var program: GLProgram? = null
 
@@ -147,7 +147,7 @@ class GLPrograms internal constructor(
 
     }
 
-    inner class Parameters(
+    internal inner class Parameters(
         material: Material,
         lights: GLLights.GLLightsState,
         shadows: List<Object3D>,
