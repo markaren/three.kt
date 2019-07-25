@@ -9,15 +9,14 @@ object TextureLoader {
 
     fun load(file: File): Texture {
 
-        return ImageLoader.load(file).let {
+        val texture = Texture(
+            image = ImageLoader.load(file),
+            format = RGBAFormat,
+            type = UnsignedByteType
+        )
+        texture.needsUpdate = true
 
-            Texture(
-                image = it,
-                format = RGBAFormat,
-                type = UnsignedByteType
-            )
-
-        }
+        return texture
 
     }
 
