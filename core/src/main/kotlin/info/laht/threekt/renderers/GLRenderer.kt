@@ -1290,7 +1290,7 @@ class GLRenderer(
 
     }
 
-    fun refreshUniformsSprites(uniforms: Map<String, Uniform>, material: Material) {
+    private fun refreshUniformsSprites(uniforms: Map<String, Uniform>, material: Material) {
 
         material as MaterialWithColor
 
