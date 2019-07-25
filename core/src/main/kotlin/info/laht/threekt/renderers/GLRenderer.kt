@@ -295,18 +295,10 @@ class GLRenderer(
 
             state.setLineWidth(lineWidth * getTargetPixelRatio())
 
-            if (`object` is LineSegments) {
-
-                renderer.mode = GL_LINES
-
-            } else if (`object` is LineLoop) {
-
-                renderer.mode = GL_LINE_LOOP
-
-            } else {
-
-                renderer.mode = GL_LINE_STRIP
-
+            when (`object`) {
+                is LineSegments -> renderer.mode = GL_LINES
+                is LineLoop -> renderer.mode = GL_LINE_LOOP
+                else -> renderer.mode = GL_LINE_STRIP
             }
 
         } else if (`object` is Points) {
@@ -477,7 +469,7 @@ class GLRenderer(
         projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
         frustum.setFromMatrix(projScreenMatrix)
 
-        localClippingEnabled = this.localClippingEnabled
+//        localClippingEnabled = this.localClippingEnabled
         clippingEnabled = clipping.init(this.clippingPlanes, localClippingEnabled, camera)
 
         this.currentRenderList = renderLists.get(scene, camera)
@@ -522,7 +514,10 @@ class GLRenderer(
 
         } else {
 
+            // opaque pass (front-to-back order)
             if (opaqueObjects.isNotEmpty()) renderObjects(opaqueObjects, scene, camera)
+
+            // transparent pass (back-to-front order)
             if (transparentObjects.isNotEmpty()) renderObjects(transparentObjects, scene, camera)
 
         }
@@ -983,7 +978,8 @@ class GLRenderer(
             ) {
 
                 p_uniforms.map["cameraPosition"]?.setValue(
-                    vector3.setFromMatrixPosition( camera.matrixWorld ) )
+                    vector3.setFromMatrixPosition(camera.matrixWorld)
+                )
             }
 
             if (material is MeshPhongMaterial ||
