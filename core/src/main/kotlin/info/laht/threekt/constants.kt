@@ -1,3 +1,5 @@
+@file:JvmName("THREE")
+
 package info.laht.threekt
 
 const val CullFaceNone = 0
