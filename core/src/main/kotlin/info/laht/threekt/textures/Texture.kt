@@ -147,6 +147,4 @@ class Image(
     var height = height
         internal set
 
-    internal var complete: Boolean? = null
-
 }
