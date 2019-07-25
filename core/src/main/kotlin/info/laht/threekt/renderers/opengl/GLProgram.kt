@@ -15,7 +15,7 @@ sealed class _GLProgram {
     abstract val id: Int
 }
 
-object GLProgramDefault: _GLProgram() {
+object GLProgramDefault : _GLProgram() {
     override val id = -1
 
 }
@@ -26,7 +26,7 @@ class GLProgram internal constructor(
     material: Material,
     shader: ShaderLib.Shader,
     parameters: GLPrograms.Parameters
-): _GLProgram() {
+) : _GLProgram() {
 
     override val id = programIdCount++
 
@@ -360,46 +360,47 @@ class GLProgram internal constructor(
                 "#define texture2DProjGradEXT textureProjGrad",
                 "#define textureCubeGradEXT textureGrad"
             ).joinToString("\n") + "\n" + prefixFragment
+        }
 
-            val vertexGlsl = prefixVertex + vertexShader;
-            val fragmentGlsl = prefixFragment + fragmentShader;
+        val vertexGlsl = prefixVertex + vertexShader;
+        val fragmentGlsl = prefixFragment + fragmentShader;
 
-            glVertexShader = createShader(GL20.GL_VERTEX_SHADER, vertexGlsl);
-            glFragmentShader = createShader(GL20.GL_FRAGMENT_SHADER, fragmentGlsl);
+        glVertexShader = createShader(GL20.GL_VERTEX_SHADER, vertexGlsl);
+        glFragmentShader = createShader(GL20.GL_FRAGMENT_SHADER, fragmentGlsl);
 
-            GL20.glAttachShader(program, glVertexShader)
-            GL20.glAttachShader(program, glFragmentShader)
+        GL20.glAttachShader(program, glVertexShader)
+        GL20.glAttachShader(program, glFragmentShader)
 
-            GL20.glLinkProgram(program)
+        GL20.glLinkProgram(program)
 
-//            println(addLineNumbers(GL20.glGetShaderSource(glVertexShader)))
-//            println()
-//            println(addLineNumbers(GL20.glGetShaderSource(glFragmentShader)))
+        if (renderer.checkShaderErrors) {
 
-            if (renderer.checkShaderErrors) {
-
-                val programLog = GL20.glGetProgramInfoLog( program ).trim();
+            val programLog = GL20.glGetProgramInfoLog(program).trim();
 //                val vertexLog = GL20.glGetShaderInfoLog( glVertexShader ).trim();
 //                val fragmentLog = GL20.glGetShaderInfoLog( glFragmentShader ).trim();
 
-                if ( GL20.glGetProgrami( program, GL20.GL_LINK_STATUS ) == GL11.GL_FALSE ) {
+            if (GL20.glGetProgrami(program, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
 
-                    val vertexErrors = getShaderErrors(glVertexShader, "vertex" );
-                    val fragmentErrors = getShaderErrors( glFragmentShader, "fragment" );
+                val vertexErrors = getShaderErrors(glVertexShader, "vertex");
+                val fragmentErrors = getShaderErrors(glFragmentShader, "fragment");
 
-                    println( "GLProgram: shader error: ${GL11.glGetError()} ${GL20.GL_VALIDATE_STATUS} ${ GL20.glGetProgrami( program, GL20.GL_VALIDATE_STATUS )} glGetProgramInfoLog  $programLog $vertexErrors $fragmentErrors" );
+                println(
+                    "GLProgram: shader error: ${GL11.glGetError()} ${GL20.GL_VALIDATE_STATUS} ${GL20.glGetProgrami(
+                        program,
+                        GL20.GL_VALIDATE_STATUS
+                    )} glGetProgramInfoLog  $programLog $vertexErrors $fragmentErrors"
+                );
 
-                } else if ( programLog != "" ) {
+            } else if (programLog != "") {
 
-                    println( "GLProgram: gl.getProgramInfoLog() $programLog" );
+                println("GLProgram: gl.getProgramInfoLog() $programLog");
 
-                }
             }
-
-            GL20.glDeleteShader(glVertexShader);
-            GL20.glDeleteShader(glFragmentShader);
-
         }
+
+        GL20.glDeleteShader(glVertexShader);
+        GL20.glDeleteShader(glFragmentShader);
+
 
     }
 
