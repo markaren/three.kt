@@ -98,9 +98,9 @@ class GLRenderList internal constructor() {
         val renderItem = getNextRenderItem(`object`, geometry, material, groupOrder, z, group)
 
         if (material.transparent) {
-            transparent.add(renderItem)
+            transparent.add(0, renderItem)
         } else {
-            opaque.add(renderItem)
+            opaque.add(0, renderItem)
         }
 
     }
