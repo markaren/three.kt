@@ -100,14 +100,11 @@ object RawShader {
             val mesh = Mesh(geometry, material)
             scene.add(mesh)
 
-            var i = 0f
             var value = 0f
             while (!canvas.shouldClose()) {
 
                 value += 0.005f
-
                 mesh.rotation.y = value
-
                 material.uniforms["time"]!!.value = value * 10f
 
                 renderer.render(scene, camera)
