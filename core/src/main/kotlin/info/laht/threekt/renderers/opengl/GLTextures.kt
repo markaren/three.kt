@@ -24,7 +24,7 @@ class GLTextures internal constructor(
     private fun textureNeedsGenerateMipmaps(texture: Texture, supportsMips: Boolean): Boolean {
 
         return texture.generateMipmaps && supportsMips &&
-                texture.minFilter != NearestFilter && texture.minFilter != LinearFilter;
+                texture.minFilter != NearestFilter && texture.minFilter != LinearFilter
 
     }
 
@@ -42,29 +42,29 @@ class GLTextures internal constructor(
 
     private fun getInternalFormat(glFormat: Int, glType: Int): Int {
 
-        var internalFormat = glFormat;
+        var internalFormat = glFormat
 
         if (glFormat == GL11.GL_RED) {
 
-            if (glType == GL11.GL_FLOAT) internalFormat = GL30.GL_R32F;
-            if (glType == GL30.GL_HALF_FLOAT) internalFormat = GL30.GL_R16F;
-            if (glType == GL11.GL_UNSIGNED_BYTE) internalFormat = GL30.GL_R8;
+            if (glType == GL11.GL_FLOAT) internalFormat = GL30.GL_R32F
+            if (glType == GL30.GL_HALF_FLOAT) internalFormat = GL30.GL_R16F
+            if (glType == GL11.GL_UNSIGNED_BYTE) internalFormat = GL30.GL_R8
 
         }
 
         if (glFormat == GL11.GL_RGB) {
 
-            if (glType == GL11.GL_FLOAT) internalFormat = GL30.GL_RGB32F;
-            if (glType == GL30.GL_HALF_FLOAT) internalFormat = GL30.GL_RGB16F;
-            if (glType == GL11.GL_UNSIGNED_BYTE) internalFormat = GL11.GL_RGB8;
+            if (glType == GL11.GL_FLOAT) internalFormat = GL30.GL_RGB32F
+            if (glType == GL30.GL_HALF_FLOAT) internalFormat = GL30.GL_RGB16F
+            if (glType == GL11.GL_UNSIGNED_BYTE) internalFormat = GL11.GL_RGB8
 
         }
 
         if (glFormat == GL11.GL_RGBA) {
 
-            if (glType == GL11.GL_FLOAT) internalFormat = GL30.GL_RGBA32F;
-            if (glType == GL30.GL_HALF_FLOAT) internalFormat = GL30.GL_RGBA16F;
-            if (glType == GL11.GL_UNSIGNED_BYTE) internalFormat = GL11.GL_RGBA8;
+            if (glType == GL11.GL_FLOAT) internalFormat = GL30.GL_RGBA32F
+            if (glType == GL30.GL_HALF_FLOAT) internalFormat = GL30.GL_RGBA16F
+            if (glType == GL11.GL_UNSIGNED_BYTE) internalFormat = GL11.GL_RGBA8
 
         }
 
@@ -74,11 +74,11 @@ class GLTextures internal constructor(
 
         } else if (internalFormat == GL30.GL_RGB16F || internalFormat == GL30.GL_RGB32F) {
 
-            println("GLRenderer: Floating point textures with RGB format not supported. Please use RGBA instead.");
+            println("GLRenderer: Floating point textures with RGB format not supported. Please use RGBA instead.")
 
         }
 
-        return internalFormat;
+        return internalFormat
 
     }
 
@@ -86,10 +86,10 @@ class GLTextures internal constructor(
     private fun filterFallback(f: Int): Int {
 
         if (f == NearestFilter || f == NearestMipMapNearestFilter || f == NearestMipMapLinearFilter) {
-            return GL11.GL_NEAREST;
+            return GL11.GL_NEAREST
         }
 
-        return GL11.GL_LINEAR;
+        return GL11.GL_LINEAR
 
     }
 
@@ -122,7 +122,7 @@ class GLTextures internal constructor(
 
             for (i in 0 until 6) {
 
-                GL30.glDeleteFramebuffers((renderTargetProperties["__webglFramebuffer"] as IntArray)[i]);
+                GL30.glDeleteFramebuffers((renderTargetProperties["__webglFramebuffer"] as IntArray)[i])
                 if (renderTargetProperties["__webglDepthbuffer"] != null) {
                     GL30.glDeleteRenderbuffers((renderTargetProperties["__webglDepthbuffer"] as IntArray)[i])
                 }
@@ -153,13 +153,13 @@ class GLTextures internal constructor(
 
         if (textureUnit >= capabilities.maxTextures) {
 
-            println("GLTextures: Trying to use " + textureUnit + " renderTargetCube units while this GPU supports only " + capabilities.maxTextures);
+            println("GLTextures: Trying to use " + textureUnit + " renderTargetCube units while this GPU supports only " + capabilities.maxTextures)
 
         }
 
-        textureUnits += 1;
+        textureUnits += 1
 
-        return textureUnit;
+        return textureUnit
     }
 
     fun setTexture2D(texture: Texture, slot: Int) {
@@ -168,40 +168,35 @@ class GLTextures internal constructor(
 
         if (texture.version > 0 && textureProperties["__version"] != texture.version) {
 
-            val image = texture.image;
+            val image = texture.image
 
-            when {
-                image == null -> println("GLRenderer: Texture marked for update but image is undefined")
-                image.complete == false -> println("THREE.WebGLRenderer: Texture marked for update but image is incomplete")
-                else -> {
-
-                    uploadTexture(textureProperties, texture, slot);
-                    return
-
-                }
+            if (image == null) {
+                println("GLRenderer: Texture marked for update but image is null")
+            } else {
+                uploadTexture(textureProperties, texture, slot)
+                return
             }
 
         }
 
-        state.activeTexture(GL13.GL_TEXTURE0 + slot);
+        state.activeTexture(GL13.GL_TEXTURE0 + slot)
         state.bindTexture(GL11.GL_TEXTURE_2D, textureProperties["__webglTexture"] as Int)
 
     }
 
     fun setTextureCubeDynamic(texture: Texture, slot: Int) {
 
-        state.activeTexture(GL13.GL_TEXTURE0 + slot);
-        state.bindTexture(GL13.GL_TEXTURE_CUBE_MAP, properties[texture]["__webglTexture"] as Int);
+        state.activeTexture(GL13.GL_TEXTURE0 + slot)
+        state.bindTexture(GL13.GL_TEXTURE_CUBE_MAP, properties[texture]["__webglTexture"] as Int)
 
     }
 
     private fun setTextureParameters(textureType: Int, texture: Texture, supportsMips: Boolean) {
 
-
         if (supportsMips) {
 
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_S, utils.convert(texture.wrapS));
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_T, utils.convert(texture.wrapT));
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_S, utils.convert(texture.wrapS))
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_T, utils.convert(texture.wrapT))
 
             if (textureType == GL12.GL_TEXTURE_3D || textureType == GL30.GL_TEXTURE_2D_ARRAY) {
                 TODO()
@@ -209,32 +204,32 @@ class GLTextures internal constructor(
 
             }
 
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MAG_FILTER, utils.convert(texture.magFilter));
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MIN_FILTER, utils.convert(texture.minFilter));
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MAG_FILTER, utils.convert(texture.magFilter))
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MIN_FILTER, utils.convert(texture.minFilter))
 
         } else {
 
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE)
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE)
 
             if (textureType == GL12.GL_TEXTURE_3D || textureType == GL30.GL_TEXTURE_2D_ARRAY) {
 
-                GL11.glTexParameteri(textureType, GL12.GL_TEXTURE_WRAP_R, GL12.GL_CLAMP_TO_EDGE);
+                GL11.glTexParameteri(textureType, GL12.GL_TEXTURE_WRAP_R, GL12.GL_CLAMP_TO_EDGE)
 
             }
 
             if (texture.wrapS != ClampToEdgeWrapping || texture.wrapT != ClampToEdgeWrapping) {
 
-                println("GLRenderer: Texture is not power of two. Texture.wrapS and Texture.wrapT should be set to THREE.ClampToEdgeWrapping.");
+                println("GLRenderer: Texture is not power of two. Texture.wrapS and Texture.wrapT should be set to THREE.ClampToEdgeWrapping.")
 
             }
 
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MAG_FILTER, filterFallback(texture.magFilter));
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MIN_FILTER, filterFallback(texture.minFilter));
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MAG_FILTER, filterFallback(texture.magFilter))
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MIN_FILTER, filterFallback(texture.minFilter))
 
             if (texture.minFilter != NearestFilter && texture.minFilter != LinearFilter) {
 
-                println("GLRenderer: Texture is not power of two. Texture.minFilter should be set to THREE.NearestFilter or THREE.LinearFilter.");
+                println("GLRenderer: Texture is not power of two. Texture.minFilter should be set to THREE.NearestFilter or THREE.LinearFilter.")
 
             }
 
@@ -246,8 +241,8 @@ class GLTextures internal constructor(
                 textureType,
                 GL46.GL_MAX_TEXTURE_MAX_ANISOTROPY,
                 min(texture.anisotropy, capabilities.maxAnisotropy)
-            );
-            properties[texture]["__currentAnisotropy"] = texture.anisotropy;
+            )
+            properties[texture]["__currentAnisotropy"] = texture.anisotropy
 
         }
 
@@ -258,10 +253,10 @@ class GLTextures internal constructor(
         if (textureProperties["__webglInit"] == null) {
 
             textureProperties["__webglInit"] = true
-            texture.addEventListener("dispose", onTextureDispose);
+            texture.addEventListener("dispose", onTextureDispose)
             textureProperties["__webglTexture"] = GL11.glGenTextures()
 
-            info.memory.textures++;
+            info.memory.textures++
 
         }
 
@@ -271,21 +266,21 @@ class GLTextures internal constructor(
 
         val image = texture.image ?: return
 
-        val textureType = GL11.GL_PROXY_TEXTURE_2D
+        val textureType = GL11.GL_TEXTURE_2D
 
-        initTexture(textureProperties, texture);
+        initTexture(textureProperties, texture)
 
-        state.activeTexture(GL13.GL_TEXTURE0 + slot);
+        state.activeTexture(GL13.GL_TEXTURE0 + slot)
         state.bindTexture(textureType, textureProperties["__webglTexture"] as Int)
 
-        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, texture.unpackAlignment);
+        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, texture.unpackAlignment)
 
         val supportsMips = true
         val glFormat = utils.convert(texture.format)
         var glType = utils.convert(texture.type)
-        var glInternalFormat = getInternalFormat(glFormat, glType);
+        var glInternalFormat = getInternalFormat(glFormat, glType)
 
-        setTextureParameters(textureType, texture, supportsMips);
+        setTextureParameters(textureType, texture, supportsMips)
 
         val mipmaps = texture.mipmaps
 
@@ -295,7 +290,7 @@ class GLTextures internal constructor(
 
             glInternalFormat = if (texture.type == FloatType) {
 
-                GL30.GL_DEPTH_COMPONENT32F;
+                GL30.GL_DEPTH_COMPONENT32F
 
             } else {
 
@@ -310,10 +305,10 @@ class GLTextures internal constructor(
                 // (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
                 if (texture.type != UnsignedShortType && texture.type != UnsignedIntType) {
 
-                    println("THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.");
+                    println("THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.")
 
-                    texture.type = UnsignedShortType;
-                    glType = utils.convert(texture.type);
+                    texture.type = UnsignedShortType
+                    glType = utils.convert(texture.type)
 
                 }
 
@@ -323,17 +318,17 @@ class GLTextures internal constructor(
             // (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
             if (texture.format == DepthStencilFormat) {
 
-                glInternalFormat = GL30.GL_DEPTH_STENCIL;
+                glInternalFormat = GL30.GL_DEPTH_STENCIL
 
                 // The error INVALID_OPERATION is generated by texImage2D if format and internalformat are
                 // DEPTH_STENCIL and type is not UNSIGNED_INT_24_8_WEBGL.
                 // (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
                 if (texture.type != UnsignedInt248Type) {
 
-                    println("THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.");
+                    println("THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.")
 
-                    texture.type = UnsignedInt248Type;
-                    glType = utils.convert(texture.type);
+                    texture.type = UnsignedInt248Type
+                    glType = utils.convert(texture.type)
 
                 }
 
@@ -348,7 +343,7 @@ class GLTextures internal constructor(
                 glFormat,
                 glType,
                 null
-            );
+            )
 
         } else {
 
@@ -371,12 +366,12 @@ class GLTextures internal constructor(
                         mipmap.width,
                         mipmap.height,
                         mipmap.data
-                    );
+                    )
 
                 }
 
-                texture.generateMipmaps = false;
-                textureProperties["__maxMipLevel"] = mipmaps.size - 1;
+                texture.generateMipmaps = false
+                textureProperties["__maxMipLevel"] = mipmaps.size - 1
 
             } else {
 
@@ -389,8 +384,8 @@ class GLTextures internal constructor(
                     image.width,
                     image.height,
                     image.data
-                );
-                textureProperties["__maxMipLevel"] = 0;
+                )
+                textureProperties["__maxMipLevel"] = 0
 
             }
 
@@ -398,11 +393,11 @@ class GLTextures internal constructor(
 
         if (textureNeedsGenerateMipmaps(texture, supportsMips)) {
 
-            generateMipmap(GL11.GL_TEXTURE_2D, texture, image.width, image.height);
+            generateMipmap(GL11.GL_TEXTURE_2D, texture, image.width, image.height)
 
         }
 
-        textureProperties["__version"] = texture.version;
+        textureProperties["__version"] = texture.version
 
         texture.onUpdate?.apply {
             invoke(texture)
@@ -417,9 +412,9 @@ class GLTextures internal constructor(
         textureTarget: Int
     ) {
 
-        val glFormat = utils.convert(renderTarget.texture.format);
-        val glType = utils.convert(renderTarget.texture.type);
-        val glInternalFormat = getInternalFormat(glFormat, glType);
+        val glFormat = utils.convert(renderTarget.texture.format)
+        val glType = utils.convert(renderTarget.texture.type)
+        val glInternalFormat = getInternalFormat(glFormat, glType)
         state.texImage2D(
             textureTarget,
             0,
@@ -429,16 +424,16 @@ class GLTextures internal constructor(
             glFormat,
             glType,
             null
-        );
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, framebuffer);
+        )
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, framebuffer)
         GL30.glFramebufferTexture2D(
             GL30.GL_FRAMEBUFFER,
             attachment,
             textureTarget,
             properties[renderTarget.texture]["__webglTexture"] as Int,
             0
-        );
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        )
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0)
 
     }
 
@@ -448,13 +443,13 @@ class GLTextures internal constructor(
         isMultisample: Boolean = false
     ) {
 
-        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderbuffer);
+        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderbuffer)
 
         if (renderTarget.depthBuffer && !renderTarget.stencilBuffer) {
 
             if (isMultisample) {
 
-                val samples = getRenderTargetSamples(renderTarget);
+                val samples = getRenderTargetSamples(renderTarget)
 
                 GL30.glRenderbufferStorageMultisample(
                     GL30.GL_RENDERBUFFER,
@@ -462,7 +457,7 @@ class GLTextures internal constructor(
                     GL14.GL_DEPTH_COMPONENT16,
                     renderTarget.width,
                     renderTarget.height
-                );
+                )
 
             } else {
 
@@ -471,7 +466,7 @@ class GLTextures internal constructor(
                     GL14.GL_DEPTH_COMPONENT16,
                     renderTarget.width,
                     renderTarget.height
-                );
+                )
 
             }
 
@@ -480,13 +475,13 @@ class GLTextures internal constructor(
                 GL30.GL_DEPTH_ATTACHMENT,
                 GL30.GL_RENDERBUFFER,
                 renderbuffer
-            );
+            )
 
         } else if (renderTarget.depthBuffer && renderTarget.stencilBuffer) {
 
             if (isMultisample) {
 
-                val samples = getRenderTargetSamples(renderTarget);
+                val samples = getRenderTargetSamples(renderTarget)
 
                 GL30.glRenderbufferStorageMultisample(
                     GL30.GL_RENDERBUFFER,
@@ -494,7 +489,7 @@ class GLTextures internal constructor(
                     GL30.GL_DEPTH24_STENCIL8,
                     renderTarget.width,
                     renderTarget.height
-                );
+                )
 
             } else {
 
@@ -503,7 +498,7 @@ class GLTextures internal constructor(
                     GL30C.GL_DEPTH_STENCIL,
                     renderTarget.width,
                     renderTarget.height
-                );
+                )
 
             }
 
@@ -513,17 +508,17 @@ class GLTextures internal constructor(
                 GL30.GL_DEPTH_STENCIL_ATTACHMENT,
                 GL30.GL_RENDERBUFFER,
                 renderbuffer
-            );
+            )
 
         } else {
 
-            val glFormat = utils.convert(renderTarget.texture.format);
-            val glType = utils.convert(renderTarget.texture.type);
-            val glInternalFormat = getInternalFormat(glFormat, glType);
+            val glFormat = utils.convert(renderTarget.texture.format)
+            val glType = utils.convert(renderTarget.texture.type)
+            val glInternalFormat = getInternalFormat(glFormat, glType)
 
             if (isMultisample) {
 
-                val samples = getRenderTargetSamples(renderTarget);
+                val samples = getRenderTargetSamples(renderTarget)
 
                 GL30.glRenderbufferStorageMultisample(
                     GL30.GL_RENDERBUFFER,
@@ -531,7 +526,7 @@ class GLTextures internal constructor(
                     glInternalFormat,
                     renderTarget.width,
                     renderTarget.height
-                );
+                )
 
             } else {
 
@@ -540,13 +535,13 @@ class GLTextures internal constructor(
                     glInternalFormat,
                     renderTarget.width,
                     renderTarget.height
-                );
+                )
 
             }
 
         }
 
-        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, 0);
+        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, 0)
 
     }
 
@@ -570,7 +565,7 @@ class GLTextures internal constructor(
 
             image.width = renderTarget.width
             image.height = renderTarget.height
-            depthTexture.needsUpdate = true;
+            depthTexture.needsUpdate = true
 
         }
 
@@ -579,15 +574,15 @@ class GLTextures internal constructor(
     }
 
     fun setupDepthRenderbuffer(renderTarget: GLRenderTarget) {
-        val renderTargetProperties = properties.get(renderTarget);
+        val renderTargetProperties = properties.get(renderTarget)
 
-        val isCube = (renderTarget is GLRenderTargetCube);
+        val isCube = (renderTarget is GLRenderTargetCube)
 
         if (renderTarget.depthTexture != null) {
 
-            if (isCube) throw Error("target.depthTexture not supported in Cube render targets");
+            if (isCube) throw Error("target.depthTexture not supported in Cube render targets")
 
-            setupDepthTexture(renderTargetProperties["__webglFramebuffer"] as Int, renderTarget);
+            setupDepthTexture(renderTargetProperties["__webglFramebuffer"] as Int, renderTarget)
 
         } else {
 
@@ -600,26 +595,26 @@ class GLTextures internal constructor(
                     GL30.glBindFramebuffer(
                         GL30.GL_FRAMEBUFFER,
                         renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i]
-                    );
-                    renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i] = GL45.glCreateRenderbuffers();
+                    )
+                    renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i] = GL45.glCreateRenderbuffers()
                     setupRenderBufferStorage(
                         renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i],
                         renderTarget
-                    );
+                    )
 
                 }
 
             } else {
 
-                GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, renderTargetProperties["__webglFramebuffer"] as Int);
-                renderTargetProperties["__webglDepthbuffer"] = GL45.glCreateRenderbuffers();
-                setupRenderBufferStorage(renderTargetProperties["__webglDepthbuffer"] as Int, renderTarget);
+                GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, renderTargetProperties["__webglFramebuffer"] as Int)
+                renderTargetProperties["__webglDepthbuffer"] = GL45.glCreateRenderbuffers()
+                setupRenderBufferStorage(renderTargetProperties["__webglDepthbuffer"] as Int, renderTarget)
 
             }
 
         }
 
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0)
     }
 
     fun setupRenderTarget(renderTarget: GLRenderTarget) {
@@ -631,7 +626,7 @@ class GLTextures internal constructor(
 
         textureProperties["__webglTexture"] = GL11.glGenTextures()
 
-        info.memory.textures++;
+        info.memory.textures++
 
         val isCube = (renderTarget is GLRenderTargetCube)
         val isMultisample = (renderTarget is GLMultisampleRenderTarget)
@@ -643,13 +638,13 @@ class GLTextures internal constructor(
 
             for (i in 0 until 6) {
 
-                renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i] = (GL45.glCreateFramebuffers());
+                renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i] = (GL45.glCreateFramebuffers())
 
             }
 
         } else {
 
-            renderTargetProperties["__webglFramebuffer"] = GL45.glCreateFramebuffers();
+            renderTargetProperties["__webglFramebuffer"] = GL45.glCreateFramebuffers()
 
             if (isMultisample) {
 
@@ -686,8 +681,8 @@ class GLTextures internal constructor(
 
         if (isCube) {
 
-            state.bindTexture(GL13.GL_TEXTURE_CUBE_MAP, textureProperties["__webglTexture"] as Int);
-            setTextureParameters(GL13.GL_TEXTURE_CUBE_MAP, renderTarget.texture, supportsMips);
+            state.bindTexture(GL13.GL_TEXTURE_CUBE_MAP, textureProperties["__webglTexture"] as Int)
+            setTextureParameters(GL13.GL_TEXTURE_CUBE_MAP, renderTarget.texture, supportsMips)
 
             for (i in 0 until 6) {
 
@@ -696,36 +691,36 @@ class GLTextures internal constructor(
                     renderTarget,
                     GL30.GL_COLOR_ATTACHMENT0,
                     GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i
-                );
+                )
 
             }
 
             if (textureNeedsGenerateMipmaps(renderTarget.texture, supportsMips)) {
 
-                generateMipmap(GL13.GL_TEXTURE_CUBE_MAP, renderTarget.texture, renderTarget.width, renderTarget.height);
+                generateMipmap(GL13.GL_TEXTURE_CUBE_MAP, renderTarget.texture, renderTarget.width, renderTarget.height)
 
             }
 
-            state.bindTexture(GL13.GL_TEXTURE_CUBE_MAP, null);
+            state.bindTexture(GL13.GL_TEXTURE_CUBE_MAP, null)
 
         } else {
 
-            state.bindTexture(GL11.GL_TEXTURE_2D, textureProperties["__webglTexture"] as Int);
-            setTextureParameters(GL11.GL_TEXTURE_2D, renderTarget.texture, supportsMips);
+            state.bindTexture(GL11.GL_TEXTURE_2D, textureProperties["__webglTexture"] as Int)
+            setTextureParameters(GL11.GL_TEXTURE_2D, renderTarget.texture, supportsMips)
             setupFrameBufferTexture(
                 renderTargetProperties["__webglFramebuffer"] as Int,
                 renderTarget,
                 GL30.GL_COLOR_ATTACHMENT0,
                 GL11.GL_TEXTURE_2D
-            );
+            )
 
             if (textureNeedsGenerateMipmaps(renderTarget.texture, supportsMips)) {
 
-                generateMipmap(GL11.GL_TEXTURE_2D, renderTarget.texture, renderTarget.width, renderTarget.height);
+                generateMipmap(GL11.GL_TEXTURE_2D, renderTarget.texture, renderTarget.width, renderTarget.height)
 
             }
 
-            state.bindTexture(GL11.GL_TEXTURE_2D, null);
+            state.bindTexture(GL11.GL_TEXTURE_2D, null)
 
         }
 
@@ -733,7 +728,7 @@ class GLTextures internal constructor(
 
         if (renderTarget.depthBuffer) {
 
-            setupDepthRenderbuffer(renderTarget);
+            setupDepthRenderbuffer(renderTarget)
 
         }
     }
@@ -759,13 +754,12 @@ class GLTextures internal constructor(
             mask = mask or GL11.GL_STENCIL_BUFFER_BIT
         }
 
-        GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, mask, GL11.GL_NEAREST);
+        GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, mask, GL11.GL_NEAREST)
     }
 
 
     private fun getRenderTargetSamples(renderTarget: GLRenderTarget): Int {
         return if (renderTarget !is GLMultisampleRenderTarget) 0 else min(capabilities.maxSamples, renderTarget.samples)
-
     }
 
     private inner class OnTextureDispose : EventLister {
@@ -774,9 +768,9 @@ class GLTextures internal constructor(
             val texture = event.target as Texture
 
             texture.removeEventListener("dispose", this)
-            deallocateTexture(texture);
+            deallocateTexture(texture)
 
-            info.memory.textures--;
+            info.memory.textures--
         }
     }
 
