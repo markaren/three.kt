@@ -3,7 +3,6 @@ package info.laht.threekt.renderers.shaders
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix3
-import java.lang.Exception
 
 object ShaderLib {
 

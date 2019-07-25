@@ -10,7 +10,6 @@ import info.laht.threekt.renderers.shaders.ShaderLib
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20
-import java.util.regex.Pattern
 
 sealed class _GLProgram {
     abstract val id: Int

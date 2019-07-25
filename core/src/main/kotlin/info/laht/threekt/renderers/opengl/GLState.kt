@@ -2,11 +2,8 @@ package info.laht.threekt.renderers.opengl
 
 
 import info.laht.threekt.*
-import info.laht.threekt.core.BufferAttribute
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector4
-import info.laht.threekt.textures.Image
-import info.laht.threekt.textures.Texture
 import org.lwjgl.opengl.*
 import java.nio.ByteBuffer
 import kotlin.math.roundToInt

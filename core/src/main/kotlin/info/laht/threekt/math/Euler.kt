@@ -1,7 +1,6 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
-import java.lang.IllegalArgumentException
 import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.atan2

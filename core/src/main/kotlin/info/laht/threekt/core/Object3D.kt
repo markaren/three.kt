@@ -6,11 +6,6 @@ import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.MeshDepthMaterial
 import info.laht.threekt.materials.MeshDistanceMaterial
 import info.laht.threekt.math.*
-import info.laht.threekt.objects.Group
-import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.scenes.Scene
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.function.Predicate
 
 interface GeometryObject {
 
@@ -33,7 +28,7 @@ open class Object3D : Cloneable, EventDispatcher() {
 
     var name = ""
     val uuid = generateUUID()
-    val id = object3DId.getAndIncrement()
+    val id = object3DId++
 
     var parent: Object3D? = null
     val children = mutableListOf<Object3D>()
@@ -333,9 +328,9 @@ open class Object3D : Cloneable, EventDispatcher() {
      * @param id    Unique Float of the object instance
      */
     fun getObjectById(id: Int): Object3D? {
-        return getObject(Predicate {
+        return getObject {
             it.id == id
-        })
+        }
     }
 
     /**
@@ -343,14 +338,14 @@ open class Object3D : Cloneable, EventDispatcher() {
      * @param name    String to match to the children's Object3d.name property.
      */
     fun getObjectByName(name: String): Object3D? {
-        return getObject(Predicate {
+        return getObject {
             it.name == name
-        })
+        }
     }
 
-    fun getObject(predicate: Predicate<Object3D>): Object3D? {
+    fun getObject(predicate: (Object3D) -> Boolean): Object3D? {
 
-        if (predicate.test(this)) {
+        if (predicate.invoke(this)) {
             return this
         }
 
@@ -528,7 +523,7 @@ open class Object3D : Cloneable, EventDispatcher() {
 
     companion object {
 
-        private val object3DId = AtomicInteger()
+        private var object3DId = 0
 
         var defaultUp = Vector3.Y.clone()
 

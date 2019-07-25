@@ -1,7 +1,6 @@
 package info.laht.threekt.geometries
 
 import info.laht.threekt.core.*
-import java.util.ArrayList
 import info.laht.threekt.math.Vector3
 import kotlin.math.cos
 import kotlin.math.sin

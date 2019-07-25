@@ -1,8 +1,6 @@
 package info.laht.threekt
 
 import java.lang.reflect.Field
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 /**
  * Returns the first [Field] in the hierarchy for the specified name

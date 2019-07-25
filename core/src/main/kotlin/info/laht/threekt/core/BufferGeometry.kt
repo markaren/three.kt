@@ -1,7 +1,6 @@
 package info.laht.threekt.core
 
 import info.laht.threekt.math.*
-import java.util.concurrent.atomic.AtomicInteger
 import info.laht.threekt.math.Box3
 import kotlin.math.max
 import kotlin.math.min
@@ -10,7 +9,7 @@ import kotlin.math.sqrt
 
 open class BufferGeometry : EventDispatcher(), Cloneable {
 
-    internal val id = geometryIdCount.getAndAdd(2)
+    internal val id = geometryIdCount++
 
     var name = ""
     val uuid = generateUUID()
@@ -530,7 +529,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
     }
 
     private companion object {
-        val geometryIdCount = AtomicInteger(1) // BufferGeometry uses odd numbers as Id
+        var geometryIdCount = 0 // BufferGeometry uses odd numbers as Id
     }
 
 }

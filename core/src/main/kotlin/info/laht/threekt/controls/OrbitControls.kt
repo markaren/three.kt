@@ -10,7 +10,6 @@ import info.laht.threekt.input.KeyEvent
 import info.laht.threekt.input.MouseEvent
 import info.laht.threekt.input.MouseWheelEvent
 import info.laht.threekt.math.*
-import java.lang.UnsupportedOperationException
 import kotlin.math.*
 
 private const val EPS = 0.000001f
