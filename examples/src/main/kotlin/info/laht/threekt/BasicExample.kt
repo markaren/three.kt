@@ -15,7 +15,7 @@ import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Scene
 import org.lwjgl.opengl.GLUtil
 
-object Basic {
+object BasicExample {
 
     @JvmStatic
     fun main(args: Array<String>) {

@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GLUtil
 import kotlin.math.sin
 import kotlin.random.Random
 
-object RawShader {
+object RawShaderExample {
 
     private val vertexShader = """
 
