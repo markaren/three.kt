@@ -81,25 +81,25 @@ class GLState internal constructor() {
 
     fun enableAttribute( attribute: Int ) {
 
-        enableAttributeAndDivisor( attribute, 0 );
+        enableAttributeAndDivisor( attribute, 0 )
 
     }
 
     fun enableAttributeAndDivisor( attribute: Int, meshPerAttribute: Int ) {
 
-        newAttributes[ attribute ] = 1;
+        newAttributes[ attribute ] = 1
 
         if ( enabledAttributes[ attribute ] == 0 ) {
 
-            GL20.glEnableVertexAttribArray( attribute );
-            enabledAttributes[ attribute ] = 1;
+            GL20.glEnableVertexAttribArray( attribute )
+            enabledAttributes[ attribute ] = 1
 
         }
 
         if ( attributeDivisors[ attribute ] != meshPerAttribute ) {
 
             GL33.glVertexAttribDivisor(attribute, meshPerAttribute)
-            attributeDivisors[ attribute ] = meshPerAttribute;
+            attributeDivisors[ attribute ] = meshPerAttribute
 
         }
 
@@ -111,8 +111,8 @@ class GLState internal constructor() {
 
             if ( enabledAttributes[ i ] != newAttributes[ i ] ) {
 
-                GL20.glDisableVertexAttribArray( i );
-                enabledAttributes[ i ] = 0;
+                GL20.glDisableVertexAttribArray( i )
+                enabledAttributes[ i ] = 0
 
             }
 
@@ -121,21 +121,20 @@ class GLState internal constructor() {
     }
 
 
-    fun createTexture(type: Int, target: Int, count: Int): Int {
+    private fun createTexture(type: Int, target: Int, count: Int): Int {
 
         val data = IntArray(4) // 4 is required to match default unpack alignment of 4.
         val texture = GL11.glGenTextures()
 
-        GL11.glBindTexture(type, texture);
+        GL11.glBindTexture(type, texture)
         GL11.glTexParameteri(type, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
         GL11.glTexParameteri(type, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
 
-        //TDOD
-//        for (i in 0 until count) {
-//            GL11.glTexImage2D(target + 1, 0, GL11.GL_RGBA, 1, 1, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data)
-//        }
+        for (i in 0 until count) {
+            GL11.glTexImage2D(target + 1, 0, GL11.GL_RGBA, 1, 1, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data)
+        }
 
-        return texture;
+        return texture
 
     }
 
@@ -157,15 +156,15 @@ class GLState internal constructor() {
 
         if ( currentProgram != program ) {
 
-            GL20.glUseProgram( program );
+            GL20.glUseProgram( program )
 
-            currentProgram = program;
+            currentProgram = program
 
-            return true;
+            return true
 
         }
 
-        return false;
+        return false
 
     }
 
@@ -180,6 +179,7 @@ class GLState internal constructor() {
         blendDstAlpha: Int? = null,
         premultipliedAlpha: Boolean? = null
     ) {
+
         if (blending == NoBlending) {
 
             if (currentBlendingEnabled == true) {
@@ -191,9 +191,11 @@ class GLState internal constructor() {
 
         }
 
-        if (currentBlendingEnabled == true) {
+        if (currentBlendingEnabled == null || currentBlendingEnabled == false) {
+
             enable(GL11.GL_BLEND)
             currentBlendingEnabled = true
+
         }
 
         if (blending != CustomBlending) {
@@ -204,7 +206,7 @@ class GLState internal constructor() {
 
                     GL14.glBlendEquation(GL14.GL_FUNC_ADD)
 
-                    currentBlendEquation = AddEquation;
+                    currentBlendEquation = AddEquation
                     currentBlendEquationAlpha = AddEquation
 
                 }
@@ -231,7 +233,7 @@ class GLState internal constructor() {
                             GL11.GL_ZERO,
                             GL11.GL_SRC_ALPHA
                         )
-                        else -> System.err.println("THREE.WebGLState: Invalid blending: $blending")
+                        else -> println("GLState: Invalid blending: $blending")
                     }
 
                 } else {
@@ -246,7 +248,7 @@ class GLState internal constructor() {
                         AdditiveBlending -> GL14.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE)
                         SubtractiveBlending -> GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR)
                         MultiplyBlending -> GL14.glBlendFunc(GL11.GL_ZERO, GL11.GL_SRC_COLOR)
-                        else -> System.err.println("THREE.WebGLState: Invalid blending: $blending")
+                        else -> System.err.println("GLState: Invalid blending: $blending")
                     }
 
                 }
@@ -290,7 +292,7 @@ class GLState internal constructor() {
                 utils.convert(blendDst),
                 utils.convert(blendSrcAlpha),
                 utils.convert(blendDstAlpha)
-            );
+            )
 
             currentBlendSrc = blendSrc
             currentBlendDst = blendDst
@@ -333,12 +335,12 @@ class GLState internal constructor() {
             )
         }
 
-        depthBuffer.setFunc(material.depthFunc);
-        depthBuffer.setTest(material.depthTest);
-        depthBuffer.setMask(material.depthWrite);
-        colorBuffer.setMask(material.colorWrite);
+        depthBuffer.setFunc(material.depthFunc)
+        depthBuffer.setTest(material.depthTest)
+        depthBuffer.setMask(material.depthWrite)
+        colorBuffer.setMask(material.colorWrite)
 
-        setPolygonOffset(material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits);
+        setPolygonOffset(material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits)
 
     }
 
@@ -348,12 +350,12 @@ class GLState internal constructor() {
         if (currentFlipSided != flipSided) {
 
             if (flipSided) {
-                GL11.glFrontFace(GL11.GL_CW);
+                GL11.glFrontFace(GL11.GL_CW)
             } else {
-                GL11.glFrontFace(GL11.GL_CCW);
+                GL11.glFrontFace(GL11.GL_CCW)
             }
 
-            currentFlipSided = flipSided;
+            currentFlipSided = flipSided
 
         }
 
@@ -381,7 +383,7 @@ class GLState internal constructor() {
 
         }
 
-        currentCullFace = cullFace;
+        currentCullFace = cullFace
 
     }
 
@@ -428,7 +430,7 @@ class GLState internal constructor() {
     fun activeTexture(glSlot: Int? = null) {
 
         @Suppress("NAME_SHADOWING")
-        val glSlot = glSlot ?: GL13.GL_TEXTURE0 + maxTextures - 1;
+        val glSlot = glSlot ?: GL13.GL_TEXTURE0 + maxTextures - 1
 
         if (currentTextureSlot != glSlot) {
 
@@ -452,7 +454,7 @@ class GLState internal constructor() {
         if (boundTexture == null) {
 
             boundTexture = BoundTexture(type = null, texture = null)
-            currentBoundTextures[currentTextureSlot] = boundTexture;
+            currentBoundTextures[currentTextureSlot] = boundTexture
 
         }
 
@@ -485,7 +487,7 @@ class GLState internal constructor() {
         if (currentScissor != scissor) {
 
             GL11.glScissor(scissor.x.roundToInt(), scissor.y.roundToInt(), scissor.z.roundToInt(), scissor.w.roundToInt())
-            currentScissor.copy(scissor);
+            currentScissor.copy(scissor)
 
         }
 
@@ -496,7 +498,7 @@ class GLState internal constructor() {
         if (currentViewport != viewport) {
 
             GL11.glViewport(viewport.x.roundToInt(), viewport.y.roundToInt(), viewport.z.roundToInt(), viewport.w.roundToInt())
-            currentViewport.copy(viewport);
+            currentViewport.copy(viewport)
 
         }
 
@@ -569,7 +571,7 @@ class GLState internal constructor() {
             locked = false
 
             currentColorMask = null
-            currentColorClear.set((-1).toFloat(), 0.toFloat(), 0.toFloat(), 0.toFloat()); // set to invalid state
+            currentColorClear.set(-1f, 0f,0f, 0f) // set to invalid state
         }
 
     }
@@ -584,16 +586,16 @@ class GLState internal constructor() {
 
         fun setTest(depthTest: Boolean) {
             if (depthTest) {
-                enable(GL11.GL_DEPTH_TEST);
+                enable(GL11.GL_DEPTH_TEST)
             } else {
-                disable(GL11.GL_DEPTH_TEST);
+                disable(GL11.GL_DEPTH_TEST)
             }
         }
 
         fun setMask(depthMask: Boolean) {
             if (currentDepthMask != depthMask && !locked) {
-                GL11.glDepthMask(depthMask);
-                currentDepthMask = depthMask;
+                GL11.glDepthMask(depthMask)
+                currentDepthMask = depthMask
             }
         }
 
@@ -611,6 +613,8 @@ class GLState internal constructor() {
                     NotEqualDepth -> GL11.glDepthFunc(GL11.GL_NOTEQUAL)
                     else -> GL11.glDepthFunc(GL11.GL_LEQUAL)
                 }
+
+                currentDepthFunc = depthFunc
 
             }
         }
@@ -668,7 +672,7 @@ class GLState internal constructor() {
                 currentStencilFuncMask != stencilMask
             ) {
 
-                GL11.glStencilFunc(stencilFunc, stencilRef, stencilMask);
+                GL11.glStencilFunc(stencilFunc, stencilRef, stencilMask)
 
                 currentStencilFunc = stencilFunc
                 currentStencilRef = stencilRef
@@ -683,7 +687,7 @@ class GLState internal constructor() {
                 currentStencilZPass != stencilZPass
             ) {
 
-                GL11.glStencilOp(stencilFail, stencilZFail, stencilZPass);
+                GL11.glStencilOp(stencilFail, stencilZFail, stencilZPass)
 
                 currentStencilFail = stencilFail
                 currentStencilZFail = stencilZFail
