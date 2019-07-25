@@ -1,6 +1,5 @@
 package info.laht.threekt.renderers.opengl
 
-
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.*
 import info.laht.threekt.textures.CubeTexture
@@ -18,8 +17,6 @@ private val arrayCacheI32 = mutableListOf<IntArray>()
 private val mat4array = FloatArray(16)
 private val mat3array = FloatArray(9)
 private val mat2array = FloatArray(4)
-
-private val RePathPart = "([\\w\\d_]+)(\\])?(\\[|\\.)?".toRegex()
 
 internal interface Container {
 
@@ -89,17 +86,22 @@ private fun parseUniform(activeInfo: ActiveUniformInfo, addr: Int, container: Co
     val path = activeInfo.name
     val pathLength = path.length
 
-    RePathPart.findAll(path).forEach {
+    val RePathPart = "([\\w\\d_]+)(\\])?(\\[|\\.)?".toRegex()
 
-        val match = it.groups.mapNotNull { it?.value }
+    var match = RePathPart.find(path)
+    while (match != null) {
 
-        var id: String = match[1]
-        val idIsIndex = match.getOrNull(2) == "]"
-        val subscript: Any? = match.getOrNull(3)
+        val matchEnd = match.range.last+1
+
+        var id = match.groups[1]!!.value
+        val idIsIndex = match.groups[2]?.value == "]"
+        val subscript = match.groups[3]?.value
 
         if (idIsIndex) id = (id.toInt() or 0).toString()
 
-        if (subscript == null || subscript == '[' && it.range.first + 2 == pathLength) {
+        if (subscript == null || subscript == "[" && matchEnd +2 == pathLength) {
+
+            // bare name or "pure" bottom-level array "[0]" suffix
 
             val uniform = if (subscript == null) {
                 SingleUniform(id, activeInfo, addr)
@@ -108,7 +110,7 @@ private fun parseUniform(activeInfo: ActiveUniformInfo, addr: Int, container: Co
             }
             addUniform(container, uniform)
 
-            return@forEach
+            return
 
         } else {
 
@@ -122,6 +124,7 @@ private fun parseUniform(activeInfo: ActiveUniformInfo, addr: Int, container: Co
             }
 
             container = next
+            match = match.next()
 
         }
 
