@@ -2,7 +2,6 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Object3D
-import info.laht.threekt.length
 import info.laht.threekt.lights.*
 import info.laht.threekt.math.*
 import info.laht.threekt.textures.Texture
@@ -61,7 +60,7 @@ class GLLights internal constructor() {
                     uniforms.position.setFromMatrixPosition(light.matrixWorld)
                     uniforms.position.applyMatrix4(viewMatrix)
 
-                    uniforms.color.copy(light.color).multiplyScalar(light.intensity)
+                    uniforms.color.copy(light.color)?.multiplyScalar(light.intensity)
                     uniforms.distance = light.distance
                     uniforms.decay = light.decay
 
@@ -89,24 +88,24 @@ class GLLights internal constructor() {
                     val distance = light.distance
                     val uniforms = cache[light] as SpotLightUniforms
 
-                    uniforms.position.setFromMatrixPosition( light.matrixWorld )
-                    uniforms.position.applyMatrix4( viewMatrix )
+                    uniforms.position.setFromMatrixPosition(light.matrixWorld)
+                    uniforms.position.applyMatrix4(viewMatrix)
 
-                    uniforms.color.copy( color ).multiplyScalar( intensity )
+                    uniforms.color.copy(color).multiplyScalar(intensity)
                     uniforms.distance = distance
 
-                    uniforms.direction.setFromMatrixPosition( light.matrixWorld )
-                    vector3.setFromMatrixPosition( light.target.matrixWorld )
-                    uniforms.direction.sub( vector3 )
-                    uniforms.direction.transformDirection( viewMatrix )
+                    uniforms.direction.setFromMatrixPosition(light.matrixWorld)
+                    vector3.setFromMatrixPosition(light.target.matrixWorld)
+                    uniforms.direction.sub(vector3)
+                    uniforms.direction.transformDirection(viewMatrix)
 
                     uniforms.coneCos = cos(light.angle)
-                    uniforms.penumbraCos = cos( light.angle * ( 1 - light.penumbra ) )
+                    uniforms.penumbraCos = cos(light.angle * (1 - light.penumbra))
                     uniforms.decay = light.decay
 
                     uniforms.shadow = light.castShadow
 
-                    if ( light.castShadow ) {
+                    if (light.castShadow) {
 
                         val shadow = light.shadow
 
@@ -116,11 +115,11 @@ class GLLights internal constructor() {
 
                     }
 
-                    state.spotShadowMap[ spotLength ] = shadowMap
-                    state.spotShadowMatrix[ spotLength ] = light.shadow.matrix
-                    state.spot[ spotLength ] = uniforms
+                    state.spotShadowMap[spotLength] = shadowMap
+                    state.spotShadowMatrix[spotLength] = light.shadow.matrix
+                    state.spot[spotLength] = uniforms
 
-                    spotLength ++
+                    spotLength++
                 }
             }
 
@@ -219,43 +218,163 @@ class GLLights internal constructor() {
 
 }
 
-internal sealed class LightUniforms
+internal sealed class LightUniforms : HashMap<String, Any>()
 
-internal class AmbientLightUniforms : LightUniforms() {
-    val direction = Vector3()
-    val color = Color()
-
-    var shadow = false
-    var shadowBias = 0f
-    var shadowRadius = 1f
-    val shadowMapSize = Vector2()
-}
+internal class AmbientLightUniforms : LightUniforms()
 
 internal class PointLightUniforms : LightUniforms() {
-    val position = Vector3()
-    val color = Color()
-    var distance = 0f
-    var decay = 0f
 
-    var shadow = false
-    var shadowBias = 0f
-    var shadowRadius = 1f
-    var shadowMapSize = Vector2()
-    var shadowCameraNear = 1f
-    var shadowCameraFar = 1000f
+    init {
+        putAll(
+            mapOf(
+                "position" to Vector3(),
+                "color" to Color(),
+                "distance" to 0f,
+                "decay" to 0f,
+
+                "shadow" to false,
+                "shadowBias" to 0f,
+                "shadowRadius" to 1f,
+                "shadowMapSize" to Vector2(),
+                "shadowCameraNear" to 1f,
+                "shadowCameraFar" to 1000f
+            )
+        )
+    }
+
+    var position: Vector3
+        get() = get("position") as Vector3
+        set(value) {
+            position.copy(value)
+        }
+    var color: Color
+        get() = get("color") as Color
+        set(value) {
+            color.copy(value)
+        }
+    var distance: Float
+        get() = get("distance") as Float
+        set(value) {
+            set("distance", value)
+        }
+    var decay: Float
+        get() = get("decay") as Float
+        set(value) {
+            set("decay", value)
+        }
+
+    var shadow: Boolean
+        get() = get("shadow") as Boolean
+        set(value) {
+            set("shadow", value)
+        }
+    var shadowBias: Float
+        get() = get("shadowBias") as Float
+        set(value) {
+            set("shadowBias", value)
+        }
+    var shadowRadius: Float
+        get() = get("shadowRadius") as Float
+        set(value) {
+            set("shadowRadius", value)
+        }
+    var shadowMapSize: Vector2
+        get() = get("shadowMapSize") as Vector2
+        set(value) {
+            shadowMapSize.copy(value)
+        }
+    var shadowCameraNear: Float
+        get() = get("shadowCameraNear") as Float
+        set(value) {
+            set("shadowCameraNear", value)
+        }
+    var shadowCameraFar: Float
+        get() = get("shadowCameraFar") as Float
+        set(value) {
+            set("shadowCameraFar", value)
+        }
+
 }
 
 internal class SpotLightUniforms : LightUniforms() {
-    val position = Vector3()
-    val direction = Vector3()
-    val color = Color()
-    var distance = 0f
-    var coneCos = 0f
-    var penumbraCos = 0f
-    var decay = 0f
 
-    var shadow = false
-    var shadowBias = 0f
-    var shadowRadius = 1f
-    val shadowMapSize = Vector2()
+    init {
+        putAll(
+            mapOf(
+                "position" to Vector3(),
+                "direction" to Vector3(),
+                "color" to Color(),
+                "distance" to 0f,
+                "coneCos" to 0f,
+                "penumbraCos" to 0f,
+                "decay" to 0f,
+
+                "shadow" to false,
+                "shadowBias" to 0f,
+                "shadowRadius" to 1f,
+                "shadowMapSize" to Vector2(),
+                "shadowCameraNear" to 1f,
+                "shadowCameraFar" to 1000f
+            )
+        )
+    }
+
+    var position: Vector3
+        get() = get("position") as Vector3
+        set(value) {
+            position.copy(value)
+        }
+    var direction: Vector3
+        get() = get("direction") as Vector3
+        set(value) {
+            direction.copy(value)
+        }
+    var color: Color
+        get() = get("color") as Color
+        set(value) {
+            color.copy(value)
+        }
+    var distance: Float
+        get() = get("distance") as Float
+        set(value) {
+            set("distance", value)
+        }
+    var coneCos: Float
+        get() = get("coneCos") as Float
+        set(value) {
+            set("coneCos", value)
+        }
+    var penumbraCos: Float
+        get() = get("penumbraCos") as Float
+        set(value) {
+            set("penumbraCos", value)
+        }
+    var decay: Float
+        get() = get("decay") as Float
+        set(value) {
+            set("decay", value)
+        }
+
+    var shadow: Boolean
+        get() = get("shadow") as Boolean
+        set(value) {
+            set("shadow", value)
+        }
+    var shadowBias: Float
+        get() = get("distance") as Float
+        set(value) {
+            set("distance", value)
+        }
+    var shadowRadius: Float
+        get() = get("distance") as Float
+        set(value) {
+            set("distance", value)
+        }
+    var shadowMapSize: Vector2
+        get() = get("shadowMapSize") as Vector2
+        set(value) {
+            shadowMapSize.copy(value)
+        }
+
 }
+

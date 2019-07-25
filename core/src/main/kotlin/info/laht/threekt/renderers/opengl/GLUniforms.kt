@@ -11,8 +11,8 @@ import kotlin.math.roundToInt
 private var emptyTexture = Texture()
 private var emptyCubeTexture = CubeTexture()
 
-private val arrayCacheF32 = mutableListOf<FloatArray>()
-private val arrayCacheI32 = mutableListOf<IntArray>()
+private val arrayCacheF32 = mutableListOf<FloatArray?>()
+private val arrayCacheI32 = mutableListOf<IntArray?>()
 
 private val mat4array = FloatArray(16)
 private val mat3array = FloatArray(9)
@@ -25,7 +25,7 @@ internal interface Container {
 
 }
 
-private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): FloatArray {
+private fun flatten(array: Array<Flattable>, nBlocks: Int, blockSize: Int): FloatArray {
     val firstElem = array[0]
 
     val n = nBlocks * blockSize
@@ -34,6 +34,9 @@ private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): Float
     if (r == null) {
 
         r = FloatArray(n)
+        while (n >= arrayCacheF32.size) {
+            arrayCacheF32.add(null)
+        }
         arrayCacheF32[n] = r
 
     }
@@ -43,7 +46,7 @@ private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): Float
         firstElem.toArray(r, 0)
 
         var offset = 0
-        for (i in 1..nBlocks) {
+        for (i in 1 until nBlocks) {
 
             offset += blockSize
             array[i].toArray(r, offset)
@@ -381,22 +384,22 @@ private class PureArrayUniform(
         return when (type) {
 
             0x1406 -> { v -> GL20.glUniform1fv(addr, v as FloatArray) } // FLOAT
-            0x8b50 -> { v -> GL20.glUniform2fv(addr, flatten(v as List<Flattable>, size, 2)) } // _VEC2
-            0x8b51 -> { v -> GL20.glUniform3fv(addr, flatten(v as List<Flattable>, size, 3)) } // _VEC3
-            0x8b52 -> { v -> GL20.glUniform4fv(addr, flatten(v as List<Flattable>, size, 4)) } // _VEC4
+            0x8b50 -> { v -> GL20.glUniform2fv(addr, flatten(v as Array<Flattable>, size, 2)) } // _VEC2
+            0x8b51 -> { v -> GL20.glUniform3fv(addr, flatten(v as Array<Flattable>, size, 3)) } // _VEC3
+            0x8b52 -> { v -> GL20.glUniform4fv(addr, flatten(v as Array<Flattable>, size, 4)) } // _VEC4
 
             0x8b5b -> { v ->
                 GL20.glUniformMatrix3fv(
                     addr,
                     false,
-                    flatten(v as List<Flattable>, size, 9)
+                    flatten(v as Array<Flattable>, size, 9)
                 )
             } // _MAT3
             0x8b5c -> { v ->
                 GL20.glUniformMatrix3fv(
                     addr,
                     false,
-                    flatten(v as List<Flattable>, size, 16)
+                    flatten(v as Array<Flattable>, size, 16)
                 )
             } // _MAT4
 
@@ -429,11 +432,21 @@ private class StructuredUniform(
 
     override fun setValue(value: Any, textures: GLTextures?) {
 
-        value as Map<String, Any>
-
-        seq.forEach { u ->
-            u.setValue(value[u.id] ?: error("No such key: ${u.id}"), textures)
+        when (value) {
+            is List<*> -> {
+                seq.forEach { u ->
+                    u.setValue(value[u.id.toInt()]!!, textures)
+                }
+            }
+            is Map<*, *> -> {
+                seq.forEach { u ->
+                    u.setValue(value[u.id]!!, textures)
+                }
+            }
+            else -> throw IllegalArgumentException()
         }
+
+
     }
 
 }
