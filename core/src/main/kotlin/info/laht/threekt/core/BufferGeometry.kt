@@ -62,8 +62,8 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
     }
 
     fun setDrawRange(start: Int, count: Int) {
-        this.drawRange.start = start;
-        this.drawRange.count = count;
+        this.drawRange.start = start
+        this.drawRange.count = count
     }
 
     fun rotateX(angle: Float): BufferGeometry {
@@ -182,7 +182,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
 
         this.attributes.tangent?.also { tangent ->
-            val normalMatrix = Matrix3().getNormalMatrix(matrix);
+            val normalMatrix = Matrix3().getNormalMatrix(matrix)
 
             // Tangent is vec4, but the '.w' component is a sign value (+1/-1).
             normalMatrix.applyToBufferAttribute(tangent)
@@ -197,7 +197,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
             this.computeBoundingSphere()
         }
 
-        return this;
+        return this
     }
 
     /**
@@ -212,7 +212,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
         val bb = boundingBox!!
 
-        val position = this.attributes.position;
+        val position = this.attributes.position
         if (position != null) {
             bb.setFromBufferAttribute(position)
 
@@ -242,7 +242,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
         if (position != null) {
 
             // first, find the center of the bounding sphere
-            val center = sphere.center;
+            val center = sphere.center
 
             box.setFromBufferAttribute(position)
             box.getCenter(center)
@@ -253,13 +253,13 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
             var maxRadiusSq = 0.toFloat()
             for (i in 0 until position.count) {
                 vector.fromBufferAttribute(position, i)
-                maxRadiusSq = max(maxRadiusSq, center.distanceToSquared(vector));
+                maxRadiusSq = max(maxRadiusSq, center.distanceToSquared(vector))
             }
 
             sphere.radius = sqrt(maxRadiusSq).toFloat()
 
             if (sphere.radius.isNaN()) {
-                println("THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The 'position' attribute is likely to have NaN values.");
+                println("THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The 'position' attribute is likely to have NaN values.")
             }
 
         }
@@ -273,8 +273,8 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
      */
     fun computeVertexNormals() {
 
-        val index = this.index;
-        val attributes = this.attributes;
+        val index = this.index
+        val attributes = this.attributes
 
         if (attributes.position != null) {
 
@@ -282,19 +282,19 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
             if (attributes.normal == null) {
 
-                this.addAttribute("normal", FloatBufferAttribute(FloatArray(positions.size), 3));
+                this.addAttribute("normal", FloatBufferAttribute(FloatArray(positions.size), 3))
 
             } else {
 
                 // reset existing normals to zero
-                val array = attributes.normal!!.array;
+                val array = attributes.normal!!.array
                 for (i in 0 until array.size) {
                     array[i] = 0f
                 }
 
             }
 
-            val normals = attributes.normal!!.array;
+            val normals = attributes.normal!!.array
 
             var vA: Int
             var vB: Int
@@ -303,7 +303,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
             val pB = Vector3()
             val pC = Vector3()
             val cb = Vector3()
-            val ab = Vector3();
+            val ab = Vector3()
 
             // indexed elements
 
@@ -311,7 +311,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
                 val indices = index.array
 
-                for (i in 0 until index.count) {
+                for (i in 0 until index.count step 3) {
 
                     vA = indices[i + 0] * 3
                     vB = indices[i + 1] * 3
@@ -435,16 +435,16 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
         // reset
 
-        this.index = null;
+        this.index = null
         this.attributes.clear()
 //        this.morphAttributes = {};
         this.groups.clear()
-        this.boundingBox = null;
-        this.boundingSphere = null;
+        this.boundingBox = null
+        this.boundingSphere = null
 
         // name
 
-        this.name = source.name;
+        this.name = source.name
 
         // index
 
@@ -455,7 +455,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
         // attributes
 
-        val attributes = source.attributes;
+        val attributes = source.attributes
         for ( name in attributes.keys ) {
 
             attributes[ name ]?.also { attribute ->
@@ -500,7 +500,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
         // bounding sphere
 
-        val boundingSphere = source.boundingSphere;
+        val boundingSphere = source.boundingSphere
 
         if ( boundingSphere != null ) {
 
@@ -516,7 +516,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
         // user data
 
-        return this;
+        return this
 
     }
 
