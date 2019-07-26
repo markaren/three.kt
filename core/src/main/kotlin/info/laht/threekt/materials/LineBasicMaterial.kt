@@ -7,9 +7,7 @@ open class LineBasicMaterial: Material(), MaterialWithColor {
     override val color = Color( 0xffffff )
 
     var linewidth = 1f
-    var linecap = "round"
-    var linejoin = "round"
-    
+
     init {
 
         lights = false
@@ -27,8 +25,6 @@ open class LineBasicMaterial: Material(), MaterialWithColor {
         this.color.copy( source.color )
 
         this.linewidth = source.linewidth
-        this.linecap = source.linecap
-        this.linejoin = source.linejoin
 
         return this
     }

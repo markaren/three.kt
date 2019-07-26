@@ -46,8 +46,6 @@ open class MeshPhongMaterial: Material(), MaterialWithWireframe, MaterialWithCol
 
     override var wireframe = false
     override var wireframeLinewidth = 1f
-    var wireframeLinecap = "round"
-    var wireframeLinejoin = "round"
 
     override var skinning = false
     override var morphTargets = false
@@ -99,8 +97,6 @@ open class MeshPhongMaterial: Material(), MaterialWithWireframe, MaterialWithCol
 
         this.wireframe = source.wireframe
         this.wireframeLinewidth = source.wireframeLinewidth
-        this.wireframeLinecap = source.wireframeLinecap
-        this.wireframeLinejoin = source.wireframeLinejoin
 
         this.skinning = source.skinning
         this.morphTargets = source.morphTargets
