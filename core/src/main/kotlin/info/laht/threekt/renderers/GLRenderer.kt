@@ -26,7 +26,6 @@ import org.lwjgl.opengl.GL30
 import kotlin.math.max
 import kotlin.math.min
 
-
 class GLRenderer(
     private val canvas: Canvas
 ) {
@@ -84,7 +83,7 @@ class GLRenderer(
     var maxMorphTargets = 8
     var maxMorphNormals = 4
 
-    private var frameBuffer: Int? = null
+    private var framebuffer: Int? = null
 
     private var currentActiveCubeFace: Int? = 0
     private var currentActiveMipmapLevel: Int? = 0
@@ -465,7 +464,7 @@ class GLRenderer(
         val currentRenderState = this.currentRenderState!!
         currentRenderState.init()
 
-//        scene.onBeforeRender( this, scene, camera, renderTarget ?: currentRenderTarget );
+        scene.onBeforeRenderScene?.invoke( this, scene, camera, currentRenderTarget );
 
         projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
         frustum.setFromMatrix(projScreenMatrix)
@@ -663,10 +662,10 @@ class GLRenderer(
     }
 
     fun setFrameBuffer(value: Int) {
-        if (frameBuffer != value) {
+        if (framebuffer != value) {
             GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, value)
         }
-        frameBuffer = value
+        framebuffer = value
     }
 
     fun getActiveCubeFace() = currentActiveCubeFace
@@ -682,7 +681,7 @@ class GLRenderer(
         currentActiveMipmapLevel = activeMipMapLevel
 
         var isCube = false
-        var framebuffer = this.frameBuffer
+        var framebuffer = this.framebuffer
 
         if (renderTarget != null) {
 
@@ -711,10 +710,10 @@ class GLRenderer(
             currentScissorTest = scissorTest
         }
 
-        if (currentFramebuffer != frameBuffer) {
+        if (currentFramebuffer != framebuffer) {
 
-            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer ?: 0)
-            currentFramebuffer = frameBuffer
+            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, framebuffer ?: 0)
+            currentFramebuffer = framebuffer
 
         }
 
@@ -746,7 +745,7 @@ class GLRenderer(
         group: GeometryGroup?
     ) {
 
-//        `object`.onBeforeRender?.invoke(this, scene, camera, geometry, material, group);
+        `object`.onBeforeRender?.invoke(this, scene, camera, geometry, material, group);
         currentRenderState = renderStates.get(scene, camera)
 
         `object`.modelViewMatrix.multiplyMatrices(camera.matrixWorldInverse, `object`.matrixWorld)
@@ -763,7 +762,7 @@ class GLRenderer(
 
         renderBufferDirect(camera, scene.fog, geometry, material, `object`, group)
 
-//        `object`.onAfterRender?.invoke(this, scene, camera, geometry, material, group);
+        `object`.onAfterRender?.invoke(this, scene, camera, geometry, material, group);
         currentRenderState = renderStates.get(scene, camera)
 
     }

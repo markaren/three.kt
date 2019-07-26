@@ -6,6 +6,8 @@ import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.MeshDepthMaterial
 import info.laht.threekt.materials.MeshDistanceMaterial
 import info.laht.threekt.math.*
+import info.laht.threekt.renderers.GLRenderer
+import info.laht.threekt.scenes.Scene
 
 interface GeometryObject {
 
@@ -71,8 +73,10 @@ open class Object3D : Cloneable, EventDispatcher() {
     var customDepthMaterial: MeshDepthMaterial? = null
     var customDistanceMaterial: MeshDistanceMaterial? = null
 
-//    internal var onBeforeRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, Group) -> Unit)? = null
-//    internal var onAfterRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, Group) -> Unit)? = null
+    var onBeforeRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null
+    var onAfterRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null
+
+    val userData by lazy { mutableMapOf<String, Any>() }
 
     private fun onRotationChange() {
         quaternion.setFromEuler(rotation, false)
