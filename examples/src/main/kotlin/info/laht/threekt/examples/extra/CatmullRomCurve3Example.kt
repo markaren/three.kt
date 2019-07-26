@@ -1,5 +1,7 @@
-package info.laht.threekt
+package info.laht.threekt.examples.extra
 
+import info.laht.threekt.Canvas
+import info.laht.threekt.CanvasOptions
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.BufferGeometry

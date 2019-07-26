@@ -1,10 +1,12 @@
-package info.laht.threekt
+package info.laht.threekt.examples.lights
 
+import info.laht.threekt.Canvas
+import info.laht.threekt.CanvasOptions
+import info.laht.threekt.DoubleSide
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
-import info.laht.threekt.geometries.CylinderBufferGeometry
 import info.laht.threekt.geometries.PlaneGeometry
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.materials.*
@@ -12,9 +14,7 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Scene
-import org.lwjgl.opengl.GLUtil
 
 object PointLightExample {
 

@@ -1,19 +1,18 @@
-package info.laht.threekt
+package info.laht.threekt.examples.materials
 
+import info.laht.threekt.Canvas
+import info.laht.threekt.CanvasOptions
+import info.laht.threekt.DoubleSide
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
-import info.laht.threekt.core.IntBufferAttribute
 import info.laht.threekt.core.Uniform
-import info.laht.threekt.geometries.BoxBufferGeometry
-import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.materials.RawShaderMaterial
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Scene
 import org.lwjgl.opengl.GLUtil
-import kotlin.math.sin
 import kotlin.random.Random
 
 object RawShaderExample {

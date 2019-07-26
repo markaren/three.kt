@@ -6,6 +6,7 @@ import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
 import info.laht.threekt.geometries.CylinderBufferGeometry
 import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.helpers.GridHelper
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
@@ -27,12 +28,16 @@ object BasicExample {
                 background = ColorBackground(Color.aliceblue)
             }
 
-            val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)
+            val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000).also {
+                it.translateZ(10f)
+            }
             val renderer = GLRenderer(canvas).apply {
                 checkShaderErrors = true
             }
 
-            Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
+            val controls = OrbitControls(camera, canvas)
+
+            val plane = Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
                 side = DoubleSide
             }).also {
@@ -69,10 +74,6 @@ object BasicExample {
                 cylinder.add(it)
             }
 
-            camera.position.z = 10f
-
-            val controls = OrbitControls(camera, canvas)
-
             val clock = Clock()
             while (!canvas.shouldClose()) {
 
@@ -81,6 +82,8 @@ object BasicExample {
                 val dt = clock.getDelta()
                 box.rotation.x += 0.5f * dt
                 box.rotation.y += 0.5f * dt
+
+                cylinder.rotation.z += 0.5f * dt
 
             }
 
