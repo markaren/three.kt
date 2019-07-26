@@ -142,6 +142,23 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
 
     }
 
+    fun setFromPoints ( points: List<Vector3> ): BufferGeometry {
+
+        val position = FloatArray(points.size*3);
+
+        points.forEachIndexed {i, v ->
+
+            position[i+0] = v.x
+            position[i+1] = v.y
+            position[i+2] = v.z
+        }
+
+        this.addAttribute( "position",  FloatBufferAttribute( position, 3 ) );
+
+        return this;
+
+    }
+
     fun normalize(): BufferGeometry {
         this.computeBoundingSphere()
 
