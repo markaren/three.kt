@@ -6,7 +6,8 @@ import info.laht.threekt.core.EventLister
 import info.laht.threekt.renderers.GLMultisampleRenderTarget
 import info.laht.threekt.renderers.GLRenderTarget
 import info.laht.threekt.renderers.GLRenderTargetCube
-import info.laht.threekt.textures.*
+import info.laht.threekt.textures.DepthTexture
+import info.laht.threekt.textures.Texture
 import org.lwjgl.opengl.*
 import kotlin.math.*
 

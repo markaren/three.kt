@@ -1,11 +1,11 @@
 package info.laht.threekt.helpers
 
 import info.laht.threekt.VertexColors
-import info.laht.threekt.objects.LineSegments
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.math.Color
+import info.laht.threekt.objects.LineSegments
 
 class GridHelper(
     size: Int = 10,

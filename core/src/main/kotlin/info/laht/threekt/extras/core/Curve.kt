@@ -1,7 +1,6 @@
 package info.laht.threekt.extras.core
 
 import info.laht.threekt.math.Vector3
-import kotlin.math.floor
 
 abstract class Curve3 {
 

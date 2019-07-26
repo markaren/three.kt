@@ -3,7 +3,6 @@ package info.laht.threekt.math
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.Object3D
-import info.laht.threekt.objects.Mesh
 import info.laht.threekt.objects.Sprite
 
 class Frustum @JvmOverloads constructor(

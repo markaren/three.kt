@@ -1,12 +1,9 @@
 package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.cameras.Camera
-import info.laht.threekt.core.*
-import info.laht.threekt.core.GeometryGroup
-import info.laht.threekt.materials.Material
-import info.laht.threekt.objects.Group
+import info.laht.threekt.core.Event
+import info.laht.threekt.core.EventLister
 import info.laht.threekt.scenes.Scene
-import kotlin.math.roundToInt
 
 internal class GLRenderLists {
 

@@ -1,6 +1,8 @@
 package info.laht.threekt.geometries
 
-import info.laht.threekt.core.*
+import info.laht.threekt.core.BufferGeometry
+import info.laht.threekt.core.FloatBufferAttribute
+import info.laht.threekt.core.IntBufferAttribute
 import info.laht.threekt.math.Vector3
 
 typealias BoxGeometry = BoxBufferGeometry

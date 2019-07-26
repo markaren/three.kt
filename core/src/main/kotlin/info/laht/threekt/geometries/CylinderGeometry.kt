@@ -1,9 +1,9 @@
 package info.laht.threekt.geometries
 
 import info.laht.threekt.core.BufferGeometry
-import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.core.IntBufferAttribute
+import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3
 import kotlin.math.cos

@@ -1,7 +1,6 @@
 package info.laht.threekt.renderers.opengl
 
 import java.util.*
-import kotlin.collections.HashMap
 
 internal class GLProperties {
 

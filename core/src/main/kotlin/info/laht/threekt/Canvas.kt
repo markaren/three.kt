@@ -5,16 +5,9 @@ import info.laht.threekt.input.KeyEvent
 import info.laht.threekt.input.MouseEvent
 import info.laht.threekt.input.MouseWheelEvent
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
 import java.io.Closeable
-import org.lwjgl.glfw.GLFWErrorCallback
-import org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose
-import org.lwjgl.glfw.GLFW.GLFW_RELEASE
-import org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE
-import org.lwjgl.glfw.GLFW.glfwSetKeyCallback
-import org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback
-import org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback
-import org.lwjgl.glfw.GLFW.glfwSetScrollCallback
 
 class CanvasOptions {
     var width: Int = 800

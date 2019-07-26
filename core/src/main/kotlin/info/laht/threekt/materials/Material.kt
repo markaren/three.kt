@@ -4,12 +4,10 @@ import info.laht.threekt.*
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.EventDispatcher
 import info.laht.threekt.core.Uniform
-import info.laht.threekt.math.Color
 import info.laht.threekt.math.Plane
 import info.laht.threekt.math.generateUUID
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.renderers.opengl.GLProgram
-import info.laht.threekt.renderers.shaders.ShaderChunk
 import info.laht.threekt.renderers.shaders.ShaderLib
 import info.laht.threekt.textures.Texture
 

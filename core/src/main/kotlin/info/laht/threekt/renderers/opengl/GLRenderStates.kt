@@ -3,9 +3,6 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Event
 import info.laht.threekt.core.EventLister
-import info.laht.threekt.core.Object3D
-import info.laht.threekt.lights.Light
-import info.laht.threekt.lights.LightShadow
 import info.laht.threekt.scenes.Scene
 
 internal class GLRenderStates internal constructor() {

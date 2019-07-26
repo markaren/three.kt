@@ -2,11 +2,9 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.*
 import info.laht.threekt.core.Object3D
-import info.laht.threekt.lights.LightShadow
 import info.laht.threekt.materials.*
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.renderers.shaders.ShaderLib
-import info.laht.threekt.scenes.Fog
 import info.laht.threekt.scenes.FogExp2
 import info.laht.threekt.scenes._Fog
 import info.laht.threekt.textures.Texture

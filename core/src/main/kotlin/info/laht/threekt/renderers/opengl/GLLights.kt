@@ -3,7 +3,10 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.*
-import info.laht.threekt.math.*
+import info.laht.threekt.math.Color
+import info.laht.threekt.math.Matrix4
+import info.laht.threekt.math.Vector2
+import info.laht.threekt.math.Vector3
 import info.laht.threekt.textures.Texture
 import kotlin.math.cos
 

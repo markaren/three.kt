@@ -2,7 +2,6 @@ package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.FloatBufferAttribute
-import info.laht.threekt.core.IntBufferAttribute
 import kotlin.math.*
 
 

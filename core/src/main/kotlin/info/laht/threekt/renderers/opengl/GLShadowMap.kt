@@ -7,7 +7,9 @@ import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.MaterialsObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.*
-import info.laht.threekt.materials.*
+import info.laht.threekt.materials.Material
+import info.laht.threekt.materials.MeshDepthMaterial
+import info.laht.threekt.materials.MeshDistanceMaterial
 import info.laht.threekt.math.*
 import info.laht.threekt.objects.Line
 import info.laht.threekt.objects.Mesh

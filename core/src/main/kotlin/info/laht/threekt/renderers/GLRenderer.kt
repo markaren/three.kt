@@ -1,7 +1,6 @@
 package info.laht.threekt.renderers
 
 import info.laht.threekt.*
-import info.laht.threekt.Canvas
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.*
 import info.laht.threekt.extras.objects.ImmediateRenderObject
@@ -10,12 +9,12 @@ import info.laht.threekt.materials.*
 import info.laht.threekt.math.*
 import info.laht.threekt.objects.*
 import info.laht.threekt.renderers.opengl.*
-import info.laht.threekt.scenes.Fog
-import info.laht.threekt.scenes.Scene
 import info.laht.threekt.renderers.shaders.ShaderLib
 import info.laht.threekt.renderers.shaders.ShaderLib.Shader
 import info.laht.threekt.renderers.shaders.cloneUniforms
+import info.laht.threekt.scenes.Fog
 import info.laht.threekt.scenes.FogExp2
+import info.laht.threekt.scenes.Scene
 import info.laht.threekt.scenes._Fog
 import info.laht.threekt.textures.CubeTexture
 import org.lwjgl.opengl.GL11.*

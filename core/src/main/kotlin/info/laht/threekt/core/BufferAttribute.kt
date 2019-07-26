@@ -1,7 +1,10 @@
 package info.laht.threekt.core
 
 
-import info.laht.threekt.math.*
+import info.laht.threekt.math.Color
+import info.laht.threekt.math.Vector2
+import info.laht.threekt.math.Vector3
+import info.laht.threekt.math.Vector4
 import kotlin.properties.Delegates
 
 

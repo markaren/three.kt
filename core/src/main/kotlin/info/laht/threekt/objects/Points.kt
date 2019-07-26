@@ -3,8 +3,8 @@ package info.laht.threekt.objects
 import info.laht.threekt.core.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.PointsMaterial
-import info.laht.threekt.math.Ray
 import info.laht.threekt.math.Matrix4
+import info.laht.threekt.math.Ray
 import info.laht.threekt.math.Sphere
 
 

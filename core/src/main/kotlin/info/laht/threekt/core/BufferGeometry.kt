@@ -1,7 +1,6 @@
 package info.laht.threekt.core
 
 import info.laht.threekt.math.*
-import info.laht.threekt.math.Box3
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt

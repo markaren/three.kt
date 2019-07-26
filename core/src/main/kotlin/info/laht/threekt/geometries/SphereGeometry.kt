@@ -1,11 +1,13 @@
 package info.laht.threekt.geometries
 
-import info.laht.threekt.core.*
+import info.laht.threekt.core.BufferGeometry
+import info.laht.threekt.core.FloatBufferAttribute
+import info.laht.threekt.core.IntBufferAttribute
+import info.laht.threekt.math.Sphere
+import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector3
 import kotlin.math.cos
 import kotlin.math.sin
-import info.laht.threekt.math.Sphere
-import info.laht.threekt.math.TWO_PI
 
 typealias SphereGeometry = SphereBufferGeometry
 

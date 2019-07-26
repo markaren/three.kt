@@ -3,7 +3,6 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.Object3D
-import info.laht.threekt.objects.Mesh
 
 internal class GLObjects(
     private val geometries: GLGeometries,
