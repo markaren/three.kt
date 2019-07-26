@@ -3,14 +3,13 @@ package info.laht.threekt.objects
 import info.laht.threekt.TrianglesDrawMode
 import info.laht.threekt.core.*
 import info.laht.threekt.materials.Material
-import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.*
 
 
 open class Mesh(
     override val geometry: BufferGeometry,
     override val materials: MutableList<Material>
-) : Object3D(), GeometryObject, MaterialObject {
+) : Object3D(), GeometryObject, MaterialsObject {
 
     constructor(geometry: BufferGeometry, material: Material)
             : this(geometry, mutableListOf(material))

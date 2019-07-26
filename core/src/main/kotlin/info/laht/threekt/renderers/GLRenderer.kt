@@ -177,7 +177,7 @@ class GLRenderer(
         }
     }
 
-    private fun renderBufferDirect(
+    internal fun renderBufferDirect(
         camera: Camera,
         fog: _Fog?,
         geometry: BufferGeometry,
@@ -424,7 +424,7 @@ class GLRenderer(
 
             if (`object` is MaterialObject) {
 
-                if (`object`.isMultiMaterial) {
+                if (`object` is MaterialsObject && `object`.isMultiMaterial) {
 
                     `object`.materials.forEach { material ->
 
@@ -603,7 +603,7 @@ class GLRenderer(
 
             } else if (`object` is Mesh || `object` is Line || `object` is Points) {
 
-                `object` as MaterialObject
+                `object` as MaterialsObject
 
                 if (`object` is SkinnedMesh) {
                     TODO()
@@ -681,19 +681,22 @@ class GLRenderer(
         currentActiveMipmapLevel = activeMipMapLevel
 
         var isCube = false
+        var framebuffer = this.frameBuffer
 
         if (renderTarget != null) {
 
+            val __webglFramebuffer = properties["renderTarget"]["__webglFramebuffer"]!!
+
             when (renderTarget) {
                 is GLRenderTargetCube -> {
+                    framebuffer = (__webglFramebuffer as IntArray) [ activeCubeFace ?: 0 ];
                     isCube = true
-                    TODO()
                 }
                 is GLMultisampleRenderTarget -> {
-                    TODO()
+                    framebuffer = properties["renderTarget"]["__webglMultisampledFramebuffer"] as Int
                 }
                 else -> {
-                    TODO()
+                    framebuffer = __webglFramebuffer as Int;
                 }
             }
 

@@ -11,7 +11,7 @@ import info.laht.threekt.math.Sphere
 class Points(
     override val geometry: BufferGeometry = BufferGeometry(),
     override val material: PointsMaterial = PointsMaterial()
-): Object3D(), GeometryObject, MaterialObject {
+): Object3D(), GeometryObject, MaterialsObject {
 
     override val materials = mutableListOf<Material>()
 

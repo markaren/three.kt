@@ -10,7 +10,7 @@ open class Line(
     override val geometry: BufferGeometry = BufferGeometry(),
     override val material: LineBasicMaterial = LineBasicMaterial()
 
-): Object3D(), GeometryObject, MaterialObject {
+): Object3D(), GeometryObject, MaterialsObject {
 
     override val materials = mutableListOf<Material>()
 

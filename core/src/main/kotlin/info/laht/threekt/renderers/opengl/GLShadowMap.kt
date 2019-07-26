@@ -4,6 +4,7 @@ import info.laht.threekt.*
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.MaterialObject
+import info.laht.threekt.core.MaterialsObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.*
 import info.laht.threekt.materials.*
@@ -18,7 +19,7 @@ import kotlin.math.roundToInt
 
 class GLShadowMap internal constructor(
     private val renderer: GLRenderer,
-    private val `objects`: GLObjects,
+    private val objects: GLObjects,
     maxTextureSize: Int
 ) {
 
@@ -385,44 +386,44 @@ class GLShadowMap internal constructor(
                 `object`.modelViewMatrix.multiplyMatrices(shadowCamera.matrixWorldInverse, `object`.matrixWorld)
 
                 val geometry = objects.update(`object`)
-                val material = `object`.material
 
-                if (false/*Array.isArray(material)*/) {
 
-//                    val groups = geometry.groups
-//
-//                    for (var k = 0, kl = groups.length; k < kl; k++ ) {
-//
-//                        var group = groups[k]
-//                        var groupMaterial = material[group.materialIndex]
-//
-//                        if (groupMaterial && groupMaterial.visible) {
-//
-//                            var depthMaterial = getDepthMaterial(
-//                                `object`,
-//                                groupMaterial,
-//                                isPointLight,
-//                                lightPositionWorld,
-//                                shadowCamera.near,
-//                                shadowCamera.far
-//                            )
-//                            renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, `object`, group)
-//
-//                        }
-//
-//                    }
+                if (`object` is MaterialsObject && `object`.isMultiMaterial) {
 
-                } else if (material.visible) {
+                    val groups = geometry.groups
+
+                    for ( k in 0 until groups.size ) {
+
+                        val group = groups[k]
+                        val groupMaterial = `object`.materials.getOrNull(group.materialIndex)
+
+                        if (groupMaterial != null && groupMaterial.visible) {
+
+                            val depthMaterial = getDepthMaterial(
+                                `object`,
+                                groupMaterial,
+                                isPointLight,
+                                lightPositionWorld,
+                                shadowCamera.near,
+                                shadowCamera.far
+                            )
+                            renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, `object`, group)
+
+                        }
+
+                    }
+
+                } else if (`object`.material.visible) {
 
                     val depthMaterial = getDepthMaterial(
                         `object`,
-                        material,
+                        `object`.material,
                         isPointLight,
                         lightPositionWorld,
                         shadowCamera.near,
                         shadowCamera.far
                     )
-                    TODO()//renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, `object`, null)
+                    renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, `object`, null)
 
                 }
 

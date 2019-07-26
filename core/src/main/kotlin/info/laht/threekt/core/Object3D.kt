@@ -16,6 +16,12 @@ interface GeometryObject {
 interface MaterialObject {
 
     val material: Material
+
+}
+
+interface MaterialsObject: MaterialObject {
+
+    override val material: Material
         get() = materials.getOrNull(0) ?: throw IllegalStateException("No material set!")
 
     val isMultiMaterial
