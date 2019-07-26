@@ -3,8 +3,7 @@ package info.laht.threekt.renderers.opengl
 import java.util.*
 import kotlin.collections.HashMap
 
-
-class GLProperties internal constructor() {
+internal class GLProperties {
 
     private val properties = WeakHashMap<Any, Properties>()
 
@@ -28,9 +27,9 @@ class GLProperties internal constructor() {
 
 }
 
-class Properties: HashMap<String, Any?>() {
+class Properties : HashMap<String, Any?>() {
 
-    inline fun <reified T> getAs( key: String): T? {
+    inline fun <reified T> getAs(key: String): T? {
         return get(key) as T
     }
 

@@ -690,7 +690,7 @@ class GLRenderer(
 
             when (renderTarget) {
                 is GLRenderTargetCube -> {
-                    framebuffer = (__webglFramebuffer as IntArray) [ activeCubeFace ?: 0 ];
+                    framebuffer = (__webglFramebuffer as IntArray)[activeCubeFace ?: 0];
                     isCube = true
                 }
                 is GLMultisampleRenderTarget -> {
@@ -752,14 +752,14 @@ class GLRenderer(
         `object`.modelViewMatrix.multiplyMatrices(camera.matrixWorldInverse, `object`.matrixWorld)
         `object`.normalMatrix.getNormalMatrix(`object`.modelViewMatrix)
 
-         if (`object` is ImmediateRenderObject) {
+        if (`object` is ImmediateRenderObject) {
 
-             if (sortObjects) {
-                 vector3.setFromMatrixPosition( `object`.matrixWorld )
-                     .applyMatrix4( projScreenMatrix )
-             }
+            if (sortObjects) {
+                vector3.setFromMatrixPosition(`object`.matrixWorld)
+                    .applyMatrix4(projScreenMatrix)
+            }
 
-         }
+        }
 
         renderBufferDirect(camera, scene.fog, geometry, material, `object`, group)
 

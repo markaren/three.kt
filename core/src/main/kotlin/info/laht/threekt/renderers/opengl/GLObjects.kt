@@ -5,7 +5,7 @@ import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.objects.Mesh
 
-class GLObjects(
+internal class GLObjects(
     private val geometries: GLGeometries,
     private val info: GLInfo
 ) {

@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL15
 import java.util.*
 
-class GLAttributes internal constructor() {
+internal class GLAttributes {
 
     private val buffers = WeakHashMap<BufferAttribute, Buffer>()
 

@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL12
 import org.lwjgl.opengl.GL14
 import org.lwjgl.opengl.GL30
 
-internal object utils {
+internal object GLUtils {
 
     fun convert(p: Int?): Int {
         if (p == RepeatWrapping) return GL11.GL_REPEAT

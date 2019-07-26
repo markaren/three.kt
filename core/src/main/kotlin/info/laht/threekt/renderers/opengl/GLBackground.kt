@@ -15,7 +15,7 @@ import info.laht.threekt.renderers.shaders.cloneUniforms
 import info.laht.threekt.scenes.*
 import info.laht.threekt.textures.Texture
 
-class GLBackground internal constructor(
+internal class GLBackground (
     private val renderer: GLRenderer,
     private val state: GLState,
     private val objects: GLObjects

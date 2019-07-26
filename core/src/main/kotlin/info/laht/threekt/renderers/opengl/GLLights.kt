@@ -7,8 +7,7 @@ import info.laht.threekt.math.*
 import info.laht.threekt.textures.Texture
 import kotlin.math.cos
 
-
-class GLLights internal constructor() {
+internal class GLLights {
 
     private val cache = UniformsCache()
 

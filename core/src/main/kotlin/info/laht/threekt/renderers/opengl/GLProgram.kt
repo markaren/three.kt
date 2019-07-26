@@ -11,16 +11,17 @@ import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20
 
-sealed class _GLProgram {
+
+internal sealed class _GLProgram {
     abstract val id: Int
 }
 
-object GLProgramDefault : _GLProgram() {
+internal object GLProgramDefault : _GLProgram() {
     override val id = -1
 
 }
 
-class GLProgram internal constructor(
+internal class GLProgram(
     renderer: GLRenderer,
     val code: String,
     material: Material,
@@ -557,6 +558,19 @@ class GLProgram internal constructor(
                 )
 
             }
+
+        }
+
+        private fun createShader(
+            type: Int,
+            source: String
+        ): Int {
+
+            val shader = GL20.glCreateShader(type)
+            GL20.glShaderSource(shader, source)
+            GL20.glCompileShader(shader)
+
+            return shader
 
         }
 

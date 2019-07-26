@@ -8,33 +8,7 @@ import info.laht.threekt.lights.Light
 import info.laht.threekt.lights.LightShadow
 import info.laht.threekt.scenes.Scene
 
-class GLRenderState internal constructor() {
-
-    internal val lights = GLLights()
-
-    internal val lightsArray = mutableListOf<Light>()
-    internal val shadowsArray = mutableListOf<Object3D>()
-
-    fun init() {
-        lightsArray.clear()
-        shadowsArray.clear()
-    }
-
-    fun pushLight(light: Light) {
-        lightsArray.add(light)
-    }
-
-    fun pushShadow(shadow: Object3D) {
-        shadowsArray.add(shadow)
-    }
-
-    fun setupLights(camera: Camera) {
-        lights.setup(lightsArray, shadowsArray, camera)
-    }
-
-}
-
-class GLRenderStates internal constructor() {
+internal class GLRenderStates internal constructor() {
 
     private var renderStates = mutableMapOf<Int, MutableMap<Int, GLRenderState>>()
 
@@ -74,6 +48,7 @@ class GLRenderStates internal constructor() {
             scene.removeEventListener("dispose", this)
             renderStates.remove(scene.id)
         }
+
     }
 
 }

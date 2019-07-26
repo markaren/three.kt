@@ -3,7 +3,6 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.*
 import info.laht.threekt.core.Event
 import info.laht.threekt.core.EventLister
-import info.laht.threekt.math.isPowerOfTwo
 import info.laht.threekt.renderers.GLMultisampleRenderTarget
 import info.laht.threekt.renderers.GLRenderTarget
 import info.laht.threekt.renderers.GLRenderTargetCube
@@ -11,7 +10,7 @@ import info.laht.threekt.textures.*
 import org.lwjgl.opengl.*
 import kotlin.math.*
 
-class GLTextures internal constructor(
+internal class GLTextures(
     private val state: GLState,
     private val properties: GLProperties,
     private val capabilities: GLCapabilities,
@@ -195,8 +194,8 @@ class GLTextures internal constructor(
 
         if (supportsMips) {
 
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_S, utils.convert(texture.wrapS))
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_T, utils.convert(texture.wrapT))
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_S, GLUtils.convert(texture.wrapS))
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_WRAP_T, GLUtils.convert(texture.wrapT))
 
             if (textureType == GL12.GL_TEXTURE_3D || textureType == GL30.GL_TEXTURE_2D_ARRAY) {
                 TODO()
@@ -204,8 +203,8 @@ class GLTextures internal constructor(
 
             }
 
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MAG_FILTER, utils.convert(texture.magFilter))
-            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MIN_FILTER, utils.convert(texture.minFilter))
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MAG_FILTER, GLUtils.convert(texture.magFilter))
+            GL11.glTexParameteri(textureType, GL11.GL_TEXTURE_MIN_FILTER, GLUtils.convert(texture.minFilter))
 
         } else {
 
@@ -276,8 +275,8 @@ class GLTextures internal constructor(
         GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, texture.unpackAlignment)
 
         val supportsMips = true
-        val glFormat = utils.convert(texture.format)
-        var glType = utils.convert(texture.type)
+        val glFormat = GLUtils.convert(texture.format)
+        var glType = GLUtils.convert(texture.type)
         var glInternalFormat = getInternalFormat(glFormat, glType)
 
         setTextureParameters(textureType, texture, supportsMips)
@@ -308,7 +307,7 @@ class GLTextures internal constructor(
                     println("THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.")
 
                     texture.type = UnsignedShortType
-                    glType = utils.convert(texture.type)
+                    glType = GLUtils.convert(texture.type)
 
                 }
 
@@ -328,7 +327,7 @@ class GLTextures internal constructor(
                     println("THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.")
 
                     texture.type = UnsignedInt248Type
-                    glType = utils.convert(texture.type)
+                    glType = GLUtils.convert(texture.type)
 
                 }
 
@@ -412,8 +411,8 @@ class GLTextures internal constructor(
         textureTarget: Int
     ) {
 
-        val glFormat = utils.convert(renderTarget.texture.format)
-        val glType = utils.convert(renderTarget.texture.type)
+        val glFormat = GLUtils.convert(renderTarget.texture.format)
+        val glType = GLUtils.convert(renderTarget.texture.type)
         val glInternalFormat = getInternalFormat(glFormat, glType)
         state.texImage2D(
             textureTarget,
@@ -512,8 +511,8 @@ class GLTextures internal constructor(
 
         } else {
 
-            val glFormat = utils.convert(renderTarget.texture.format)
-            val glType = utils.convert(renderTarget.texture.type)
+            val glFormat = GLUtils.convert(renderTarget.texture.format)
+            val glType = GLUtils.convert(renderTarget.texture.type)
             val glInternalFormat = getInternalFormat(glFormat, glType)
 
             if (isMultisample) {

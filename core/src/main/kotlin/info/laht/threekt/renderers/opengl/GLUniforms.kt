@@ -76,66 +76,8 @@ private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
 
 }
 
-private fun addUniform(container: Container, uniformObject: UniformObject) {
-    container.seq.add(uniformObject)
-    container.map[uniformObject.id] = uniformObject
-}
 
-private fun parseUniform(activeInfo: ActiveUniformInfo, addr: Int, container: Container) {
-
-    @Suppress("NAME_SHADOWING")
-    var container = container
-
-    val path = activeInfo.name
-    val pathLength = path.length
-
-    val RePathPart = "([\\w\\d_]+)(\\])?(\\[|\\.)?".toRegex()
-
-    var match = RePathPart.find(path)
-    while (match != null) {
-
-        val matchEnd = match.range.last+1
-
-        var id = match.groups[1]!!.value
-        val idIsIndex = match.groups[2]?.value == "]"
-        val subscript = match.groups[3]?.value
-
-        if (idIsIndex) id = (id.toInt() or 0).toString()
-
-        if (subscript == null || subscript == "[" && matchEnd +2 == pathLength) {
-
-            // bare name or "pure" bottom-level array "[0]" suffix
-
-            val uniform = if (subscript == null) {
-                SingleUniform(id, activeInfo, addr)
-            } else {
-                PureArrayUniform(id, activeInfo, addr)
-            }
-            addUniform(container, uniform)
-
-            return
-
-        } else {
-
-            var next = container.map[id] as StructuredUniform?
-
-            if (next == null) {
-
-                next = StructuredUniform(id)
-                addUniform(container, next)
-
-            }
-
-            container = next
-            match = match.next()
-
-        }
-
-    }
-
-}
-
-class GLUniforms internal constructor(
+internal class GLUniforms(
     program: Int
 ) : Container {
 
@@ -159,6 +101,65 @@ class GLUniforms internal constructor(
     }
 
     companion object {
+
+        private fun addUniform(container: Container, uniformObject: UniformObject) {
+            container.seq.add(uniformObject)
+            container.map[uniformObject.id] = uniformObject
+        }
+
+        private fun parseUniform(activeInfo: ActiveUniformInfo, addr: Int, container: Container) {
+
+            @Suppress("NAME_SHADOWING")
+            var container = container
+
+            val path = activeInfo.name
+            val pathLength = path.length
+
+            val regex = "([\\w\\d_]+)(\\])?(\\[|\\.)?".toRegex()
+
+            var match = regex.find(path)
+            while (match != null) {
+
+                val matchEnd = match.range.last + 1
+
+                var id = match.groups[1]!!.value
+                val idIsIndex = match.groups[2]?.value == "]"
+                val subscript = match.groups[3]?.value
+
+                if (idIsIndex) id = (id.toInt() or 0).toString()
+
+                if (subscript == null || subscript == "[" && matchEnd + 2 == pathLength) {
+
+                    // bare name or "pure" bottom-level array "[0]" suffix
+
+                    val uniform = if (subscript == null) {
+                        SingleUniform(id, activeInfo, addr)
+                    } else {
+                        PureArrayUniform(id, activeInfo, addr)
+                    }
+                    addUniform(container, uniform)
+
+                    return
+
+                } else {
+
+                    var next = container.map[id] as StructuredUniform?
+
+                    if (next == null) {
+
+                        next = StructuredUniform(id)
+                        addUniform(container, next)
+
+                    }
+
+                    container = next
+                    match = match.next()
+
+                }
+
+            }
+
+        }
 
         fun upload(seq: List<UniformObject>, values: Map<String, Uniform>, textures: GLTextures) {
 
@@ -210,7 +211,7 @@ private class ActiveUniformInfo(
 
 }
 
-sealed class UniformObject(
+internal sealed class UniformObject(
     val id: String
 ) {
 

@@ -3,7 +3,7 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.core.*
 import org.lwjgl.opengl.GL15
 
-class GLGeometries internal constructor(
+internal class GLGeometries(
     private val attributes: GLAttributes,
     private val info: GLInfo
 ) {

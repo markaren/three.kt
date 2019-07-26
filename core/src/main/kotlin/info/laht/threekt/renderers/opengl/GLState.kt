@@ -1,6 +1,5 @@
 package info.laht.threekt.renderers.opengl
 
-
 import info.laht.threekt.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector4
@@ -8,8 +7,7 @@ import org.lwjgl.opengl.*
 import java.nio.ByteBuffer
 import kotlin.math.roundToInt
 
-
-class GLState internal constructor() {
+internal class GLState {
 
     val colorBuffer = GLColorBuffer().apply {
         setClear(0f, 0f, 0f, 1f)
@@ -276,8 +274,8 @@ class GLState internal constructor() {
         if (blendEquation != currentBlendEquation || blendEquationAlpha != currentBlendEquationAlpha) {
 
             GL20.glBlendEquationSeparate(
-                utils.convert(blendEquation),
-                utils.convert(blendEquationAlpha)
+                GLUtils.convert(blendEquation),
+                GLUtils.convert(blendEquationAlpha)
             )
 
             currentBlendEquation = blendEquation
@@ -288,10 +286,10 @@ class GLState internal constructor() {
         if (blendSrc != currentBlendSrc || blendDst != currentBlendDst || blendSrcAlpha != currentBlendSrcAlpha || blendDstAlpha != currentBlendDstAlpha) {
 
             GL14.glBlendFuncSeparate(
-                utils.convert(blendSrc),
-                utils.convert(blendDst),
-                utils.convert(blendSrcAlpha),
-                utils.convert(blendDstAlpha)
+                GLUtils.convert(blendSrc),
+                GLUtils.convert(blendDst),
+                GLUtils.convert(blendSrcAlpha),
+                GLUtils.convert(blendDstAlpha)
             )
 
             currentBlendSrc = blendSrc

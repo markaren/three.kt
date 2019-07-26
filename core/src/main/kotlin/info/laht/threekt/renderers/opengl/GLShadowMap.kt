@@ -372,7 +372,12 @@ class GLShadowMap internal constructor(
 //        return result
     }
 
-    private fun renderObject(`object`: Object3D, camera: Camera, shadowCamera: PerspectiveCamera, isPointLight: Boolean) {
+    private fun renderObject(
+        `object`: Object3D,
+        camera: Camera,
+        shadowCamera: PerspectiveCamera,
+        isPointLight: Boolean
+    ) {
         if (!`object`.visible) return
 
         val visible = `object`.layers.test(camera.layers)
@@ -392,7 +397,7 @@ class GLShadowMap internal constructor(
 
                     val groups = geometry.groups
 
-                    for ( k in 0 until groups.size ) {
+                    for (k in 0 until groups.size) {
 
                         val group = groups[k]
                         val groupMaterial = `object`.materials.getOrNull(group.materialIndex)

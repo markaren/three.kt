@@ -11,7 +11,7 @@ import info.laht.threekt.scenes.FogExp2
 import info.laht.threekt.scenes._Fog
 import info.laht.threekt.textures.Texture
 
-class GLPrograms internal constructor(
+internal class GLPrograms(
     private val renderer: GLRenderer,
     private val capabilities: GLCapabilities
 ) {
@@ -30,7 +30,15 @@ class GLPrograms internal constructor(
 
     }
 
-    internal fun getParameters( material: Material, lights: GLLights.GLLightsState, shadows: List<Object3D>, fog: _Fog?, nClipPlanes: Int, nClipIntersection: Int, `object`: Object3D ): Parameters {
+    internal fun getParameters(
+        material: Material,
+        lights: GLLights.GLLightsState,
+        shadows: List<Object3D>,
+        fog: _Fog?,
+        nClipPlanes: Int,
+        nClipIntersection: Int,
+        `object`: Object3D
+    ): Parameters {
         return Parameters(
             material,
             lights,
@@ -74,7 +82,12 @@ class GLPrograms internal constructor(
 
     }
 
-    internal fun acquireProgram(material: Material, shader: ShaderLib.Shader, parameters: Parameters, code: String): GLProgram {
+    internal fun acquireProgram(
+        material: Material,
+        shader: ShaderLib.Shader,
+        parameters: Parameters,
+        code: String
+    ): GLProgram {
 
         var program: GLProgram? = null
 
@@ -160,7 +173,7 @@ class GLPrograms internal constructor(
         val shaderID = ShaderIds[material::class.java.simpleName]
 
         val maxBones = 0 // TODO
-        val precision ="highp"
+        val precision = "highp"
 
         val supportsVertexTextures = capabilities.vertexTextures
         val outputEncoding = getTextureEncodingFromMap(renderer.getRenderTarget()?.texture, renderer.gammaOutput)
@@ -240,59 +253,59 @@ class GLPrograms internal constructor(
 }
 
 private val parameterNames = listOf(
-        "precision",
-        "supportsVertexTextures",
-        "map",
-        "mapEncoding",
-        "matcap",
-        "matcapEncoding",
-        "envMap",
-        "envMapMode",
-        "envMapEncoding",
-        "lightMap",
-        "aoMap",
-        "emissiveMap",
-        "emissiveMapEncoding",
-        "bumpMap",
-        "normalMap",
-        "objectSpaceNormalMap",
-        "displacementMap",
-        "specularMap",
-        "roughnessMap",
-        "metalnessMap",
-        "gradientMap",
-        "alphaMap",
-        "combine",
-        "vertexColors",
-        "vertexTangents",
-        "fog",
-        "useFog",
-        "fogExp",
-        "flatShading",
-        "sizeAttenuation",
-        "logarithmicDepthBuffer",
-        "skinning",
-        "maxBones",
-        "useVertexTexture",
-        "morphTargets",
-        "morphNormals",
-        "maxMorphTargets",
-        "maxMorphNormals",
-        "premultipliedAlpha",
-        "numDirLights",
-        "numPointLights",
-        "numSpotLights",
-        "numHemiLights",
-        "numRectAreaLights",
-        "shadowMapEnabled",
-        "shadowMapType",
-        "toneMapping",
-        "physicallyCorrectLights",
-        "alphaTest",
-        "doubleSided",
-        "flipSided",
-        "numClippingPlanes",
-        "numClipIntersection",
-        "depthPacking",
-        "dithering"
+    "precision",
+    "supportsVertexTextures",
+    "map",
+    "mapEncoding",
+    "matcap",
+    "matcapEncoding",
+    "envMap",
+    "envMapMode",
+    "envMapEncoding",
+    "lightMap",
+    "aoMap",
+    "emissiveMap",
+    "emissiveMapEncoding",
+    "bumpMap",
+    "normalMap",
+    "objectSpaceNormalMap",
+    "displacementMap",
+    "specularMap",
+    "roughnessMap",
+    "metalnessMap",
+    "gradientMap",
+    "alphaMap",
+    "combine",
+    "vertexColors",
+    "vertexTangents",
+    "fog",
+    "useFog",
+    "fogExp",
+    "flatShading",
+    "sizeAttenuation",
+    "logarithmicDepthBuffer",
+    "skinning",
+    "maxBones",
+    "useVertexTexture",
+    "morphTargets",
+    "morphNormals",
+    "maxMorphTargets",
+    "maxMorphNormals",
+    "premultipliedAlpha",
+    "numDirLights",
+    "numPointLights",
+    "numSpotLights",
+    "numHemiLights",
+    "numRectAreaLights",
+    "shadowMapEnabled",
+    "shadowMapType",
+    "toneMapping",
+    "physicallyCorrectLights",
+    "alphaTest",
+    "doubleSided",
+    "flipSided",
+    "numClippingPlanes",
+    "numClipIntersection",
+    "depthPacking",
+    "dithering"
 )
