@@ -8,7 +8,7 @@ class Color(
     var r: Float,
     var g: Float,
     var b: Float
-): Cloneable {
+) : Cloneable {
 
     constructor() : this(0f, 0f, 0f)
 
@@ -34,7 +34,7 @@ class Color(
         return set(r, g, b)
     }
 
-    fun addScalar ( s: Float ): Color {
+    fun addScalar(s: Float): Color {
 
         this.r += s
         this.g += s
@@ -44,7 +44,7 @@ class Color(
 
     }
 
-    fun sub ( color: Color ): Color {
+    fun sub(color: Color): Color {
 
         this.r = max(0f, this.r - color.r)
         this.g = max(0f, this.g - color.g)
@@ -54,7 +54,7 @@ class Color(
 
     }
 
-    fun multiply ( color: Color ): Color {
+    fun multiply(color: Color): Color {
 
         this.r *= color.r
         this.g *= color.g
@@ -64,7 +64,7 @@ class Color(
 
     }
 
-    fun multiplyScalar ( s: Float ): Color {
+    fun multiplyScalar(s: Float): Color {
 
         this.r *= s
         this.g *= s
@@ -80,6 +80,26 @@ class Color(
 
     override fun clone(): Color {
         return Color(r, g, b)
+    }
+
+    fun fromArray(array: FloatArray, offset: Int = 0): Color {
+
+        this.r = array[offset];
+        this.g = array[offset + 1];
+        this.b = array[offset + 2];
+
+        return this;
+
+    }
+
+    fun toArray(array: FloatArray = FloatArray(3), offset: Int = 0): FloatArray {
+
+        array[offset + 0] = this.r;
+        array[offset + 1] = this.g;
+        array[offset + 2] = this.b;
+
+        return array;
+
     }
 
     override fun equals(other: Any?): Boolean {
