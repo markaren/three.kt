@@ -7,11 +7,14 @@
 
 Kotlin/JVM port of the popular [three.js](http://threejs.org) 3D library ([r106](https://github.com/mrdoob/three.js/tree/r106)).
 
-Be warned, while the basics works, alot of features are still missing, like controls, textures, 3D model loaders etc.
-
-## Looking for the Kotlin/JS wrapper project?
-It has been renamed and moved to [here](https://github.com/markaren/three-kt-wrapper).
-
+Be warned, while the basics works, such as
+* Simple geometries
+* Most materials
+* OrbitControls
+* Ambient, Point and Spot lights
+* 2D textures
+ 
+a lot of features are still missing and the API can change rapidly.
 
 #### API (subject to changes)
 
@@ -48,5 +51,7 @@ Canvas().use { canvas ->
     }
     
 }
-
 ```
+
+## Looking for the Kotlin/JS wrapper project?
+It has been renamed and moved to [here](https://github.com/markaren/three-kt-wrapper).
