@@ -44,20 +44,45 @@ object PointLightExample {
             }
 
 
-            val box = Mesh(BoxGeometry(1f).apply { computeVertexNormals() }, MeshPhongMaterial().apply {
+            val box = Mesh(BoxGeometry(1f), MeshPhongMaterial().apply {
                 color.set(0x00ff00)
             }).also {
-                it.position.x = -2f
                 it.castShadow = true
                 scene.add(it)
             }
+
+             Mesh(BoxGeometry(1f), MeshPhongMaterial().apply {
+                color.set(0x0000ff)
+            }).also {
+                it.position.x = 2f
+                it.castShadow = true
+                box.add(it)
+            }
+
+            Mesh(BoxGeometry(1f), MeshLambertMaterial().apply {
+                color.set(0xff0000)
+            }).also {
+                it.position.x = -2f
+                it.castShadow = true
+                box.add(it)
+            }
+
             camera.position.z = 10f
 
             val controls = OrbitControls(camera, canvas)
 
-            val pointLight = PointLight(Color.fromHex(Color.yellow)).also {
+            val pointLight = PointLight(Color.fromHex(Color.white)).also {
                 it.intensity = 0.5f
-                it.position.y = 5f
+                it.position.y = 3f
+                it.position.z = 3f
+                it.castShadow = true
+                scene.add(it)
+            }
+
+            PointLight(Color.fromHex(Color.white)).also {
+                it.intensity = 0.5f
+                it.position.y = 3f
+                it.position.z = -3f
                 it.castShadow = true
                 scene.add(it)
             }
@@ -69,7 +94,6 @@ object PointLightExample {
                 renderer.render(scene, camera)
 
                 val dt = clock.getDelta()
-                box.rotation.x += 0.5f * dt
                 box.rotation.y += 0.5f * dt
 
             }
