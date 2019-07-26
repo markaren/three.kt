@@ -6,6 +6,10 @@ class LineDashedMaterial: LineBasicMaterial() {
     var dashSize = 3f;
     var gapSize = 1f;
 
+    override fun clone(): LineDashedMaterial {
+        return LineDashedMaterial().copy(this)
+    }
+
     fun copy( source: LineDashedMaterial ): LineDashedMaterial {
 
         super.copy(source)

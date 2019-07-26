@@ -6,7 +6,7 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
-class MeshPhongMaterial: Material(), MaterialWithWireframe, MaterialWithColor, MaterialWithEmissive, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithSkinning {
+open class MeshPhongMaterial: Material(), MaterialWithWireframe, MaterialWithColor, MaterialWithEmissive, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithSkinning {
 
     override var color =  Color( 0xffffff ) // diffuse
     var specular =  Color( 0x111111 )

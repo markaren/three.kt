@@ -27,5 +27,47 @@ class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
         lights = false
 
     }
+
+    override fun clone(): MeshDepthMaterial {
+        return MeshDepthMaterial().copy(this)
+    }
+
+    fun copy( source: MeshDepthMaterial ): MeshDepthMaterial {
+
+        super.copy(source)
+
+        this.depthPacking = source.depthPacking;
+
+        this.skinning = source.skinning;
+        this.morphTargets = source.morphTargets;
+
+        this.map = source.map;
+
+        this.alphaMap = source.alphaMap;
+
+        this.displacementMap = source.displacementMap;
+        this.displacementScale = source.displacementScale;
+        this.displacementBias = source.displacementBias;
+
+        this.wireframe = source.wireframe;
+        this.wireframeLinewidth = source.wireframeLinewidth;depthPacking = source.depthPacking;
+
+        this.skinning = source.skinning;
+        this.morphTargets = source.morphTargets;
+
+        this.map = source.map;
+
+        this.alphaMap = source.alphaMap;
+
+        this.displacementMap = source.displacementMap;
+        this.displacementScale = source.displacementScale;
+        this.displacementBias = source.displacementBias;
+
+        this.wireframe = source.wireframe;
+        this.wireframeLinewidth = source.wireframeLinewidth;
+
+        return this
+
+    }
     
 }

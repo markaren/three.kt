@@ -18,6 +18,10 @@ class PointsMaterial : Material(), MaterialWithMorphTarget, MaterialWithSizeAtte
         lights = false
     }
 
+    fun clone( source: PointsMaterial ): PointsMaterial {
+        return PointsMaterial().clone(this)
+    }
+
     fun copy(source: PointsMaterial): PointsMaterial {
 
         super.copy(source)

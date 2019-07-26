@@ -27,6 +27,10 @@ class MeshDistanceMaterial: Material(), MaterialWithMorphTarget, MaterialWithSki
 
     }
 
+    override fun clone(): MeshDistanceMaterial {
+        return MeshDistanceMaterial().copy(this)
+    }
+
     fun copy( source: MeshDistanceMaterial ): MeshDistanceMaterial {
         
         super.copy(source)

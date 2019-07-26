@@ -8,7 +8,31 @@ class MeshPhysicalMaterial : MeshStandardMaterial() {
     var clearCoatRoughness = 0.0f;
 
     init {
-        defines["PHYSICAL"] = ""
+        defines.apply {
+            clear()
+            put("PHYSICAL", "")
+        }
+    }
+
+    override fun clone(): MeshPhysicalMaterial {
+        return MeshPhysicalMaterial().copy(this)
+    }
+
+    fun copy( source: MeshPhysicalMaterial ): MeshPhysicalMaterial {
+
+        super.copy(source)
+
+        this.defines.apply {
+            clear()
+            put("PHYSICAL", "")
+        }
+
+        this.reflectivity = source.reflectivity;
+
+        this.clearCoat = source.clearCoat;
+        this.clearCoatRoughness = source.clearCoatRoughness;
+
+        return this
     }
 
 }

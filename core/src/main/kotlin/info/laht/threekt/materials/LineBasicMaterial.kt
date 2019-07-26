@@ -16,6 +16,10 @@ open class LineBasicMaterial: Material(), MaterialWithColor {
 
     }
 
+    override fun clone(): LineBasicMaterial {
+        return LineBasicMaterial().copy(this)
+    }
+
     fun copy( source: LineBasicMaterial ): LineBasicMaterial {
 
         super.copy(source)

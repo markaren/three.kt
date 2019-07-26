@@ -38,6 +38,10 @@ open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphT
 
     }
 
+    override fun clone(): ShaderMaterial {
+        return ShaderMaterial().copy(this)
+    }
+
     fun copy(source: ShaderMaterial): ShaderMaterial {
 
         super.copy(source)

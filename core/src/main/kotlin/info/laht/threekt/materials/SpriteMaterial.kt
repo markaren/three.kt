@@ -20,4 +20,23 @@ class SpriteMaterial : Material(), MaterialWithSizeAttenuation, MaterialWithColo
 
     }
 
+    override fun clone(): SpriteMaterial {
+        return SpriteMaterial().copy(this)
+    }
+
+    fun copy( source: SpriteMaterial ): SpriteMaterial {
+
+        super.copy(source)
+
+        this.color.copy( source.color );
+        this.map = source.map;
+
+        this.rotation = source.rotation;
+
+        this.sizeAttenuation = source.sizeAttenuation;
+
+        return this;
+
+    }
+
 }

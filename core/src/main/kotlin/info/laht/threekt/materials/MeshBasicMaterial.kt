@@ -39,6 +39,10 @@ class MeshBasicMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
 
     }
 
+    override fun clone(): MeshBasicMaterial {
+        return MeshBasicMaterial().copy(this)
+    }
+
     fun copy( source: MeshBasicMaterial ): MeshBasicMaterial {
         super.copy(source)
 
