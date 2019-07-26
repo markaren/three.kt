@@ -12,7 +12,6 @@ import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Scene
-import org.lwjgl.opengl.GLUtil
 import kotlin.random.Random
 
 object RawShaderExample {
@@ -51,8 +50,6 @@ object RawShaderExample {
         Canvas(CanvasOptions().apply {
             antialiasing = 4
         }).use { canvas ->
-
-            val debugProc = GLUtil.setupDebugMessageCallback()!!
 
             val scene = Scene().apply {
                 background = ColorBackground(0x101010)
@@ -109,8 +106,6 @@ object RawShaderExample {
                 renderer.render(scene, camera)
 
             }
-
-            debugProc.free()
 
         }
 
