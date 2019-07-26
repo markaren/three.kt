@@ -372,6 +372,10 @@ internal class GLProgram(
         GL20.glAttachShader(program, glVertexShader)
         GL20.glAttachShader(program, glFragmentShader)
 
+        material.index0AttributeName?.also {
+            GL20.glBindAttribLocation(program, 0, it)
+        }
+
         GL20.glLinkProgram(program)
 
         if (renderer.checkShaderErrors) {

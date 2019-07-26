@@ -229,6 +229,8 @@ open class Material : Cloneable, EventDispatcher() {
 
     internal var type = javaClass.simpleName
 
+    internal var index0AttributeName: String? = null
+
     internal open val uniforms: MutableMap<String, Uniform> = mutableMapOf()
 
     internal open var vertexShader: String = ""
