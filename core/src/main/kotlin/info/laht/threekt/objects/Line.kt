@@ -14,7 +14,7 @@ open class Line(
 
     override val materials = mutableListOf<Material>()
 
-    fun computeLineDistances(): Line {
+    open fun computeLineDistances(): Line {
 
         val start = Vector3()
         val end = Vector3()
@@ -36,7 +36,7 @@ open class Line(
             geometry.addAttribute("lineDistance", FloatBufferAttribute(lineDistances.toFloatArray(), 1));
 
         } else {
-            println( "THREE.Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry." )
+            println( "Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry." )
         }
 
         return this
