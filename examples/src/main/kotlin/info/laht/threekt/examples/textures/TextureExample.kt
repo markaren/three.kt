@@ -25,8 +25,6 @@ object TextureExample {
             antialiasing = 4
         }).use { canvas ->
 
-            canvas.enableDebugCallback()
-
             val scene = Scene().apply {
                 background = ColorBackground(Color.aliceblue)
             }
