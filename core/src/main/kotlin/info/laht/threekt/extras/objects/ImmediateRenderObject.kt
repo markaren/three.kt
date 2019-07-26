@@ -1,4 +1,4 @@
-package info.laht.threekt.extras
+package info.laht.threekt.extras.objects
 
 import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.Object3D

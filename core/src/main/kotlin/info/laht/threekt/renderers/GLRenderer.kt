@@ -4,7 +4,7 @@ import info.laht.threekt.*
 import info.laht.threekt.Canvas
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.*
-import info.laht.threekt.extras.ImmediateRenderObject
+import info.laht.threekt.extras.objects.ImmediateRenderObject
 import info.laht.threekt.lights.Light
 import info.laht.threekt.materials.*
 import info.laht.threekt.math.*
