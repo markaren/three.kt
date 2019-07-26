@@ -31,7 +31,10 @@ object ShaderLib {
                 UniformsLib.lightmap,
                 UniformsLib.emissivemap,
                 UniformsLib.fog,
-                UniformsLib.lights
+                UniformsLib.lights,
+                mapOf(
+                    "emissive" to Uniform(Color(0x000000))
+                )
             )
         ),
         ShaderChunk.meshlambert_vert,
