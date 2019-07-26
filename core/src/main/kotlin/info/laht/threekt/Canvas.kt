@@ -9,6 +9,8 @@ import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL32
+import org.lwjgl.opengl.GLUtil
+import org.lwjgl.system.Callback
 import java.io.Closeable
 
 class CanvasOptions {
@@ -40,6 +42,8 @@ class Canvas @JvmOverloads constructor(
 
     private val mouseEvent = MouseEvent()
 
+    private var debugProc: Callback? = null
+
     init {
         val errorCallback = GLFWErrorCallback.createPrint(System.err)
         glfwSetErrorCallback(errorCallback)
@@ -49,11 +53,16 @@ class Canvas @JvmOverloads constructor(
         pointer = createWindow(options.title, options.antialiasing)
     }
 
+    fun enableDebugCallback() {
+        debugProc = GLUtil.setupDebugMessageCallback()
+    }
+
     fun shouldClose(): Boolean {
         return glfwWindowShouldClose(pointer)
     }
 
     override fun close() {
+        debugProc?.free()
         glfwTerminate()
     }
 
