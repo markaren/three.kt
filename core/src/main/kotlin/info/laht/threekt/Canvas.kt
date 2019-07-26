@@ -7,6 +7,8 @@ import info.laht.threekt.input.MouseWheelEvent
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
+import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL32
 import java.io.Closeable
 
 class CanvasOptions {
@@ -100,6 +102,8 @@ class Canvas @JvmOverloads constructor(
         // Tell LWJGL 3 that an OpenGL context is current in this thread. This will result in LWJGL 3 querying function
         // pointers for various OpenGL functions.
         GL.createCapabilities()
+
+        GL11.glEnable(GL32.GL_PROGRAM_POINT_SIZE)
 
         // Return the handle to the created pointer.
         return window
