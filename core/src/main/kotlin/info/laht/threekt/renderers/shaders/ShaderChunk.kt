@@ -395,6 +395,10 @@ internal object ShaderChunk {
         load("distanceRGBA_frag")
     }
 
+    val distanceRGBA_vert by lazy {
+        load("distanceRGBA_vert")
+    }
+
     val equirect_frag by lazy {
         load("equirect_frag")
     }

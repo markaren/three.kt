@@ -3,6 +3,7 @@ package info.laht.threekt.renderers.shaders
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix3
+import info.laht.threekt.math.Vector3
 
 object ShaderLib {
 
@@ -198,6 +199,45 @@ object ShaderLib {
         ShaderChunk.cube_frag
     )
 
+    val equirect = Shader(
+        mutableMapOf(
+            "tEquirect" to Uniform(null)
+        ),
+        ShaderChunk.equirect_vert,
+        ShaderChunk.equirect_frag
+    )
+
+    val distanceRGBA = Shader(
+        mergeUniforms(
+            listOf(
+                UniformsLib.common,
+                UniformsLib.displacementmap,
+                mutableMapOf(
+                    "referencePosition" to Uniform(Vector3()),
+                    "nearDistance" to Uniform(1f),
+                    "nearDistance" to Uniform(1000f)
+                )
+            )
+        ),
+        ShaderChunk.distanceRGBA_vert,
+        ShaderChunk.distanceRGBA_frag
+    )
+
+    val shadow = Shader(
+        mergeUniforms(
+            listOf(
+                UniformsLib.lights,
+                UniformsLib.fog,
+                mutableMapOf(
+                    "color" to Uniform(Color(0x000000)),
+                    "opacity" to Uniform(1f)
+                )
+            )
+        ),
+        ShaderChunk.shadow_vert,
+        ShaderChunk.shadow_frag
+    )
+
     val physical = Shader(
         mergeUniforms(
             listOf(
@@ -214,7 +254,6 @@ object ShaderLib {
         ShaderChunk.normal_vert,
         ShaderChunk.normal_frag
     )
-
 
     operator fun get(name: String): Shader {
         return ShaderLib::class.java.getDeclaredField(name).get(this) as Shader
