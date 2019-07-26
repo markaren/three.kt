@@ -7,7 +7,7 @@ class PointsMaterial : Material(), MaterialWithMorphTarget, MaterialWithSizeAtte
 
     override val color = Color(0xffffff)
 
-    var size = 1
+    var size = 1f
     override var sizeAttenuation = true
 
     override var map: Texture? = null
@@ -18,8 +18,8 @@ class PointsMaterial : Material(), MaterialWithMorphTarget, MaterialWithSizeAtte
         lights = false
     }
 
-    fun clone( source: PointsMaterial ): PointsMaterial {
-        return PointsMaterial().clone(this)
+    override fun clone(): PointsMaterial {
+        return PointsMaterial().copy(this)
     }
 
     fun copy(source: PointsMaterial): PointsMaterial {
