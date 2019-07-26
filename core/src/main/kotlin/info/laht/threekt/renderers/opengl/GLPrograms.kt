@@ -70,10 +70,11 @@ internal class GLPrograms(
 
         }
 
-        array.addAll(parameterNames)
+        parameterNames.forEach { name ->
+            array.add(parameters[name] ?: "null")
+        }
 
         array.add(renderer.gammaOutput.toString())
-
         array.add(renderer.gammaFactor.toString())
 
         return array.joinToString(",")
@@ -94,7 +95,7 @@ internal class GLPrograms(
 
             val programInfo = programs[i]
 
-            if (programInfo.code == code) {
+            if (programInfo.code === code) {
 
                 program = programInfo
                 ++program.usedTimes
@@ -245,6 +246,10 @@ internal class GLPrograms(
         val flipSided = material.side == BackSide
 
         val depthPacking = if (material is MeshDepthMaterial) material.depthPacking else false
+
+        operator fun get(name: String): String? {
+            return Parameters::class.java.getDeclaredField(name)?.get(this).toString()
+        }
 
     }
 
