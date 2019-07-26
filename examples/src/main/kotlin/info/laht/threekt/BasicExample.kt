@@ -6,7 +6,6 @@ import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
 import info.laht.threekt.geometries.CylinderBufferGeometry
 import info.laht.threekt.geometries.PlaneGeometry
-import info.laht.threekt.helpers.GridHelper
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
