@@ -379,10 +379,11 @@ internal class GLTextures(
                     GL11.GL_TEXTURE_2D,
                     0,
                     glInternalFormat,
-                    glFormat,
-                    glType,
                     image.width,
                     image.height,
+                    glFormat,
+                    glType,
+
                     image.data
                 )
                 textureProperties["__maxMipLevel"] = 0
