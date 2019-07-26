@@ -5,7 +5,7 @@ import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.math.Vector3
 
-class LineSegments(
+open class LineSegments(
     geometry: BufferGeometry,
     material: LineBasicMaterial
 ): Line(geometry, material) {
