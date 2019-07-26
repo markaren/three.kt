@@ -10,9 +10,7 @@ open class Line(
     override val geometry: BufferGeometry = BufferGeometry(),
     override val material: LineBasicMaterial = LineBasicMaterial()
 
-): Object3D(), GeometryObject, MaterialsObject {
-
-    override val materials = mutableListOf<Material>()
+): Object3D(), GeometryObject, MaterialObject {
 
     open fun computeLineDistances(): Line {
 
@@ -23,9 +21,9 @@ open class Line(
         if (geometry.index == null) {
 
             val positionAttribute = geometry.attributes.position!!
-            val lineDistances = mutableListOf(0.toFloat())
+            val lineDistances = mutableListOf(0f)
 
-            for (i in 0 until positionAttribute.count) {
+            for (i in 1 until positionAttribute.count) {
                 start.fromBufferAttribute(positionAttribute, i - 1);
                 end.fromBufferAttribute(positionAttribute, i);
 

@@ -604,7 +604,7 @@ class GLRenderer(
 
             } else if (`object` is Mesh || `object` is Line || `object` is Points) {
 
-                `object` as MaterialsObject
+                `object` as MaterialObject
 
                 if (`object` is SkinnedMesh) {
                     TODO()
@@ -621,7 +621,7 @@ class GLRenderer(
 
                     val geometry = objects.update(`object`)
 
-                    if (`object`.isMultiMaterial) {
+                    if (`object` is MaterialsObject && `object`.isMultiMaterial) {
 
                         geometry.groups.forEach { group ->
 
