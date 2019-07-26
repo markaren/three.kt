@@ -4,6 +4,7 @@ import info.laht.threekt.*
 import info.laht.threekt.Canvas
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.*
+import info.laht.threekt.extras.ImmediateRenderObject
 import info.laht.threekt.lights.Light
 import info.laht.threekt.materials.*
 import info.laht.threekt.math.*
@@ -751,7 +752,14 @@ class GLRenderer(
         `object`.modelViewMatrix.multiplyMatrices(camera.matrixWorldInverse, `object`.matrixWorld)
         `object`.normalMatrix.getNormalMatrix(`object`.modelViewMatrix)
 
-        // TODO object.isImmediateRenderObject
+         if (`object` is ImmediateRenderObject) {
+
+             if (sortObjects) {
+                 vector3.setFromMatrixPosition( `object`.matrixWorld )
+                     .applyMatrix4( projScreenMatrix )
+             }
+
+         }
 
         renderBufferDirect(camera, scene.fog, geometry, material, `object`, group)
 
