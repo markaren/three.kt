@@ -1,6 +1,7 @@
 package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.*
+import info.laht.threekt.core.Shader
 import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.RawShaderMaterial
 import info.laht.threekt.materials.ShaderMaterial
@@ -25,7 +26,7 @@ internal class GLProgram(
     renderer: GLRenderer,
     val code: String,
     material: Material,
-    shader: ShaderLib.Shader,
+    shader: Shader,
     parameters: GLPrograms.Parameters
 ) : _GLProgram() {
 

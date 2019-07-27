@@ -1,24 +1,35 @@
 package info.laht.threekt.core
 
-
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3
 import info.laht.threekt.math.Vector4
 import org.lwjgl.BufferUtils
+import org.lwjgl.system.APIUtil
+import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import kotlin.properties.Delegates
 
-
 sealed class BufferAttribute(
-    internal var itemSize: Int,
+    capacity: Int,
+    elementShift: Int,
+    itemSize: Int,
     normalized: Boolean? = null
 ) : Cloneable {
 
     internal var name = ""
     internal var version = 0
-    internal var normalized = normalized ?: false
+
+    var itemSize = itemSize
+        private set
+
+    var normalized = normalized ?: false
+        private set
+
+    internal var backingBuffer = BufferUtils.createByteBuffer(
+        getAllocationSize(capacity, elementShift)
+    )
 
     abstract val size: Int
 
@@ -42,6 +53,8 @@ sealed class BufferAttribute(
 
         this.dynamic = source.dynamic
 
+        this.backingBuffer = source.backingBuffer.clone()
+
         return this
 
     }
@@ -54,65 +67,68 @@ class IntBufferAttribute(
     capacity: Int,
     itemSize: Int,
     normalized: Boolean? = null
-) : BufferAttribute(itemSize, normalized) {
+) : BufferAttribute(capacity, 2, itemSize, normalized) {
 
-    internal val array = BufferUtils.createIntBuffer(capacity)
+    private val buffer
+        get() = backingBuffer.asIntBuffer()
 
     override val size: Int
-        get() = array.capacity()
+        get() = buffer.capacity()
 
-    constructor(array: IntArray,
-                itemSize: Int,
-                normalized: Boolean? = null): this(array.size, itemSize, normalized) {
-        this.array.put(array).flip()
+    constructor(
+        array: IntArray,
+        itemSize: Int,
+        normalized: Boolean? = null
+    ) : this(array.size, itemSize, normalized) {
+        this.buffer.put(array).flip()
     }
 
     operator fun get(index: Int): Int {
-        return array[index]
+        return buffer[index]
     }
 
     operator fun set(index: Int, value: Int) {
-        array[index] = value
+        buffer[index] = value
     }
 
     fun add(value: Int): IntBufferAttribute {
-        array.put(value)
+        buffer.put(value)
         return this
     }
 
     fun getX(index: Int): Int {
-        return array[index * itemSize]
+        return buffer[index * itemSize]
     }
 
     fun setX(index: Int, value: Int): IntBufferAttribute {
-        array[index * itemSize] = value
+        buffer[index * itemSize] = value
         return this
     }
 
     fun getY(index: Int): Int {
-        return array[index * itemSize + 1]
+        return buffer[index * itemSize + 1]
     }
 
     fun setY(index: Int, value: Int): IntBufferAttribute {
-        array[index * itemSize + 1] = value
+        buffer[index * itemSize + 1] = value
         return this
     }
 
     fun getZ(index: Int): Int {
-        return array[index * itemSize + 2]
+        return buffer[index * itemSize + 2]
     }
 
     fun setZ(index: Int, value: Int): IntBufferAttribute {
-        array[index * itemSize + 2] = value
+        buffer[index * itemSize + 2] = value
         return this
     }
 
     fun getW(index: Int): Int {
-        return array[index * itemSize + 3]
+        return buffer[index * itemSize + 3]
     }
 
     fun setW(index: Int, value: Int): IntBufferAttribute {
-        array[index * itemSize + 3] = value
+        buffer[index * itemSize + 3] = value
         return this
     }
 
@@ -120,8 +136,8 @@ class IntBufferAttribute(
         @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
-        array[index + 0] = x
-        array[index + 1] = y
+        buffer[index + 0] = x
+        buffer[index + 1] = y
 
         return this
     }
@@ -130,9 +146,9 @@ class IntBufferAttribute(
         @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
-        array[index + 0] = x
-        array[index + 1] = y
-        array[index + 2] = z
+        buffer[index + 0] = x
+        buffer[index + 1] = y
+        buffer[index + 2] = z
 
         return this
     }
@@ -141,18 +157,16 @@ class IntBufferAttribute(
         @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
-        array[index + 0] = x
-        array[index + 1] = y
-        array[index + 2] = z
-        array[index + 3] = w
+        buffer[index + 0] = x
+        buffer[index + 1] = y
+        buffer[index + 2] = z
+        buffer[index + 3] = w
 
         return this
     }
 
     fun copy(source: IntBufferAttribute): IntBufferAttribute {
-        super.copy(this)
-        TODO()
-//        array = source.array.clone()
+        super.copy(source)
         return this
     }
 
@@ -163,7 +177,7 @@ class IntBufferAttribute(
         val index2 = index2 * attribute.itemSize;
 
         for (i in 0 until itemSize) {
-            array[index1 + i] = attribute.array[index2 + i];
+            buffer[index1 + i] = attribute.buffer[index2 + i];
         }
 
         return this
@@ -171,8 +185,7 @@ class IntBufferAttribute(
 
 
     override fun clone(): IntBufferAttribute {
-        TODO()
-//        return IntBufferAttribute(array.clone(), itemSize, normalized)
+        return IntBufferAttribute(0, 0).copy(this)
     }
 
 }
@@ -181,65 +194,68 @@ class FloatBufferAttribute(
     capacity: Int,
     itemSize: Int,
     normalized: Boolean? = null
-) : BufferAttribute(itemSize, normalized) {
+) : BufferAttribute(capacity, 2, itemSize, normalized) {
 
-    internal val array = BufferUtils.createFloatBuffer(capacity)
+    private val buffer
+        get() = backingBuffer.asFloatBuffer()
 
     override val size: Int
-        get() = array.capacity()
+        get() = buffer.capacity()
 
-    constructor(array: FloatArray,
-                itemSize: Int,
-                normalized: Boolean? = null): this(array.size, itemSize, normalized) {
-        this.array.put(array).flip()
+    constructor(
+        array: FloatArray,
+        itemSize: Int,
+        normalized: Boolean? = null
+    ) : this(array.size, itemSize, normalized) {
+        this.buffer.put(array).flip()
     }
 
     operator fun get(index: Int): Float {
-        return array[index]
+        return buffer[index]
     }
 
     operator fun set(index: Int, value: Float) {
-        array[index] = value
+        buffer[index] = value
     }
 
     fun add(value: Float): FloatBufferAttribute {
-        array.put(value)
+        buffer.put(value)
         return this
     }
 
     fun getX(index: Int): Float {
-        return array[index * itemSize]
+        return buffer[index * itemSize]
     }
 
     fun setX(index: Int, value: Float): FloatBufferAttribute {
-        array[index * itemSize] = value
+        buffer[index * itemSize] = value
         return this
     }
 
     fun getY(index: Int): Float {
-        return array[index * itemSize + 1]
+        return buffer[index * itemSize + 1]
     }
 
     fun setY(index: Int, value: Float): FloatBufferAttribute {
-        array[index * itemSize + 1] = value
+        buffer[index * itemSize + 1] = value
         return this
     }
 
     fun getZ(index: Int): Float {
-        return array[index * itemSize + 2]
+        return buffer[index * itemSize + 2]
     }
 
     fun setZ(index: Int, value: Float): FloatBufferAttribute {
-        array[index * itemSize + 2] = value
+        buffer[index * itemSize + 2] = value
         return this
     }
 
     fun getW(index: Int): Float {
-        return array[index * itemSize + 3]
+        return buffer[index * itemSize + 3]
     }
 
     fun setW(index: Int, value: Float): FloatBufferAttribute {
-        array[index * itemSize + 3] = value
+        buffer[index * itemSize + 3] = value
         return this
     }
 
@@ -247,8 +263,8 @@ class FloatBufferAttribute(
         @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
-        array[index + 0] = x
-        array[index + 1] = y
+        buffer[index + 0] = x
+        buffer[index + 1] = y
 
         return this
     }
@@ -257,9 +273,9 @@ class FloatBufferAttribute(
         @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
-        array[index + 0] = x
-        array[index + 1] = y
-        array[index + 2] = z
+        buffer[index + 0] = x
+        buffer[index + 1] = y
+        buffer[index + 2] = z
 
         return this
     }
@@ -268,10 +284,10 @@ class FloatBufferAttribute(
         @Suppress("NAME_SHADOWING")
         val index = index * itemSize
 
-        array[index + 0] = x
-        array[index + 1] = y
-        array[index + 2] = z
-        array[index + 3] = w
+        buffer[index + 0] = x
+        buffer[index + 1] = y
+        buffer[index + 2] = z
+        buffer[index + 3] = w
 
         return this
     }
@@ -280,9 +296,9 @@ class FloatBufferAttribute(
 
         var offset = 0
         colors.forEach { color ->
-            array[offset++] = color.r
-            array[offset++] = color.g
-            array[offset++] = color.b
+            buffer[offset++] = color.r
+            buffer[offset++] = color.g
+            buffer[offset++] = color.b
         }
 
         return this
@@ -293,8 +309,8 @@ class FloatBufferAttribute(
 
         var offset = 0
         vectors.forEach { vector ->
-            array[offset++] = vector.x
-            array[offset++] = vector.y
+            buffer[offset++] = vector.x
+            buffer[offset++] = vector.y
         }
 
         return this
@@ -305,9 +321,9 @@ class FloatBufferAttribute(
 
         var offset = 0
         vectors.forEach { vector ->
-            array[offset++] = vector.x
-            array[offset++] = vector.y
-            array[offset++] = vector.z
+            buffer[offset++] = vector.x
+            buffer[offset++] = vector.y
+            buffer[offset++] = vector.z
         }
 
         return this
@@ -317,19 +333,17 @@ class FloatBufferAttribute(
 
         var offset = 0
         vectors.forEach { vector ->
-            array[offset++] = vector.x
-            array[offset++] = vector.y
-            array[offset++] = vector.z
-            array[offset++] = vector.w
+            buffer[offset++] = vector.x
+            buffer[offset++] = vector.y
+            buffer[offset++] = vector.z
+            buffer[offset++] = vector.w
         }
 
         return this
     }
 
     fun copy(source: FloatBufferAttribute): FloatBufferAttribute {
-        super.copy(this)
-        TODO()
-//        array = source.array.clone()
+        super.copy(source)
         return this
     }
 
@@ -340,15 +354,14 @@ class FloatBufferAttribute(
         val index2 = index2 * attribute.itemSize;
 
         for (i in 0 until itemSize) {
-            array[index1 + i] = attribute.array[index2 + i];
+            buffer[index1 + i] = attribute.buffer[index2 + i];
         }
 
         return this
     }
 
     override fun clone(): FloatBufferAttribute {
-        TODO()
-//        return FloatBufferAttribute(array.clone(), itemSize, normalized)
+        return FloatBufferAttribute(0, 0).copy(this)
     }
 
 }
@@ -370,4 +383,24 @@ private operator fun IntBuffer.set(index: Int, value: Int) {
 
 private operator fun FloatBuffer.set(index: Int, value: Float) {
     this.put(index, value)
+}
+
+private fun ByteBuffer.clone(): ByteBuffer {
+
+    // Create clone with same capacity as original.
+    val clone = BufferUtils.createByteBuffer(capacity())
+    // Create a read-only copy of the original.
+    // This allows reading from the original without modifying it.
+    val readOnlyCopy = asReadOnlyBuffer()
+
+    readOnlyCopy.rewind()
+    clone.put(readOnlyCopy)
+    clone.flip()
+
+    return clone
+}
+
+private fun getAllocationSize(elements: Int, elementShift: Int): Int {
+    APIUtil.apiCheckAllocation(elements, APIUtil.apiGetBytes(elements, elementShift), 0x7FFF_FFFFL);
+    return elements shl elementShift
 }

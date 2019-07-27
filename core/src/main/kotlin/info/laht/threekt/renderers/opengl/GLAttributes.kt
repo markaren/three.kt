@@ -20,11 +20,11 @@ internal class GLAttributes {
 
         val (type, bytesPerElement) = when (attribute) {
             is IntBufferAttribute -> {
-                GL15.glBufferData(bufferType, attribute.array, usage)
+                GL15.glBufferData(bufferType, attribute.backingBuffer, usage)
                 GL11.GL_UNSIGNED_INT to 3
             }
             is FloatBufferAttribute -> {
-                GL15.glBufferData(bufferType, attribute.array, usage)
+                GL15.glBufferData(bufferType, attribute.backingBuffer, usage)
                 GL11.GL_FLOAT to 4
             }
         }
@@ -46,8 +46,8 @@ internal class GLAttributes {
 
         when (attribute) {
             is IntBufferAttribute -> {
-                if (!attribute.dynamic) GL15.glBufferData(bufferType, attribute.array, GL15.GL_STATIC_DRAW)
-                else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.array)
+                if (!attribute.dynamic) GL15.glBufferData(bufferType, attribute.backingBuffer, GL15.GL_STATIC_DRAW)
+                else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.backingBuffer)
                 else if (updateRange.count == 0) println("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
                 else {
                     TODO()
@@ -57,8 +57,8 @@ internal class GLAttributes {
                 }
             }
             is FloatBufferAttribute -> {
-                if (!attribute.dynamic) GL15.glBufferData(bufferType, attribute.array, GL15.GL_STATIC_DRAW)
-                else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.array)
+                if (!attribute.dynamic) GL15.glBufferData(bufferType, attribute.backingBuffer, GL15.GL_STATIC_DRAW)
+                else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.backingBuffer)
                 else if (updateRange.count == 0) println("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
                 else {
                     TODO()

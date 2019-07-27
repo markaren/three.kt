@@ -322,7 +322,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
             if (index != null) {
 
-                val indices = index.array
+                val indices = index
 
                 for (i in 0 until index.count step 3) {
 

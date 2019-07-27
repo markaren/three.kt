@@ -65,7 +65,7 @@ internal class GLBackground (
                 BoxBufferGeometry(1f, 1f, 1f),
                 ShaderMaterial().apply {
                     type = "BackgroundCubeMaterial"
-                    uniforms = cloneUniforms(ShaderLib.cube.uniforms)
+                    uniforms.putAll(cloneUniforms(ShaderLib.cube.uniforms))
                     vertexShader = ShaderLib.cube.vertexShader
                     fragmentShader = ShaderLib.cube.fragmentShader
                     side = BackSide
@@ -79,10 +79,9 @@ internal class GLBackground (
             boxMesh.geometry.removeAttribute("normal")
             boxMesh.geometry.removeAttribute("uv")
 
-            TODO()
-//            boxMesh.onBeforeRender = { _, _, camera, _, _, _ ->
-//                boxMesh.matrixWorld.copyPosition(camera.matrixWorld);
-//            }
+            boxMesh.onBeforeRender = { _, _, camera, _, _, _ ->
+                boxMesh.matrixWorld.copyPosition(camera.matrixWorld);
+            }
 
             val material = boxMesh.material as ShaderMaterial
             material.map = material.uniforms["tCube"]?.value as Texture
@@ -120,7 +119,7 @@ internal class GLBackground (
                 PlaneBufferGeometry(2f, 2f),
                 ShaderMaterial().apply {
                     type = "BackgroundMaterial"
-                    uniforms = cloneUniforms(ShaderLib.background.uniforms)
+                    uniforms.putAll(cloneUniforms(ShaderLib.background.uniforms))
                     vertexShader = ShaderLib.background.vertexShader
                     fragmentShader = ShaderLib.background.fragmentShader
                     side = FrontSide

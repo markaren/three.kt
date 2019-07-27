@@ -52,7 +52,7 @@ object BasicExample {
                 scene.add(it)
             }
 
-            Mesh(box.geometry.clone(), MeshBasicMaterial().apply {
+            val clone = Mesh(box.geometry.clone(), MeshBasicMaterial().apply {
                 color.set(0xffffff)
                 wireframe = true
             }).also {

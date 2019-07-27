@@ -2,6 +2,7 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.*
 import info.laht.threekt.core.Object3D
+import info.laht.threekt.core.Shader
 import info.laht.threekt.materials.*
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.renderers.shaders.ShaderLib
@@ -83,7 +84,7 @@ internal class GLPrograms(
 
     internal fun acquireProgram(
         material: Material,
-        shader: ShaderLib.Shader,
+        shader: Shader,
         parameters: Parameters,
         code: String
     ): GLProgram {
