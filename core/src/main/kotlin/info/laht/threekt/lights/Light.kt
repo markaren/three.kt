@@ -17,10 +17,11 @@ interface LightWithTarget {
 }
 
 sealed class Light(
-    val color: Color,
+    color: Color? = null,
     intensity: Number? = null
 ) : Object3D() {
 
+    val color = color ?: Color(0xffffff)
     var intensity = intensity?.toFloat() ?: DEFAULT_INTENSITY
 
     init {
@@ -28,7 +29,7 @@ sealed class Light(
     }
 
     fun copy(source: Light): Light {
-        super.copy(this, true)
+        super.copy(source, true)
 
         color.copy(source.color)
         this.intensity = source.intensity
@@ -39,7 +40,7 @@ sealed class Light(
 }
 
 class AmbientLight(
-    color: Color,
+    color: Color? = null,
     intensity: Number? = null
 ) : Light(color, intensity) {
 
@@ -66,7 +67,7 @@ internal class LightProbe(
 }
 
 class PointLight(
-    color: Color,
+    color: Color? = null,
     intensity: Number? = null,
     distance: Number? = null,
     decay: Number? = null
@@ -81,7 +82,7 @@ class PointLight(
         Color(color), intensity, distance, decay
     )
 
-    fun copy(source: PointLight): PointLight{
+    fun copy(source: PointLight): PointLight {
 
         super.copy(source)
 
@@ -94,14 +95,10 @@ class PointLight(
 
     }
 
-    override fun clone(): PointLight {
-        return super.clone() as PointLight
-    }
-
 }
 
 class SpotLight(
-    color: Color,
+    color: Color? = null,
     intensity: Number? = null,
     distance: Number? = null,
     angle: Number? = null,
@@ -145,10 +142,6 @@ class SpotLight(
 
         return this;
 
-    }
-
-    override fun clone(): SpotLight {
-        return super.clone() as SpotLight
     }
 
 }
