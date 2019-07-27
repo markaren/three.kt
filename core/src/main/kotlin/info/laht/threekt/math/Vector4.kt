@@ -2,6 +2,8 @@ package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.FloatBufferAttribute
+import kotlin.math.abs
+import kotlin.math.sqrt
 
 
 class Vector4(
@@ -26,23 +28,89 @@ class Vector4(
         return this
     }
 
+    fun add(v: Vector4): Vector4 {
+
+        this.x += v.x
+        this.y += v.y
+        this.z += v.z
+        this.w += v.w
+
+        return this
+
+    }
+
+    fun addScalar(s: Float): Vector4 {
+
+        this.x += s
+        this.y += s
+        this.z += s
+        this.w += s
+
+        return this
+
+    }
+
+    fun addVectors(a: Vector4, b: Vector4): Vector4 {
+
+        this.x = a.x + b.x
+        this.y = a.y + b.y
+        this.z = a.z + b.z
+        this.w = a.w + b.w
+
+        return this
+
+    }
+
+    fun addScaledVector(v: Vector4, s: Float): Vector4 {
+
+        this.x += v.x * s
+        this.y += v.y * s
+        this.z += v.z * s
+        this.w += v.w * s
+
+        return this
+
+    }
+
+    fun sub(v: Vector4): Vector4 {
+
+        this.x -= v.x
+        this.y -= v.y
+        this.z -= v.z
+        this.w -= v.w
+
+        return this
+
+    }
+
+    fun subScalar(s: Float): Vector4 {
+
+        this.x -= s
+        this.y -= s
+        this.z -= s
+        this.w -= s
+
+        return this
+
+    }
+
+    fun subVectors(a: Vector4, b: Vector4): Vector4 {
+
+        this.x = a.x - b.x
+        this.y = a.y - b.y
+        this.z = a.z - b.z
+        this.w = a.w - b.w
+
+        return this
+
+    }
+
     fun multiplyScalar(scalar: Number): Vector4 {
 
         this.x *= scalar.toFloat()
         this.y *= scalar.toFloat()
         this.z *= scalar.toFloat()
         this.w *= scalar.toFloat()
-
-        return this
-
-    }
-
-    fun floor (): Vector4 {
-
-        this.x = kotlin.math.floor( this.x )
-        this.y = kotlin.math.floor( this.y )
-        this.z = kotlin.math.floor( this.z )
-        this.w = kotlin.math.floor( this.w )
 
         return this
 
@@ -65,14 +133,119 @@ class Vector4(
 
     }
 
-    fun fromBufferAttribute(attribute: FloatBufferAttribute, index: Int): Vector4 {
+    fun divideScalar(scalar: Float): Vector4 {
 
-        this.x = attribute.getX(index)
-        this.y = attribute.getY(index)
-        this.z = attribute.getZ(index)
-        this.w = attribute.getW(index)
+        return this.multiplyScalar(1f / scalar)
+
+    }
+
+    fun floor(): Vector4 {
+
+        this.x = kotlin.math.floor(this.x)
+        this.y = kotlin.math.floor(this.y)
+        this.z = kotlin.math.floor(this.z)
+        this.w = kotlin.math.floor(this.w)
 
         return this
+
+    }
+
+
+    fun ceil(): Vector4 {
+
+        this.x = kotlin.math.ceil(this.x)
+        this.y = kotlin.math.ceil(this.y)
+        this.z = kotlin.math.ceil(this.z)
+        this.w = kotlin.math.ceil(this.w)
+
+        return this
+
+    }
+
+    fun round(): Vector4 {
+
+        this.x = kotlin.math.round(this.x)
+        this.y = kotlin.math.round(this.y)
+        this.z = kotlin.math.round(this.z)
+        this.w = kotlin.math.round(this.w)
+
+        return this
+
+    }
+
+    fun roundToZero(): Vector4 {
+
+        this.x = if (this.x < 0) kotlin.math.ceil(this.x) else kotlin.math.floor(this.x)
+        this.y = if (this.y < 0) kotlin.math.ceil(this.y) else kotlin.math.floor(this.y)
+        this.z = if (this.z < 0) kotlin.math.ceil(this.z) else kotlin.math.floor(this.z)
+        this.w = if (this.w < 0) kotlin.math.ceil(this.w) else kotlin.math.floor(this.w)
+
+        return this
+
+    }
+
+    fun negate(): Vector4 {
+
+        this.x = -this.x
+        this.y = -this.y
+        this.z = -this.z
+        this.w = -this.w
+
+        return this
+
+    }
+
+    fun dot(v: Vector4): Float {
+
+        return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w
+
+    }
+
+    fun lengthSq(): Float {
+
+        return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w
+
+    }
+
+    fun length(): Float {
+
+        return sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w)
+
+    }
+
+    fun manhattanLength(): Float {
+
+        return abs(this.x) + abs(this.y) + abs(this.z) + abs(this.w)
+
+    }
+
+    fun normalize(): Vector4 {
+
+        val l = this.length()
+        return this.divideScalar(if (l.isNaN()) 1f else l)
+
+    }
+
+    fun setLength(length: Float): Vector4 {
+
+        return this.normalize().multiplyScalar(length)
+
+    }
+
+    fun lerp(v: Vector4, alpha: Float): Vector4 {
+
+        this.x += (v.x - this.x) * alpha
+        this.y += (v.y - this.y) * alpha
+        this.z += (v.z - this.z) * alpha
+        this.w += (v.w - this.w) * alpha
+
+        return this
+
+    }
+
+    fun lerpVectors(v1: Vector4, v2: Vector4, alpha: Float): Vector4 {
+
+        return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1)
 
     }
 
@@ -105,6 +278,19 @@ class Vector4(
 
         return array
     }
+
+
+    fun fromBufferAttribute(attribute: FloatBufferAttribute, index: Int): Vector4 {
+
+        this.x = attribute.getX(index)
+        this.y = attribute.getY(index)
+        this.z = attribute.getZ(index)
+        this.w = attribute.getW(index)
+
+        return this
+
+    }
+
 
     override fun clone(): Vector4 {
         return Vector4(x, y, z, w)
