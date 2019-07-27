@@ -94,8 +94,6 @@ object PointsExampleWaves {
             val particles = Points(geometry, material)
             scene.add(particles)
 
-            OrbitControls(camera, canvas)
-
             var count = 0f
             while (!canvas.shouldClose()) {
 
