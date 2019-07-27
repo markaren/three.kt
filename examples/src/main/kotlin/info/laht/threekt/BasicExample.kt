@@ -47,12 +47,14 @@ object BasicExample {
 
             val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
                 color.set(0x00ff00)
+                transparent = true
+                opacity = 0.5f
             }).also {
                 it.position.x = -2f
                 scene.add(it)
             }
 
-            val clone = Mesh(box.geometry.clone(), MeshBasicMaterial().apply {
+            Mesh(box.geometry.clone(), MeshBasicMaterial().apply {
                 color.set(0xffffff)
                 wireframe = true
             }).also {
