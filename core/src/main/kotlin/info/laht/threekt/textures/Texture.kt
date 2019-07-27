@@ -7,6 +7,9 @@ import info.laht.threekt.math.Matrix3
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.generateUUID
 import java.nio.ByteBuffer
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
 
 
 open class Texture(
@@ -80,7 +83,48 @@ open class Texture(
     }
 
     fun transformUv(uv: Vector2): Vector2 {
-        TODO()
+
+        if (this.mapping != UVMapping) return uv
+
+        uv.applyMatrix3(this.matrix)
+
+        if (uv.x < 0 || uv.x > 1) {
+
+            when (this.wrapS) {
+
+                RepeatWrapping -> uv.x = uv.x - floor(uv.x)
+                ClampToEdgeWrapping -> uv.x = if (uv.x < 0) 0f else 1f
+                MirroredRepeatWrapping -> {
+                    if (abs(floor(uv.x).toInt() % 2) == 1) {
+                        uv.x = ceil(uv.x) - uv.x
+                    } else {
+                        uv.x = uv.x - floor(uv.x)
+                    }
+                }
+
+            }
+
+        }
+
+        if (uv.y < 0 || uv.y > 1) {
+
+            when (this.wrapT) {
+
+                RepeatWrapping -> uv.y = uv.y - floor(uv.y)
+                ClampToEdgeWrapping -> uv.y = if (uv.y < 0) 0f else 1f
+                MirroredRepeatWrapping -> {
+                    if (abs(floor(uv.y).toInt() % 2) == 1) {
+                        uv.y = ceil(uv.y) - uv.y
+                    } else {
+                        uv.y = uv.y - floor(uv.y)
+                    }
+                }
+
+            }
+
+        }
+
+        return uv
     }
 
     fun clone(): Texture {
