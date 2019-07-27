@@ -8,7 +8,7 @@
 Kotlin/JVM port of the popular [three.js](http://threejs.org) 3D library ([r106](https://github.com/mrdoob/three.js/tree/r106)).
 
 Be warned, while the basics works, such as
-* Simple geometries
+* Simple (buffer) geometries, Points and CatmullRomCurve
 * Most materials
 * OrbitControls
 * Ambient, Point and Spot lights
