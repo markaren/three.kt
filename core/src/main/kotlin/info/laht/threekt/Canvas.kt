@@ -10,14 +10,15 @@ import org.lwjgl.opengl.*
 import org.lwjgl.system.Callback
 import java.io.Closeable
 
-class CanvasOptions {
-    var width: Int = 800
-    var height: Int = 600
+class CanvasOptions(
+    var width: Int = 800,
+    var height: Int = 600,
 
-    var antialiasing: Int = 0
+    var antialiasing: Int = 0,
+    var vsync: Boolean = false,
 
     var title: String = "Three.kt"
-}
+)
 
 class Canvas @JvmOverloads constructor(
     options: CanvasOptions = CanvasOptions()
@@ -47,7 +48,7 @@ class Canvas @JvmOverloads constructor(
         if (!glfwInit()) {
             throw IllegalStateException("Unable to initialize GLFW")
         }
-        pointer = createWindow(options.title, options.antialiasing)
+        pointer = createWindow(options)
     }
 
     fun enableDebugCallback() {
@@ -63,15 +64,15 @@ class Canvas @JvmOverloads constructor(
         glfwTerminate()
     }
 
-    private fun createWindow(title: String, antialias: Int): Long {
+    private fun createWindow(options: CanvasOptions): Long {
 
-        if (antialias > 0) {
-            glfwWindowHint(GLFW_SAMPLES, antialias);
+        if (options.antialiasing > 0) {
+            glfwWindowHint(GLFW_SAMPLES, options.antialiasing);
         }
 
         // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
-        val window = glfwCreateWindow(width, height, title, 0, 0)
+        val window = glfwCreateWindow(width, height, options.title, 0, 0)
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window) { window, key, _, action, _ ->
@@ -95,20 +96,20 @@ class Canvas @JvmOverloads constructor(
             onMouseMove?.invoke(mouseEvent)
         }
 
-        glfwSetScrollCallback(window){ window, xoffset, yoffset ->
+        glfwSetScrollCallback(window) { window, xoffset, yoffset ->
             onMouseWheel?.invoke(MouseWheelEvent(xoffset.toFloat(), yoffset.toFloat()))
         }
 
         // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
         glfwMakeContextCurrent(window)
 
-        // Enable v-sync
-        glfwSwapInterval(1);
+        if (options.vsync) glfwSwapInterval(1) else glfwSwapInterval(0)
 
         // Tell LWJGL 3 that an OpenGL context is current in this thread. This will result in LWJGL 3 querying function
         // pointers for various OpenGL functions.
         GL.createCapabilities()
 
+        // required for various point stuff to work
         GL11.glEnable(GL32.GL_PROGRAM_POINT_SIZE)
         GL11.glEnable(GL20.GL_POINT_SPRITE)
 
