@@ -63,13 +63,11 @@ internal class GLGeometries(
 
         if (geometryIndex != null) {
 
-            val array = geometryIndex.array
+            for (i in 0 until geometryIndex.size step 3) {
 
-            for (i in 0 until array.size step 3) {
-
-                val a = array[i + 0]
-                val b = array[i + 1]
-                val c = array[i + 2]
+                val a = geometryIndex[i + 0]
+                val b = geometryIndex[i + 1]
+                val c = geometryIndex[i + 2]
 
                 indices.add(a)
                 indices.add(b)
@@ -82,7 +80,7 @@ internal class GLGeometries(
 
         } else {
 
-            val array = geometryAttributes.position?.array
+            val array = geometryAttributes.position
                 ?: throw IllegalStateException("No position attribute found!")
 
 

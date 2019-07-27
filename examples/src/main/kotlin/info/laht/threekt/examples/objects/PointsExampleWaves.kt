@@ -18,8 +18,8 @@ import kotlin.math.sin
 object PointsExampleWaves {
 
     private const val SEPARATION = 100
-    private const val AMOUNTX = 50
-    private const val AMOUNTY = 50
+    private const val AMOUNTX = 250
+    private const val AMOUNTY = 250
 
     private val vertexShader = """
         
@@ -46,19 +46,25 @@ object PointsExampleWaves {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas().use { canvas ->
+        Canvas(
+            CanvasOptions(
+                vsync = true
+            )
+        ).use { canvas ->
 
             val scene = Scene()
             val renderer = GLRenderer(canvas)
 
-            val camera = PerspectiveCamera(75, canvas.aspect, 1, 10000).apply {
+            val camera = PerspectiveCamera(75, canvas.aspect, 1, 100000).apply {
                 position.z = 1000f
             }
-            OrbitControls(camera, canvas)
+            OrbitControls(camera, canvas).apply {
+                zoomSpeed *= 5
+            }
 
             val numParticles = AMOUNTX * AMOUNTY
-            val positions = FloatArray(numParticles * 3)
-            val scales = FloatArray(numParticles)
+            val positions = FloatBufferAttribute(numParticles * 3, 3)
+            val scales = FloatBufferAttribute(numParticles, 1)
 
             var i = 0
             var j = 0
@@ -80,8 +86,8 @@ object PointsExampleWaves {
             }
 
             val geometry = BufferGeometry()
-            geometry.addAttribute("position", FloatBufferAttribute(positions, 3))
-            geometry.addAttribute("scale", FloatBufferAttribute(scales, 1))
+            geometry.addAttribute("position", positions)
+            geometry.addAttribute("scale", scales)
 
             val material = ShaderMaterial().apply {
                 uniforms["color"] = Uniform(Color(0xffffff))
@@ -92,6 +98,7 @@ object PointsExampleWaves {
             val particles = Points(geometry, material)
             scene.add(particles)
 
+            var count = 0f
             val clock = Clock()
             while (!canvas.shouldClose()) {
 
@@ -99,7 +106,7 @@ object PointsExampleWaves {
 
                 i = 0
                 j = 0
-                val count = clock.getElapsedTime() * 2
+
                 for (ix in 0 until AMOUNTX) {
 
                     for (iy in 0 until AMOUNTY) {
@@ -115,10 +122,12 @@ object PointsExampleWaves {
 
                 }
 
-                particles.geometry.attributes.position!!.needsUpdate = true
-                particles.geometry.attributes["scale"]!!.needsUpdate = true
+                positions.needsUpdate = true
+                scales.needsUpdate = true
 
                 renderer.render(scene, camera)
+
+                count +=  10f * clock.getDelta()
 
             }
 

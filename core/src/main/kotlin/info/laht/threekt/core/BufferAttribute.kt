@@ -5,17 +5,20 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3
 import info.laht.threekt.math.Vector4
+import org.lwjgl.BufferUtils
+import java.nio.FloatBuffer
+import java.nio.IntBuffer
 import kotlin.properties.Delegates
 
 
 sealed class BufferAttribute(
     internal var itemSize: Int,
-    internal var normalized: Boolean = false
+    normalized: Boolean? = null
 ) : Cloneable {
 
-    var name = ""
-
+    internal var name = ""
     internal var version = 0
+    internal var normalized = normalized ?: false
 
     abstract val size: Int
 
@@ -48,13 +51,34 @@ sealed class BufferAttribute(
 }
 
 class IntBufferAttribute(
-    internal var array: IntArray,
+    capacity: Int,
     itemSize: Int,
-    normalized: Boolean = false
+    normalized: Boolean? = null
 ) : BufferAttribute(itemSize, normalized) {
 
+    internal val array = BufferUtils.createIntBuffer(capacity)
+
     override val size: Int
-        get() = array.size
+        get() = array.capacity()
+
+    constructor(array: IntArray,
+                itemSize: Int,
+                normalized: Boolean? = null): this(array.size, itemSize, normalized) {
+        this.array.put(array).flip()
+    }
+
+    operator fun get(index: Int): Int {
+        return array[index]
+    }
+
+    operator fun set(index: Int, value: Int) {
+        array[index] = value
+    }
+
+    fun add(value: Int): IntBufferAttribute {
+        array.put(value)
+        return this
+    }
 
     fun getX(index: Int): Int {
         return array[index * itemSize]
@@ -127,7 +151,8 @@ class IntBufferAttribute(
 
     fun copy(source: IntBufferAttribute): IntBufferAttribute {
         super.copy(this)
-        array = source.array.clone()
+        TODO()
+//        array = source.array.clone()
         return this
     }
 
@@ -146,19 +171,41 @@ class IntBufferAttribute(
 
 
     override fun clone(): IntBufferAttribute {
-        return IntBufferAttribute(array.clone(), itemSize, normalized)
+        TODO()
+//        return IntBufferAttribute(array.clone(), itemSize, normalized)
     }
 
 }
 
 class FloatBufferAttribute(
-    internal var array: FloatArray,
+    capacity: Int,
     itemSize: Int,
-    normalized: Boolean = false
+    normalized: Boolean? = null
 ) : BufferAttribute(itemSize, normalized) {
 
+    internal val array = BufferUtils.createFloatBuffer(capacity)
+
     override val size: Int
-        get() = array.size
+        get() = array.capacity()
+
+    constructor(array: FloatArray,
+                itemSize: Int,
+                normalized: Boolean? = null): this(array.size, itemSize, normalized) {
+        this.array.put(array).flip()
+    }
+
+    operator fun get(index: Int): Float {
+        return array[index]
+    }
+
+    operator fun set(index: Int, value: Float) {
+        array[index] = value
+    }
+
+    fun add(value: Float): FloatBufferAttribute {
+        array.put(value)
+        return this
+    }
 
     fun getX(index: Int): Float {
         return array[index * itemSize]
@@ -195,7 +242,6 @@ class FloatBufferAttribute(
         array[index * itemSize + 3] = value
         return this
     }
-
 
     fun setXY(index: Int, x: Float, y: Float): FloatBufferAttribute {
         @Suppress("NAME_SHADOWING")
@@ -282,7 +328,8 @@ class FloatBufferAttribute(
 
     fun copy(source: FloatBufferAttribute): FloatBufferAttribute {
         super.copy(this)
-        array = source.array.clone()
+        TODO()
+//        array = source.array.clone()
         return this
     }
 
@@ -300,7 +347,8 @@ class FloatBufferAttribute(
     }
 
     override fun clone(): FloatBufferAttribute {
-        return FloatBufferAttribute(array.clone(), itemSize, normalized)
+        TODO()
+//        return FloatBufferAttribute(array.clone(), itemSize, normalized)
     }
 
 }
@@ -314,4 +362,12 @@ class BufferAttributes : HashMap<String, BufferAttribute>() {
     val color get() = get("color") as FloatBufferAttribute?
     val tangent get() = get("tangent") as FloatBufferAttribute?
 
+}
+
+private operator fun IntBuffer.set(index: Int, value: Int) {
+    this.put(index, value)
+}
+
+private operator fun FloatBuffer.set(index: Int, value: Float) {
+    this.put(index, value)
 }

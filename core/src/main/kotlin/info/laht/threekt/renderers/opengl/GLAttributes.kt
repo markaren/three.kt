@@ -50,9 +50,10 @@ internal class GLAttributes {
                 else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.array)
                 else if (updateRange.count == 0) println("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
                 else {
-                    val sub = attribute.array.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
-                    GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
-                    updateRange.count = -1
+                    TODO()
+//                    val sub = attribute.array.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
+//                    GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
+//                    updateRange.count = -1
                 }
             }
             is FloatBufferAttribute -> {
@@ -60,9 +61,10 @@ internal class GLAttributes {
                 else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.array)
                 else if (updateRange.count == 0) println("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
                 else {
-                    val sub = attribute.array.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
-                    GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
-                    updateRange.count = -1
+                    TODO()
+//                    val sub = attribute.array.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
+//                    GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
+//                    updateRange.count = -1
                 }
             }
         }

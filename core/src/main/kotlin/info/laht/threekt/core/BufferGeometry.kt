@@ -28,12 +28,9 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     internal var drawRange = DrawRange(0, Int.MAX_VALUE/2)
 
-    fun setIndex(index: IntBufferAttribute) {
+    fun setIndex(index: IntBufferAttribute): BufferGeometry {
         this.index = index
-    }
-
-    fun setIndex(index: IntArray) {
-        this.index = IntBufferAttribute(index, 1)
+        return this
     }
 
     fun addAttribute(
@@ -143,7 +140,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     fun setFromPoints ( points: List<Vector3> ): BufferGeometry {
 
-        val position = FloatArray(points.size*3);
+        val position = FloatBufferAttribute(points.size*3, 3);
 
         points.forEachIndexed {i, v ->
 
@@ -152,7 +149,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
             position[i+2] = v.z
         }
 
-        this.addAttribute( "position",  FloatBufferAttribute( position, 3 ) );
+        this.addAttribute( "position",  position );
 
         return this;
 
@@ -294,23 +291,23 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
         if (attributes.position != null) {
 
-            val positions = attributes.position!!.array
+            val positions = attributes.position!!
 
             if (attributes.normal == null) {
 
-                this.addAttribute("normal", FloatBufferAttribute(FloatArray(positions.size), 3))
+                this.addAttribute("normal", FloatBufferAttribute(positions.size, 3))
 
             } else {
 
                 // reset existing normals to zero
-                val array = attributes.normal!!.array
+                val array = attributes.normal!!
                 for (i in 0 until array.size) {
                     array[i] = 0f
                 }
 
             }
 
-            val normals = attributes.normal!!.array
+            val normals = attributes.normal!!
 
             var vA: Int
             var vB: Int
@@ -333,9 +330,9 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
                     vB = indices[i + 1] * 3
                     vC = indices[i + 2] * 3
 
-                    pA.fromArray(positions, vA)
-                    pB.fromArray(positions, vB)
-                    pC.fromArray(positions, vC)
+                    pA.fromBufferAttribute(positions, vA)
+                    pB.fromBufferAttribute(positions, vB)
+                    pC.fromBufferAttribute(positions, vC)
 
                     cb.subVectors(pC, pB)
                     ab.subVectors(pA, pB)
@@ -360,9 +357,9 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
                 // non-indexed elements (unconnected triangle soup)
                 for (i in 0 until positions.size step 9) {
 
-                    pA.fromArray(positions, i)
-                    pB.fromArray(positions, i + 3)
-                    pC.fromArray(positions, i + 6)
+                    pA.fromBufferAttribute(positions, i)
+                    pB.fromBufferAttribute(positions, i + 3)
+                    pC.fromBufferAttribute(positions, i + 6)
 
                     cb.subVectors(pC, pB)
                     ab.subVectors(pA, pB)
@@ -417,8 +414,8 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
             var j = attributeOffset
             for (i in 0 until length) {
                 when (attribute1) {
-                    is IntBufferAttribute -> attribute1.array[j] = (attribute2 as IntBufferAttribute).array[i]
-                    is FloatBufferAttribute -> attribute1.array[j] = (attribute2 as FloatBufferAttribute).array[i]
+                    is IntBufferAttribute -> attribute1[j] = (attribute2 as IntBufferAttribute)[i]
+                    is FloatBufferAttribute -> attribute1[j] = (attribute2 as FloatBufferAttribute)[i]
                 }
                 j++
             }
@@ -448,12 +445,11 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     fun copy( source: BufferGeometry ): BufferGeometry {
 
-
         // reset
 
         this.index = null
         this.attributes.clear()
-//        this.morphAttributes = {};
+        //TODO        this.morphAttributes = {};
         this.groups.clear()
         this.boundingBox = null
         this.boundingSphere = null
@@ -467,7 +463,6 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
         source.index?.also {
             this.setIndex( it.clone() )
         }
-
 
         // attributes
 
