@@ -33,8 +33,7 @@ class Scene: Object3D() {
     }
 
     fun dispose() {
-        dispatchEvent("dispose")
+        dispatchEvent("dispose", this)
     }
-
 
 }

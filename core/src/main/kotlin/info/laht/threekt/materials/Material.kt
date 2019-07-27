@@ -3,6 +3,7 @@ package info.laht.threekt.materials
 import info.laht.threekt.*
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.EventDispatcher
+import info.laht.threekt.core.EventDispatcherImpl
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.Plane
 import info.laht.threekt.math.generateUUID
@@ -11,7 +12,7 @@ import info.laht.threekt.renderers.opengl.GLProgram
 import info.laht.threekt.renderers.shaders.ShaderLib
 import info.laht.threekt.textures.Texture
 
-open class Material : Cloneable, EventDispatcher() {
+open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
 
     /**
      * Material name. Default is an empty string.
@@ -298,7 +299,7 @@ open class Material : Cloneable, EventDispatcher() {
      * This disposes the material. Textures of a material don't get disposed. These needs to be disposed by {@link Texture}.
      */
     fun dispose() {
-        dispatchEvent("dispose")
+        dispatchEvent("dispose", this)
     }
 
     internal inline operator fun <reified T> get(field: String): T? {

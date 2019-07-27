@@ -32,7 +32,7 @@ interface MaterialsObject: MaterialObject {
     val materials: MutableList<Material>
 }
 
-open class Object3D : Cloneable, EventDispatcher() {
+open class Object3D : Cloneable, EventDispatcher by EventDispatcherImpl() {
 
     var name = ""
     val uuid = generateUUID()
@@ -286,7 +286,7 @@ open class Object3D : Cloneable, EventDispatcher() {
             it.parent?.remove(it)
             it.parent = this
             children.add(it)
-            it.dispatchEvent("added")
+            it.dispatchEvent("added", this)
         }
 
         return this
@@ -300,7 +300,7 @@ open class Object3D : Cloneable, EventDispatcher() {
         objects.forEach {
             if (children.remove(it)) {
                 it.parent = null
-                it.dispatchEvent("removed")
+                it.dispatchEvent("removed", this)
             }
         }
 

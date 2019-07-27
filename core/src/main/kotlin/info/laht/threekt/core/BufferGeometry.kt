@@ -6,7 +6,7 @@ import kotlin.math.min
 import kotlin.math.sqrt
 
 
-open class BufferGeometry : EventDispatcher(), Cloneable {
+open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() {
 
     internal val id = geometryIdCount++
 
@@ -541,7 +541,7 @@ open class BufferGeometry : EventDispatcher(), Cloneable {
     }
 
     fun dispose() {
-        dispatchEvent("dispose")
+        dispatchEvent("dispose", this)
     }
 
     private companion object {

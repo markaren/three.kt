@@ -2,6 +2,7 @@ package info.laht.threekt.renderers
 
 import info.laht.threekt.LinearFilter
 import info.laht.threekt.core.EventDispatcher
+import info.laht.threekt.core.EventDispatcherImpl
 import info.laht.threekt.math.Vector4
 import info.laht.threekt.textures.DepthTexture
 import info.laht.threekt.textures.Texture
@@ -10,7 +11,7 @@ open class GLRenderTarget(
     width: Int,
     height: Int,
     options: Options? = null
-) : EventDispatcher() {
+) : EventDispatcher by EventDispatcherImpl() {
 
     var width = width
         private set
@@ -93,7 +94,7 @@ open class GLRenderTarget(
     }
 
     fun dispose() {
-        dispatchEvent("dispose")
+        dispatchEvent("dispose", this)
     }
 
     data class Options(

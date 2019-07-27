@@ -2,6 +2,7 @@ package info.laht.threekt.textures
 
 import info.laht.threekt.*
 import info.laht.threekt.core.EventDispatcher
+import info.laht.threekt.core.EventDispatcherImpl
 import info.laht.threekt.math.Matrix3
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.generateUUID
@@ -19,7 +20,7 @@ open class Texture(
     type: Int? = null,
     anisotropy: Int? = null,
     encoding: Int? = null
-) : EventDispatcher() {
+) : EventDispatcher by EventDispatcherImpl() {
 
     var name = ""
     val id = textureId++
@@ -124,7 +125,7 @@ open class Texture(
     }
 
     fun dispose() {
-        dispatchEvent("dispose")
+        dispatchEvent("dispose", this)
     }
 
     private companion object {

@@ -6,6 +6,7 @@ import info.laht.threekt.cameras.CameraWithZoom
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.EventDispatcher
+import info.laht.threekt.core.EventDispatcherImpl
 import info.laht.threekt.input.KeyEvent
 import info.laht.threekt.input.MouseEvent
 import info.laht.threekt.input.MouseWheelEvent
@@ -17,7 +18,7 @@ private const val EPS = 0.000001f
 class OrbitControls(
     private val camera: Camera,
     private val canvas: Canvas
-) : EventDispatcher() {
+) : EventDispatcher by EventDispatcherImpl() {
 
     // Set to false to disable this control
     var enabled = true
@@ -171,12 +172,12 @@ class OrbitControls(
                         if (enabled) {
                             canvas.onMouseMove = null
                             canvas.onMouseUp = null
-                            dispatchEvent("end")
+                            dispatchEvent("end", this)
                             state = State.NONE
                         }
                     }
 
-                    dispatchEvent("start");
+                    dispatchEvent("start", this);
 
                 }
 
@@ -218,7 +219,7 @@ class OrbitControls(
             else -> throw UnsupportedOperationException()
         }
 
-        this.dispatchEvent("change")
+        this.dispatchEvent("change", this)
 
         this.update()
 
@@ -327,7 +328,7 @@ class OrbitControls(
             8 * (1 - lastQuaternion.dot(this.camera.quaternion)) > EPS
         ) {
 
-            this.dispatchEvent("change")
+            this.dispatchEvent("change", this)
 
             lastPosition.copy(this.camera.position)
             lastQuaternion.copy(this.camera.quaternion)
