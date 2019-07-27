@@ -5,6 +5,7 @@ import info.laht.threekt.CanvasOptions
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.BufferGeometry
+import info.laht.threekt.core.Clock
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.materials.ShaderMaterial
@@ -35,6 +36,7 @@ object PointsExampleWaves {
         
         uniform vec3 color;
         void main() {
+            if ( length( gl_PointCoord - vec2( 0.5, 0.5 ) ) > 0.475 ) discard;
             gl_FragColor = vec4( color, 1.0 );
         }
 
@@ -44,19 +46,15 @@ object PointsExampleWaves {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
-            antialiasing = 4
-        }).use { canvas ->
+        Canvas().use { canvas ->
 
             val scene = Scene()
-            val renderer = GLRenderer(canvas).apply {
-                checkShaderErrors = true
-            }
+            val renderer = GLRenderer(canvas)
 
             val camera = PerspectiveCamera(75, canvas.aspect, 1, 10000).apply {
                 position.z = 1000f
             }
-            val controls = OrbitControls(camera, canvas)
+            OrbitControls(camera, canvas)
 
             val numParticles = AMOUNTX * AMOUNTY
             val positions = FloatArray(numParticles * 3)
@@ -94,13 +92,14 @@ object PointsExampleWaves {
             val particles = Points(geometry, material)
             scene.add(particles)
 
-            var count = 0f
+            val clock = Clock()
             while (!canvas.shouldClose()) {
 
                 camera.lookAt(scene.position)
 
                 i = 0
                 j = 0
+                val count = clock.getElapsedTime() * 2
                 for (ix in 0 until AMOUNTX) {
 
                     for (iy in 0 until AMOUNTY) {
@@ -121,7 +120,6 @@ object PointsExampleWaves {
 
                 renderer.render(scene, camera)
 
-                count += 0.1f
             }
 
         }
