@@ -1,5 +1,6 @@
 package info.laht.threekt.renderers.shaders
 
+import info.laht.threekt.core.Shader
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix3
@@ -257,21 +258,6 @@ object ShaderLib {
 
     operator fun get(name: String): Shader {
         return ShaderLib::class.java.getDeclaredField(name).get(this) as Shader
-    }
-
-    class Shader(
-        val name: String,
-        val uniforms: MutableMap<String, Uniform>,
-        val vertexShader: String,
-        val fragmentShader: String
-    ) {
-
-        constructor (
-            uniforms: MutableMap<String, Uniform>,
-            vertexShader: String,
-            fragmentShader: String
-        ) : this("", uniforms, vertexShader, fragmentShader)
-
     }
 
 }

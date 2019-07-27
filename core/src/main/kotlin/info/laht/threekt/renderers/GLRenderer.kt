@@ -10,7 +10,6 @@ import info.laht.threekt.math.*
 import info.laht.threekt.objects.*
 import info.laht.threekt.renderers.opengl.*
 import info.laht.threekt.renderers.shaders.ShaderLib
-import info.laht.threekt.renderers.shaders.ShaderLib.Shader
 import info.laht.threekt.renderers.shaders.cloneUniforms
 import info.laht.threekt.scenes.Fog
 import info.laht.threekt.scenes.FogExp2

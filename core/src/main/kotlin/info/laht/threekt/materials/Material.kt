@@ -1,10 +1,8 @@
 package info.laht.threekt.materials
 
 import info.laht.threekt.*
+import info.laht.threekt.core.*
 import info.laht.threekt.core.Cloneable
-import info.laht.threekt.core.EventDispatcher
-import info.laht.threekt.core.EventDispatcherImpl
-import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.Plane
 import info.laht.threekt.math.generateUUID
 import info.laht.threekt.renderers.GLRenderer
@@ -237,7 +235,7 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
     internal open var vertexShader: String = ""
     internal open var fragmentShader: String = ""
 
-    val onBeforeCompile: ((ShaderLib.Shader, GLRenderer) -> Unit)? = null
+    val onBeforeCompile: ((Shader, GLRenderer) -> Unit)? = null
 
     /**
      * Return a new material with the same parameters as this material.
