@@ -26,12 +26,12 @@ object PointLightExample {
         }).use { canvas ->
 
             val scene = Scene()
-
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)
-            val renderer = GLRenderer(canvas).apply {
-                checkShaderErrors = true
-            }
+            camera.position.z = 10f
 
+            val controls = OrbitControls(camera, canvas)
+
+            val renderer = GLRenderer(canvas)
 
             Mesh(PlaneGeometry(10f, 10f), MeshPhongMaterial().apply {
                 color.set(Color.gray)
@@ -67,9 +67,6 @@ object PointLightExample {
                 box.add(it)
             }
 
-            camera.position.z = 10f
-
-            val controls = OrbitControls(camera, canvas)
 
             val pointLight = PointLight(Color.fromHex(Color.white)).also {
                 it.intensity = 0.5f
@@ -79,11 +76,8 @@ object PointLightExample {
                 scene.add(it)
             }
 
-            PointLight(Color.fromHex(Color.white)).also {
-                it.intensity = 0.5f
-                it.position.y = 3f
+            PointLight().copy(pointLight).also {
                 it.position.z = -3f
-                it.castShadow = true
                 scene.add(it)
             }
 
