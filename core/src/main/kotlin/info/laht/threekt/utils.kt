@@ -22,12 +22,3 @@ internal fun getFieldInHiarchy(clazz: Class<*>?, name: String): Field? {
 }
 
 internal fun List<*>.length() : Int = this.size
-
-internal inline fun <reified T> MutableList<T>.length(newLength: Int, noinline defaultValue: (() -> T)? = null) {
-    while (newLength > length()) {
-        add(defaultValue!!.invoke())
-    }
-    while (newLength < length()) {
-        removeAt(length()-1)
-    }
-}
