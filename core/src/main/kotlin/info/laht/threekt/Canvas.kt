@@ -6,10 +6,7 @@ import info.laht.threekt.input.MouseEvent
 import info.laht.threekt.input.MouseWheelEvent
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
-import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL32
-import org.lwjgl.opengl.GLUtil
+import org.lwjgl.opengl.*
 import org.lwjgl.system.Callback
 import java.io.Closeable
 
@@ -113,6 +110,7 @@ class Canvas @JvmOverloads constructor(
         GL.createCapabilities()
 
         GL11.glEnable(GL32.GL_PROGRAM_POINT_SIZE)
+        GL11.glEnable(GL20.GL_POINT_SPRITE)
 
         // Return the handle to the created pointer.
         return window
