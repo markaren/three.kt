@@ -15,7 +15,7 @@ class CanvasOptions(
     var height: Int = 600,
 
     var antialiasing: Int = 0,
-    var vsync: Boolean = false,
+    var vsync: Boolean = true,
 
     var title: String = "Three.kt"
 )
