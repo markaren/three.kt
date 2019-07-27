@@ -2,6 +2,7 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Object3D
+import info.laht.threekt.length
 import info.laht.threekt.lights.*
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix4
@@ -117,9 +118,9 @@ internal class GLLights {
 
                     }
 
-                    state.spotShadowMap[spotLength] = shadowMap
-                    state.spotShadowMatrix[spotLength] = light.shadow.matrix
-                    state.spot[spotLength] = uniforms
+                    state.spotShadowMap.add(shadowMap)
+                    state.spotShadowMatrix.add(light.shadow.matrix)
+                    state.spot.add(uniforms)
 
                     spotLength++
                 }
@@ -314,9 +315,7 @@ internal class SpotLightUniforms : LightUniforms() {
                 "shadow" to false,
                 "shadowBias" to 0f,
                 "shadowRadius" to 1f,
-                "shadowMapSize" to Vector2(),
-                "shadowCameraNear" to 1f,
-                "shadowCameraFar" to 1000f
+                "shadowMapSize" to Vector2()
             )
         )
     }
@@ -363,14 +362,14 @@ internal class SpotLightUniforms : LightUniforms() {
             set("shadow", value)
         }
     var shadowBias: Float
-        get() = get("distance") as Float
+        get() = get("shadowBias") as Float
         set(value) {
-            set("distance", value)
+            set("shadowBias", value)
         }
     var shadowRadius: Float
-        get() = get("distance") as Float
+        get() = get("shadowRadius") as Float
         set(value) {
-            set("distance", value)
+            set("shadowRadius", value)
         }
     var shadowMapSize: Vector2
         get() = get("shadowMapSize") as Vector2
@@ -379,4 +378,3 @@ internal class SpotLightUniforms : LightUniforms() {
         }
 
 }
-

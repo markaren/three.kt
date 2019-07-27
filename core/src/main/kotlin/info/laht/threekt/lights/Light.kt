@@ -18,10 +18,10 @@ interface LightWithTarget {
 
 sealed class Light(
     val color: Color,
-    intensity: Float? = null
+    intensity: Number? = null
 ) : Object3D() {
 
-    var intensity = intensity ?: DEFAULT_INTENSITY
+    var intensity = intensity?.toFloat() ?: DEFAULT_INTENSITY
 
     init {
         receiveShadow = false
@@ -40,8 +40,10 @@ sealed class Light(
 
 class AmbientLight(
     color: Color,
-    intensity: Float? = null
+    intensity: Number? = null
 ) : Light(color, intensity) {
+
+    constructor(color: Int, intensity: Number? = null) : this(Color(color), intensity)
 
     init {
         castShadow = false
@@ -49,9 +51,9 @@ class AmbientLight(
 
 }
 
-class LightProbe(
+internal class LightProbe(
     var sh: SphericalHarmonics3 = SphericalHarmonics3(),
-    intensity: Float? = null
+    intensity: Number? = null
 ) : Light(Color(), intensity) {
 
     fun copy(source: LightProbe): LightProbe {
@@ -65,14 +67,21 @@ class LightProbe(
 
 class PointLight(
     color: Color,
-    intensity: Float? = null,
-    var distance: Float = 0f,
-    var decay: Float = 1f
+    intensity: Number? = null,
+    distance: Number? = null,
+    decay: Number? = null
 ) : Light(color, intensity), LightWithShadow {
+
+    var distance = distance?.toFloat() ?: 0f
+    var decay = decay?.toFloat() ?: 1f
 
     override val shadow = LightShadow(PerspectiveCamera(90, 1f, 0.5f, 500f))
 
-    fun copy(source: PointLight): PointLight {
+    constructor(color: Int, intensity: Number? = null, distance: Number? = null, decay: Number? = null) : this(
+        Color(color), intensity, distance, decay
+    )
+
+    fun copy(source: PointLight): PointLight{
 
         super.copy(source)
 
@@ -85,16 +94,25 @@ class PointLight(
 
     }
 
+    override fun clone(): PointLight {
+        return super.clone() as PointLight
+    }
+
 }
 
 class SpotLight(
     color: Color,
-    intensity: Float? = null,
-    var distance: Float = 0f,
-    var angle: Float = (PI / 3).toFloat(),
-    var penumbra: Float = 0f,
-    var decay: Float = 1f
+    intensity: Number? = null,
+    distance: Number? = null,
+    angle: Number? = null,
+    penumbra: Number? = null,
+    decay: Number? = null
 ) : Light(color, intensity) {
+
+    var distance = distance?.toFloat() ?: 0f
+    var angle = angle?.toFloat() ?: (PI / 3).toFloat()
+    var penumbra = penumbra?.toFloat() ?: 0f
+    var decay = decay?.toFloat() ?: 1f
 
     var target = Object3D()
     var shadow = SpotLightShadow()
@@ -109,7 +127,7 @@ class SpotLight(
 
     init {
 
-        position.copy(Object3D.defaultUp)
+        position.copy(defaultUp)
         updateMatrix()
 
     }
@@ -127,6 +145,10 @@ class SpotLight(
 
         return this;
 
+    }
+
+    override fun clone(): SpotLight {
+        return super.clone() as SpotLight
     }
 
 }
