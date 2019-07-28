@@ -417,8 +417,8 @@ internal class GLState {
         }
     }
 
-    fun setScissorTest(scissorTest: Boolean) {
-        if (scissorTest) {
+    fun setScissorTest(scissorTest: Boolean?) {
+        if (scissorTest == true) {
             enable(GL11.GL_SCISSOR_TEST)
         } else {
             disable(GL11.GL_SCISSOR_TEST)
