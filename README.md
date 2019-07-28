@@ -11,7 +11,7 @@ Be warned, while the basics works, such as
 * Simple (buffer) geometries, Points and CatmullRomCurve
 * Most materials
 * OrbitControls
-* Ambient, Point and Spot lights
+* Ambient, Directional, Point and Spot lights
 * 2D textures
  
 a lot of features are still missing and the API can change rapidly.
