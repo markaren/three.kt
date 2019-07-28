@@ -9,6 +9,8 @@ internal class GLInfo {
 
     var autoReset = true
 
+    var programs: List<GLProgram>? = null
+
     fun update(count: Int, mode: Int, instanceCount: Int = 1) {
         render.calls++
 

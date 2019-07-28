@@ -15,7 +15,7 @@ internal class GLPrograms(
     private val capabilities: GLCapabilities
 ) {
 
-    private val programs = mutableListOf<GLProgram>()
+    internal val programs = mutableListOf<GLProgram>()
 
     fun getTextureEncodingFromMap(map: Texture?, gammaOverrideLinear: Boolean): Int {
 
