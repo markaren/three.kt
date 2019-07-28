@@ -47,14 +47,18 @@ interface Camera: Object3D {
 
 }
 
-abstract class AbstractCamera: Camera, Object3DImpl() {
+open class AbstractCamera: Camera, Object3DImpl() {
 
     override val matrixWorldInverse = Matrix4()
 
     override val projectionMatrix = Matrix4()
     override val projectionMatrixInverse = Matrix4()
 
-    abstract override fun clone(): AbstractCamera
+    override fun clone(): AbstractCamera {
+        return AbstractCamera().apply {
+            copy(this, true)
+        }
+    }
 
 }
 
@@ -69,6 +73,12 @@ interface CameraWithNearAndFar: Camera {
 
     var near: Float
     var far: Float
+
+}
+
+interface CameraCanUpdateProjectionMatrix: Camera {
+
+    fun updateProjectionMatrix()
 
 }
 

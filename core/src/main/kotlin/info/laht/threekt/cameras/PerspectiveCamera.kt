@@ -12,7 +12,7 @@ class PerspectiveCamera(
     aspect: Number = 1,
     near: Number = 0.1,
     far: Number = 2000
-) : AbstractCamera(), CameraWithZoom, CameraWithNearAndFar {
+) : AbstractCamera(), CameraWithZoom, CameraWithNearAndFar, CameraCanUpdateProjectionMatrix {
 
     var fov: Float = fov.toFloat()
     var aspect: Float = aspect.toFloat()
@@ -53,7 +53,7 @@ class PerspectiveCamera(
      */
     fun getFocalLength(): Float {
 
-        val vExtentSlope = tan(DEG2RAD * 0.5.toFloat() * this.fov).toFloat()
+        val vExtentSlope = tan(DEG2RAD * 0.5.toFloat() * this.fov)
         return 0.5f * this.getFilmHeight() / vExtentSlope;
 
     }
@@ -161,7 +161,7 @@ class PerspectiveCamera(
     /**
      * Updates the camera projection matrix. Must be called after change of parameters.
      */
-    fun updateProjectionMatrix() {
+    override fun updateProjectionMatrix() {
         val near = this.near
         var top = near * tan( DEG2RAD * 0.5 * this.fov ).toFloat() / this.zoom
         var height = 2 * top
