@@ -9,7 +9,7 @@ import info.laht.threekt.objects.Mesh
 
 class PointLightHelper(
     val light: PointLight,
-    sphereSize: Number,
+    sphereSize: Number = 1f,
     val color: Color? = null
 ) : Mesh(
     geometry = SphereBufferGeometry(sphereSize.toFloat(), 4, 2),
