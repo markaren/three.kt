@@ -6,7 +6,7 @@ import info.laht.threekt.math.Vector2
 
 class Sprite(
     val material: SpriteMaterial = SpriteMaterial()
-) : Object3D(), GeometryObject {
+) : Object3DImpl(), GeometryObject {
 
     override val geometry = BufferGeometry()
 
@@ -29,7 +29,7 @@ class Sprite(
     }
 
     override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
-        super.raycast(raycaster, intersects)
+
     }
 
 }

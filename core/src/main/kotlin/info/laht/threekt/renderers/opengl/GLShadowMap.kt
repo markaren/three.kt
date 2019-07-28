@@ -2,6 +2,8 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.*
 import info.laht.threekt.cameras.Camera
+import info.laht.threekt.cameras.CameraWithNearAndFar
+import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.MaterialsObject
@@ -178,7 +180,11 @@ class GLShadowMap internal constructor(
                     )
                     shadow.map?.texture?.name = light.name + ".shadowMap"
 
-                    shadowCamera.updateProjectionMatrix()
+                    when (shadowCamera) {
+                        is PerspectiveCamera -> shadowCamera.updateProjectionMatrix()
+                        is OrthographicCamera -> shadowCamera.updateProjectionMatrix()
+                        else -> throw IllegalStateException()
+                    }
 
                 }
 
@@ -377,7 +383,7 @@ class GLShadowMap internal constructor(
     private fun renderObject(
         `object`: Object3D,
         camera: Camera,
-        shadowCamera: PerspectiveCamera,
+        shadowCamera: CameraWithNearAndFar,
         isPointLight: Boolean
     ) {
         if (!`object`.visible) return

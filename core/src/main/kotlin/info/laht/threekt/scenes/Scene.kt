@@ -2,11 +2,12 @@ package info.laht.threekt.scenes
 
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Object3D
+import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.materials.Material
 import info.laht.threekt.renderers.GLRenderTarget
 import info.laht.threekt.renderers.GLRenderer
 
-class Scene: Object3D() {
+class Scene: Object3DImpl() {
 
     var background: Background? = null
 

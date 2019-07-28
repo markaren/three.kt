@@ -2,6 +2,7 @@ package info.laht.threekt.lights
 
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.Object3D
+import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.SphericalHarmonics3
 import kotlin.math.PI
@@ -9,7 +10,7 @@ import kotlin.math.PI
 private const val DEFAULT_INTENSITY = 1f
 
 interface LightWithShadow {
-    val shadow: LightShadow
+    val shadow: LightShadow<*>
 }
 
 interface LightWithTarget {
@@ -19,7 +20,7 @@ interface LightWithTarget {
 sealed class Light(
     color: Color? = null,
     intensity: Number? = null
-) : Object3D() {
+) : Object3DImpl() {
 
     val color = color ?: Color(0xffffff)
     var intensity = intensity?.toFloat() ?: DEFAULT_INTENSITY
@@ -104,15 +105,15 @@ class SpotLight(
     angle: Number? = null,
     penumbra: Number? = null,
     decay: Number? = null
-) : Light(color, intensity) {
+) : Light(color, intensity), LightWithShadow {
 
     var distance = distance?.toFloat() ?: 0f
     var angle = angle?.toFloat() ?: (PI / 3).toFloat()
     var penumbra = penumbra?.toFloat() ?: 0f
     var decay = decay?.toFloat() ?: 1f
 
-    var target = Object3D()
-    var shadow = SpotLightShadow()
+    var target = Object3DImpl()
+    override var shadow = SpotLightShadow()
 
     var power: Float
         get() {
@@ -124,43 +125,41 @@ class SpotLight(
 
     init {
 
-        position.copy(defaultUp)
+        position.copy(Object3D.defaultUp)
         updateMatrix()
 
     }
 
     fun copy(source: SpotLight): SpotLight {
 
-        this.distance = source.distance;
-        this.angle = source.angle;
-        this.penumbra = source.penumbra;
-        this.decay = source.decay;
+        this.distance = source.distance
+        this.angle = source.angle
+        this.penumbra = source.penumbra
+        this.decay = source.decay
 
-        this.target = source.target.clone();
+        this.target = source.target.clone()
 
-        this.shadow = source.shadow.clone();
+        this.shadow = source.shadow.clone()
 
-        return this;
+        return this
 
     }
 
 }
 
-//class DirectionalLight(
-//    color: Color
-//): Light(color) {
-//
-//
-//
-//    var target = Object3D()
-//
-//    var shadow = DirectionalLightShadow()
-//
-//    init {
-//
-//        this.position.copy( Object3D.defaultUp )
-//        this.updateMatrix();
-//
-//    }
-//
-//}
+class DirectionalLight(
+    color: Color
+): Light(color) {
+
+    var target = Object3DImpl()
+
+    var shadow = DirectionalLightShadow()
+
+    init {
+
+        this.position.copy( Object3D.defaultUp )
+        this.updateMatrix()
+
+    }
+
+}

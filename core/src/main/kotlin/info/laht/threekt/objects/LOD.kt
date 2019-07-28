@@ -3,10 +3,11 @@ package info.laht.threekt.objects
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Intersection
 import info.laht.threekt.core.Object3D
+import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.core.Raycaster
 import kotlin.math.abs
 
-class LOD: Object3D() {
+class LOD: Object3DImpl() {
 
     private val levels = mutableListOf<Level>()
 

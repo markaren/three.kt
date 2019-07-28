@@ -5,9 +5,9 @@ class OrthographicCamera(
     var right: Float = 1f,
     var top: Float = 1f,
     var bottom: Float = -1f,
-    var near: Float = 0.1f,
-    var far: Float = 2000f
-) : Camera(), CameraWithZoom {
+    override var near: Float = 0.1f,
+    override var far: Float = 2000f
+) : AbstractCamera(), CameraWithZoom, CameraWithNearAndFar {
 
     override var zoom: Float = 1f
 
@@ -23,7 +23,7 @@ class OrthographicCamera(
 
     fun copy ( source: OrthographicCamera ): OrthographicCamera {
 
-        super.copy(source, true)
+        super<AbstractCamera>.copy(source, true)
 
         this.left = source.left;
         this.right = source.right;

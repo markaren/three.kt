@@ -118,7 +118,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
     }
 
     fun lookAt(vector: Vector3): BufferGeometry {
-        val obj = Object3D()
+        val obj = Object3DImpl()
         obj.lookAt(vector)
         obj.updateMatrix()
         this.applyMatrix(obj.matrix)

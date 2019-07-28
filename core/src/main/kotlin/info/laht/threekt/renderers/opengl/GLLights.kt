@@ -57,13 +57,40 @@ internal class GLLights {
                         state.probe[i].addScaledVector(light.sh.coefficients[i], intensity)
                     }
                 }
+                is DirectionalLight -> {
+                    val uniforms = cache[light] as DirectionalLightUniforms
+
+                    uniforms.color.copy(light.color).multiplyScalar(light.intensity)
+                    uniforms.direction.setFromMatrixPosition(light.matrixWorld)
+                    vector3.setFromMatrixPosition(light.target.matrixWorld)
+                    uniforms.direction.sub(vector3)
+                    uniforms.direction.transformDirection(viewMatrix)
+
+                    uniforms.shadow = light.castShadow
+
+                    if (light.castShadow) {
+
+                        val shadow = light.shadow
+
+                        uniforms.shadowBias = shadow.bias
+                        uniforms.shadowRadius = shadow.radius
+                        uniforms.shadowMapSize = shadow.mapSize
+
+                    }
+
+                    state.directionalShadowMap.add(shadowMap)
+                    state.directionalShadowMatrix.add(light.shadow.matrix)
+                    state.directional.add(uniforms)
+
+                    directionalLength++
+                }
                 is PointLight -> {
                     val uniforms = cache[light] as PointLightUniforms
 
                     uniforms.position.setFromMatrixPosition(light.matrixWorld)
                     uniforms.position.applyMatrix4(viewMatrix)
 
-                    uniforms.color.copy(light.color)?.multiplyScalar(light.intensity)
+                    uniforms.color.copy(light.color).multiplyScalar(light.intensity)
                     uniforms.distance = light.distance
                     uniforms.decay = light.decay
 
@@ -142,12 +169,6 @@ internal class GLLights {
             hash.shadowsLength != shadows.size
         ) {
 
-//            state.directional.length(directionalLength)
-//            state.spot.length = spotLength
-//            state.rectArea.length = rectAreaLength
-//            state.point.length = pointLength
-//            state.hemi.length = hemiLength
-
             hash.directionalLength = directionalLength
             hash.pointLength = pointLength
             hash.spotLength = spotLength
@@ -208,9 +229,10 @@ internal class GLLights {
 
                 when (light) {
                     is AmbientLight -> AmbientLightUniforms()
+                    is DirectionalLight -> DirectionalLightUniforms()
                     is PointLight -> PointLightUniforms()
                     is SpotLight -> SpotLightUniforms()
-                    else -> throw IllegalArgumentException("")
+                    else -> throw IllegalArgumentException("Unsupported light: $light")
                 }
 
             }
@@ -225,45 +247,31 @@ internal sealed class LightUniforms : HashMap<String, Any>()
 
 internal class AmbientLightUniforms : LightUniforms()
 
-internal class PointLightUniforms : LightUniforms() {
+internal class DirectionalLightUniforms : LightUniforms() {
 
     init {
         putAll(
             mapOf(
-                "position" to Vector3(),
+                "direction" to Vector3(),
                 "color" to Color(),
-                "distance" to 0f,
-                "decay" to 0f,
 
                 "shadow" to false,
                 "shadowBias" to 0f,
                 "shadowRadius" to 1f,
-                "shadowMapSize" to Vector2(),
-                "shadowCameraNear" to 1f,
-                "shadowCameraFar" to 1000f
+                "shadowMapSize" to Vector2()
             )
         )
     }
 
-    var position: Vector3
-        get() = get("position") as Vector3
+    var direction: Vector3
+        get() = get("direction") as Vector3
         set(value) {
-            position.copy(value)
+            direction.copy(value)
         }
     var color: Color
         get() = get("color") as Color
         set(value) {
             color.copy(value)
-        }
-    var distance: Float
-        get() = get("distance") as Float
-        set(value) {
-            set("distance", value)
-        }
-    var decay: Float
-        get() = get("decay") as Float
-        set(value) {
-            set("decay", value)
         }
 
     var shadow: Boolean
@@ -285,16 +293,6 @@ internal class PointLightUniforms : LightUniforms() {
         get() = get("shadowMapSize") as Vector2
         set(value) {
             shadowMapSize.copy(value)
-        }
-    var shadowCameraNear: Float
-        get() = get("shadowCameraNear") as Float
-        set(value) {
-            set("shadowCameraNear", value)
-        }
-    var shadowCameraFar: Float
-        get() = get("shadowCameraFar") as Float
-        set(value) {
-            set("shadowCameraFar", value)
         }
 
 }
@@ -375,6 +373,80 @@ internal class SpotLightUniforms : LightUniforms() {
         get() = get("shadowMapSize") as Vector2
         set(value) {
             shadowMapSize.copy(value)
+        }
+
+}
+
+internal class PointLightUniforms : LightUniforms() {
+
+    init {
+        putAll(
+            mapOf(
+                "position" to Vector3(),
+                "color" to Color(),
+                "distance" to 0f,
+                "decay" to 0f,
+
+                "shadow" to false,
+                "shadowBias" to 0f,
+                "shadowRadius" to 1f,
+                "shadowMapSize" to Vector2(),
+                "shadowCameraNear" to 1f,
+                "shadowCameraFar" to 1000f
+            )
+        )
+    }
+
+    var position: Vector3
+        get() = get("position") as Vector3
+        set(value) {
+            position.copy(value)
+        }
+    var color: Color
+        get() = get("color") as Color
+        set(value) {
+            color.copy(value)
+        }
+    var distance: Float
+        get() = get("distance") as Float
+        set(value) {
+            set("distance", value)
+        }
+    var decay: Float
+        get() = get("decay") as Float
+        set(value) {
+            set("decay", value)
+        }
+
+    var shadow: Boolean
+        get() = get("shadow") as Boolean
+        set(value) {
+            set("shadow", value)
+        }
+    var shadowBias: Float
+        get() = get("shadowBias") as Float
+        set(value) {
+            set("shadowBias", value)
+        }
+    var shadowRadius: Float
+        get() = get("shadowRadius") as Float
+        set(value) {
+            set("shadowRadius", value)
+        }
+    var shadowMapSize: Vector2
+        get() = get("shadowMapSize") as Vector2
+        set(value) {
+            shadowMapSize.copy(value)
+        }
+    var shadowCameraNear: Float
+        get() = get("shadowCameraNear") as Float
+        set(value) {
+            set("shadowCameraNear", value)
+        }
+    var shadowCameraFar: Float
+        get() = get("shadowCameraFar") as Float
+        set(value) {
+            set("shadowCameraFar", value)
         }
 
 }

@@ -1,36 +1,16 @@
 package info.laht.threekt.cameras
 
 import info.laht.threekt.core.Object3D
+import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.math.Matrix4
 import info.laht.threekt.math.Vector3
 
-interface CameraWithZoom {
 
-    var zoom: Float
+interface Camera: Object3D {
+    val matrixWorldInverse: Matrix4
 
-}
-
-abstract class Camera: Object3D() {
-
-    val matrixWorldInverse = Matrix4()
-
-    val projectionMatrix = Matrix4()
-    val projectionMatrixInverse = Matrix4()
-
-    fun copy( source: Camera, recursive: Boolean): Camera {
-
-        super.copy(source, recursive)
-
-        this.matrixWorldInverse.copy( source.matrixWorldInverse )
-
-        this.projectionMatrix.copy( source.projectionMatrix )
-        this.projectionMatrixInverse.copy( source.projectionMatrixInverse )
-
-        return this
-
-    }
-
-    abstract override fun clone(): Camera
+    val projectionMatrix: Matrix4
+    val projectionMatrixInverse: Matrix4
 
     override fun getWorldDirection( target: Vector3 ): Vector3 {
 
@@ -50,4 +30,45 @@ abstract class Camera: Object3D() {
 
     }
 
+    fun copy( source: Camera, recursive: Boolean): Camera {
+
+        super.copy(source, recursive)
+
+        this.matrixWorldInverse.copy( source.matrixWorldInverse )
+
+        this.projectionMatrix.copy( source.projectionMatrix )
+        this.projectionMatrixInverse.copy( source.projectionMatrixInverse )
+
+        return this
+
+    }
+
+    override fun clone(): Camera
+
 }
+
+abstract class AbstractCamera: Camera, Object3DImpl() {
+
+    override val matrixWorldInverse = Matrix4()
+
+    override val projectionMatrix = Matrix4()
+    override val projectionMatrixInverse = Matrix4()
+
+    abstract override fun clone(): AbstractCamera
+
+}
+
+
+interface CameraWithZoom: Camera {
+
+    var zoom: Float
+
+}
+
+interface CameraWithNearAndFar: Camera {
+
+    var near: Float
+    var far: Float
+
+}
+

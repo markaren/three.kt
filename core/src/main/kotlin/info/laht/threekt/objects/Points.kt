@@ -11,7 +11,7 @@ import info.laht.threekt.math.Sphere
 class Points(
     override val geometry: BufferGeometry = BufferGeometry(),
     override val material: Material = PointsMaterial()
-): Object3D(), GeometryObject, MaterialObject {
+): Object3DImpl(), GeometryObject, MaterialObject {
 
     private val raycastHelper by lazy { RaycastHelper() }
 

@@ -9,7 +9,7 @@ import info.laht.threekt.math.*
 open class Mesh(
     override val geometry: BufferGeometry,
     override val materials: MutableList<Material>
-) : Object3D(), GeometryObject, MaterialsObject {
+) : Object3DImpl(), GeometryObject, MaterialsObject {
 
     constructor(geometry: BufferGeometry, material: Material)
             : this(geometry, mutableListOf(material))
@@ -32,7 +32,8 @@ open class Mesh(
     }
 
     fun copy(source: Mesh): Mesh {
-        super.copy(source, true)
+
+        super<Object3DImpl>.copy(source, true)
 
         this.drawMode = source.drawMode
 

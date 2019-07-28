@@ -12,12 +12,12 @@ class PerspectiveCamera(
     aspect: Number = 1,
     near: Number = 0.1,
     far: Number = 2000
-) : Camera(), CameraWithZoom {
+) : AbstractCamera(), CameraWithZoom, CameraWithNearAndFar {
 
     var fov: Float = fov.toFloat()
     var aspect: Float = aspect.toFloat()
-    var near: Float = near.toFloat()
-    var far: Float = far.toFloat()
+    override var near: Float = near.toFloat()
+    override var far: Float = far.toFloat()
 
     override var zoom = 1f
     var focus = 10
@@ -188,7 +188,8 @@ class PerspectiveCamera(
     }
 
     fun copy(source: PerspectiveCamera, recursive: Boolean): PerspectiveCamera {
-        super.copy(source, recursive)
+
+        super<AbstractCamera>.copy(source, recursive)
 
         this.fov = source.fov
         this.zoom = source.zoom

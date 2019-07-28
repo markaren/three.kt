@@ -9,7 +9,7 @@ open class Line(
     override val geometry: BufferGeometry = BufferGeometry(),
     override val material: LineBasicMaterial = LineBasicMaterial()
 
-): Object3D(), GeometryObject, MaterialObject {
+): Object3DImpl(), GeometryObject, MaterialObject {
 
     open fun computeLineDistances(): Line {
 
