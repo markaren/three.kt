@@ -718,17 +718,16 @@ class GLRenderer(
 
         state.viewport(currentViewport)
         state.scissor(currentScissor)
-        currentScissorTest?.also { state.setScissorTest(it) }
+        state.setScissorTest(currentScissorTest)
 
-        if (isCube && renderTarget != null) {
+        if (isCube) {
 
-            val textureProperties = properties[renderTarget.texture]
+            val textureProperties = properties[renderTarget!!.texture]
             GL30.glFramebufferTexture2D(
                 GL30.GL_FRAMEBUFFER,
                 GL30.GL_COLOR_ATTACHMENT0,
                 GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + (activeCubeFace ?: 0),
-                textureProperties["__webglTexture"] as Int,
-                activeMipMapLevel ?: 0
+                textureProperties["__webglTexture"] as Int, activeMipMapLevel ?: 0
             )
 
         }
