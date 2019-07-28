@@ -8,6 +8,7 @@ import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
 import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.helpers.PointLightHelper
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.materials.*
 import info.laht.threekt.math.Color
@@ -68,19 +69,24 @@ object PointLightExample {
             }
 
 
-            val pointLight = PointLight(Color.fromHex(Color.white)).also {
+            val pointLight1 = PointLight(Color.fromHex(Color.white)).also {
                 it.intensity = 0.5f
                 it.position.y = 3f
                 it.position.z = 3f
                 it.castShadow = true
                 scene.add(it)
             }
-
-            PointLight().copy(pointLight).also {
-                it.position.z = -3f
+            PointLightHelper(pointLight1, 1).also {
                 scene.add(it)
             }
 
+            val pointLight2 = PointLight().copy(pointLight1).also {
+                it.position.z = -3f
+                scene.add(it)
+            }
+            PointLightHelper(pointLight2, 1).also {
+                scene.add(it)
+            }
 
             val clock = Clock()
             while (!canvas.shouldClose()) {
