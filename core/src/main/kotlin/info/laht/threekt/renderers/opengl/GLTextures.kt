@@ -635,12 +635,8 @@ internal class GLTextures(
 
         if (isCube) {
 
-            renderTargetProperties["__webglFramebuffer"] = IntArray(6)
-
-            for (i in 0 until 6) {
-
-                renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i] = (GL45.glCreateFramebuffers())
-
+            renderTargetProperties["__webglFramebuffer"] = IntArray(6).also {
+                GL45.glCreateFramebuffers(it)
             }
 
         } else {
@@ -734,30 +730,52 @@ internal class GLTextures(
         }
     }
 
+    fun updateRenderTargetMipmap( renderTarget: GLRenderTarget ) {
 
-    fun updateMultisampleRenderTarget(renderTarget: GLMultisampleRenderTarget) {
-        val renderTargetProperties = properties[renderTarget]
+        val texture = renderTarget.texture
+        val supportsMips = true
 
-        GL30.glBindFramebuffer(
-            GL30.GL_READ_FRAMEBUFFER,
-            renderTargetProperties["__webglMultisampledFramebuffer"] as Int
-        )
-        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, renderTargetProperties["__webglFramebuffer"] as Int)
+        if ( textureNeedsGenerateMipmaps( texture, supportsMips ) ) {
 
-        val width = renderTarget.width
-        val height = renderTarget.height
-        var mask = GL11.GL_COLOR_BUFFER_BIT
+            val target = if(renderTarget is GLRenderTargetCube) GL13.GL_TEXTURE_CUBE_MAP else GL11.GL_TEXTURE_2D
+            val webglTexture = properties[texture]["__webglTexture"] as Int?
 
-        if (renderTarget.depthBuffer) {
-            mask = mask or GL11.GL_DEPTH_BUFFER_BIT
-        }
-        if (renderTarget.stencilBuffer) {
-            mask = mask or GL11.GL_STENCIL_BUFFER_BIT
+            state.bindTexture( target, webglTexture )
+            generateMipmap( target, texture, renderTarget.width, renderTarget.height )
+            state.bindTexture( target, null )
+
         }
 
-        GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, mask, GL11.GL_NEAREST)
     }
 
+    fun updateMultisampleRenderTarget(renderTarget: GLRenderTarget) {
+
+        if (renderTarget is GLMultisampleRenderTarget) {
+
+            val renderTargetProperties = properties[renderTarget]
+
+            GL30.glBindFramebuffer(
+                GL30.GL_READ_FRAMEBUFFER,
+                renderTargetProperties["__webglMultisampledFramebuffer"] as Int
+            )
+            GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, renderTargetProperties["__webglFramebuffer"] as Int)
+
+            val width = renderTarget.width
+            val height = renderTarget.height
+            var mask = GL11.GL_COLOR_BUFFER_BIT
+
+            if (renderTarget.depthBuffer) {
+                mask = mask or GL11.GL_DEPTH_BUFFER_BIT
+            }
+            if (renderTarget.stencilBuffer) {
+                mask = mask or GL11.GL_STENCIL_BUFFER_BIT
+            }
+
+            GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, mask, GL11.GL_NEAREST)
+
+        }
+
+    }
 
     private fun getRenderTargetSamples(renderTarget: GLRenderTarget): Int {
         return if (renderTarget !is GLMultisampleRenderTarget) 0 else min(capabilities.maxSamples, renderTarget.samples)
