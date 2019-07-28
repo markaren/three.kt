@@ -462,7 +462,7 @@ class GLRenderer(
         val currentRenderState = this.currentRenderState!!
         currentRenderState.init()
 
-        scene.onBeforeRenderScene?.invoke( this, scene, camera, currentRenderTarget );
+        scene.onBeforeRenderScene?.invoke(this, scene, camera, currentRenderTarget)
 
         projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
         frustum.setFromMatrix(projScreenMatrix)
@@ -520,15 +520,12 @@ class GLRenderer(
 
         }
 
-        if (currentRenderTarget != null) {
+        currentRenderTarget?.also {
+            // Generate mipmap if we're using any kind of mipmap filtering
+            textures.updateRenderTargetMipmap(it);
 
-            TODO()
-//            // Generate mipmap if we're using any kind of mipmap filtering
-//            textures.updateRenderTargetMipmap(_currentRenderTarget);
-//
             // resolve multisample renderbuffers to a single-sample texture if necessary
-//            textures.updateMultisampleRenderTarget(currentRenderTarget);
-
+            textures.updateMultisampleRenderTarget(it);
         }
 
         state.depthBuffer.setTest(true)
@@ -678,23 +675,27 @@ class GLRenderer(
         currentActiveCubeFace = activeCubeFace
         currentActiveMipmapLevel = activeMipMapLevel
 
+        if (renderTarget != null && properties[renderTarget]["__webglFramebuffer"] == null) {
+            textures.setupRenderTarget(renderTarget)
+        }
+
         var isCube = false
         var framebuffer = this.framebuffer
 
         if (renderTarget != null) {
 
-            val __webglFramebuffer = properties["renderTarget"]["__webglFramebuffer"]!!
+            val __webglFramebuffer = properties[renderTarget]["__webglFramebuffer"]!!
 
             when (renderTarget) {
                 is GLRenderTargetCube -> {
-                    framebuffer = (__webglFramebuffer as IntArray)[activeCubeFace ?: 0];
+                    framebuffer = (__webglFramebuffer as IntArray)[activeCubeFace ?: 0]
                     isCube = true
                 }
                 is GLMultisampleRenderTarget -> {
-                    framebuffer = properties["renderTarget"]["__webglMultisampledFramebuffer"] as Int
+                    framebuffer = properties[renderTarget]["__webglMultisampledFramebuffer"] as Int
                 }
                 else -> {
-                    framebuffer = __webglFramebuffer as Int;
+                    framebuffer = __webglFramebuffer as Int
                 }
             }
 
@@ -743,7 +744,7 @@ class GLRenderer(
         group: GeometryGroup?
     ) {
 
-        `object`.onBeforeRender?.invoke(this, scene, camera, geometry, material, group);
+        `object`.onBeforeRender?.invoke(this, scene, camera, geometry, material, group)
         currentRenderState = renderStates.get(scene, camera)
 
         `object`.modelViewMatrix.multiplyMatrices(camera.matrixWorldInverse, `object`.matrixWorld)
@@ -760,7 +761,7 @@ class GLRenderer(
 
         renderBufferDirect(camera, scene.fog, geometry, material, `object`, group)
 
-        `object`.onAfterRender?.invoke(this, scene, camera, geometry, material, group);
+        `object`.onAfterRender?.invoke(this, scene, camera, geometry, material, group)
         currentRenderState = renderStates.get(scene, camera)
 
     }
