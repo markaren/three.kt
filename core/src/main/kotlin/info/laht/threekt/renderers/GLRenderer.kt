@@ -663,11 +663,17 @@ class GLRenderer(
         framebuffer = value
     }
 
-    fun getActiveCubeFace() = currentActiveCubeFace
+    fun getActiveCubeFace(): Int? {
+        return currentActiveCubeFace
+    }
 
-    fun getActiveMipmapLevel() = currentActiveMipmapLevel
+    fun getActiveMipmapLevel(): Int? {
+        return currentActiveMipmapLevel
+    }
 
-    fun getRenderTarget() = currentRenderTarget
+    fun getRenderTarget(): GLRenderTarget? {
+        return currentRenderTarget
+    }
 
     fun setRenderTarget(renderTarget: GLRenderTarget?, activeCubeFace: Int? = null, activeMipMapLevel: Int? = null) {
 
@@ -704,9 +710,11 @@ class GLRenderer(
             currentScissorTest = renderTarget.scissorTest
 
         } else {
-            currentViewport.copy(viewport).multiplyScalar(pixelRatio)
-            currentScissor.copy(scissor).multiplyScalar(pixelRatio)
+
+            currentViewport.copy(viewport).multiplyScalar(pixelRatio).floor()
+            currentScissor.copy(scissor).multiplyScalar(pixelRatio).floor()
             currentScissorTest = scissorTest
+
         }
 
         if (currentFramebuffer != framebuffer) {
