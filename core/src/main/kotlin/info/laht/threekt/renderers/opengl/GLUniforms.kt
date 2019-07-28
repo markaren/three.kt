@@ -242,15 +242,15 @@ private class SingleUniform(
             0x8b51 -> { v, _ -> setValueV3f(v) }
             0x8b52 -> { v, _ -> setValueV4f(v) }
 
-            0x8b5a -> throw UnsupportedOperationException() // _MAT2
+            0x8b5a -> TODO() // _MAT2
             0x8b5b -> { v, _ -> setValueM3(v) } // _MAT3
             0x8b5c -> { v, _ -> setValueM4(v) } // _MAT4
 
             0x8b5e, 0x8d66 -> { v, t -> setValueT1(v, t!!) }; // SAMPLER_2D, SAMPLER_EXTERNAL_OES
-//             0x8b5f, return setValueT3D1; // SAMPLER_3D
-//             0x8b60, return setValueT6; // SAMPLER_CUBE
-//             0x8DC1, return setValueT2DArray1; // SAMPLER_2D_ARRAY
-//
+            0x8b5f -> TODO() // SAMPLER_3D
+            0x8b60 -> TODO() // SAMPLER_CUBE
+            0x8DC1 -> TODO() // SAMPLER_2D_ARRAY
+
             0x1404, 0x8b56 -> { v, _ -> setValueV1i(v) } // INT, BOOL
             0x8b53, 0x8b57 -> { v, _ -> setValueV2i(v) } // _VEC2
             0x8b54, 0x8b58 -> { v, _ -> setValueV3i(v) } // _VEC3
@@ -276,6 +276,7 @@ private class SingleUniform(
     fun setValueV1i(v: Any) {
         when (v) {
             is Int -> GL20.glUniform1i(addr, v)
+            is Boolean -> GL20.glUniform1i(addr, if (v) 1 else 0 )
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
     }
@@ -404,8 +405,8 @@ private class PureArrayUniform(
                 )
             } // _MAT4
 
-//            0x8b5e -> { v -> TODO() } // SAMPLER_2D
-//            0x8b60 -> { v -> TODO() } // SAMPLER_CUBE
+            0x8b5e -> { v -> TODO() } // SAMPLER_2D
+            0x8b60 -> { v -> TODO() } // SAMPLER_CUBE
 
             0x1404, 0x8b56 -> { v -> GL20.glUniform1iv(addr, v as IntArray) } // INT, BOOL
             0x8b53, 0x8b57 -> { v -> GL20.glUniform2iv(addr, v as IntArray) } // _VEC2
