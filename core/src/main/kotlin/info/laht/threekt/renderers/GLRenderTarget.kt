@@ -5,6 +5,7 @@ import info.laht.threekt.core.EventDispatcher
 import info.laht.threekt.core.EventDispatcherImpl
 import info.laht.threekt.math.Vector4
 import info.laht.threekt.textures.DepthTexture
+import info.laht.threekt.textures.Image
 import info.laht.threekt.textures.Texture
 
 open class GLRenderTarget(
@@ -35,10 +36,6 @@ open class GLRenderTarget(
         @Suppress("NAME_SHADOWING")
         val options = options ?: Options()
 
-        depthBuffer = options.depthBuffer ?: true
-        stencilBuffer = options.stencilBuffer ?: true
-        depthTexture = options.depthTexture
-
         texture = Texture(
             null,
             null,
@@ -52,8 +49,13 @@ open class GLRenderTarget(
             options.encoding
         )
 
-        texture.minFilter = options.minFilter ?: LinearFilter
+        texture.image = Image(width, height)
         texture.generateMipmaps = options.generateMipmaps ?: false
+        texture.minFilter = options.minFilter ?: LinearFilter
+
+        depthBuffer = options.depthBuffer ?: true
+        stencilBuffer = options.stencilBuffer ?: true
+        depthTexture = options.depthTexture
 
     }
 
@@ -64,15 +66,15 @@ open class GLRenderTarget(
             this.width = width
             this.height = height
 
-            this.texture.image?.width = width;
-            this.texture.image?.height = height;
+            this.texture.image?.width = width
+            this.texture.image?.height = height
 
             dispose()
 
         }
 
-        this.viewport.set(0, 0, width, height);
-        this.scissor.set(0, 0, width, height);
+        this.viewport.set(0, 0, width, height)
+        this.scissor.set(0, 0, width, height)
 
     }
 
