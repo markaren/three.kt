@@ -533,7 +533,8 @@ open class Object3DImpl : Object3D, EventDispatcher by EventDispatcherImpl() {
     override val modelViewMatrix = Matrix4()
     override val normalMatrix = Matrix3()
 
-    override val matrix = Matrix4()
+    override var matrix = Matrix4()
+        protected set
     override val matrixWorld = Matrix4()
 
     override var matrixAutoUpdate = true
