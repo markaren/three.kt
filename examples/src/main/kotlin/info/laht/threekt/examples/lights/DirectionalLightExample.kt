@@ -8,11 +8,13 @@ import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
 import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.helpers.DirectionalLightHelper
 import info.laht.threekt.lights.DirectionalLight
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.materials.*
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
+import info.laht.threekt.math.Vector3
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
@@ -28,7 +30,7 @@ object DirectionalLightExample {
 
             val scene = Scene()
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)
-            camera.position.z = 10f
+            camera.position.set(5f, 5f, 5f)
 
             val controls = OrbitControls(camera, canvas)
 
@@ -68,14 +70,15 @@ object DirectionalLightExample {
                 box.add(it)
             }
 
-
             val light = DirectionalLight(Color.fromHex(Color.white)).also {
                 it.intensity = 0.5f
-//                it.position.y = 3f
-//                it.position.z = 3f
                 it.castShadow = true
+                it.position.set(-10,10,-10)
                 scene.add(it)
             }
+
+            val helper = DirectionalLightHelper(light, 5)
+            scene.add(helper)
 
             val clock = Clock()
             while (!canvas.shouldClose()) {
