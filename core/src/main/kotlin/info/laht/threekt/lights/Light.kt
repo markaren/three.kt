@@ -105,14 +105,14 @@ class SpotLight(
     angle: Number? = null,
     penumbra: Number? = null,
     decay: Number? = null
-) : Light(color, intensity), LightWithShadow {
+) : Light(color, intensity), LightWithShadow, LightWithTarget {
 
     var distance = distance?.toFloat() ?: 0f
     var angle = angle?.toFloat() ?: (PI / 3).toFloat()
     var penumbra = penumbra?.toFloat() ?: 0f
     var decay = decay?.toFloat() ?: 1f
 
-    var target = Object3DImpl()
+    override var target = Object3DImpl()
     override var shadow = SpotLightShadow()
 
     var power: Float
