@@ -442,7 +442,7 @@ class GLRenderer(
 
     }
 
-    fun render(scene: Scene, camera: Camera) {
+    fun render(scene: Scene, camera: Camera, swapBuffers: Boolean = true ) {
 
         currentGeometryProgram.geometry = null
         currentGeometryProgram.program = null
@@ -537,7 +537,10 @@ class GLRenderer(
         this.currentRenderList = null
         this.currentRenderState = null
 
-        canvas.tick()
+        if (swapBuffers) {
+            canvas.tick()
+        }
+
     }
 
     private fun projectObject(`object`: Object3D, camera: Camera, groupOrder: Int, sortObjects: Boolean) {

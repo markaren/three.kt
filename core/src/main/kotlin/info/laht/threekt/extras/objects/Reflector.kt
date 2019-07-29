@@ -180,7 +180,7 @@ class Reflector(
 
         renderer.setRenderTarget(renderTarget)
         renderer.clear()
-        renderer.render(scene, virtualCamera)
+        renderer.render(scene, virtualCamera, false)
 
         renderer.shadowMap.autoUpdate = currentShadowAutoUpdate
 
