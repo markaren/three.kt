@@ -57,22 +57,16 @@ class Reflector(
 
         material.also {
 
-            it.uniforms.putAll(
-                mergeUniforms(
-                    listOf(
-                        cloneUniforms(options.shader.uniforms),
-                        mapOf(
-                            "tDiffuse" to Uniform(renderTarget.texture),
-                            "color" to Uniform(options.color),
-                            "textureMatrix" to Uniform(textureMatrix)
-                        )
-                    )
-                )
-            )
+            it.uniforms.putAll(cloneUniforms(options.shader.uniforms))
+
+            it.uniforms["tDiffuse"]!!.value = renderTarget.texture
+            it.uniforms["color"]!!.value = options.color
+            it.uniforms["textureMatrix"]!!.value = textureMatrix
+
+            it.vertexShader = ReflectorShader.vertexShader
+            it.fragmentShader = ReflectorShader.fragmentShader
 
         }
-
-        val m = material.uniforms
 
         onBeforeRender = { renderer, scene, camera, _, _, _ ->
 
