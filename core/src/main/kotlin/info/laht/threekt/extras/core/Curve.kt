@@ -25,7 +25,7 @@ abstract class Curve3 {
 
     fun getPoints(divisions: Int = 5): List<Vector3> {
 
-        return (0..divisions).map {
+        return (0 .. divisions).map {
             getPoint(it.toFloat())
         }
 
@@ -40,8 +40,8 @@ abstract class Curve3 {
     }
 
     fun getLength(): Float {
-        val lenghts = getLengths()
-        return lenghts[lenghts.size - 1]
+        val lengths = getLengths()
+        return lengths[lengths.size - 1]
     }
 
     fun getLengths(divisions: Int = arcLengthDivisions): FloatArray {
@@ -57,15 +57,15 @@ abstract class Curve3 {
 
         this.needsUpdate = false
 
-        val cache = FloatArray(divisions)
+        val cache = FloatArray(divisions+1)
         var last = this.getPoint(0f)
         var sum = 0f
 
         cache[0] = 0f
 
-        for (p in 1..divisions) {
+        for (p in 1 .. divisions) {
 
-            val current = this.getPoint((p / divisions).toFloat())
+            val current = this.getPoint(p.toFloat() / divisions)
             sum += current.distanceTo(last)
             cache[p] = sum
             last = current
@@ -88,7 +88,7 @@ abstract class Curve3 {
 
         val il = arcLengths.size
 
-        val targetArcLength = if (distance != null) distance else u * arcLengths[il - 1]
+        val targetArcLength = distance ?: u * arcLengths[il - 1]
 
         // binary search for the index with largest value smaller than target u distance
 
@@ -194,11 +194,11 @@ abstract class Curve3 {
 
         // compute the tangent vectors for each segment on the curve
 
-        for (i in 0..segments) {
+        for (i in 0 .. segments) {
 
             val u = i.toFloat() / segments
 
-            tangents[i] = this.getTangentAt(u)
+            tangents.add(this.getTangentAt(u))
             tangents[i].normalize()
 
         }
@@ -241,13 +241,13 @@ abstract class Curve3 {
 
         // compute the slowly-varying normal and binormal vectors for each segment on the curve
 
-        var theta = 0f
+        var theta: Float
 
-        for (i in 1..segments) {
+        for (i in 1 .. segments) {
 
-            normals[i] = normals[i - 1].clone()
+            normals.add(normals[i - 1].clone())
 
-            binormals[i] = binormals[i - 1].clone()
+            binormals.add(binormals[i - 1].clone())
 
             vec.crossVectors(tangents[i - 1], tangents[i])
 
@@ -269,7 +269,7 @@ abstract class Curve3 {
 
         if (closed) {
 
-            var theta = acos(clamp(normals[0].dot(normals[segments]), -1, 1))
+            theta = acos(clamp(normals[0].dot(normals[segments]), -1, 1))
             theta /= segments
 
             if (tangents[0].dot(vec.crossVectors(normals[0], normals[segments])) > 0) {
@@ -278,7 +278,7 @@ abstract class Curve3 {
 
             }
 
-            for (i in 1..segments) {
+            for (i in 1 .. segments) {
 
                 // twist a little...
                 normals[i].applyMatrix4(mat.makeRotationAxis(tangents[i], theta * i))
