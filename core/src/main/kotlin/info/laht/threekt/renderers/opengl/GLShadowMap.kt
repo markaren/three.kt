@@ -5,11 +5,13 @@ import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.CameraWithNearAndFar
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
+import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.MaterialsObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.*
 import info.laht.threekt.materials.Material
+import info.laht.threekt.materials.MaterialWithWireframe
 import info.laht.threekt.materials.MeshDepthMaterial
 import info.laht.threekt.materials.MeshDistanceMaterial
 import info.laht.threekt.math.*
@@ -58,7 +60,10 @@ class GLShadowMap internal constructor(
         Vector4(), Vector4(), Vector4()
     )
 
-    var enabled = false
+    private val MorphingFlag = 1
+    private val SkinningFlag = 2
+
+    var enabled = true
 
     var autoUpdate = true
     var needsUpdate = false
@@ -67,8 +72,6 @@ class GLShadowMap internal constructor(
 
     init {
 
-        val MorphingFlag = 1
-        val SkinningFlag = 2
         val NumberOfMaterialVariants = (MorphingFlag or SkinningFlag) + 1
 
         for (i in 0 until NumberOfMaterialVariants) {
@@ -282,102 +285,90 @@ class GLShadowMap internal constructor(
         shadowCameraFar: Float
     ): Material {
 
-        TODO()
+        `object` as GeometryObject
 
-//        `object` as GeometryObject
-//
-//        val geometry = `object`.geometry
-//
-//        val (materialVariants, customMaterial) = if (isPointLight) {
-//            distanceMaterials to `object`.customDistanceMaterial
-//        } else {
-//            depthMaterials to `object`.customDepthMaterial
-//        }
-//
-//        var result = if (customMaterial == null) {
-//
-//            val useMorphing = false
+        val geometry = `object`.geometry
+
+        var materialVariants: MutableList<out Material> = depthMaterials
+        var customMaterial: Material? = `object`.customDepthMaterial
+
+        if (isPointLight) {
+            materialVariants = distanceMaterials
+            customMaterial = `object`.customDistanceMaterial
+        }
+
+        var result = customMaterial ?: run {
+
+            val useMorphing = false
 //            if (material is MorphTargetMaterial && material.morphTargets) {
-//                TODO()//useMorphing = geometry.morphAttributes && geometry.morphAttributes.position && geometry.morphAttributes.position.length > 0
+//                useMorphing = geometry.morphAttributes && geometry.morphAttributes.position && geometry.morphAttributes.position.length > 0
 //            }
 //
 //            if (`object` is SkinnedMesh && !(material is SkinningMaterial && material.skinning)) {
 //                println("GLShadowMap: SkinnedMesh with material.skinning set to false:  $`object`")
 //            }
+
+            val useSkinning = false // `object` is SkinnedMesh && (material is SkinningMaterial && material.skinning)
 //
-//            val useSkinning = `object` is SkinnedMesh && (material is SkinningMaterial && material.skinning)
-//
-//            var variantIndex = 0
-//
-//            if (useMorphing) {
-//                variantIndex = variantIndex or MorphingFlag
-//            }
-//            if (useSkinning) {
-//                variantIndex = variantIndex or SkinningFlag
-//            }
-//
-//            materialVariants[variantIndex]
-//
-//        } else {
-//
-//            customMaterial
-//
-//        }
-//
-//        if (renderer.localClippingEnabled &&
-//            material.clipShadows &&
-//            material.clippingPlanes?.isNotEmpty() == true
-//        ) {
-//
-//            // in this case we need a unique material instance reflecting the
-//            // appropriate state
-//
-//            val keyA = result.uuid
-//            val keyB = material.uuid
-//
-//            var materialsForVariant = materialCache[keyA]
-//
-//            if (materialsForVariant == null) {
-//
-//                materialsForVariant = mutableMapOf()
-//                materialCache[keyA] = materialsForVariant
-//
-//            }
-//
-//            var cachedMaterial = materialsForVariant[keyB]
-//
-//            if (cachedMaterial == null) {
-//
-//                cachedMaterial = result.clone()
-//                materialsForVariant[keyB] = cachedMaterial
-//
-//            }
-//
-//            result = cachedMaterial
-//
-//        }
-//
-//        result.visible = material.visible
-//        result["wireframe"] = material.get<Boolean>("wireframe")
-//
-//        result.side = material.shadowSide ?: shadowSide[material.side]!!
-//
-//        result.clipShadows = material.clipShadows
-//        result.clippingPlanes = material.clippingPlanes
-//        result.clipIntersection = material.clipIntersection
-//
-//        result["wireframeLinewidth"] = material.get<Float>("wireframeLinewidth")
-//        result["linewidth"] = material.get<Float>("linewidth")
-//
-//        if (isPointLight && result is MeshDistanceMaterial) {
-//
-//            result.referencePosition.copy(lightPositionWorld)
-//            result.nearDistance = shadowCameraNear
-//            result.farDistance = shadowCameraFar
-//
-//        }
-//
-//        return result
+            var variantIndex = 0
+
+            if (useMorphing) {
+                variantIndex = variantIndex or MorphingFlag
+            }
+            if (useSkinning) {
+                variantIndex = variantIndex or SkinningFlag
+            }
+
+            materialVariants[variantIndex]
+
+        }
+
+        if (renderer.localClippingEnabled &&
+            material.clipShadows &&
+            material.clippingPlanes?.isNotEmpty() == true
+        ) {
+
+            // in this case we need a unique material instance reflecting the
+            // appropriate state
+
+            val keyA = result.uuid
+            val keyB = material.uuid
+
+            val materialsForVariant = materialCache[keyA] ?: mutableMapOf<String, Material>().also {
+                materialCache[keyA] = it
+            }
+
+            val cachedMaterial = materialsForVariant[keyB] ?: result.clone().also {
+                materialsForVariant[keyB] = it
+            }
+
+            result = cachedMaterial
+
+        }
+
+        result.visible = material.visible
+        if (result is MaterialWithWireframe && material is MaterialWithWireframe) {
+            result.wireframe = material.wireframe
+            result.wireframeLinewidth = material.wireframeLinewidth
+        }
+
+        result.side = material.shadowSide ?: shadowSide[material.side]!!
+
+        result.clipShadows = material.clipShadows
+        result.clippingPlanes = material.clippingPlanes
+        result.clipIntersection = material.clipIntersection
+
+//TODO        result["linewidth"] = material.get<Float>("linewidth")
+
+        if (isPointLight && result is MeshDistanceMaterial) {
+
+            result.referencePosition.copy(lightPositionWorld)
+            result.nearDistance = shadowCameraNear
+            result.farDistance = shadowCameraFar
+
+        }
+
+        return result
     }
 
     private fun renderObject(
