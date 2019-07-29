@@ -8,6 +8,7 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix4
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3
+import info.laht.threekt.safeSet
 import info.laht.threekt.textures.Texture
 import kotlin.math.cos
 
@@ -18,8 +19,8 @@ internal class GLLights {
     internal val state = GLLightsState()
 
     private var vector3 = Vector3()
-    private var matrix4 = Matrix4()
-    private var matrix42 = Matrix4()
+//    private var matrix4 = Matrix4()
+//    private var matrix42 = Matrix4()
 
     fun setup(lights: List<Light>, shadows: List<Object3D>, camera: Camera) {
 
@@ -84,36 +85,6 @@ internal class GLLights {
 
                     directionalLength++
                 }
-                is PointLight -> {
-                    val uniforms = cache[light] as PointLightUniforms
-
-                    uniforms.position.setFromMatrixPosition(light.matrixWorld)
-                    uniforms.position.applyMatrix4(viewMatrix)
-
-                    uniforms.color.copy(light.color).multiplyScalar(light.intensity)
-                    uniforms.distance = light.distance
-                    uniforms.decay = light.decay
-
-                    uniforms.shadow = light.castShadow
-
-                    if (light.castShadow) {
-
-                        val shadow = light.shadow
-
-                        uniforms.shadowBias = shadow.bias
-                        uniforms.shadowRadius = shadow.radius
-                        uniforms.shadowMapSize = shadow.mapSize
-                        uniforms.shadowCameraNear = shadow.camera.near
-                        uniforms.shadowCameraFar = shadow.camera.far
-
-                    }
-
-                    state.pointShadowMap.add(shadowMap)
-                    state.pointShadowMatrix.add(light.shadow.matrix)
-                    state.point.add(uniforms)
-
-                    pointLength++
-                }
                 is SpotLight -> {
                     val distance = light.distance
                     val uniforms = cache[light] as SpotLightUniforms
@@ -145,11 +116,41 @@ internal class GLLights {
 
                     }
 
-                    state.spotShadowMap.add(shadowMap)
-                    state.spotShadowMatrix.add(light.shadow.matrix)
-                    state.spot.add(uniforms)
+                    state.spotShadowMap.safeSet(pointLength, shadowMap)
+                    state.spotShadowMatrix.safeSet(pointLength, light.shadow.matrix)
+                    state.spot.safeSet(pointLength, uniforms)
 
                     spotLength++
+                }
+                is PointLight -> {
+                    val uniforms = cache[light] as PointLightUniforms
+
+                    uniforms.position.setFromMatrixPosition(light.matrixWorld)
+                    uniforms.position.applyMatrix4(viewMatrix)
+
+                    uniforms.color.copy(light.color).multiplyScalar(light.intensity)
+                    uniforms.distance = light.distance
+                    uniforms.decay = light.decay
+
+                    uniforms.shadow = light.castShadow
+
+                    if (light.castShadow) {
+
+                        val shadow = light.shadow
+
+                        uniforms.shadowBias = shadow.bias
+                        uniforms.shadowRadius = shadow.radius
+                        uniforms.shadowMapSize = shadow.mapSize
+                        uniforms.shadowCameraNear = shadow.camera.near
+                        uniforms.shadowCameraFar = shadow.camera.far
+
+                    }
+
+                    state.pointShadowMap.safeSet(pointLength, shadowMap)
+                    state.pointShadowMatrix.safeSet(pointLength, light.shadow.matrix)
+                    state.point.safeSet(pointLength, uniforms)
+
+                    pointLength++
                 }
             }
 
@@ -162,12 +163,18 @@ internal class GLLights {
         val hash = state.hash
 
         if (hash.directionalLength != directionalLength ||
-            hash.pointLength != pointLength ||
-            hash.spotLength != spotLength ||
-            hash.rectAreaLength != rectAreaLength ||
-            hash.hemiLength != hemiLength ||
-            hash.shadowsLength != shadows.size
+                hash.pointLength != pointLength ||
+                hash.spotLength != spotLength ||
+                hash.rectAreaLength != rectAreaLength ||
+                hash.hemiLength != hemiLength ||
+                hash.shadowsLength != shadows.size
         ) {
+
+            state.directional.length(directionalLength)
+            state.spot.length(spotLength)
+            state.rectArea.length(rectAreaLength)
+            state.point.length(pointLength)
+            state.hemi.length(hemiLength)
 
             hash.directionalLength = directionalLength
             hash.pointLength = pointLength
@@ -196,17 +203,17 @@ internal class GLLights {
 
         val ambient = Color(0f, 0f, 0f)
         val probe = Array(9) { Vector3() }
-        val directional = mutableListOf<Any>()
+        val directional = mutableListOf<DirectionalLightUniforms?>()
         val directionalShadowMap = mutableListOf<Texture?>()
-        val directionalShadowMatrix = mutableListOf<Matrix4>()
-        val spot = mutableListOf<SpotLightUniforms>()
+        val directionalShadowMatrix = mutableListOf<Matrix4?>()
+        val spot = mutableListOf<SpotLightUniforms?>()
         val spotShadowMap = mutableListOf<Texture?>()
-        val spotShadowMatrix = mutableListOf<Matrix4>()
-        val rectArea = mutableListOf<Any>()
-        val point = mutableListOf<PointLightUniforms>()
+        val spotShadowMatrix = mutableListOf<Matrix4?>()
+        val rectArea = mutableListOf<RectAreaLightUniforms?>()
+        val point = mutableListOf<PointLightUniforms?>()
         val pointShadowMap = mutableListOf<Texture?>()
-        val pointShadowMatrix = mutableListOf<Matrix4>()
-        val hemi = mutableListOf<Any>()
+        val pointShadowMatrix = mutableListOf<Matrix4?>()
+        val hemi = mutableListOf<HemisphereLightUniforms?>()
 
         inner class Hash {
             var directionalLength = -1
@@ -251,15 +258,15 @@ internal class DirectionalLightUniforms : LightUniforms() {
 
     init {
         putAll(
-            mapOf(
-                "direction" to Vector3(),
-                "color" to Color(),
+                mapOf(
+                        "direction" to Vector3(),
+                        "color" to Color(),
 
-                "shadow" to false,
-                "shadowBias" to 0f,
-                "shadowRadius" to 1f,
-                "shadowMapSize" to Vector2()
-            )
+                        "shadow" to false,
+                        "shadowBias" to 0f,
+                        "shadowRadius" to 1f,
+                        "shadowMapSize" to Vector2()
+                )
         )
     }
 
@@ -301,20 +308,20 @@ internal class SpotLightUniforms : LightUniforms() {
 
     init {
         putAll(
-            mapOf(
-                "position" to Vector3(),
-                "direction" to Vector3(),
-                "color" to Color(),
-                "distance" to 0f,
-                "coneCos" to 0f,
-                "penumbraCos" to 0f,
-                "decay" to 0f,
+                mapOf(
+                        "position" to Vector3(),
+                        "direction" to Vector3(),
+                        "color" to Color(),
+                        "distance" to 0f,
+                        "coneCos" to 0f,
+                        "penumbraCos" to 0f,
+                        "decay" to 0f,
 
-                "shadow" to false,
-                "shadowBias" to 0f,
-                "shadowRadius" to 1f,
-                "shadowMapSize" to Vector2()
-            )
+                        "shadow" to false,
+                        "shadowBias" to 0f,
+                        "shadowRadius" to 1f,
+                        "shadowMapSize" to Vector2()
+                )
         )
     }
 
@@ -381,19 +388,19 @@ internal class PointLightUniforms : LightUniforms() {
 
     init {
         putAll(
-            mapOf(
-                "position" to Vector3(),
-                "color" to Color(),
-                "distance" to 0f,
-                "decay" to 0f,
+                mapOf(
+                        "position" to Vector3(),
+                        "color" to Color(),
+                        "distance" to 0f,
+                        "decay" to 0f,
 
-                "shadow" to false,
-                "shadowBias" to 0f,
-                "shadowRadius" to 1f,
-                "shadowMapSize" to Vector2(),
-                "shadowCameraNear" to 1f,
-                "shadowCameraFar" to 1000f
-            )
+                        "shadow" to false,
+                        "shadowBias" to 0f,
+                        "shadowRadius" to 1f,
+                        "shadowMapSize" to Vector2(),
+                        "shadowCameraNear" to 1f,
+                        "shadowCameraFar" to 1000f
+                )
         )
     }
 
@@ -447,6 +454,72 @@ internal class PointLightUniforms : LightUniforms() {
         get() = get("shadowCameraFar") as Float
         set(value) {
             set("shadowCameraFar", value)
+        }
+
+}
+
+internal class HemisphereLightUniforms : LightUniforms() {
+
+    init {
+        putAll(
+                mapOf(
+                        "direction" to Vector3(),
+                        "skyColor" to Color(),
+                        "groundColor" to Color()
+                )
+        )
+    }
+
+    var direction: Vector3
+        get() = get("direction") as Vector3
+        set(value) {
+            direction.copy(value)
+        }
+    var skyColor: Color
+        get() = get("skyColor") as Color
+        set(value) {
+            skyColor.copy(value)
+        }
+    var groundColor: Color
+        get() = get("groundColor") as Color
+        set(value) {
+            groundColor.copy(value)
+        }
+
+}
+
+internal class RectAreaLightUniforms : LightUniforms() {
+
+    init {
+        putAll(
+                mapOf(
+                        "color" to Color(),
+                        "position" to Vector3(),
+                        "halfWidth" to Vector3(),
+                        "halfHeight" to Vector3()
+                )
+        )
+    }
+
+    var color: Color
+        get() = get("color") as Color
+        set(value) {
+            color.copy(value)
+        }
+    var position: Vector3
+        get() = get("position") as Vector3
+        set(value) {
+            position.copy(value)
+        }
+    var halfWidth: Vector3
+        get() = get("halfWidth") as Vector3
+        set(value) {
+            halfWidth.copy(value)
+        }
+    var halfHeight: Vector3
+        get() = get("halfHeight") as Vector3
+        set(value) {
+            halfHeight.copy(value)
         }
 
 }

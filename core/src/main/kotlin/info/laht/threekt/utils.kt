@@ -21,4 +21,30 @@ internal fun getFieldInHiarchy(clazz: Class<*>?, name: String): Field? {
     return field
 }
 
-internal fun List<*>.length() : Int = this.size
+internal val List<*>.length : Int
+    get() = this.size
+
+internal inline fun <reified T> MutableList<T?>.length(length: Int) {
+
+    if (length < size) {
+        while (length < size) {
+            add(null)
+        }
+    } else if (length > size) {
+        removeAt(length-1)
+    }
+
+
+}
+
+internal inline fun <reified T> MutableList<T?>.safeSet(index: Int, value: T) {
+
+    when {
+        index < size -> set(index, value)
+        index == size -> add(value)
+        else -> while (index > size) {
+            if (index == size) add(value) else add(null)
+        }
+    }
+
+}
