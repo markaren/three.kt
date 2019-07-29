@@ -21,7 +21,7 @@ internal fun getFieldInHiarchy(clazz: Class<*>?, name: String): Field? {
     return field
 }
 
-internal val List<*>.length : Int
+internal val List<*>.length: Int
     get() = this.size
 
 internal inline fun <reified T> MutableList<T?>.length(length: Int) {
@@ -31,9 +31,8 @@ internal inline fun <reified T> MutableList<T?>.length(length: Int) {
             add(null)
         }
     } else if (length > size) {
-        removeAt(length-1)
+        removeAt(length - 1)
     }
-
 
 }
 
@@ -47,4 +46,15 @@ internal inline fun <reified T> MutableList<T?>.safeSet(index: Int, value: T) {
         }
     }
 
+}
+
+internal inline fun <reified T> MutableList<T>.add(v1: T, v2: T) {
+    add(v1)
+    add(v2)
+}
+
+internal inline fun <reified T> MutableList<T>.add(v1: T, v2: T, v3: T) {
+    add(v1)
+    add(v2)
+    add(v3)
 }
