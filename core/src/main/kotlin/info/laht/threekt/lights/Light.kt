@@ -148,8 +148,11 @@ class SpotLight(
 }
 
 class DirectionalLight(
-    color: Color
-): Light(color) {
+    color: Color? = null,
+    intensity: Number? = null
+): Light(color, intensity) {
+
+    constructor(color: Int, intensity: Number?): this(Color(color), intensity)
 
     var target = Object3DImpl()
 
