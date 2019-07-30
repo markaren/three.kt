@@ -5,9 +5,9 @@ import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.math.Vector3
 
-open class LineSegments(
-    geometry: BufferGeometry,
-    material: LineBasicMaterial
+open class LineSegments @JvmOverloads constructor(
+    geometry: BufferGeometry? = null,
+    material: LineBasicMaterial? = null
 ): Line(geometry, material) {
 
     override fun computeLineDistances(): LineSegments {

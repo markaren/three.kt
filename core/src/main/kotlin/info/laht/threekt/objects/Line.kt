@@ -5,12 +5,15 @@ import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector3
 
-open class Line(
+open class Line @JvmOverloads constructor(
 
-    override var geometry: BufferGeometry = BufferGeometry(),
-    override var material: LineBasicMaterial = LineBasicMaterial()
+    geometry: BufferGeometry? = null,
+    material: LineBasicMaterial? =null
 
 ): Object3DImpl(), GeometryObject, MaterialObject {
+
+    override var geometry = geometry ?: BufferGeometry()
+    override var material = material ?: LineBasicMaterial()
 
     open fun computeLineDistances(): Line {
 
