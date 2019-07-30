@@ -2,11 +2,11 @@ package info.laht.threekt.materials
 
 import info.laht.threekt.math.Color
 
-open class LineBasicMaterial: Material(), MaterialWithColor {
+open class LineBasicMaterial: Material(), MaterialWithColor, MaterialWithLineWidth {
 
     override val color = Color( 0xffffff )
 
-    var linewidth = 1f
+    override var linewidth = 1f
 
     init {
 

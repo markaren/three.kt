@@ -235,7 +235,7 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
     internal open var vertexShader: String = ""
     internal open var fragmentShader: String = ""
 
-    val onBeforeCompile: ((Shader, GLRenderer) -> Unit)? = null
+    var onBeforeCompile: ((Shader, GLRenderer) -> Unit)? = null
 
     /**
      * Return a new material with the same parameters as this material.

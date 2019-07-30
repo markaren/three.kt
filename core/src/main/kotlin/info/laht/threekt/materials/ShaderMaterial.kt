@@ -3,14 +3,14 @@ package info.laht.threekt.materials
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.renderers.shaders.ShaderChunk
 
-open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithClipping, MaterialWithWireframe {
+open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithClipping, MaterialWithWireframe, MaterialWithLineWidth {
 
     public override val uniforms: MutableMap<String, Uniform> = mutableMapOf()
 
     public override var vertexShader = ShaderChunk.default_vertex
     public override var fragmentShader = ShaderChunk.default_fragment
 
-    var linewidth = 1f
+    override var linewidth = 1f
 
     override var wireframe = false
     override var wireframeLinewidth = 1f
