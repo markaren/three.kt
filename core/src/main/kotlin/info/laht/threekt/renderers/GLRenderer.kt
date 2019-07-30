@@ -830,10 +830,16 @@ class GLRenderer(
 
             }
 
-            // Computing code again as onBeforeCompile may have changed the shaders
-            code = programCache.getProgramCode(material, parameters)
+            val shader = materialProperties["shader"] as Shader
 
-            program = programCache.acquireProgram(material, materialProperties["shader"] as Shader, parameters, code)
+            material.onBeforeCompile?.invoke(shader, this).also {
+
+                // Computing code again as onBeforeCompile may have changed the shaders
+                code = programCache.getProgramCode(material, parameters)
+
+            }
+
+            program = programCache.acquireProgram(material, shader, parameters, code)
 
             materialProperties["program"] = program
             material.program = program
