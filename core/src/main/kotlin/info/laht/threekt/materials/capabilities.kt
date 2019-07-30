@@ -51,3 +51,9 @@ interface MaterialWithWireframe {
     var wireframeLinewidth: Float
 
 }
+
+interface MaterialWithLineWidth {
+
+    var linewidth: Float
+
+}
