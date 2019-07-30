@@ -1,8 +1,8 @@
 package info.laht.threekt.extras.objects
 
-import info.laht.threekt.FrontSide
-import info.laht.threekt.LinearFilter
-import info.laht.threekt.RGBFormat
+import info.laht.threekt.Side
+import info.laht.threekt.TextureFilter
+import info.laht.threekt.TextureFormat
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
@@ -52,9 +52,9 @@ class Water(
     init {
 
         renderTarget = GLRenderTarget(options.textureWidth, options.textureHeight, GLRenderTarget.Options(
-                minFilter = LinearFilter,
-                magFilter = LinearFilter,
-                format = RGBFormat,
+                minFilter = TextureFilter.Linear,
+                magFilter = TextureFilter.Linear,
+                format = TextureFormat.RGB,
                 stencilBuffer = false
         ))
 
@@ -212,7 +212,7 @@ class Water(
             val waterColor: Color = Color(0x7F7F7F),
             val eye: Vector3 = Vector3(),
             val distortionScale: Float = 20f,
-            val side: Int = FrontSide,
+            val side: Side = Side.Front,
             val fog: Boolean = false
 
     )

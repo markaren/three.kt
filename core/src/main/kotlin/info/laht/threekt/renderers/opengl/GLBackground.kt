@@ -1,7 +1,6 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.BackSide
-import info.laht.threekt.FrontSide
+import info.laht.threekt.Side
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.geometries.PlaneBufferGeometry
@@ -68,7 +67,7 @@ internal class GLBackground (
                     uniforms.putAll(cloneUniforms(ShaderLib.cube.uniforms))
                     vertexShader = ShaderLib.cube.vertexShader
                     fragmentShader = ShaderLib.cube.fragmentShader
-                    side = BackSide
+                    side = Side.Back
                     depthTest = false
                     depthWrite = false
                     fog = false
@@ -122,7 +121,7 @@ internal class GLBackground (
                     uniforms.putAll(cloneUniforms(ShaderLib.background.uniforms))
                     vertexShader = ShaderLib.background.vertexShader
                     fragmentShader = ShaderLib.background.fragmentShader
-                    side = FrontSide
+                    side = Side.Front
                     depthTest = false
                     depthWrite = false
                     fog = false

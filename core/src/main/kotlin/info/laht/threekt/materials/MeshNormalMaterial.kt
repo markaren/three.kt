@@ -1,6 +1,6 @@
 package info.laht.threekt.materials
 
-import info.laht.threekt.TangentSpaceNormalMap
+import info.laht.threekt.NormalMapType
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
@@ -10,7 +10,7 @@ class MeshNormalMaterial: Material(), MaterialWithWireframe, MaterialWithMorphNo
     public override var bumpScale = 1f
 
     public override var normalMap: Texture? = null
-    public override var normalMapType = TangentSpaceNormalMap
+    public override var normalMapType = NormalMapType.TangentSpace
     val normalScale = Vector2( 1, 1 )
 
     public override var displacementMap: Texture? = null

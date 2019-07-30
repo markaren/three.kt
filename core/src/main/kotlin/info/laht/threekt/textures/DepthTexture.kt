@@ -5,14 +5,14 @@ import info.laht.threekt.*
 class DepthTexture(
     val width: Int,
     val height: Int,
-    type: Int? = null,
-    mapping: Int? = null,
-    wrapS: Int? = null,
-    wrapT: Int? = null,
-    magFilter: Int? = null,
-    minFilter: Int? = null,
+    type: TextureType? = null,
+    mapping: TextureMapping? = null,
+    wrapS: TextureWrapping? = null,
+    wrapT: TextureWrapping? = null,
+    magFilter: TextureFilter? = null,
+    minFilter: TextureFilter? = null,
     anisotropy: Int? = null,
-    format: Int? = null
+    format: TextureFormat? = null
 ) : Texture(
     image = null,
     mapping = mapping,
@@ -27,17 +27,17 @@ class DepthTexture(
 
     init {
 
-        this.format = format ?: DepthFormat
+        this.format = format ?: TextureFormat.Depth
 
-        if (type == null && format == DepthFormat) {
-            this.type = UnsignedShortType
+        if (type == null && format == TextureFormat.Depth) {
+            this.type = TextureType.UnsignedShort
         }
-        if (type == null && format == DepthStencilFormat) {
-            this.type = UnsignedInt248Type
+        if (type == null && format == TextureFormat.DepthStencil) {
+            this.type = TextureType.UnsignedInt248
         }
 
-        this.magFilter = magFilter ?: NearestFilter
-        this.minFilter = minFilter ?: NearestFilter
+        this.magFilter = magFilter ?: TextureFilter.Nearest
+        this.minFilter = minFilter ?: TextureFilter.Nearest
 
         this.generateMipmaps = false
 

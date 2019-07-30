@@ -2,7 +2,7 @@ package info.laht.threekt.examples.extra
 
 import info.laht.threekt.Canvas
 import info.laht.threekt.CanvasOptions
-import info.laht.threekt.RepeatWrapping
+import info.laht.threekt.TextureWrapping
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
@@ -45,8 +45,8 @@ object WaterExample {
             val planeGeometry = PlaneGeometry(10f, 10f)
 
             val texture = TextureLoader.load(File(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file)).also {
-                it.wrapS = RepeatWrapping
-                it.wrapT = RepeatWrapping
+                it.wrapS = TextureWrapping.Repeat
+                it.wrapT = TextureWrapping.Repeat
             }
 
             val light = DirectionalLight(0xffffff, 0.8).also {

@@ -73,7 +73,7 @@ class GLRenderer(
     var physicallyCorrectLights = false
 
     // tone mapping
-    var toneMapping = LinearToneMapping
+    var toneMapping = ToneMapping.Linear
     var toneMappingExposure = 1f
     var toneMappingWhitePoint = 1f
 
@@ -278,9 +278,9 @@ class GLRenderer(
 
                 when (`object`.drawMode) {
 
-                    TrianglesDrawMode -> renderer.mode = GL_TRIANGLES
-                    TriangleStripDrawMode -> renderer.mode = GL_TRIANGLE_STRIP
-                    TriangleFanDrawMode -> renderer.mode = GL_TRIANGLE_FAN
+                    DrawMode.Triangles -> renderer.mode = GL_TRIANGLES
+                    DrawMode.TriangleStrip -> renderer.mode = GL_TRIANGLE_STRIP
+                    DrawMode.TriangleFan -> renderer.mode = GL_TRIANGLE_FAN
 
                 }
 
@@ -1373,7 +1373,7 @@ class GLRenderer(
 
             uniforms["bumpMap"]?.value = material.bumpMap
             uniforms["bumpScale"]?.value = material.bumpScale
-            if (material.side == BackSide) {
+            if (material.side == Side.Back) {
                 val bumpScale = uniforms["bumpScale"]?.value<Float>()!!
                 uniforms["bumpScale"]?.value = bumpScale * -1
             }
@@ -1384,7 +1384,7 @@ class GLRenderer(
 
             uniforms["normalMap"]?.value = material.normalMap
             uniforms["normalScale"]?.value<Vector2>()?.copy(material["normalScale"]!!)
-            if (material.side == BackSide) uniforms["normalScale"]?.value<Vector2>()?.negate()
+            if (material.side == Side.Back) uniforms["normalScale"]?.value<Vector2>()?.negate()
 
         }
 
@@ -1437,7 +1437,7 @@ class GLRenderer(
 
             uniforms["bumpMap"]?.value = material.bumpMap
             uniforms["bumpScale"]?.value = material.bumpScale
-            if (material.side == BackSide) {
+            if (material.side == Side.Back) {
                 val bumpScale = uniforms["bumpScale"]?.value<Float>()!!
                 uniforms["bumpScale"]?.value = bumpScale * -1
             }
@@ -1448,7 +1448,7 @@ class GLRenderer(
 
             uniforms["normalMap"]?.value = material.normalMap
             uniforms["normalScale"]?.value<Vector2>()?.copy(material.get("normalScale")!!)
-            if (material.side == BackSide) {
+            if (material.side == Side.Back) {
                 uniforms["normalScale"]?.value<Vector2>()?.negate()
             }
 
@@ -1493,7 +1493,7 @@ class GLRenderer(
 
             uniforms["bumpMap"]?.value = material.bumpMap
             uniforms["bumpScale"]?.value = material.bumpScale
-            if (material.side == BackSide) {
+            if (material.side == Side.Back) {
                 val bumpScale = uniforms["bumpScale"]?.value<Float>()!!
                 uniforms["bumpScale"]?.value = bumpScale * -1
             }
@@ -1504,7 +1504,7 @@ class GLRenderer(
 
             uniforms["normalMap"]?.value = material.normalMap
             uniforms["normalScale"]?.value<Vector2>()?.copy(material["normalScale"]!!)
-            if (material.side == BackSide) {
+            if (material.side == Side.Back) {
                 uniforms["normalScale"]?.value<Vector2>()?.negate()
             }
 
@@ -1554,7 +1554,7 @@ class GLRenderer(
 
             uniforms["bumpMap"]?.value = material.bumpMap
             uniforms["bumpScale"]?.value = material.bumpScale
-            if (material.side == BackSide) {
+            if (material.side == Side.Back) {
                 uniforms["bumpScale"]?.value<Vector2>()?.negate()
             }
 
@@ -1564,7 +1564,7 @@ class GLRenderer(
 
             uniforms["normalMap"]?.value = material.normalMap
             uniforms["normalScale"]?.value<Vector2>()?.copy(material.get("normalScale")!!)
-            if (material.side == BackSide) uniforms["normalScale"]?.value<Vector2>()?.negate()
+            if (material.side == Side.Back) uniforms["normalScale"]?.value<Vector2>()?.negate()
 
         }
 
