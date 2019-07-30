@@ -7,10 +7,11 @@ import java.io.File
 
 object TextureLoader {
 
-    fun load(file: File): Texture {
+    @JvmOverloads
+    fun load(file: File, flipY: Boolean = true): Texture {
 
         val texture = Texture(
-            image = ImageLoader.load(file),
+            image = ImageLoader.load(file, flipY),
             format = RGBAFormat,
             type = UnsignedByteType
         )
