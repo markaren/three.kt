@@ -79,9 +79,9 @@ internal class GLLights {
 
                     }
 
-                    state.directionalShadowMap.add(shadowMap)
-                    state.directionalShadowMatrix.add(light.shadow.matrix)
-                    state.directional.add(uniforms)
+                    state.directionalShadowMap.safeSet(directionalLength, shadowMap)
+                    state.directionalShadowMatrix.safeSet(directionalLength, light.shadow.matrix)
+                    state.directional.safeSet(directionalLength, uniforms)
 
                     directionalLength++
                 }
