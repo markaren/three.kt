@@ -75,6 +75,10 @@ internal class GLPrograms(
             array.add(parameters[name] ?: "null")
         }
 
+        material.onBeforeCompile?.also {
+            array.add(it.hashCode().toString()) // TODO verify
+        }
+
         array.add(renderer.gammaOutput.toString())
         array.add(renderer.gammaFactor.toString())
 
