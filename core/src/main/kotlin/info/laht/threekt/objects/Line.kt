@@ -2,12 +2,13 @@ package info.laht.threekt.objects
 
 import info.laht.threekt.core.*
 import info.laht.threekt.materials.LineBasicMaterial
+import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector3
 
 open class Line(
 
-    override val geometry: BufferGeometry = BufferGeometry(),
-    override val material: LineBasicMaterial = LineBasicMaterial()
+    override var geometry: BufferGeometry = BufferGeometry(),
+    override var material: LineBasicMaterial = LineBasicMaterial()
 
 ): Object3DImpl(), GeometryObject, MaterialObject {
 
@@ -40,7 +41,12 @@ open class Line(
     }
 
     override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
-
+        TODO()
     }
 
 }
+
+class LineLoop(
+        geometry: BufferGeometry,
+        material: LineBasicMaterial
+) : Line(geometry, material)

@@ -5,10 +5,10 @@ import info.laht.threekt.materials.SpriteMaterial
 import info.laht.threekt.math.Vector2
 
 class Sprite(
-    val material: SpriteMaterial = SpriteMaterial()
-) : Object3DImpl(), GeometryObject {
+    override var material: SpriteMaterial = SpriteMaterial()
+) : Object3DImpl(), GeometryObject, MaterialObject {
 
-    override val geometry = BufferGeometry()
+    override var geometry = BufferGeometry()
 
     val center = Vector2( 0.5f, 0.5f )
 
@@ -22,6 +22,7 @@ class Sprite(
         )
 
         geometry.setIndex( IntBufferAttribute(intArrayOf( 0, 1, 2,	0, 2, 3 ), 1) );
+        TODO()
 //        geometry.addAttribute( "position",  InterleavedBufferAttribute( interleavedBuffer, 3, 0, false ) );
 //        geometry.addAttribute( "uv",  InterleavedBufferAttribute( interleavedBuffer, 2, 3, false ) );
 
@@ -29,7 +30,7 @@ class Sprite(
     }
 
     override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
-
+        TODO()
     }
 
 }

@@ -2,6 +2,7 @@ package info.laht.threekt.examples.extra
 
 import info.laht.threekt.Canvas
 import info.laht.threekt.CanvasOptions
+import info.laht.threekt.DoubleSide
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.BufferGeometry
@@ -9,9 +10,11 @@ import info.laht.threekt.extras.core.Curve3
 import info.laht.threekt.extras.curves.CatmullRomCurve3
 import info.laht.threekt.geometries.TubeBufferGeometry
 import info.laht.threekt.materials.LineBasicMaterial
+import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector3
 import info.laht.threekt.objects.Line
+import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
 import kotlin.math.sin
@@ -34,12 +37,23 @@ object TubeGeometryExample {
             OrbitControls(camera, canvas)
 
             val geometry = TubeBufferGeometry(CustomSineCurve(10f))
-            val material = LineBasicMaterial().apply {
+            val material = MeshBasicMaterial().apply {
                 color.set(0xff0000)
+                side = DoubleSide
             }
 
-            val line = Line(geometry, material)
-            scene.add(line)
+            val solidTube = Mesh(geometry, material).also {
+                scene.add(it)
+            }
+
+            solidTube.clone().also {
+                it.material = (solidTube.material.clone() as MeshBasicMaterial).also {
+                    it.wireframe = true
+                    it.color.set(0xffffff)
+                }
+                scene.add(it)
+            }
+
 
             while (!canvas.shouldClose()) {
 

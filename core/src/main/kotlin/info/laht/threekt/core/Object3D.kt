@@ -9,7 +9,7 @@ import info.laht.threekt.math.*
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
 
-interface Object3D: Cloneable, EventDispatcher {
+interface Object3D : Cloneable, EventDispatcher {
 
     var name: String
     val uuid: String
@@ -466,7 +466,7 @@ interface Object3D: Cloneable, EventDispatcher {
 
     }
 
-     fun copy(source: Object3D, recursive: Boolean): Object3D {
+    fun copy(source: Object3D, recursive: Boolean): Object3D {
         this.name = source.name
 
         this.up.copy(source.up)
@@ -573,26 +573,31 @@ open class Object3DImpl : Object3D, EventDispatcher by EventDispatcherImpl() {
 
 }
 
-interface GeometryObject: Object3D {
+interface GeometryObject : Object3D {
 
-    val geometry: BufferGeometry
+    var geometry: BufferGeometry
 
 }
 
-interface MaterialObject: Object3D {
+interface MaterialObject : Object3D {
 
     val material: Material
 
 }
 
-interface MaterialsObject: MaterialObject {
-
-    override val material: Material
-        get() = materials.getOrNull(0) ?: throw IllegalStateException("No material set!")
+interface MaterialsObject : MaterialObject {
 
     val isMultiMaterial
         get() = materials.size > 1
 
     val materials: MutableList<Material>
-}
 
+    override var material: Material
+        get() {
+            return materials.getOrNull(0) ?: throw IllegalStateException("No material set!")
+        }
+        set(value) {
+            materials[0] = value
+        }
+
+}

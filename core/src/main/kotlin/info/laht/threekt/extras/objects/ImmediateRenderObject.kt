@@ -6,7 +6,7 @@ import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.materials.Material
 
 class ImmediateRenderObject(
-    override val material: Material
+    override var material: Material
 ): Object3DImpl(), MaterialObject {
 
     var render: () -> Unit = {}

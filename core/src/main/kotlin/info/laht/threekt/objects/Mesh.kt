@@ -7,19 +7,19 @@ import info.laht.threekt.math.*
 
 
 open class Mesh(
-    override val geometry: BufferGeometry,
-    override val materials: MutableList<Material>
+        override var geometry: BufferGeometry,
+        override val materials: MutableList<Material>
 ) : Object3DImpl(), GeometryObject, MaterialsObject {
-
-    constructor(geometry: BufferGeometry, material: Material)
-            : this(geometry, mutableListOf(material))
 
     var drawMode = TrianglesDrawMode
 
     private val raycastHelper by lazy { RaycastHelper() }
 
-    init {
 
+    constructor(geometry: BufferGeometry, material: Material)
+            : this(geometry, mutableListOf(material))
+
+    init {
 //        updateMorphTargets()
     }
 
