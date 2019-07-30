@@ -228,15 +228,15 @@ private class SingleUniform(
     private val vector2Cache by lazy { Vector2() }
     private val vector3Cache by lazy { Vector3() }
     private val colorCache by lazy { Color() }
-    private val setValue = getSingularSetter(activeInfo.type)
+    private val setValue = getSingularSetter(activeInfo)
 
     override fun setValue(v: Any, textures: GLTextures?) {
         setValue.invoke(v, textures)
     }
 
-    private fun getSingularSetter(type: Int): (Any, GLTextures?) -> Unit {
+    private fun getSingularSetter(activeInfo: ActiveUniformInfo): (Any, GLTextures?) -> Unit {
 
-        return when (type) {
+        return when (activeInfo.type) {
             0x1406 -> { v, _ -> setValueV1f(v) }
             0x8b50 -> { v, _ -> setValueV2f(v) }
             0x8b51 -> { v, _ -> setValueV3f(v) }
@@ -256,7 +256,7 @@ private class SingleUniform(
             0x8b54, 0x8b58 -> { v, _ -> setValueV3i(v) } // _VEC3
             0x8b55, 0x8b59 -> { v, _ -> setValueV4i(v) } // _VEC4
 
-            else -> throw IllegalArgumentException("Illegal or unsupported type encountered: $type")
+            else -> throw IllegalArgumentException("Illegal or unsupported type encountered: $activeInfo")
 
         }
 
