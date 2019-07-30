@@ -14,7 +14,6 @@ import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderTarget
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.renderers.shaders.cloneUniforms
-import info.laht.threekt.renderers.shaders.mergeUniforms
 import info.laht.threekt.scenes.Scene
 import kotlin.math.sign
 

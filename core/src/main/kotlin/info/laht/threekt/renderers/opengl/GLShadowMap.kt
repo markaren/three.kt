@@ -5,7 +5,6 @@ import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.CameraWithNearAndFar
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
-import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.MaterialsObject
 import info.laht.threekt.core.Object3D

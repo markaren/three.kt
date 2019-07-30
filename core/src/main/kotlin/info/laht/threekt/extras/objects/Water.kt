@@ -9,7 +9,6 @@ import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.Shader
 import info.laht.threekt.core.Uniform
-import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.ShaderMaterial
 import info.laht.threekt.math.*
 import info.laht.threekt.objects.Mesh

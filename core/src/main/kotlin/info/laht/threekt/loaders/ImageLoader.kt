@@ -2,10 +2,10 @@ package info.laht.threekt.loaders
 
 import info.laht.threekt.textures.Image
 import org.lwjgl.BufferUtils
-import java.io.File
-import javax.imageio.ImageIO
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
+import java.io.File
+import javax.imageio.ImageIO
 
 
 object ImageLoader {

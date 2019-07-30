@@ -7,7 +7,6 @@ import info.laht.threekt.materials.RawShaderMaterial
 import info.laht.threekt.materials.ShaderMaterial
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.renderers.shaders.ShaderChunk
-import info.laht.threekt.renderers.shaders.ShaderLib
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20

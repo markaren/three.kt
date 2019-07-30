@@ -7,7 +7,6 @@ import info.laht.threekt.math.Plane
 import info.laht.threekt.math.generateUUID
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.renderers.opengl.GLProgram
-import info.laht.threekt.renderers.shaders.ShaderLib
 import info.laht.threekt.textures.Texture
 
 open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
