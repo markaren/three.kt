@@ -10,10 +10,7 @@ import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.MaterialsObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.*
-import info.laht.threekt.materials.Material
-import info.laht.threekt.materials.MaterialWithWireframe
-import info.laht.threekt.materials.MeshDepthMaterial
-import info.laht.threekt.materials.MeshDistanceMaterial
+import info.laht.threekt.materials.*
 import info.laht.threekt.math.*
 import info.laht.threekt.objects.Line
 import info.laht.threekt.objects.Mesh
@@ -63,7 +60,7 @@ class GLShadowMap internal constructor(
     private val MorphingFlag = 1
     private val SkinningFlag = 2
 
-    var enabled = true
+    var enabled = false
 
     var autoUpdate = true
     var needsUpdate = false
@@ -285,10 +282,6 @@ class GLShadowMap internal constructor(
         shadowCameraFar: Float
     ): Material {
 
-        `object` as GeometryObject
-
-        val geometry = `object`.geometry
-
         var materialVariants: MutableList<out Material> = depthMaterials
         var customMaterial: Material? = `object`.customDepthMaterial
 
@@ -352,13 +345,15 @@ class GLShadowMap internal constructor(
             result.wireframeLinewidth = material.wireframeLinewidth
         }
 
-        result.side = material.shadowSide ?: shadowSide[material.side]!!
+        result.side = material.shadowSide ?: shadowSide.getValue(material.side)
 
         result.clipShadows = material.clipShadows
         result.clippingPlanes = material.clippingPlanes
         result.clipIntersection = material.clipIntersection
 
-//TODO        result["linewidth"] = material.get<Float>("linewidth")
+        if (result is MaterialWithLineWidth && material is MaterialWithLineWidth) {
+            result.linewidth = material.linewidth
+        }
 
         if (isPointLight && result is MeshDistanceMaterial) {
 
