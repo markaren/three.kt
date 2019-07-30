@@ -9,14 +9,17 @@
 
 Kotlin/JVM port of the popular [three.js](http://threejs.org) 3D library ([r106](https://github.com/mrdoob/three.js/tree/r106)).
 
-Be warned, while the basics works, such as
-* Simple (buffer) geometries, Points and CatmullRomCurve
+Be warned, while the basics works, such as:
+* Primitives, Points and TubeGeometry (Only BufferGeometries are supported)
 * Most materials
 * OrbitControls
 * Ambient, Directional, Point and Spot lights
 * 2D textures
+* Plain RenderTarget and Reflector
  
 a lot of features are still missing and the API can change rapidly.
+
+Right now, this is mostly interessting for developers that want to contribute.
 
 #### API (subject to changes)
 
