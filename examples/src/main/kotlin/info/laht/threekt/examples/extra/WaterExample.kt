@@ -1,23 +1,19 @@
 package info.laht.threekt.examples.extra
 
-import info.laht.threekt.*
+import info.laht.threekt.Canvas
+import info.laht.threekt.CanvasOptions
+import info.laht.threekt.RepeatWrapping
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.examples.textures.TextureExample
-import info.laht.threekt.extras.objects.Reflector
 import info.laht.threekt.extras.objects.Water
 import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.geometries.PlaneGeometry
-import info.laht.threekt.helpers.PointLightHelper
 import info.laht.threekt.lights.DirectionalLight
-import info.laht.threekt.lights.PointLight
 import info.laht.threekt.loaders.TextureLoader
-import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Color
-import info.laht.threekt.math.DEG2RAD
-import info.laht.threekt.math.Vector3
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.ColorBackground

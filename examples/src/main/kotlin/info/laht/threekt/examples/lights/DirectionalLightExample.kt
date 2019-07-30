@@ -10,11 +10,10 @@ import info.laht.threekt.geometries.BoxGeometry
 import info.laht.threekt.geometries.PlaneGeometry
 import info.laht.threekt.helpers.DirectionalLightHelper
 import info.laht.threekt.lights.DirectionalLight
-import info.laht.threekt.lights.PointLight
-import info.laht.threekt.materials.*
+import info.laht.threekt.materials.MeshLambertMaterial
+import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
-import info.laht.threekt.math.Vector3
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene

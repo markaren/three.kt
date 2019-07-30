@@ -9,9 +9,9 @@ import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
 import info.laht.threekt.geometries.PlaneGeometry
 import info.laht.threekt.lights.AmbientLight
-import info.laht.threekt.lights.PointLight
 import info.laht.threekt.lights.SpotLight
-import info.laht.threekt.materials.*
+import info.laht.threekt.materials.MeshLambertMaterial
+import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
 import info.laht.threekt.objects.Mesh

@@ -5,15 +5,11 @@ import info.laht.threekt.CanvasOptions
 import info.laht.threekt.DoubleSide
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
-import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.extras.core.Curve3
-import info.laht.threekt.extras.curves.CatmullRomCurve3
 import info.laht.threekt.geometries.TubeBufferGeometry
-import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector3
-import info.laht.threekt.objects.Line
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene

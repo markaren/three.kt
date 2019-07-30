@@ -9,10 +9,8 @@ import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.geometries.PlaneGeometry
 import info.laht.threekt.helpers.PointLightHelper
 import info.laht.threekt.lights.PointLight
-import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Color
-import info.laht.threekt.math.DEG2RAD
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.ColorBackground
