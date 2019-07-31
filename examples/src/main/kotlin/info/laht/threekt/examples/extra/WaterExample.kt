@@ -16,7 +16,6 @@ import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Scene
 import java.io.File
 import kotlin.math.PI
@@ -27,13 +26,13 @@ object WaterExample {
     fun main(args: Array<String>) {
 
         Canvas(CanvasOptions().apply {
-//            antialiasing = 4
+            antialiasing = 4
         }).use { canvas ->
 
-//            canvas.enableDebugCallback()
+            canvas.enableDebugCallback()
 
             val scene = Scene().apply {
-                background = ColorBackground(Color(Color.aliceblue).multiplyScalar(0.8f))
+                setBackground(Color(Color.aliceblue).multiplyScalar(0.8f))
             }
             val renderer = GLRenderer(canvas)
 

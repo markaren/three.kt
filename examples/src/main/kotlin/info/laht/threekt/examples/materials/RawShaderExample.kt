@@ -10,7 +10,6 @@ import info.laht.threekt.core.Uniform
 import info.laht.threekt.materials.RawShaderMaterial
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Scene
 import kotlin.random.Random
 
@@ -52,7 +51,7 @@ object RawShaderExample {
         }).use { canvas ->
 
             val scene = Scene().apply {
-                background = ColorBackground(0x101010)
+                setBackground(0x101010)
             }
             val camera = PerspectiveCamera(50, canvas.aspect, 1, 10)
             camera.position.z = 2f

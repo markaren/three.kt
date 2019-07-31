@@ -13,7 +13,6 @@ import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Scene
 import kotlin.math.PI
 
@@ -29,7 +28,7 @@ object ReflectorExample {
             canvas.enableDebugCallback()
 
             val scene = Scene().apply {
-                background = ColorBackground(Color.aliceblue)
+                setBackground(Color.aliceblue)
             }
             val renderer = GLRenderer(canvas).apply {
                 checkShaderErrors = true

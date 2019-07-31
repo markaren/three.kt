@@ -12,7 +12,6 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Scene
 import java.io.File
 
@@ -26,7 +25,7 @@ object TextureExample {
         }).use { canvas ->
 
             val scene = Scene().apply {
-                background = ColorBackground(Color.aliceblue)
+                setBackground(Color.aliceblue)
             }
 
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)

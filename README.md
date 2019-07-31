@@ -28,7 +28,7 @@ Right now, this is mostly interesting for developers that want to contribute.
 Canvas().use { canvas ->
 
     val scene = Scene().apply {
-        background = ColorBackground(Color.aliceblue)
+        setBackground(Color.aliceblue)
     }
 
     val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)

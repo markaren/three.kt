@@ -9,10 +9,12 @@ import info.laht.threekt.materials.ShaderMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix3
 import info.laht.threekt.objects.Mesh
+import info.laht.threekt.renderers.GLRenderTargetCube
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.renderers.shaders.ShaderLib
 import info.laht.threekt.renderers.shaders.cloneUniforms
 import info.laht.threekt.scenes.*
+import info.laht.threekt.textures.CubeTexture
 import info.laht.threekt.textures.Texture
 
 internal class GLBackground (
@@ -31,7 +33,7 @@ internal class GLBackground (
     private var planeMesh: Mesh? = null
     private var boxMesh: Mesh? = null
 
-    private var currentBackground: Background? = null
+    private var currentBackground: Any? = null
     private var currentBackgroundVersion = 0
 
     fun render(renderList: GLRenderList, scene: Scene, camera: Camera, forceClear: Boolean) {
@@ -46,9 +48,9 @@ internal class GLBackground (
             currentBackground = null
             currentBackgroundVersion = 0
 
-        } else if (background is ColorBackground) {
+        } else if (background is Color) {
 
-            setClear(background.color, 1f)
+            setClear(background, 1f)
             forceClear = true
             currentBackground = null
             currentBackgroundVersion = 0
@@ -59,7 +61,7 @@ internal class GLBackground (
             renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
         }
 
-        if (background is CubeTextureBackground || background is GLRenderTargetCubeBackground) {
+        if (background is CubeTexture || background is GLRenderTargetCube) {
 
             val boxMesh = this.boxMesh ?: Mesh(
                 BoxBufferGeometry(1f, 1f, 1f),
@@ -88,14 +90,13 @@ internal class GLBackground (
             objects.update(boxMesh);
 
             val texture = when (background) {
-                is TextureBackground -> background.texture
-                is GLRenderTargetCubeBackground -> background.renderTargetCube.texture
+                is Texture -> background
+                is GLRenderTargetCube -> background.texture
                 else -> throw IllegalStateException()
             }
 
-//            val renderTargetCube = if (background is GLRenderTargetCubeBackground) background.renderTargetCube else background;
             material.uniforms["tCube"]?.value = texture;
-            material.uniforms["tFlip"]?.value = if (background is GLRenderTargetCubeBackground) 1 else -1;
+            material.uniforms["tFlip"]?.value = if (background is GLRenderTargetCube) 1 else -1;
 
             if (currentBackground != background ||
                 currentBackgroundVersion != texture.version
@@ -111,9 +112,7 @@ internal class GLBackground (
             // push to the pre-sorted opaque render list
             renderList.unshift(boxMesh, boxMesh.geometry, boxMesh.material, 0, 0f, null);
 
-        } else if (background is TextureBackground) {
-
-            val texture = background.texture
+        } else if (background is Texture) {
 
             val planeMesh = this.planeMesh ?: Mesh(
                 PlaneBufferGeometry(2f, 2f),
@@ -139,24 +138,24 @@ internal class GLBackground (
 
             objects.update(planeMesh);
 
-            material.uniforms["t2D"]?.value = texture;
+            material.uniforms["t2D"]?.value = background;
 
-            if (texture.matrixAutoUpdate) {
+            if (background.matrixAutoUpdate) {
 
-                texture.updateMatrix();
+                background.updateMatrix();
 
             }
 
-            (material.uniforms["uvTransform"]?.value as Matrix3).copy(texture.matrix);
+            (material.uniforms["uvTransform"]?.value as Matrix3).copy(background.matrix);
 
             if (currentBackground != background ||
-                currentBackgroundVersion != texture.version
+                currentBackgroundVersion != background.version
             ) {
 
                 planeMesh.material.needsUpdate = true;
 
                 currentBackground = background;
-                currentBackgroundVersion = texture.version;
+                currentBackgroundVersion = background.version;
 
             }
 

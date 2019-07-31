@@ -10,7 +10,6 @@ import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.materials.PointsMaterial
 import info.laht.threekt.objects.Points
 import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.scenes.ColorBackground
 import info.laht.threekt.scenes.Fog
 import info.laht.threekt.scenes.Scene
 import kotlin.random.Random
@@ -25,7 +24,7 @@ object PointsExample {
         }).use { canvas ->
 
             val scene = Scene().apply {
-                background = ColorBackground(0x050505)
+                setBackground(0x050505)
                 fog = Fog(0x050505, 2000, 3500)
             }
             val renderer = GLRenderer(canvas)
