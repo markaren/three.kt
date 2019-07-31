@@ -2,7 +2,7 @@ package info.laht.threekt.examples.objects
 
 import info.laht.threekt.Canvas
 import info.laht.threekt.CanvasOptions
-import info.laht.threekt.VertexColors
+import info.laht.threekt.Colors
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.Clock
@@ -61,7 +61,7 @@ object PointsExample {
 
             val material = PointsMaterial().apply {
                 size = 15f
-                vertexColors = VertexColors
+                vertexColors = Colors.Vertex
             }
 
             val points = Points(geometry, material)

@@ -1,6 +1,6 @@
 package info.laht.threekt.renderers
 
-import info.laht.threekt.LinearFilter
+import info.laht.threekt.*
 import info.laht.threekt.core.EventDispatcher
 import info.laht.threekt.core.EventDispatcherImpl
 import info.laht.threekt.math.Vector4
@@ -51,7 +51,7 @@ open class GLRenderTarget(
 
         texture.image = Image(width, height)
         texture.generateMipmaps = options.generateMipmaps ?: false
-        texture.minFilter = options.minFilter ?: LinearFilter
+        texture.minFilter = options.minFilter ?: TextureFilter.Linear
 
         depthBuffer = options.depthBuffer ?: true
         stencilBuffer = options.stencilBuffer ?: true
@@ -100,14 +100,14 @@ open class GLRenderTarget(
     }
 
     data class Options(
-        val wrapT: Int? = null,
-        val wrapS: Int? = null,
-        val magFilter: Int? = null,
-        val minFilter: Int? = null,
-        val format: Int? = null,
-        val type: Int? = null,
+        val wrapT: TextureWrapping? = null,
+        val wrapS: TextureWrapping? = null,
+        val magFilter: TextureFilter? = null,
+        val minFilter: TextureFilter? = null,
+        val format: TextureFormat? = null,
+        val type: TextureType? = null,
         val anisotropy: Int? = null,
-        val encoding: Int? = null,
+        val encoding: TextureEncoding? = null,
         val generateMipmaps: Boolean? = null,
         val depthBuffer: Boolean? = null,
         val stencilBuffer: Boolean? = null,

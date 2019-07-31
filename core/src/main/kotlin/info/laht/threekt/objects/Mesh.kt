@@ -1,6 +1,6 @@
 package info.laht.threekt.objects
 
-import info.laht.threekt.TrianglesDrawMode
+import info.laht.threekt.DrawMode
 import info.laht.threekt.core.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.*
@@ -11,10 +11,9 @@ open class Mesh(
         override val materials: MutableList<Material>
 ) : Object3DImpl(), GeometryObject, MaterialsObject {
 
-    var drawMode = TrianglesDrawMode
+    var drawMode = DrawMode.Triangles
 
     private val raycastHelper by lazy { RaycastHelper() }
-
 
     constructor(geometry: BufferGeometry, material: Material)
             : this(geometry, mutableListOf(material))

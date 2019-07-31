@@ -2,7 +2,7 @@ package info.laht.threekt.examples.materials
 
 import info.laht.threekt.Canvas
 import info.laht.threekt.CanvasOptions
-import info.laht.threekt.DoubleSide
+import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
@@ -88,7 +88,7 @@ object RawShaderExample {
                 it.uniforms["time"] = Uniform(null)
                 it.vertexShader = vertexShader
                 it.fragmentShader = fragmentShader
-                it.side = DoubleSide
+                it.side = Side.Double
                 it.transparent = true
             }
 

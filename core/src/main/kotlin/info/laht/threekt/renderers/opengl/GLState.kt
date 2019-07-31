@@ -31,17 +31,17 @@ internal class GLState {
     var currentProgram: Int? = null
 
     var currentBlendingEnabled: Boolean? = null
-    var currentBlending: Int? = null
-    var currentBlendEquation: Int? = null
-    var currentBlendSrc: Int? = null
-    var currentBlendDst: Int? = null
-    var currentBlendEquationAlpha: Int? = null
-    var currentBlendSrcAlpha: Int? = null
-    var currentBlendDstAlpha: Int? = null
+    var currentBlending: Blending? = null
+    var currentBlendEquation: BlendingEquation? = null
+    var currentBlendSrc: BlendingFactor? = null
+    var currentBlendDst: BlendingFactor? = null
+    var currentBlendEquationAlpha: BlendingEquation? = null
+    var currentBlendSrcAlpha: BlendingFactor? = null
+    var currentBlendDstAlpha: BlendingFactor? = null
     var currentPremultipledAlpha: Boolean? = null
 
     var currentFlipSided: Boolean? = null
-    var currentCullFace: Int? = null
+    var currentCullFace: CullFaceMode? = null
 
     var currentLineWidth: Float? = null
 
@@ -65,10 +65,10 @@ internal class GLState {
 
     init {
         enable(GL11.GL_DEPTH_TEST)
-        depthBuffer.setFunc(LessEqualDepth)
+        depthBuffer.setFunc(DepthMode.LessEqualDepth)
 
         enable(GL11.GL_CULL_FACE)
-        setBlending(NoBlending)
+        setBlending(Blending.None)
     }
 
     fun initAttributes() {
@@ -168,17 +168,17 @@ internal class GLState {
 
     @Suppress("NAME_SHADOWING")
     fun setBlending(
-        blending: Int,
-        blendEquation: Int? = null,
-        blendSrc: Int? = null,
-        blendDst: Int? = null,
-        blendEquationAlpha: Int? = null,
-        blendSrcAlpha: Int? = null,
-        blendDstAlpha: Int? = null,
+        blending: Blending,
+        blendEquation: BlendingEquation? = null,
+        blendSrc: BlendingFactor? = null,
+        blendDst: BlendingFactor? = null,
+        blendEquationAlpha: BlendingEquation? = null,
+        blendSrcAlpha: BlendingFactor? = null,
+        blendDstAlpha: BlendingFactor? = null,
         premultipliedAlpha: Boolean? = null
     ) {
 
-        if (blending == NoBlending) {
+        if (blending == Blending.None) {
 
             if (currentBlendingEnabled == true) {
                 disable(GL11.GL_BLEND)
@@ -196,36 +196,36 @@ internal class GLState {
 
         }
 
-        if (blending != CustomBlending) {
+        if (blending != Blending.Custom) {
 
             if (blending != currentBlending || premultipliedAlpha != currentPremultipledAlpha) {
 
-                if (currentBlendEquation != AddEquation || currentBlendEquationAlpha != AddEquation) {
+                if (currentBlendEquation != BlendingEquation.Add || currentBlendEquationAlpha != BlendingEquation.Add) {
 
                     GL14.glBlendEquation(GL14.GL_FUNC_ADD)
 
-                    currentBlendEquation = AddEquation
-                    currentBlendEquationAlpha = AddEquation
+                    currentBlendEquation = BlendingEquation.Add
+                    currentBlendEquationAlpha = BlendingEquation.Add
 
                 }
 
                 if (premultipliedAlpha == true) {
 
                     when (blending) {
-                        NormalBlending -> GL14.glBlendFuncSeparate(
+                        Blending.Normal -> GL14.glBlendFuncSeparate(
                             GL11.GL_ONE,
                             GL11.GL_ONE_MINUS_SRC_ALPHA,
                             GL11.GL_ONE,
                             GL11.GL_ONE_MINUS_SRC_ALPHA
                         )
-                        AdditiveBlending -> GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE)
-                        SubtractiveBlending -> GL14.glBlendFuncSeparate(
+                        Blending.Additive -> GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE)
+                        Blending.Subtractive -> GL14.glBlendFuncSeparate(
                             GL11.GL_ZERO,
                             GL11.GL_ZERO,
                             GL11.GL_ONE_MINUS_SRC_COLOR,
                             GL11.GL_ONE_MINUS_SRC_ALPHA
                         )
-                        MultiplyBlending -> GL14.glBlendFuncSeparate(
+                        Blending.Multiply -> GL14.glBlendFuncSeparate(
                             GL11.GL_ZERO,
                             GL11.GL_SRC_COLOR,
                             GL11.GL_ZERO,
@@ -237,15 +237,15 @@ internal class GLState {
                 } else {
 
                     when (blending) {
-                        NormalBlending -> GL14.glBlendFuncSeparate(
+                        Blending.Normal -> GL14.glBlendFuncSeparate(
                             GL11.GL_SRC_ALPHA,
                             GL11.GL_ONE_MINUS_SRC_ALPHA,
                             GL11.GL_ONE,
                             GL11.GL_ONE_MINUS_SRC_ALPHA
                         )
-                        AdditiveBlending -> GL14.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE)
-                        SubtractiveBlending -> GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR)
-                        MultiplyBlending -> GL14.glBlendFunc(GL11.GL_ZERO, GL11.GL_SRC_COLOR)
+                        Blending.Additive -> GL14.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE)
+                        Blending.Subtractive -> GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR)
+                        Blending.Multiply -> GL14.glBlendFunc(GL11.GL_ZERO, GL11.GL_SRC_COLOR)
                         else -> System.err.println("GLState: Invalid blending: $blending")
                     }
 
@@ -274,8 +274,8 @@ internal class GLState {
         if (blendEquation != currentBlendEquation || blendEquationAlpha != currentBlendEquationAlpha) {
 
             GL20.glBlendEquationSeparate(
-                GLUtils.convert(blendEquation),
-                GLUtils.convert(blendEquationAlpha)
+                GLUtils.convert(blendEquation?.value),
+                GLUtils.convert(blendEquationAlpha?.value)
             )
 
             currentBlendEquation = blendEquation
@@ -286,10 +286,10 @@ internal class GLState {
         if (blendSrc != currentBlendSrc || blendDst != currentBlendDst || blendSrcAlpha != currentBlendSrcAlpha || blendDstAlpha != currentBlendDstAlpha) {
 
             GL14.glBlendFuncSeparate(
-                GLUtils.convert(blendSrc),
-                GLUtils.convert(blendDst),
-                GLUtils.convert(blendSrcAlpha),
-                GLUtils.convert(blendDstAlpha)
+                GLUtils.convert(blendSrc?.value),
+                GLUtils.convert(blendDst?.value),
+                GLUtils.convert(blendSrcAlpha?.value),
+                GLUtils.convert(blendDstAlpha?.value)
             )
 
             currentBlendSrc = blendSrc
@@ -305,21 +305,21 @@ internal class GLState {
 
     fun setMaterial(material: Material, frontFaceCW: Boolean) {
 
-        if (material.side == DoubleSide) {
+        if (material.side == Side.Double) {
             disable(GL11.GL_CULL_FACE)
         } else {
             enable(GL11.GL_CULL_FACE)
         }
 
-        var flipSided = material.side == BackSide
+        var flipSided = material.side == Side.Back
         if (frontFaceCW) {
             flipSided = !flipSided
         }
 
         setFlipSided(flipSided)
 
-        if (material.blending == NormalBlending && !material.transparent) {
-            setBlending(NoBlending)
+        if (material.blending == Blending.Normal && !material.transparent) {
+            setBlending(Blending.None)
         } else {
             setBlending(
                 material.blending,
@@ -359,17 +359,17 @@ internal class GLState {
 
     }
 
-    fun setCullFace(cullFace: Int) {
+    fun setCullFace(cullFace: CullFaceMode) {
 
-        if (cullFace != CullFaceNone) {
+        if (cullFace != CullFaceMode.None) {
 
             enable(GL11.GL_CULL_FACE)
 
             if (cullFace != currentCullFace) {
 
                 when (cullFace) {
-                    CullFaceBack -> GL11.glCullFace(GL11.GL_BACK)
-                    CullFaceFront -> GL11.glCullFace(GL11.GL_FRONT)
+                    CullFaceMode.Back -> GL11.glCullFace(GL11.GL_BACK)
+                    CullFaceMode.Front -> GL11.glCullFace(GL11.GL_FRONT)
                     else -> GL11.glCullFace(GL11.GL_FRONT_AND_BACK)
                 }
 
@@ -579,7 +579,7 @@ internal class GLState {
         internal var locked = false
 
         private var currentDepthMask: Boolean? = null
-        private var currentDepthFunc: Int? = null
+        private var currentDepthFunc: DepthMode? = null
         private var currentDepthClear: Double? = null
 
         fun setTest(depthTest: Boolean) {
@@ -597,18 +597,18 @@ internal class GLState {
             }
         }
 
-        fun setFunc(depthFunc: Int) {
+        fun setFunc(depthFunc: DepthMode) {
             if (currentDepthFunc != depthFunc) {
 
                 when (depthFunc) {
-                    NeverDepth -> GL11.glDepthFunc(GL11.GL_NEVER)
-                    AlwaysDepth -> GL11.glDepthFunc(GL11.GL_ALWAYS)
-                    LessDepth -> GL11.glDepthFunc(GL11.GL_LESS)
-                    LessEqualDepth -> GL11.glDepthFunc(GL11.GL_LEQUAL)
-                    EqualDepth -> GL11.glDepthFunc(GL11.GL_EQUAL)
-                    GreaterEqualDepth -> GL11.glDepthFunc(GL11.GL_GEQUAL)
-                    GreaterDepth -> GL11.glDepthFunc(GL11.GL_GREATER)
-                    NotEqualDepth -> GL11.glDepthFunc(GL11.GL_NOTEQUAL)
+                    DepthMode.NeverDepth -> GL11.glDepthFunc(GL11.GL_NEVER)
+                    DepthMode.AlwaysDepth -> GL11.glDepthFunc(GL11.GL_ALWAYS)
+                    DepthMode.LessDepth -> GL11.glDepthFunc(GL11.GL_LESS)
+                    DepthMode.LessEqualDepth -> GL11.glDepthFunc(GL11.GL_LEQUAL)
+                    DepthMode.EqualDepth -> GL11.glDepthFunc(GL11.GL_EQUAL)
+                    DepthMode.GreaterEqualDepth -> GL11.glDepthFunc(GL11.GL_GEQUAL)
+                    DepthMode.GreaterDepth -> GL11.glDepthFunc(GL11.GL_GREATER)
+                    DepthMode.NotEqualDepth -> GL11.glDepthFunc(GL11.GL_NOTEQUAL)
                     else -> GL11.glDepthFunc(GL11.GL_LEQUAL)
                 }
 

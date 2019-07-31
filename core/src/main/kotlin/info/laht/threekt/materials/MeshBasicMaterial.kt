@@ -1,6 +1,6 @@
 package info.laht.threekt.materials
 
-import info.laht.threekt.MultiplyOperation
+import info.laht.threekt.TextureCombineOperation
 import info.laht.threekt.math.Color
 import info.laht.threekt.textures.Texture
 
@@ -20,7 +20,7 @@ class MeshBasicMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
     public override var alphaMap: Texture? = null
     public override var envMap: Texture? = null
 
-    public override var combine = MultiplyOperation
+    public override var combine = TextureCombineOperation.Multiply
 
     var reflectivity = 1f
     var refractionRatio = 0.98f

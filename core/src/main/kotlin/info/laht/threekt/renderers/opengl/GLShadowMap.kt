@@ -39,7 +39,7 @@ class GLShadowMap internal constructor(
 
     private val materialCache = mutableMapOf<String, MutableMap<String, Material>>()
 
-    private val shadowSide = mapOf(0 to BackSide, 1 to FrontSide, 2 to DoubleSide)
+    private val shadowSide = mapOf(0 to Side.Back, 1 to Side.Front, 2 to Side.Double)
 
     private var cubeDirections = listOf(
         Vector3(1f, 0f, 0f), Vector3(-1f, 0f, 0f), Vector3(0f, 0f, 1f),
@@ -64,7 +64,7 @@ class GLShadowMap internal constructor(
     var autoUpdate = true
     var needsUpdate = false
 
-    var type = PCFShadowMap
+    var type = ShadowType.PCF
 
     init {
 
@@ -76,7 +76,7 @@ class GLShadowMap internal constructor(
 
             val depthMaterial = MeshDepthMaterial().apply {
 
-                depthPacking = RGBADepthPacking
+                depthPacking = TextureEncoding.RGBADepthPacking
 
                 morphTargets = useMorphing
                 skinning = useSkinning
@@ -112,7 +112,7 @@ class GLShadowMap internal constructor(
         val state = renderer.state
 
         // Set GL state for depth map.
-        state.setBlending(NoBlending)
+        state.setBlending(Blending.None)
         state.colorBuffer.setClear(1f, 1f, 1f, 1f)
         state.depthBuffer.setTest(true)
         state.setScissorTest(false)
@@ -172,9 +172,9 @@ class GLShadowMap internal constructor(
 
                     shadow.map = GLRenderTarget(
                         shadowMapSize.x.roundToInt(), shadowMapSize.y.roundToInt(), GLRenderTarget.Options(
-                            minFilter = NearestFilter,
-                            magFilter = NearestFilter,
-                            format = RGBAFormat
+                            minFilter = TextureFilter.Nearest,
+                            magFilter = TextureFilter.Nearest,
+                            format = TextureFormat.RGBA
                         )
                     )
                     shadow.map?.texture?.name = light.name + ".shadowMap"
@@ -344,7 +344,7 @@ class GLShadowMap internal constructor(
             result.wireframeLinewidth = material.wireframeLinewidth
         }
 
-        result.side = material.shadowSide ?: shadowSide.getValue(material.side)
+        result.side = material.shadowSide ?: shadowSide.getValue(material.side.value)
 
         result.clipShadows = material.clipShadows
         result.clippingPlanes = material.clippingPlanes

@@ -1,7 +1,7 @@
 package info.laht.threekt.extras.objects
 
-import info.laht.threekt.LinearFilter
-import info.laht.threekt.RGBFormat
+import info.laht.threekt.TextureFilter
+import info.laht.threekt.TextureFormat
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
@@ -43,9 +43,9 @@ class Reflector(
 
         renderTarget = GLRenderTarget(
             options.textureWidth, options.textureHeight, GLRenderTarget.Options(
-                minFilter = LinearFilter,
-                magFilter = LinearFilter,
-                format = RGBFormat,
+                minFilter = TextureFilter.Linear,
+                magFilter = TextureFilter.Linear,
+                format = TextureFormat.RGB,
                 stencilBuffer = false
             )
         )

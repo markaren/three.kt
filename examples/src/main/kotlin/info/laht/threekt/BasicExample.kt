@@ -37,7 +37,7 @@ object BasicExample {
 
             val plane = Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
-                side = DoubleSide
+                side = Side.Double
             }).also {
                 it.rotation.x = DEG2RAD * -90
                 it.translateZ(-1f)

@@ -2,7 +2,7 @@ package info.laht.threekt.examples.extra
 
 import info.laht.threekt.Canvas
 import info.laht.threekt.CanvasOptions
-import info.laht.threekt.DoubleSide
+import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.extras.core.Curve3
@@ -35,7 +35,7 @@ object TubeGeometryExample {
             val geometry = TubeBufferGeometry(CustomSineCurve(10f))
             val material = MeshBasicMaterial().apply {
                 color.set(0xff0000)
-                side = DoubleSide
+                side = Side.Double
             }
 
             val solidTube = Mesh(geometry, material).also {

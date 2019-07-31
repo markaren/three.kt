@@ -1,6 +1,9 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.*
+import info.laht.threekt.TextureCombineOperation
+import info.laht.threekt.TextureEncoding
+import info.laht.threekt.TextureMapping
+import info.laht.threekt.ToneMapping
 import info.laht.threekt.core.Shader
 import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.RawShaderMaterial
@@ -10,7 +13,6 @@ import info.laht.threekt.renderers.shaders.ShaderChunk
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20
-
 
 internal sealed class _GLProgram {
     abstract val id: Int
@@ -61,22 +63,22 @@ internal class GLProgram(
 
             when (material.envMap?.mapping) {
 
-                CubeReflectionMapping, CubeRefractionMapping -> envMapTypeDefine = "ENVMAP_TYPE_CUBE"
-                CubeUVReflectionMapping, CubeUVRefractionMapping -> envMapTypeDefine = "ENVMAP_TYPE_CUBE_UV"
-                EquirectangularReflectionMapping, EquirectangularRefractionMapping -> envMapTypeDefine =
+                TextureMapping.CubeReflection, TextureMapping.CubeRefraction -> envMapTypeDefine = "ENVMAP_TYPE_CUBE"
+                TextureMapping.CubeUVReflection, TextureMapping.CubeUVRefraction -> envMapTypeDefine = "ENVMAP_TYPE_CUBE_UV"
+                TextureMapping.EquirectangularReflection, TextureMapping.EquirectangularRefraction -> envMapTypeDefine =
                     "ENVMAP_TYPE_EQUIREC"
-                SphericalReflectionMapping -> envMapTypeDefine = "ENVMAP_TYPE_SPHERE";
+                TextureMapping.SphericalReflection -> envMapTypeDefine = "ENVMAP_TYPE_SPHERE";
 
             }
 
             when (material.envMap?.mapping) {
-                CubeRefractionMapping, EquirectangularRefractionMapping -> envMapModeDefine = "ENVMAP_MODE_REFRACTION"
+                TextureMapping.CubeRefraction, TextureMapping.EquirectangularRefraction -> envMapModeDefine = "ENVMAP_MODE_REFRACTION"
             }
 
             when (material.combine) {
-                MultiplyOperation -> envMapBlendingDefine = "ENVMAP_BLENDING_MULTIPLY"
-                MixOperation -> envMapBlendingDefine = "ENVMAP_BLENDING_MIX"
-                AddOperation -> envMapBlendingDefine = "ENVMAP_BLENDING_ADD"
+                TextureCombineOperation.Multiply -> envMapBlendingDefine = "ENVMAP_BLENDING_MULTIPLY"
+                TextureCombineOperation.Mix -> envMapBlendingDefine = "ENVMAP_BLENDING_MIX"
+                TextureCombineOperation.Add -> envMapBlendingDefine = "ENVMAP_BLENDING_ADD"
             }
 
         }
@@ -139,7 +141,7 @@ internal class GLProgram(
                 if (parameters.alphaMap) "#define USE_ALPHAMAP" else "",
 
                 if (parameters.vertexTangents) "#define USE_TANGENT" else "",
-                if (parameters.vertexColors > 0) "#define USE_COLOR" else "",
+                if (parameters.vertexColors.value > 0) "#define USE_COLOR" else "",
 
                 if (parameters.flatShading) "#define FLAT_SHADED" else "",
 
@@ -249,7 +251,7 @@ internal class GLProgram(
                 if (parameters.alphaMap) "#define USE_ALPHAMAP" else "",
 
                 if (parameters.vertexTangents) "#define USE_TANGENT" else "",
-                if (parameters.vertexColors > 0) "#define USE_COLOR" else "",
+                if (parameters.vertexColors.value > 0) "#define USE_COLOR" else "",
 
                 if (parameters.gradientMap) "#define USE_GRADIENTMAP" else "",
 
@@ -273,9 +275,9 @@ internal class GLProgram(
                 "uniform mat4 viewMatrix;",
                 "uniform vec3 cameraPosition;",
 
-                if ((parameters.toneMapping != NoToneMapping)) "#define TONE_MAPPING" else "",
-                if ((parameters.toneMapping != NoToneMapping)) ShaderChunk["tonemapping_pars_fragment"]!! else "", // this code is required here because it is used by the toneMapping() function defined below
-                if ((parameters.toneMapping != NoToneMapping)) getToneMappingFunction(
+                if ((parameters.toneMapping != ToneMapping.None)) "#define TONE_MAPPING" else "",
+                if ((parameters.toneMapping != ToneMapping.None)) ShaderChunk["tonemapping_pars_fragment"]!! else "", // this code is required here because it is used by the toneMapping() function defined below
+                if ((parameters.toneMapping != ToneMapping.None)) getToneMappingFunction(
                     "toneMapping",
                     parameters.toneMapping
                 ) else "",
@@ -441,17 +443,17 @@ internal class GLProgram(
 
         var programIdCount = 0
 
-        fun getEncodingComponents(encoding: Int): Pair<String, String> {
+        fun getEncodingComponents(encoding: TextureEncoding): Pair<String, String> {
 
             return when (encoding) {
 
-                LinearEncoding -> "Linear" to "( value )"
-                sRGBEncoding -> "sRGB" to "( value )"
-                RGBEEncoding -> "RGBE" to "( value )"
-                RGBM7Encoding -> "RGBM" to "( value, 7.0 )"
-                RGBM16Encoding -> "RGBM" to "( value, 16.0 )"
-                RGBDEncoding -> "RGBD" to "( value, 256.0 )"
-                GammaEncoding -> "Gamma" to "( value, float( GAMMA_FACTOR ) )"
+                TextureEncoding.Linear -> "Linear" to "( value )"
+                TextureEncoding.sRGB -> "sRGB" to "( value )"
+                TextureEncoding.RGBE -> "RGBE" to "( value )"
+                TextureEncoding.RGBM7 -> "RGBM" to "( value, 7.0 )"
+                TextureEncoding.RGBM16 -> "RGBM" to "( value, 16.0 )"
+                TextureEncoding.RGBD -> "RGBD" to "( value, 256.0 )"
+                TextureEncoding.Gamma -> "Gamma" to "( value, float( GAMMA_FACTOR ) )"
                 else -> throw IllegalArgumentException("unsupported encoding: $encoding")
 
             }
@@ -481,25 +483,25 @@ internal class GLProgram(
 
         }
 
-        fun getTexelDecodingFunction(functionName: String, encoding: Int): String {
+        fun getTexelDecodingFunction(functionName: String, encoding: TextureEncoding): String {
             val components = getEncodingComponents(encoding)
             return "vec4 $functionName( vec4 value ) { return ${components.first}ToLinear ${components.second}; }";
         }
 
-        fun getTexelEncodingFunction(functionName: String, encoding: Int): String {
+        fun getTexelEncodingFunction(functionName: String, encoding: TextureEncoding): String {
             val components = getEncodingComponents(encoding)
             return "vec4 $functionName( vec4 value ) { return LinearTo${components.first}${components.second}; }";
         }
 
-        fun getToneMappingFunction(functionName: String, toneMapping: Int): String {
+        fun getToneMappingFunction(functionName: String, toneMapping: ToneMapping): String {
 
             val toneMappingName = when (toneMapping) {
 
-                LinearToneMapping -> "Linear"
-                ReinhardToneMapping -> "Reinhard"
-                Uncharted2ToneMapping -> "Uncharted2"
-                CineonToneMapping -> "OptimizedCineon"
-                ACESFilmicToneMapping -> "ACESFilmic"
+                ToneMapping.Linear -> "Linear"
+                ToneMapping.Reinhard -> "Reinhard"
+                ToneMapping.Uncharted2 -> "Uncharted2"
+                ToneMapping.Cineon -> "OptimizedCineon"
+                ToneMapping.ACESFilmic -> "ACESFilmic"
                 else -> throw IllegalArgumentException("unsupported toneMapping: $toneMapping")
 
             }
