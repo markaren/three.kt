@@ -3,7 +3,6 @@ package info.laht.threekt.math
 import info.laht.threekt.core.Cloneable
 import kotlin.math.max
 
-
 class Color(
     var r: Float,
     var g: Float,
@@ -104,7 +103,7 @@ class Color(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other == null || this::class != other::class) return false
 
         other as Color
 
