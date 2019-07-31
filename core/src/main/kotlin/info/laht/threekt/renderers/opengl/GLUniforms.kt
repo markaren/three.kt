@@ -2,6 +2,7 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.*
+import info.laht.threekt.safeSet
 import info.laht.threekt.textures.CubeTexture
 import info.laht.threekt.textures.Texture
 import org.lwjgl.BufferUtils
@@ -11,12 +12,11 @@ import kotlin.math.roundToInt
 private var emptyTexture = Texture()
 private var emptyCubeTexture = CubeTexture()
 
-private val arrayCacheF32 = mutableListOf<FloatArray?>()
-private val arrayCacheI32 = mutableListOf<IntArray?>()
+private val arrayCacheF32 = mutableListOf<FloatArray>()
+private val arrayCacheI32 = mutableListOf<IntArray>()
 
 private val mat4array = FloatArray(16)
 private val mat3array = FloatArray(9)
-private val mat2array = FloatArray(4)
 
 internal interface Container {
 
@@ -29,17 +29,38 @@ private fun flatten(array: Array<Flattable>, nBlocks: Int, blockSize: Int): Floa
     val firstElem = array[0]
 
     val n = nBlocks * blockSize
-    var r = if (n < arrayCacheF32.size) arrayCacheF32[n] else null
 
-    if (r == null) {
+    while (n >= arrayCacheF32.size) {
+        arrayCacheF32.add(FloatArray(arrayCacheF32.size + 1))
+    }
+    val r = arrayCacheF32[n]
 
-        r = FloatArray(n)
-        while (n >= arrayCacheF32.size) {
-            arrayCacheF32.add(null)
+    if (nBlocks != 0) {
+
+        firstElem.toArray(r, 0)
+
+        var offset = 0
+        for (i in 1 until nBlocks) {
+
+            offset += blockSize
+            array[i].toArray(r, offset)
+
         }
-        arrayCacheF32[n] = r
 
     }
+
+    return r
+}
+
+private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): FloatArray {
+    val firstElem = array[0]
+
+    val n = nBlocks * blockSize
+
+    while (n >= arrayCacheF32.size) {
+        arrayCacheF32.add(FloatArray(arrayCacheF32.size + 1))
+    }
+    val r = arrayCacheF32[n]
 
     if (nBlocks != 0) {
 
@@ -60,14 +81,10 @@ private fun flatten(array: Array<Flattable>, nBlocks: Int, blockSize: Int): Floa
 
 private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
 
-    var r = if (n < arrayCacheI32.size) arrayCacheI32[n] else null
-
-    if (r == null) {
-
-        r = IntArray(n)
-        arrayCacheI32[n] = r
-
+    while (n >= arrayCacheI32.size) {
+        arrayCacheI32.add(IntArray(arrayCacheI32.size + 1))
     }
+    val r = arrayCacheI32[n]
 
     for (i in 0 until n)
         r[i] = textures.allocateTextureUnit()
@@ -78,7 +95,7 @@ private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
 
 
 internal class GLUniforms(
-    program: Int
+        program: Int
 ) : Container {
 
     override val seq = mutableListOf<UniformObject>()
@@ -187,8 +204,8 @@ internal class GLUniforms(
 }
 
 private class ActiveUniformInfo(
-    program: Int,
-    index: Int
+        program: Int,
+        index: Int
 ) {
 
     val name: String
@@ -212,7 +229,7 @@ private class ActiveUniformInfo(
 }
 
 internal sealed class UniformObject(
-    val id: String
+        val id: String
 ) {
 
     abstract fun setValue(v: Any, textures: GLTextures? = null)
@@ -220,14 +237,13 @@ internal sealed class UniformObject(
 }
 
 private class SingleUniform(
-    id: String,
-    activeInfo: ActiveUniformInfo,
-    private val addr: Int
+        id: String,
+        activeInfo: ActiveUniformInfo,
+        private val addr: Int
 ) : UniformObject(id) {
 
-    private val vector2Cache by lazy { Vector2() }
-    private val vector3Cache by lazy { Vector3() }
-    private val colorCache by lazy { Color() }
+    private val cache = mutableListOf<Any>()
+
     private val setValue = getSingularSetter(activeInfo)
 
     override fun setValue(v: Any, textures: GLTextures?) {
@@ -246,7 +262,7 @@ private class SingleUniform(
             0x8b5b -> { v, _ -> setValueM3(v) } // _MAT3
             0x8b5c -> { v, _ -> setValueM4(v) } // _MAT4
 
-            0x8b5e, 0x8d66 -> { v, t -> setValueT1(v, t!!) }; // SAMPLER_2D, SAMPLER_EXTERNAL_OES
+            0x8b5e, 0x8d66 -> { v, t -> setValueT1(v, t!!) } // SAMPLER_2D, SAMPLER_EXTERNAL_OES
             0x8b5f -> TODO() // SAMPLER_3D
             0x8b60 -> TODO() // SAMPLER_CUBE
             0x8DC1 -> TODO() // SAMPLER_2D_ARRAY
@@ -276,7 +292,7 @@ private class SingleUniform(
     fun setValueV1i(v: Any) {
         when (v) {
             is Int -> GL20.glUniform1i(addr, v)
-            is Boolean -> GL20.glUniform1i(addr, if (v) 1 else 0 )
+            is Boolean -> GL20.glUniform1i(addr, if (v) 1 else 0)
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
     }
@@ -306,19 +322,28 @@ private class SingleUniform(
     }
 
     fun setValueV1f(v: Any) {
+
         when (v) {
-            is Float -> GL20.glUniform1f(addr, v)
+            is Float -> {
+                if (cache.getOrNull(0) == v) return
+                GL20.glUniform1f(addr, v)
+                cache.safeSet(v)
+            }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
     }
 
     fun setValueV2f(v: Any) {
         when (v) {
-            is FloatArray -> GL20.glUniform2fv(addr, v)
+            is FloatArray -> {
+                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1])
+                    GL20.glUniform2fv(addr, v)
+                cache.safeSet(v[0], v[1])
+            }
             is Vector2 -> {
-                if (vector2Cache == v) return
+                if (cache.getOrNull(0) == v.x && cache.getOrNull(1) == v.y) return
                 GL20.glUniform2f(addr, v.x, v.y)
-                vector2Cache.copy(v)
+                cache.safeSet(v.x, v.y)
             }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
@@ -326,16 +351,20 @@ private class SingleUniform(
 
     fun setValueV3f(v: Any) {
         when (v) {
-            is FloatArray -> GL20.glUniform3fv(addr, v)
+            is FloatArray -> {
+                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1] && cache.getOrNull(2) == v[2])
+                    GL20.glUniform3fv(addr, v)
+                cache.safeSet(v[0], v[1], v[2])
+            }
             is Vector3 -> {
-                if (vector3Cache == v) return
+                if (cache.getOrNull(0) == v.x && cache.getOrNull(1) == v.y && cache.getOrNull(2) == v.z) return
                 GL20.glUniform3f(addr, v.x, v.y, v.z)
-
+                cache.safeSet(v.x, v.y, v.z)
             }
             is Color -> {
-                if (colorCache == v) return
+                if (cache.getOrNull(0) == v.r && cache.getOrNull(1) == v.g && cache.getOrNull(2) == v.b) return
                 GL20.glUniform3f(addr, v.r, v.g, v.b)
-                colorCache.copy(v)
+                cache.safeSet(v.r, v.g, v.b)
             }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
@@ -343,8 +372,16 @@ private class SingleUniform(
 
     fun setValueV4f(v: Any) {
         when (v) {
-            is FloatArray -> GL20.glUniform4fv(addr, v)
-            is Vector4 -> GL20.glUniform4f(addr, v.x, v.y, v.z, v.w)
+            is FloatArray -> {
+                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1] && cache.getOrNull(2) == v[2] && cache.getOrNull(3) == v[3])
+                    GL20.glUniform4fv(addr, v)
+                cache.safeSet(v[0], v[1], v[2], v[3])
+            }
+            is Vector4 -> {
+                if (cache.getOrNull(0) == v.x && cache.getOrNull(1) == v.y && cache.getOrNull(2) == v.z && cache.getOrNull(3) == v.w) return
+                GL20.glUniform4f(addr, v.x, v.y, v.z, v.w)
+                cache.safeSet(v.x, v.y, v.z, v.w)
+            }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
     }
@@ -370,51 +407,63 @@ private class SingleUniform(
 }
 
 private class PureArrayUniform(
-    id: String,
-    activeInfo: ActiveUniformInfo,
-    private val addr: Int
+        id: String,
+        activeInfo: ActiveUniformInfo,
+        private val addr: Int
 ) : UniformObject(id) {
 
     private val setValue = getPureArraySetter(activeInfo.type, addr, activeInfo.size)
 
     override fun setValue(v: Any, textures: GLTextures?) {
-        setValue.invoke(v)
+        setValue.invoke(v, textures)
     }
 
-    private fun getPureArraySetter(type: Int, addr: Int, size: Int): (Any) -> Unit {
+    private fun getPureArraySetter(type: Int, addr: Int, size: Int): (Any, GLTextures?) -> Unit {
 
         return when (type) {
 
-            0x1406 -> { v -> GL20.glUniform1fv(addr, v as FloatArray) } // FLOAT
-            0x8b50 -> { v -> GL20.glUniform2fv(addr, flatten(v as Array<Flattable>, size, 2)) } // _VEC2
-            0x8b51 -> { v -> GL20.glUniform3fv(addr, flatten(v as Array<Flattable>, size, 3)) } // _VEC3
-            0x8b52 -> { v -> GL20.glUniform4fv(addr, flatten(v as Array<Flattable>, size, 4)) } // _VEC4
+            0x1406 -> { v, _ -> GL20.glUniform1fv(addr, v as FloatArray) } // FLOAT
+            0x8b50 -> { v, _ -> GL20.glUniform2fv(addr, flatten(v as Array<Flattable>, size, 2)) } // _VEC2
+            0x8b51 -> { v, _ -> GL20.glUniform3fv(addr, flatten(v as Array<Flattable>, size, 3)) } // _VEC3
+            0x8b52 -> { v, _ -> GL20.glUniform4fv(addr, flatten(v as Array<Flattable>, size, 4)) } // _VEC4
 
-            0x8b5b -> { v ->
+            0x8b5b -> { v, _ ->
                 GL20.glUniformMatrix3fv(
-                    addr,
-                    false,
-                    flatten(v as Array<Flattable>, size, 9)
+                        addr,
+                        false,
+                        flatten(v as List<Flattable>, size, 9)
                 )
             } // _MAT3
-            0x8b5c -> { v ->
+            0x8b5c -> { v, _ ->
                 GL20.glUniformMatrix3fv(
-                    addr,
-                    false,
-                    flatten(v as Array<Flattable>, size, 16)
+                        addr,
+                        false,
+                        flatten(v as List<Flattable>, size, 16)
                 )
             } // _MAT4
 
-            0x8b5e -> { v -> TODO() } // SAMPLER_2D
-            0x8b60 -> { v -> TODO() } // SAMPLER_CUBE
+            0x8b5e -> { v, t -> setValueT1Array(v as List<Texture?>, t!!) } // SAMPLER_2D
+            0x8b60 -> { v, _ -> TODO() } // SAMPLER_CUBE
 
-            0x1404, 0x8b56 -> { v -> GL20.glUniform1iv(addr, v as IntArray) } // INT, BOOL
-            0x8b53, 0x8b57 -> { v -> GL20.glUniform2iv(addr, v as IntArray) } // _VEC2
-            0x8b54, 0x8b58 -> { v -> GL20.glUniform3iv(addr, v as IntArray) } // _VEC3
-            0x8b55, 0x8b59 -> { v -> GL20.glUniform4iv(addr, v as IntArray) } // _VEC4
+            0x1404, 0x8b56 -> { v, _ -> GL20.glUniform1iv(addr, v as IntArray) } // INT, BOOL
+            0x8b53, 0x8b57 -> { v, _ -> GL20.glUniform2iv(addr, v as IntArray) } // _VEC2
+            0x8b54, 0x8b58 -> { v, _ -> GL20.glUniform3iv(addr, v as IntArray) } // _VEC3
+            0x8b55, 0x8b59 -> { v, _ -> GL20.glUniform4iv(addr, v as IntArray) } // _VEC4
 
             else -> throw IllegalArgumentException("Unsupported type: $type")
 
+        }
+
+    }
+
+    fun setValueT1Array(v: List<Texture?>, textures: GLTextures) {
+
+        val n = v.size
+        val units = allocTexUnits(textures, n)
+        GL20.glUniform1iv(addr, units)
+
+        for (i in 0 until n) {
+            textures.setTexture2D(v[i] ?: emptyTexture, units[i])
         }
 
     }
@@ -426,7 +475,7 @@ private class PureArrayUniform(
 }
 
 private class StructuredUniform(
-    id: String
+        id: String
 ) : UniformObject(id), Container {
 
     override val seq = mutableListOf<UniformObject>()
