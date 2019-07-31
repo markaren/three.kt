@@ -56,7 +56,7 @@ object WaterExample {
 
             val water = Water(
                 planeGeometry, Water.Options(
-                    alpha = 1f,
+                    alpha = 0.7f,
                     waterNormals = texture,
                     waterColor = Color(0x001e0f),
                     sunColor = Color(0xffffff),
