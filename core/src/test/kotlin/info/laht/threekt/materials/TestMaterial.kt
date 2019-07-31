@@ -10,14 +10,4 @@ class TestMaterial {
         Assertions.assertEquals("ShaderMaterial", ShaderMaterial().type)
     }
 
-    @Test
-    fun testReflection() {
-
-        val mat = MeshDepthMaterial() as Material
-        Assertions.assertFalse(mat.get<Boolean>("skinning")!!)
-        mat["skinning"] = true
-        Assertions.assertTrue(mat.get<Boolean>("skinning")!!)
-
-    }
-
 }
