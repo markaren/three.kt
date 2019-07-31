@@ -26,7 +26,7 @@ tasks {
         if (sourceFile.extension != "kt") continue
 
         val relativePath = sourceFile.relativeTo(basePath)
-        val mainClass = relativePath.path.replace('/', '.')
+        val mainClass = relativePath.toPath().joinToString(".")
             .removeSuffix(".kt")
 
         register<JavaExec>("run${sourceFile.nameWithoutExtension}") {
