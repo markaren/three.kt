@@ -1,6 +1,6 @@
 package info.laht.threekt.helpers
 
-import info.laht.threekt.FaceColors
+import info.laht.threekt.Colors
 import info.laht.threekt.cameras.AbstractCamera
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.CameraCanUpdateProjectionMatrix
@@ -15,7 +15,7 @@ class CameraHelper(
     val camera: Camera
 ) : LineSegments(BufferGeometry(), LineBasicMaterial().apply {
     color.set(0xffffff)
-    vertexColors = FaceColors
+    vertexColors = Colors.Face
 }) {
 
     private val pointMap = mutableMapOf<String, MutableList<Int>>()

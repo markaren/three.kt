@@ -2,7 +2,7 @@ package info.laht.threekt.examples.lights
 
 import info.laht.threekt.Canvas
 import info.laht.threekt.CanvasOptions
-import info.laht.threekt.DoubleSide
+import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
@@ -37,7 +37,7 @@ object SpotLightExample {
 
             Mesh(PlaneGeometry(25f, 25f), MeshPhongMaterial().apply {
                 color.set(Color.yellowgreen)
-                side = DoubleSide
+                side = Side.Double
             }).also {
                 it.rotation.x = DEG2RAD * -90
                 it.translateZ(-1f)

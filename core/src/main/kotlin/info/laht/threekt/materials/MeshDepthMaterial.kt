@@ -1,11 +1,11 @@
 package info.laht.threekt.materials
 
-import info.laht.threekt.BasicDepthPacking
+import info.laht.threekt.TextureEncoding
 import info.laht.threekt.textures.Texture
 
 class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithWireframe {
 
-    var depthPacking = BasicDepthPacking
+    var depthPacking = TextureEncoding.BasicDepthPacking
 
     override var skinning = false
     override var morphTargets = false

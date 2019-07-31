@@ -9,6 +9,14 @@ internal sealed class _GLRenderer {
 
     var mode by Delegates.notNull<Int>()
 
+//    fun setMode(mode: Int) {
+//        this._mode = mode
+//    }
+//
+//    fun setMode(mode: DrawMode) {
+//        setMode(mode.value)
+//    }
+
     abstract fun render(start: Int, count: Int)
 
 }

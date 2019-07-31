@@ -34,37 +34,37 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
     /**
      * Blending destination. It's one of the blending mode constants defined in Three.js. Default is {@link OneMinusSrcAlphaFactor}.
      */
-    var blendDst = OneMinusSrcAlphaFactor
+    var blendDst = BlendingFactor.OneMinusSrcAlpha
 
     /**
      * The tranparency of the .blendDst. Default is null.
      */
-    var blendDstAlpha: Int? = null
+    var blendDstAlpha: BlendingFactor? = null
 
     /**
      * Blending equation to use when applying blending. It's one of the constants defined in Three.js. Default is {@link AddEquation}.
      */
-    var blendEquation = AddEquation
+    var blendEquation = BlendingEquation.Add
 
     /**
      * The transparency of the .blendEquation. Default is null.
      */
-    var blendEquationAlpha: Int? = null
+    var blendEquationAlpha: BlendingEquation? = null
 
     /**
      * Which blending to use when displaying objects with this material. Default is {@link NormalBlending}.
      */
-    var blending = NormalBlending
+    var blending = Blending.Normal
 
     /**
      * Blending source. It's one of the blending mode constants defined in Three.js. Default is {@link SrcAlphaFactor}.
      */
-    var blendSrc = SrcAlphaFactor
+    var blendSrc = BlendingFactor.SrcAlpha
 
     /**
      * The tranparency of the .blendSrc. Default is null.
      */
-    var blendSrcAlpha: Int? = null
+    var blendSrcAlpha: BlendingFactor? = null
 
     /**
      * User-defined clipping planes specified as THREE.Plane objects in world space. These planes apply to the objects this material is attached to. Points in space whose signed distance to the plane is negative are clipped (not rendered). See the WebGL / clipping /intersection example. Default is null.
@@ -89,7 +89,7 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
     /**
      * Which depth function to use. Default is {@link LessEqualDepth}. See the depth mode constants for all possible values.
      */
-    var depthFunc = LessEqualDepth
+    var depthFunc = DepthMode.LessEqualDepth
 
     /**
      * Whether to have depth test enabled when rendering this material. Default is true.
@@ -158,10 +158,9 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
      * Defines which of the face sides will be rendered - front, back or both.
      * Default is THREE.FrontSide. Other options are THREE.BackSide and THREE.DoubleSide.
      */
-    var side = FrontSide
+    var side = Side.Front
 
-
-    var shadowSide: Int? = null
+    var shadowSide: Side? = null
 
     /**
      * Defines whether this material is transparent. This has an effect on rendering as transparent objects need special treatment and are rendered after non-transparent objects.
@@ -173,7 +172,7 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
     /**
      * Defines whether vertex coloring is used. Default is THREE.NoColors. Other options are THREE.VertexColors and THREE.FaceColors.
      */
-    var vertexColors = NoColors
+    var vertexColors = Colors.None
 
     /**
      * Defines whether precomputed vertex tangents are used. Default is false.
@@ -203,7 +202,7 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
     internal open var bumpScale = 0f
 
     internal open var normalMap: Texture? = null
-    internal open var normalMapType = 0
+    internal open var normalMapType = NormalMapType.TangentSpace
 
     internal open var displacementMap: Texture? = null
     internal open var displacementScale = 0f
@@ -221,7 +220,7 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
 
     internal open var gradientMap: Texture? = null
 
-    internal open var combine: Int = MultiplyOperation
+    internal open var combine = TextureCombineOperation.Multiply
 
     internal var program: GLProgram? = null
 

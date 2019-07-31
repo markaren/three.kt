@@ -16,12 +16,12 @@ internal class GLPrograms(
 
     internal val programs = mutableListOf<GLProgram>()
 
-    fun getTextureEncodingFromMap(map: Texture?, gammaOverrideLinear: Boolean): Int {
+    fun getTextureEncodingFromMap(map: Texture?, gammaOverrideLinear: Boolean): TextureEncoding {
 
-        var encoding = map?.encoding ?: LinearEncoding
+        var encoding = map?.encoding ?: TextureEncoding.Linear
 
-        if (encoding == LinearEncoding && gammaOverrideLinear) {
-            encoding = GammaEncoding
+        if (encoding == TextureEncoding.Linear && gammaOverrideLinear) {
+            encoding = TextureEncoding.Gamma
         }
 
         return encoding
@@ -189,14 +189,14 @@ internal class GLPrograms(
         val envMapMode = envMap && material.envMap?.mapping != null
         val envMapEncoding = getTextureEncodingFromMap(material.envMap, renderer.gammaInput)
         val envMapCubeUV =
-            (envMap) && ((material.envMap?.mapping == CubeUVReflectionMapping) || (material.envMap?.mapping == CubeUVRefractionMapping))
+            (envMap) && ((material.envMap?.mapping == TextureMapping.CubeUVReflection) || (material.envMap?.mapping == TextureMapping.CubeUVRefraction))
         val lightMap = material.lightMap != null
         val aoMap = material.aoMap != null
         val emissiveMap = material.emissiveMap != null
         val emissiveMapEncoding = getTextureEncodingFromMap(material.emissiveMap, renderer.gammaInput)
         val bumpMap = material.bumpMap != null
         val normalMap = material.normalMap != null
-        val objectSpaceNormalMap = material.normalMapType == ObjectSpaceNormalMap
+        val objectSpaceNormalMap = material.normalMapType == NormalMapType.ObjectSpace
         val displacementMap = material.displacementMap != null
         val roughnessMap = material.roughnessMap != null
         val metalnessMap = material.metalnessMap != null
@@ -246,8 +246,8 @@ internal class GLPrograms(
         val premultipliedAlpha = material.premultipliedAlpha
 
         val alphaTest = material.alphaTest
-        val doubleSided = material.side == DoubleSide
-        val flipSided = material.side == BackSide
+        val doubleSided = material.side == Side.Double
+        val flipSided = material.side == Side.Back
 
         val depthPacking = if (material is MeshDepthMaterial) material.depthPacking else false
 

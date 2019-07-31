@@ -1,6 +1,6 @@
 package info.laht.threekt.helpers
 
-import info.laht.threekt.VertexColors
+import info.laht.threekt.Colors
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.materials.LineBasicMaterial
@@ -12,7 +12,7 @@ class GridHelper(
     divisions: Int = 10,
     color1: Color = Color(0x444444),
     color2: Color = Color(0x888888)
-): LineSegments(create(size, divisions, color1, color2), LineBasicMaterial().apply { vertexColors = VertexColors }) {
+): LineSegments(create(size, divisions, color1, color2), LineBasicMaterial().apply { vertexColors = Colors.Vertex }) {
 
     private companion object {
 

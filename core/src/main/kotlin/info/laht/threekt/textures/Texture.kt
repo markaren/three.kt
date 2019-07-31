@@ -14,15 +14,15 @@ import kotlin.math.floor
 
 open class Texture(
     var image: Image? = null,
-    mapping: Int? = null,
-    wrapS: Int? = null,
-    wrapT: Int? = null,
-    magFilter: Int? = null,
-    minFilter: Int? = null,
-    format: Int? = null,
-    type: Int? = null,
+    mapping: TextureMapping? = null,
+    wrapS: TextureWrapping? = null,
+    wrapT: TextureWrapping? = null,
+    magFilter: TextureFilter? = null,
+    minFilter: TextureFilter? = null,
+    format: TextureFormat? = null,
+    type: TextureType? = null,
     anisotropy: Int? = null,
-    encoding: Int? = null
+    encoding: TextureEncoding? = null
 ) : EventDispatcher by EventDispatcherImpl() {
 
     var name = ""
@@ -33,18 +33,18 @@ open class Texture(
 
     val mipmaps = mutableListOf<Image>()
 
-    var mapping = mapping ?: UVMapping
+    var mapping = mapping ?: TextureMapping.UV
 
-    var wrapS = wrapS ?: ClampToEdgeWrapping
-    var wrapT = wrapT ?: ClampToEdgeWrapping
+    var wrapS = wrapS ?: TextureWrapping.ClampToEdge
+    var wrapT = wrapT ?: TextureWrapping.ClampToEdge
 
-    var magFilter = magFilter ?: LinearFilter
-    var minFilter = minFilter ?: LinearMipMapLinearFilter
+    var magFilter = magFilter ?: TextureFilter.Linear
+    var minFilter = minFilter ?: TextureFilter.LinearMipMapLinear
 
     var anisotropy = anisotropy ?: 1
 
-    open var format = format ?: RGBAFormat
-    var type = type ?: UnsignedByteType
+    open var format = format ?: TextureFormat.RGBA
+    var type = type ?: TextureType.UnsignedByte
 
     val offset = Vector2(0, 0)
     val repeat = Vector2(1, 1)
@@ -58,7 +58,7 @@ open class Texture(
 
     var unpackAlignment = 4
 
-    var encoding = encoding ?: LinearEncoding
+    var encoding = encoding ?: TextureEncoding.Linear
 
     internal val onUpdate: ((Texture) -> Unit)? = null
 
@@ -84,7 +84,7 @@ open class Texture(
 
     fun transformUv(uv: Vector2): Vector2 {
 
-        if (this.mapping != UVMapping) return uv
+        if (this.mapping != TextureMapping.UV) return uv
 
         uv.applyMatrix3(this.matrix)
 
@@ -92,9 +92,9 @@ open class Texture(
 
             when (this.wrapS) {
 
-                RepeatWrapping -> uv.x = uv.x - floor(uv.x)
-                ClampToEdgeWrapping -> uv.x = if (uv.x < 0) 0f else 1f
-                MirroredRepeatWrapping -> {
+                TextureWrapping.Repeat -> uv.x = uv.x - floor(uv.x)
+                TextureWrapping.ClampToEdge -> uv.x = if (uv.x < 0) 0f else 1f
+                TextureWrapping.MirroredRepeat -> {
                     if (abs(floor(uv.x).toInt() % 2) == 1) {
                         uv.x = ceil(uv.x) - uv.x
                     } else {
@@ -110,9 +110,9 @@ open class Texture(
 
             when (this.wrapT) {
 
-                RepeatWrapping -> uv.y = uv.y - floor(uv.y)
-                ClampToEdgeWrapping -> uv.y = if (uv.y < 0) 0f else 1f
-                MirroredRepeatWrapping -> {
+                TextureWrapping.Repeat -> uv.y = uv.y - floor(uv.y)
+                TextureWrapping.ClampToEdge -> uv.y = if (uv.y < 0) 0f else 1f
+                TextureWrapping.MirroredRepeat -> {
                     if (abs(floor(uv.y).toInt() % 2) == 1) {
                         uv.y = ceil(uv.y) - uv.y
                     } else {

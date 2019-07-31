@@ -1,6 +1,6 @@
 package info.laht.threekt.helpers
 
-import info.laht.threekt.VertexColors
+import info.laht.threekt.Colors
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.objects.LineSegments
 
@@ -25,7 +25,7 @@ class AxesHelper(
         geometry.addAttribute("position", FloatBufferAttribute(vertices, 3))
         geometry.addAttribute("color", FloatBufferAttribute(colors, 3))
 
-        material.vertexColors = VertexColors
+        material.vertexColors = Colors.Vertex
 
     }
 

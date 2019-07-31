@@ -1,7 +1,7 @@
 package info.laht.threekt.materials
 
-import info.laht.threekt.MultiplyOperation
-import info.laht.threekt.TangentSpaceNormalMap
+import info.laht.threekt.NormalMapType
+import info.laht.threekt.TextureCombineOperation
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
@@ -28,7 +28,7 @@ open class MeshPhongMaterial: Material(), MaterialWithWireframe, MaterialWithCol
     public override var bumpScale = 1f
 
     public override var normalMap: Texture? = null
-    public override var normalMapType = TangentSpaceNormalMap
+    public override var normalMapType = NormalMapType.TangentSpace
     var normalScale =  Vector2( 1, 1 )
 
     public override var displacementMap: Texture? = null
@@ -40,7 +40,7 @@ open class MeshPhongMaterial: Material(), MaterialWithWireframe, MaterialWithCol
     public override var alphaMap: Texture? = null
 
     public override var envMap: Texture? = null
-    override var combine = MultiplyOperation
+    override var combine = TextureCombineOperation.Multiply
     var reflectivity = 1f
     var refractionRatio = 0.98f
 
