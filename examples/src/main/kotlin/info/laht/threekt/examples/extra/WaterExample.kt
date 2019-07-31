@@ -8,17 +8,19 @@ import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.examples.textures.TextureExample
 import info.laht.threekt.extras.objects.Water
-import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.geometries.SphereBufferGeometry
 import info.laht.threekt.lights.DirectionalLight
 import info.laht.threekt.loaders.TextureLoader
 import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Color
+import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
 import java.io.File
 import kotlin.math.PI
+import kotlin.math.sin
 
 object WaterExample {
 
@@ -41,7 +43,7 @@ object WaterExample {
             }
             val controls = OrbitControls(camera, canvas)
 
-            val planeGeometry = PlaneGeometry(10f, 10f)
+            val planeGeometry = PlaneGeometry(1000f, 1000f)
 
             val texture = TextureLoader.load(File(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file)).also {
                 it.wrapS = TextureWrapping.Repeat
@@ -61,30 +63,29 @@ object WaterExample {
                     textureWidth = 512,
                     textureHeight = 512,
                     sunDirection = light.position.clone().normalize(),
-                    distortionScale = 3.7f
+                    distortionScale = 1f
                 )
             ).also {
                 it.rotateX(-PI.toFloat() / 2)
                 scene.add(it)
             }
 
-            val box = Mesh(BoxBufferGeometry(1f), MeshPhongMaterial().apply {
+            val box = Mesh(SphereBufferGeometry(1f), MeshPhongMaterial().apply {
                 color.set(0x00ff00)
-//                emissive.set(0x333333)
-//                flatShading = true
+                emissive.set(0x333333)
             }).also {
                 it.position.y = 3f
                 scene.add(it)
             }
-
-
 
             val clock = Clock()
             while (!canvas.shouldClose()) {
 
 
                 val wTime = water.uniforms["time"]!!.value as Float
-                water.uniforms["time"]!!.value = wTime + (0.001f*clock.getDelta())
+                water.uniforms["time"]!!.value = wTime + (0.6f*clock.getDelta())
+
+                box.position.y = 5 * sin(TWO_PI* 0.1f * clock.getElapsedTime())
 
                 renderer.render(scene, camera)
 
