@@ -2,13 +2,13 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Object3D
-import info.laht.threekt.length
 import info.laht.threekt.lights.*
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix4
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3
 import info.laht.threekt.safeSet
+import info.laht.threekt.shrinkToFit
 import info.laht.threekt.textures.Texture
 import kotlin.math.cos
 
@@ -170,11 +170,11 @@ internal class GLLights {
                 hash.shadowsLength != shadows.size
         ) {
 
-            state.directional.length(directionalLength)
-            state.spot.length(spotLength)
-            state.rectArea.length(rectAreaLength)
-            state.point.length(pointLength)
-            state.hemi.length(hemiLength)
+            state.directional.shrinkToFit(directionalLength)
+            state.spot.shrinkToFit(spotLength)
+            state.rectArea.shrinkToFit(rectAreaLength)
+            state.point.shrinkToFit(pointLength)
+            state.hemi.shrinkToFit(hemiLength)
 
             hash.directionalLength = directionalLength
             hash.pointLength = pointLength
@@ -203,17 +203,17 @@ internal class GLLights {
 
         val ambient = Color(0f, 0f, 0f)
         val probe = Array(9) { Vector3() }
-        val directional = mutableListOf<DirectionalLightUniforms?>()
+        val directional = mutableListOf<DirectionalLightUniforms>()
         val directionalShadowMap = mutableListOf<Texture?>()
-        val directionalShadowMatrix = mutableListOf<Matrix4?>()
-        val spot = mutableListOf<SpotLightUniforms?>()
+        val directionalShadowMatrix = mutableListOf<Matrix4>()
+        val spot = mutableListOf<SpotLightUniforms>()
         val spotShadowMap = mutableListOf<Texture?>()
-        val spotShadowMatrix = mutableListOf<Matrix4?>()
-        val rectArea = mutableListOf<RectAreaLightUniforms?>()
-        val point = mutableListOf<PointLightUniforms?>()
+        val spotShadowMatrix = mutableListOf<Matrix4>()
+        val rectArea = mutableListOf<RectAreaLightUniforms>()
+        val point = mutableListOf<PointLightUniforms>()
         val pointShadowMap = mutableListOf<Texture?>()
-        val pointShadowMatrix = mutableListOf<Matrix4?>()
-        val hemi = mutableListOf<HemisphereLightUniforms?>()
+        val pointShadowMatrix = mutableListOf<Matrix4>()
+        val hemi = mutableListOf<HemisphereLightUniforms>()
 
         inner class Hash {
             var directionalLength = -1
