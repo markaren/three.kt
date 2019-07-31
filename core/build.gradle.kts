@@ -1,6 +1,8 @@
 import org.gradle.internal.os.OperatingSystem
 
-apply(plugin = "maven-publish")
+plugins {
+    `maven-publish`
+}
 
 val os = OperatingSystem.current()
 val lwjglNatives = when {
@@ -30,4 +32,12 @@ dependencies {
 tasks.named<Test>("test") {
     failFast = true
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }
