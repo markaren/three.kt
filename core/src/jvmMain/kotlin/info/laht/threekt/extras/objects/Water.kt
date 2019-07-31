@@ -231,7 +231,7 @@ val mirrorShader by lazy {
                                     "mirrorSampler" to Uniform(null),
                                     "alpha" to Uniform(1f),
                                     "time" to Uniform(0f),
-                                    "size" to Uniform(0f),
+                                    "size" to Uniform(1f),
                                     "distortionScale" to Uniform(20f),
                                     "textureMatrix" to Uniform(Matrix4()),
                                     "sunColor" to Uniform(Color(0x7F7F7F)),
