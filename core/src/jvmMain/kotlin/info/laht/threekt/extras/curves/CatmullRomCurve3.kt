@@ -13,10 +13,10 @@ class CatmullRomCurve3(
     var tension: Float = 0.5f
 ) : Curve3() {
 
-    val tmp = Vector3()
-    val px = CubicPoly()
-    val py = CubicPoly()
-    val pz = CubicPoly()
+    private val tmp = Vector3()
+    private val px = CubicPoly()
+    private val py = CubicPoly()
+    private val pz = CubicPoly()
 
     override fun getPoint(t: Float, optionalTarget: Vector3): Vector3 {
         val point = optionalTarget
