@@ -2,6 +2,8 @@
 
 package info.laht.threekt
 
+import kotlin.jvm.JvmName
+
 enum class CullFaceMode(
     val value: Int
 ) {
