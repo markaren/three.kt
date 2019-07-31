@@ -19,7 +19,7 @@ Be warned, while the basics works, such as:
  
 a lot of features are still missing and the API can change rapidly.
 
-Right now, this is mostly interessting for developers that want to contribute.
+Right now, this is mostly interesting for developers that want to contribute.
 
 #### API (subject to changes)
 
