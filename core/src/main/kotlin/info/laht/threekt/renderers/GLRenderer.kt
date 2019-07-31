@@ -1270,20 +1270,14 @@ class GLRenderer(
 
     }
 
-    private fun refreshUniformsLine(uniforms: Map<String, Uniform>, material: Material) {
-
-        material as MaterialWithColor
+    private fun refreshUniformsLine(uniforms: Map<String, Uniform>, material: LineBasicMaterial) {
 
         uniforms["diffuse"]?.value<Color>()?.copy(material.color)
         uniforms["opacity"]?.value = material.opacity
 
     }
 
-    private fun refreshUniformsDash(uniforms: Map<String, Uniform>, material: Material) {
-
-        if (material !is LineDashedMaterial) {
-            throw IllegalArgumentException()
-        }
+    private fun refreshUniformsDash(uniforms: Map<String, Uniform>, material: LineDashedMaterial) {
 
         val dashSize = material.dashSize
         uniforms["dashSize"]?.value = dashSize
@@ -1315,11 +1309,7 @@ class GLRenderer(
 
     }
 
-    private fun refreshUniformsSprites(uniforms: Map<String, Uniform>, material: Material) {
-
-        if (material !is SpriteMaterial) {
-            throw IllegalArgumentException()
-        }
+    private fun refreshUniformsSprites(uniforms: Map<String, Uniform>, material: SpriteMaterial) {
 
         uniforms["diffuse"]?.value<Color>()?.copy(material.color)
         uniforms["opacity"]?.value = material.opacity
@@ -1354,7 +1344,7 @@ class GLRenderer(
 
     }
 
-    private fun refreshUniformsLambert(uniforms: Map<String, Uniform>, material: Material) {
+    private fun refreshUniformsLambert(uniforms: Map<String, Uniform>, material: MeshLambertMaterial) {
 
         if (material.emissiveMap != null) {
 
