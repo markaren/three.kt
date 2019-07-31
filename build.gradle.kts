@@ -1,11 +1,9 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 plugins {
-    kotlin("jvm") version "1.3.41"
+    java
+    kotlin("jvm") version "1.3.41" apply false
 }
-
-group = "info.laht"
-version = "r106-ALPHA"
 
 configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -15,8 +13,8 @@ tasks.named<Wrapper>("wrapper") {
     distributionType = Wrapper.DistributionType.ALL
 }
 
-allprojects {
-    apply(plugin = "java")
+subprojects {
+
     apply(plugin = "kotlin")
 
     repositories {
