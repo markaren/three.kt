@@ -57,3 +57,23 @@ interface MaterialWithLineWidth {
     var linewidth: Float
 
 }
+
+interface MaterialWithReflectivity {
+
+    var reflectivity: Float
+    var refractionRatio: Float
+
+}
+
+interface MaterialWithSpecular {
+
+    var specular: Color
+    var shininess: Float
+
+}
+
+interface MaterialWithDefaultAttributeValues {
+
+    val defaultAttributeValues: MutableMap<String, Any>
+
+}

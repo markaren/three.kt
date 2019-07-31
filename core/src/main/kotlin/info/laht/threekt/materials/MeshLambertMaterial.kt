@@ -2,15 +2,15 @@ package info.laht.threekt.materials
 
 import info.laht.threekt.math.Color
 
-class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithEmissive, MaterialWithWireframe {
+class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithEmissive, MaterialWithWireframe, MaterialWithReflectivity {
 
     override val color = Color( 0xffffff )
 
     override val emissive = Color( 0x000000 )
     override var emissiveIntensity = 1f
 
-    var reflectivity = 1f
-    var refractionRatio = 0.98f
+    override var reflectivity = 1f
+    override var refractionRatio = 0.98f
 
     override var wireframe = false
     override var wireframeLinewidth = 1f

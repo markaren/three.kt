@@ -6,11 +6,11 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
-open class MeshPhongMaterial: Material(), MaterialWithWireframe, MaterialWithColor, MaterialWithEmissive, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithSkinning {
+open class MeshPhongMaterial: Material(), MaterialWithWireframe, MaterialWithColor, MaterialWithEmissive, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithSkinning, MaterialWithReflectivity, MaterialWithSpecular {
 
     override var color =  Color( 0xffffff ) // diffuse
-    var specular =  Color( 0x111111 )
-    var shininess = 30f
+    override var specular =  Color( 0x111111 )
+    override var shininess = 30f
 
     public override var map: Texture? = null
 
@@ -41,8 +41,8 @@ open class MeshPhongMaterial: Material(), MaterialWithWireframe, MaterialWithCol
 
     public override var envMap: Texture? = null
     override var combine = TextureCombineOperation.Multiply
-    var reflectivity = 1f
-    var refractionRatio = 0.98f
+    override var reflectivity = 1f
+    override var refractionRatio = 0.98f
 
     override var wireframe = false
     override var wireframeLinewidth = 1f

@@ -4,7 +4,7 @@ import info.laht.threekt.TextureCombineOperation
 import info.laht.threekt.math.Color
 import info.laht.threekt.textures.Texture
 
-class MeshBasicMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithColor, MaterialWithWireframe {
+class MeshBasicMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithColor, MaterialWithWireframe, MaterialWithReflectivity {
 
     override val color = Color.fromHex(0xffffff)
 
@@ -22,8 +22,8 @@ class MeshBasicMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
 
     public override var combine = TextureCombineOperation.Multiply
 
-    var reflectivity = 1f
-    var refractionRatio = 0.98f
+    override var reflectivity = 1f
+    override var refractionRatio = 0.98f
 
     override var wireframe = false
     override var wireframeLinewidth = 1f

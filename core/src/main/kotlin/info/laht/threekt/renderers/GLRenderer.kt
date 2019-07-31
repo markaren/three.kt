@@ -289,7 +289,7 @@ class GLRenderer(
 
         } else if (`object` is Line) {
 
-            val lineWidth = material.get<Float>("linewidth") ?: 1f
+            val lineWidth = if (material is MaterialWithLineWidth) material.linewidth else 1f
 
             state.setLineWidth(lineWidth * getTargetPixelRatio())
 
@@ -339,10 +339,7 @@ class GLRenderer(
         state.initAttributes()
 
         val geometryAttributes = geometry.attributes
-
         val programAttributes = program.getAttributes()
-
-        val materialDefaultAttributeValues = material.get<Map<String, Any>>("defaultAttributeValues")
 
         for (name in programAttributes.keys) {
 
@@ -368,9 +365,9 @@ class GLRenderer(
                     GL20.glVertexAttribPointer(programAttribute, size, type, normalized, 0, 0)
 
 
-                } else if (materialDefaultAttributeValues != null) {
+                } else if (material is MaterialWithDefaultAttributeValues && material.defaultAttributeValues != null) {
 
-                    val value = materialDefaultAttributeValues[name] as FloatArray?
+                    val value = material.defaultAttributeValues[name] as FloatArray?
 
                     if (value != null) {
 
@@ -1212,8 +1209,10 @@ class GLRenderer(
             // this check must be handled differently, or removed entirely, if WebGLRenderTargetCube uses a CubeTexture in the future
             uniforms["flipEnvMap"]?.value = if (envMap is CubeTexture) -1 else 1
 
-            uniforms["reflectivity"]?.value = material["reflectivity"]
-            uniforms["refractionRatio"]?.value = material["refractionRatio"]
+            if (material is MaterialWithReflectivity) {
+                uniforms["reflectivity"]?.value = material.reflectivity
+                uniforms["refractionRatio"]?.value = material.refractionRatio
+            }
 
             uniforms["maxMipLevel"]?.value = properties[envMap]["__maxMipLevel"]
 
@@ -1282,9 +1281,14 @@ class GLRenderer(
 
     private fun refreshUniformsDash(uniforms: Map<String, Uniform>, material: Material) {
 
-        uniforms["dashSize"]?.value = material["dashSize"]
-        uniforms["totalSize"]?.value = material.get<Float>("dashSize")!! + material.get<Float>("gapSize")!!
-        uniforms["scale"]?.value = material["scale"]
+        if (material !is LineDashedMaterial) {
+            throw IllegalArgumentException()
+        }
+
+        val dashSize = material.dashSize
+        uniforms["dashSize"]?.value = dashSize
+        uniforms["totalSize"]?.value = dashSize + material.gapSize
+        uniforms["scale"]?.value = material.scale
 
     }
 
@@ -1313,11 +1317,13 @@ class GLRenderer(
 
     private fun refreshUniformsSprites(uniforms: Map<String, Uniform>, material: Material) {
 
-        material as MaterialWithColor
+        if (material !is SpriteMaterial) {
+            throw IllegalArgumentException()
+        }
 
         uniforms["diffuse"]?.value<Color>()?.copy(material.color)
         uniforms["opacity"]?.value = material.opacity
-        uniforms["rotation"]?.value = material.get("rotation")
+        uniforms["rotation"]?.value = material.rotation
         uniforms["map"]?.value = material.map
 
         material.map?.also { map ->
@@ -1358,10 +1364,10 @@ class GLRenderer(
 
     }
 
-    private fun refreshUniformsPhong(uniforms: Map<String, Uniform>, material: Material) {
+    private fun refreshUniformsPhong(uniforms: Map<String, Uniform>, material: MeshPhongMaterial) {
 
-        uniforms["specular"]?.value<Color>()?.copy(material["specular"]!!)
-        uniforms["shininess"]?.value = max(material.get<Float>("shininess")!!, 1e-4f) // to prevent pow( 0.0, 0.0 )
+        uniforms["specular"]?.value<Color>()?.copy(material.specular)
+        uniforms["shininess"]?.value = max(material.shininess, 1e-4f) // to prevent pow( 0.0, 0.0 )
 
         if (material.emissiveMap != null) {
 
@@ -1383,7 +1389,7 @@ class GLRenderer(
         if (material.normalMap != null) {
 
             uniforms["normalMap"]?.value = material.normalMap
-            uniforms["normalScale"]?.value<Vector2>()?.copy(material["normalScale"]!!)
+            uniforms["normalScale"]?.value<Vector2>()?.copy(material.normalScale)
             if (material.side == Side.Back) uniforms["normalScale"]?.value<Vector2>()?.negate()
 
         }
@@ -1398,7 +1404,7 @@ class GLRenderer(
 
     }
 
-    private fun refreshUniformsToon(uniforms: Map<String, Uniform>, material: Material) {
+    private fun refreshUniformsToon(uniforms: Map<String, Uniform>, material: MeshToonMaterial) {
 
         refreshUniformsPhong(uniforms, material)
 
@@ -1410,10 +1416,10 @@ class GLRenderer(
 
     }
 
-    fun refreshUniformsStandard(uniforms: Map<String, Uniform>, material: Material) {
+    fun refreshUniformsStandard(uniforms: Map<String, Uniform>, material: MeshStandardMaterial) {
 
-        uniforms["roughness"]?.value = material["roughness"]
-        uniforms["metalness"]?.value = material["metalness"]
+        uniforms["roughness"]?.value = material.roughness
+        uniforms["metalness"]?.value = material.metalness
 
         if (material.roughnessMap != null) {
 
@@ -1447,7 +1453,7 @@ class GLRenderer(
         if (material.normalMap != null) {
 
             uniforms["normalMap"]?.value = material.normalMap
-            uniforms["normalScale"]?.value<Vector2>()?.copy(material.get("normalScale")!!)
+            uniforms["normalScale"]?.value<Vector2>()?.copy(material.normalScale)
             if (material.side == Side.Back) {
                 uniforms["normalScale"]?.value<Vector2>()?.negate()
             }
@@ -1464,24 +1470,24 @@ class GLRenderer(
 
         if (material.envMap != null) {
 
-            uniforms["envMapIntensity"]?.value = material.get("envMapIntensity")
+            uniforms["envMapIntensity"]?.value = material.envMapIntensity
 
         }
 
     }
 
-    private fun refreshUniformsPhysical(uniforms: Map<String, Uniform>, material: Material) {
+    private fun refreshUniformsPhysical(uniforms: Map<String, Uniform>, material: MeshPhysicalMaterial) {
 
         refreshUniformsStandard(uniforms, material)
 
-        uniforms["reflectivity"]?.value = material["reflectivity"] // also part of uniforms common
+        uniforms["reflectivity"]?.value = material.reflectivity // also part of uniforms common
 
-        uniforms["clearCoat"]?.value = material["clearCoat"]
-        uniforms["clearCoatRoughness"]?.value = material["clearCoatRoughness"]
+        uniforms["clearCoat"]?.value = material.clearCoat
+        uniforms["clearCoatRoughness"]?.value = material.clearCoatRoughness
 
     }
 
-    private fun refreshUniformsMatcap(uniforms: Map<String, Uniform>, material: Material) {
+    private fun refreshUniformsMatcap(uniforms: Map<String, Uniform>, material: MeshMatcapMaterial) {
 
         if (material.matcap != null) {
 
@@ -1503,7 +1509,7 @@ class GLRenderer(
         if (material.normalMap != null) {
 
             uniforms["normalMap"]?.value = material.normalMap
-            uniforms["normalScale"]?.value<Vector2>()?.copy(material["normalScale"]!!)
+            uniforms["normalScale"]?.value<Vector2>()?.copy(material.normalScale)
             if (material.side == Side.Back) {
                 uniforms["normalScale"]?.value<Vector2>()?.negate()
             }
@@ -1532,7 +1538,7 @@ class GLRenderer(
 
     }
 
-    private fun refreshUniformsDistance(uniforms: Map<String, Uniform>, material: Material) {
+    private fun refreshUniformsDistance(uniforms: Map<String, Uniform>, material: MeshDistanceMaterial) {
 
         if (material.displacementMap != null) {
 
@@ -1542,13 +1548,13 @@ class GLRenderer(
 
         }
 
-        uniforms["referencePosition"]?.value<Vector3>()?.copy(material.get("referencePosition")!!)
-        uniforms["nearDistance"]?.value = material.get("nearDistance")
-        uniforms["farDistance"]?.value = material.get("farDistance")
+        uniforms["referencePosition"]?.value<Vector3>()?.copy(material.referencePosition)
+        uniforms["nearDistance"]?.value = material.nearDistance
+        uniforms["farDistance"]?.value = material.farDistance
 
     }
 
-    private fun refreshUniformsNormal(uniforms: Map<String, Uniform>, material: Material) {
+    private fun refreshUniformsNormal(uniforms: Map<String, Uniform>, material: MeshNormalMaterial) {
 
         if (material.bumpMap != null) {
 
@@ -1563,7 +1569,7 @@ class GLRenderer(
         if (material.normalMap != null) {
 
             uniforms["normalMap"]?.value = material.normalMap
-            uniforms["normalScale"]?.value<Vector2>()?.copy(material.get("normalScale")!!)
+            uniforms["normalScale"]?.value<Vector2>()?.copy(material.normalScale)
             if (material.side == Side.Back) uniforms["normalScale"]?.value<Vector2>()?.negate()
 
         }
