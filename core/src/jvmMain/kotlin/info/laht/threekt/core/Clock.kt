@@ -41,9 +41,9 @@ class Clock(
 
             val newTime = System.currentTimeMillis()
             diff = ( newTime - this.oldTime ).toFloat() / 1000f
-            this.oldTime = newTime;
+            this.oldTime = newTime
 
-            elapsedTime += diff;
+            elapsedTime += diff
 
         }
 

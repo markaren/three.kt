@@ -26,14 +26,14 @@ open class Line @JvmOverloads constructor(
             val lineDistances = mutableListOf(0f)
 
             for (i in 1 until positionAttribute.count) {
-                start.fromBufferAttribute(positionAttribute, i - 1);
-                end.fromBufferAttribute(positionAttribute, i);
+                start.fromBufferAttribute(positionAttribute, i - 1)
+                end.fromBufferAttribute(positionAttribute, i)
 
-                lineDistances[i] = lineDistances[i - 1];
-                lineDistances[i] += start.distanceTo(end);
+                lineDistances[i] = lineDistances[i - 1]
+                lineDistances[i] += start.distanceTo(end)
             }
 
-            geometry.addAttribute("lineDistance", FloatBufferAttribute(lineDistances.toFloatArray(), 1));
+            geometry.addAttribute("lineDistance", FloatBufferAttribute(lineDistances.toFloatArray(), 1))
 
         } else {
             println( "Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry." )

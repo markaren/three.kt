@@ -67,7 +67,7 @@ class Canvas @JvmOverloads constructor(
     private fun createWindow(options: CanvasOptions): Long {
 
         if (options.antialiasing > 0) {
-            glfwWindowHint(GLFW_SAMPLES, options.antialiasing);
+            glfwWindowHint(GLFW_SAMPLES, options.antialiasing)
         }
 
         // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().

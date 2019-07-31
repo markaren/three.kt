@@ -57,7 +57,7 @@ internal class GLBackground (
         }
 
         if (renderer.autoClear || forceClear) {
-            renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
+            renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil)
         }
 
         if (background is CubeTexture || background is GLRenderTargetCube) {
@@ -81,12 +81,12 @@ internal class GLBackground (
             boxMesh.geometry.removeAttribute("uv")
 
             boxMesh.onBeforeRender = { _, _, camera, _, _, _ ->
-                boxMesh.matrixWorld.copyPosition(camera.matrixWorld);
+                boxMesh.matrixWorld.copyPosition(camera.matrixWorld)
             }
 
             val material = boxMesh.material as ShaderMaterial
             material.map = material.uniforms["tCube"]?.value as Texture
-            objects.update(boxMesh);
+            objects.update(boxMesh)
 
             val texture = when (background) {
                 is Texture -> background
@@ -94,22 +94,22 @@ internal class GLBackground (
                 else -> throw IllegalStateException()
             }
 
-            material.uniforms["tCube"]?.value = texture;
-            material.uniforms["tFlip"]?.value = if (background is GLRenderTargetCube) 1 else -1;
+            material.uniforms["tCube"]?.value = texture
+            material.uniforms["tFlip"]?.value = if (background is GLRenderTargetCube) 1 else -1
 
             if (currentBackground != background ||
                 currentBackgroundVersion != texture.version
             ) {
 
-                boxMesh.material.needsUpdate = true;
+                boxMesh.material.needsUpdate = true
 
-                currentBackground = background;
-                currentBackgroundVersion = texture.version;
+                currentBackground = background
+                currentBackgroundVersion = texture.version
 
             }
 
             // push to the pre-sorted opaque render list
-            renderList.unshift(boxMesh, boxMesh.geometry, boxMesh.material, 0, 0f, null);
+            renderList.unshift(boxMesh, boxMesh.geometry, boxMesh.material, 0, 0f, null)
 
         } else if (background is Texture) {
 
@@ -130,37 +130,37 @@ internal class GLBackground (
             }
 
 
-            planeMesh.geometry.removeAttribute("normal");
+            planeMesh.geometry.removeAttribute("normal")
 
             val material = planeMesh.material as ShaderMaterial
             material.map = material.uniforms["t2D"]?.value as Texture
 
-            objects.update(planeMesh);
+            objects.update(planeMesh)
 
-            material.uniforms["t2D"]?.value = background;
+            material.uniforms["t2D"]?.value = background
 
             if (background.matrixAutoUpdate) {
 
-                background.updateMatrix();
+                background.updateMatrix()
 
             }
 
-            (material.uniforms["uvTransform"]?.value as Matrix3).copy(background.matrix);
+            (material.uniforms["uvTransform"]?.value as Matrix3).copy(background.matrix)
 
             if (currentBackground != background ||
                 currentBackgroundVersion != background.version
             ) {
 
-                planeMesh.material.needsUpdate = true;
+                planeMesh.material.needsUpdate = true
 
-                currentBackground = background;
-                currentBackgroundVersion = background.version;
+                currentBackground = background
+                currentBackgroundVersion = background.version
 
             }
 
 
             // push to the pre-sorted opaque render list
-            renderList.unshift(planeMesh, planeMesh.geometry, planeMesh.material, 0, 0f, null);
+            renderList.unshift(planeMesh, planeMesh.geometry, planeMesh.material, 0, 0f, null)
 
         }
 

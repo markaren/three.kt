@@ -391,35 +391,35 @@ class Vector3(
 
     fun setFromSpherical ( s: Spherical ): Vector3 {
 
-        return this.setFromSphericalCoords( s.radius, s.phi, s.theta );
+        return this.setFromSphericalCoords( s.radius, s.phi, s.theta )
 
     }
 
     fun setFromSphericalCoords ( radius: Float, phi: Float, theta: Float ): Vector3 {
 
-        var sinPhiRadius = sin( phi ) * radius;
+        var sinPhiRadius = sin( phi ) * radius
 
-        this.x = sinPhiRadius * sin( theta );
-        this.y = cos( phi ) * radius;
-        this.z = sinPhiRadius * cos( theta );
+        this.x = sinPhiRadius * sin( theta )
+        this.y = cos( phi ) * radius
+        this.z = sinPhiRadius * cos( theta )
 
-        return this;
+        return this
 
     }
 
     fun setFromCylindrical ( c: Cylindrical ): Vector3 {
 
-        return this.setFromCylindricalCoords( c.radius, c.theta, c.y );
+        return this.setFromCylindricalCoords( c.radius, c.theta, c.y )
 
     }
 
     fun setFromCylindricalCoords ( radius: Float, theta: Float, y: Float ): Vector3 {
 
-        this.x = radius * sin( theta );
-        this.y = y;
-        this.z = radius * cos( theta );
+        this.x = radius * sin( theta )
+        this.y = y
+        this.z = radius * cos( theta )
 
-        return this;
+        return this
 
     }
 

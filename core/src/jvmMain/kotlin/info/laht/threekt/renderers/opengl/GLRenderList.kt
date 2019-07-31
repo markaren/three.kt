@@ -45,21 +45,21 @@ internal class GLRenderList {
             }
         } else {
 
-            renderItem.id = `object`.id;
-            renderItem.`object` = `object`;
-            renderItem.geometry = geometry;
-            renderItem.material = material;
-            renderItem.program = material.program ?: GLProgramDefault;
-            renderItem.groupOrder = groupOrder;
-            renderItem.renderOrder = `object`.renderOrder;
-            renderItem.z = z;
-            renderItem.group = group;
+            renderItem.id = `object`.id
+            renderItem.`object` = `object`
+            renderItem.geometry = geometry
+            renderItem.material = material
+            renderItem.program = material.program ?: GLProgramDefault
+            renderItem.groupOrder = groupOrder
+            renderItem.renderOrder = `object`.renderOrder
+            renderItem.z = z
+            renderItem.group = group
 
 
         }
 
 
-        renderItemsIndex++;
+        renderItemsIndex++
 
         return renderItem
 

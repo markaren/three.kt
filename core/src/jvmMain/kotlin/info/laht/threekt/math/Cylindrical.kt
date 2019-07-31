@@ -20,17 +20,17 @@ class Cylindrical(
 
     fun setFromVector3 ( v: Vector3 ): Cylindrical {
 
-        return this.setFromCartesianCoords( v.x, v.y, v.z );
+        return this.setFromCartesianCoords( v.x, v.y, v.z )
 
     }
 
     fun setFromCartesianCoords ( x: Float, y: Float, z: Float ): Cylindrical {
 
-        this.radius = sqrt( x * x + z * z );
-        this.theta = atan2( x, z );
-        this.y = y;
+        this.radius = sqrt( x * x + z * z )
+        this.theta = atan2( x, z )
+        this.y = y
 
-        return this;
+        return this
 
     }
 

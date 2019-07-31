@@ -83,13 +83,13 @@ class Box3 @JvmOverloads constructor(
     }
 
     fun setFromPoints(points: List<Vector3>): Box3 {
-        this.makeEmpty();
+        this.makeEmpty()
 
         points.forEach {
-            this.expandByPoint(it);
+            this.expandByPoint(it)
         }
 
-        return this;
+        return this
     }
 
     fun setFromCenterAndSize(center: Vector3, size: Vector3): Box3 {
@@ -116,7 +116,7 @@ class Box3 @JvmOverloads constructor(
         this.max.y = Float.NEGATIVE_INFINITY
         this.max.z = Float.NEGATIVE_INFINITY
 
-        return this;
+        return this
     }
 
     fun isEmpty(): Boolean {
@@ -216,12 +216,12 @@ class Box3 @JvmOverloads constructor(
     }
 
     fun intersectsSphere(sphere: Sphere): Boolean {
-        val closestPoint = Vector3();
+        val closestPoint = Vector3()
         // Find the point on the AABB closest to the sphere center.
-        this.clampPoint( sphere.center, closestPoint );
+        this.clampPoint( sphere.center, closestPoint )
 
         // If that point is inside the sphere, the AABB and sphere intersect.
-        return closestPoint.distanceToSquared( sphere.center ) <= ( sphere.radius * sphere.radius );
+        return closestPoint.distanceToSquared( sphere.center ) <= ( sphere.radius * sphere.radius )
     }
 
     fun intersectsPlane(plane: Plane): Boolean {
@@ -296,7 +296,7 @@ class Box3 @JvmOverloads constructor(
             this.makeEmpty()
         }
 
-        return this;
+        return this
     }
 
     fun union(box: Box3): Box3 {
@@ -324,10 +324,10 @@ class Box3 @JvmOverloads constructor(
             points[6].set(this.max.x, this.max.y, this.min.z).applyMatrix4(matrix) // 110
             points[7].set(this.max.x, this.max.y, this.max.z).applyMatrix4(matrix) // 111
 
-            this.setFromPoints(points);
+            this.setFromPoints(points)
         }
 
-        return this;
+        return this
     }
 
     fun translate(offset: Vector3): Box3 {

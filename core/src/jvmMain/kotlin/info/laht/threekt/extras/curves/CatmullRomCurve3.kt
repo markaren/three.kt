@@ -19,7 +19,7 @@ class CatmullRomCurve3(
     val pz = CubicPoly()
 
     override fun getPoint(t: Float, optionalTarget: Vector3): Vector3 {
-        val point = optionalTarget ?: Vector3()
+        val point = optionalTarget
 
         val points = this.points
         val l = points.size

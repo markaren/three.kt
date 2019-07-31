@@ -30,9 +30,9 @@ class CylinderBufferGeometry(
         val helper = CylinderBufferGeometryHelper()
 
         setIndex(helper.indices)
-        addAttribute("position", helper.vertices);
-        addAttribute("normal", helper.normals);
-        addAttribute("uv", helper.uvs);
+        addAttribute("position", helper.vertices)
+        addAttribute("normal", helper.normals)
+        addAttribute("uv", helper.uvs)
 
     }
 

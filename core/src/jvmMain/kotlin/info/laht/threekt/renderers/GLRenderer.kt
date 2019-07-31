@@ -519,10 +519,10 @@ class GLRenderer(
 
         currentRenderTarget?.also {
             // Generate mipmap if we're using any kind of mipmap filtering
-            textures.updateRenderTargetMipmap(it);
+            textures.updateRenderTargetMipmap(it)
 
             // resolve multisample renderbuffers to a single-sample texture if necessary
-            textures.updateMultisampleRenderTarget(it);
+            textures.updateMultisampleRenderTarget(it)
         }
 
         state.depthBuffer.setTest(true)

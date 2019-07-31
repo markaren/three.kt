@@ -40,14 +40,14 @@ class Matrix4(
             n43: Float,
             n44: Float
     ): Matrix4 {
-        val te = this.elements;
+        val te = this.elements
 
-        te[0] = n11; te[4] = n12; te[8] = n13; te[12] = n14;
-        te[1] = n21; te[5] = n22; te[9] = n23; te[13] = n24;
-        te[2] = n31; te[6] = n32; te[10] = n33; te[14] = n34;
-        te[3] = n41; te[7] = n42; te[11] = n43; te[15] = n44;
+        te[0] = n11; te[4] = n12; te[8] = n13; te[12] = n14
+        te[1] = n21; te[5] = n22; te[9] = n23; te[13] = n24
+        te[2] = n31; te[6] = n32; te[10] = n33; te[14] = n34
+        te[3] = n41; te[7] = n42; te[11] = n43; te[15] = n44
 
-        return this;
+        return this
     }
 
     /**
@@ -98,7 +98,7 @@ class Matrix4(
                 xAxis.y, yAxis.y, zAxis.y, 0f,
                 xAxis.z, yAxis.z, zAxis.z, 0f,
                 0f, 0f, 0f, 1f
-        );
+        )
     }
 
     /**
@@ -108,26 +108,26 @@ class Matrix4(
 
         val v1 = Vector3()
 
-        val te = this.elements;
-        val me = m.elements;
+        val te = this.elements
+        val me = m.elements
 
-        val scaleX = 1f / v1.setFromMatrixColumn(m, 0).length();
-        val scaleY = 1f / v1.setFromMatrixColumn(m, 1).length();
-        val scaleZ = 1f / v1.setFromMatrixColumn(m, 2).length();
+        val scaleX = 1f / v1.setFromMatrixColumn(m, 0).length()
+        val scaleY = 1f / v1.setFromMatrixColumn(m, 1).length()
+        val scaleZ = 1f / v1.setFromMatrixColumn(m, 2).length()
 
-        te[0] = me[0] * scaleX;
-        te[1] = me[1] * scaleX;
-        te[2] = me[2] * scaleX;
+        te[0] = me[0] * scaleX
+        te[1] = me[1] * scaleX
+        te[2] = me[2] * scaleX
         te[3] = 0f
 
-        te[4] = me[4] * scaleY;
-        te[5] = me[5] * scaleY;
-        te[6] = me[6] * scaleY;
+        te[4] = me[4] * scaleY
+        te[5] = me[5] * scaleY
+        te[6] = me[6] * scaleY
         te[7] = 0f
 
-        te[8] = me[8] * scaleZ;
-        te[9] = me[9] * scaleZ;
-        te[10] = me[10] * scaleZ;
+        te[8] = me[8] * scaleZ
+        te[9] = me[9] * scaleZ
+        te[10] = me[10] * scaleZ
         te[11] = 0f
 
         te[12] = 0f
@@ -135,135 +135,135 @@ class Matrix4(
         te[14] = 0f
         te[15] = 1f
 
-        return this;
+        return this
     }
 
     fun makeRotationFromEuler(euler: Euler): Matrix4 {
-        val te = this.elements;
+        val te = this.elements
 
         val x = euler.x
         val y = euler.y
         val z = euler.z
-        val a = cos(x);
+        val a = cos(x)
         val b = sin(x)
-        val c = cos(y);
+        val c = cos(y)
         val d = sin(y)
-        val e = cos(z);
+        val e = cos(z)
         val f = sin(z)
 
         if (euler.order == EulerOrder.XYZ) {
 
-            val ae = a * e;
+            val ae = a * e
             val af = a * f
-            val be = b * e;
+            val be = b * e
             val bf = b * f
 
-            te[0] = c * e;
-            te[4] = -c * f;
-            te[8] = d;
+            te[0] = c * e
+            te[4] = -c * f
+            te[8] = d
 
-            te[1] = af + be * d;
-            te[5] = ae - bf * d;
-            te[9] = -b * c;
+            te[1] = af + be * d
+            te[5] = ae - bf * d
+            te[9] = -b * c
 
-            te[2] = bf - ae * d;
-            te[6] = be + af * d;
-            te[10] = a * c;
+            te[2] = bf - ae * d
+            te[6] = be + af * d
+            te[10] = a * c
 
         } else if (euler.order == EulerOrder.YXZ) {
 
-            val ce = c * e;
+            val ce = c * e
             val cf = c * f
-            val de = d * e;
-            val df = d * f;
+            val de = d * e
+            val df = d * f
 
-            te[0] = ce + df * b;
-            te[4] = de * b - cf;
-            te[8] = a * d;
+            te[0] = ce + df * b
+            te[4] = de * b - cf
+            te[8] = a * d
 
-            te[1] = a * f;
-            te[5] = a * e;
-            te[9] = -b;
+            te[1] = a * f
+            te[5] = a * e
+            te[9] = -b
 
-            te[2] = cf * b - de;
-            te[6] = df + ce * b;
-            te[10] = a * c;
+            te[2] = cf * b - de
+            te[6] = df + ce * b
+            te[10] = a * c
 
         } else if (euler.order == EulerOrder.ZXY) {
 
-            val ce = c * e;
+            val ce = c * e
             val cf = c * f
-            val de = d * e;
-            val df = d * f;
+            val de = d * e
+            val df = d * f
 
-            te[0] = ce - df * b;
-            te[4] = -a * f;
-            te[8] = de + cf * b;
+            te[0] = ce - df * b
+            te[4] = -a * f
+            te[8] = de + cf * b
 
-            te[1] = cf + de * b;
-            te[5] = a * e;
-            te[9] = df - ce * b;
+            te[1] = cf + de * b
+            te[5] = a * e
+            te[9] = df - ce * b
 
-            te[2] = -a * d;
-            te[6] = b;
-            te[10] = a * c;
+            te[2] = -a * d
+            te[6] = b
+            te[10] = a * c
 
         } else if (euler.order == EulerOrder.ZYX) {
 
-            val ae = a * e;
+            val ae = a * e
             val af = a * f
-            val be = b * e;
-            val bf = b * f;
+            val be = b * e
+            val bf = b * f
 
-            te[0] = c * e;
-            te[4] = be * d - af;
-            te[8] = ae * d + bf;
+            te[0] = c * e
+            te[4] = be * d - af
+            te[8] = ae * d + bf
 
-            te[1] = c * f;
-            te[5] = bf * d + ae;
-            te[9] = af * d - be;
+            te[1] = c * f
+            te[5] = bf * d + ae
+            te[9] = af * d - be
 
-            te[2] = -d;
-            te[6] = b * c;
-            te[10] = a * c;
+            te[2] = -d
+            te[6] = b * c
+            te[10] = a * c
 
         } else if (euler.order == EulerOrder.YZX) {
 
-            val ac = a * c;
+            val ac = a * c
             val ad = a * d
-            val bc = b * c;
-            val bd = b * d;
+            val bc = b * c
+            val bd = b * d
 
-            te[0] = c * e;
-            te[4] = bd - ac * f;
-            te[8] = bc * f + ad;
+            te[0] = c * e
+            te[4] = bd - ac * f
+            te[8] = bc * f + ad
 
-            te[1] = f;
-            te[5] = a * e;
-            te[9] = -b * e;
+            te[1] = f
+            te[5] = a * e
+            te[9] = -b * e
 
-            te[2] = -d * e;
-            te[6] = ad * f + bc;
-            te[10] = ac - bd * f;
+            te[2] = -d * e
+            te[6] = ad * f + bc
+            te[10] = ac - bd * f
 
         } else if (euler.order == EulerOrder.XZY) {
 
-            val ac = a * c;
+            val ac = a * c
             val ad = a * d
-            val bc = b * c;
-            val bd = b * d;
+            val bc = b * c
+            val bd = b * d
 
-            te[0] = c * e;
-            te[4] = -f;
-            te[8] = d * e;
+            te[0] = c * e
+            te[4] = -f
+            te[8] = d * e
 
-            te[1] = ac * f + bd;
-            te[5] = a * e;
-            te[9] = ad * f - bc;
+            te[1] = ac * f + bd
+            te[5] = a * e
+            te[9] = ad * f - bc
 
-            te[2] = bc * f - ad;
-            te[6] = b * e;
-            te[10] = bd * f + ac;
+            te[2] = bc * f - ad
+            te[6] = b * e
+            te[10] = bd * f + ac
 
         }
 
@@ -278,14 +278,14 @@ class Matrix4(
         te[14] = 0f
         te[15] = 1f
 
-        return this;
+        return this
     }
 
     fun makeRotationFromQuaternion(q: Quaternion): Matrix4 {
-        val zero = Vector3(0f, 0f, 0f);
-        val one = Vector3(1f, 1f, 1f);
+        val zero = Vector3(0f, 0f, 0f)
+        val one = Vector3(1f, 1f, 1f)
 
-        return this.compose(zero, q, one);
+        return this.compose(zero, q, one)
 
 
     }
@@ -294,24 +294,24 @@ class Matrix4(
      * Constructs a rotation matrix, looking from eye towards center with defined up vector.
      */
     fun lookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix4 {
-        val x = Vector3();
-        val y = Vector3();
-        val z = Vector3();
+        val x = Vector3()
+        val y = Vector3()
+        val z = Vector3()
 
-        val te = this.elements;
+        val te = this.elements
 
-        z.subVectors(eye, target);
+        z.subVectors(eye, target)
 
         if (z.lengthSq() == 0f) {
 
             // eye and target are in the same position
 
-            z.z = 1f;
+            z.z = 1f
 
         }
 
-        z.normalize();
-        x.crossVectors(up, z);
+        z.normalize()
+        x.crossVectors(up, z)
 
         if (x.lengthSq() == 0f) {
 
@@ -319,27 +319,27 @@ class Matrix4(
 
             if (abs(up.z) == 1f) {
 
-                z.x += 0.0001f;
+                z.x += 0.0001f
 
             } else {
 
-                z.z += 0.0001f;
+                z.z += 0.0001f
 
             }
 
-            z.normalize();
-            x.crossVectors(up, z);
+            z.normalize()
+            x.crossVectors(up, z)
 
         }
 
-        x.normalize();
-        y.crossVectors(z, x);
+        x.normalize()
+        y.crossVectors(z, x)
 
-        te[0] = x.x; te[4] = y.x; te[8] = z.x;
-        te[1] = x.y; te[5] = y.y; te[9] = z.y;
-        te[2] = x.z; te[6] = y.z; te[10] = z.z;
+        te[0] = x.x; te[4] = y.x; te[8] = z.x
+        te[1] = x.y; te[5] = y.y; te[9] = z.y
+        te[2] = x.z; te[6] = y.z; te[10] = z.z
 
-        return this;
+        return this
 
 
     }
@@ -348,11 +348,11 @@ class Matrix4(
      * Multiplies this matrix by m.
      */
     fun multiply(m: Matrix4): Matrix4 {
-        return this.multiplyMatrices(this, m);
+        return this.multiplyMatrices(this, m)
     }
 
     fun premultiply(m: Matrix4): Matrix4 {
-        return this.multiplyMatrices(m, this);
+        return this.multiplyMatrices(m, this)
     }
 
     /**
@@ -363,38 +363,38 @@ class Matrix4(
         val be = b.elements
         val te = this.elements
 
-        val a11 = ae[0];
-        val a12 = ae[4];
-        val a13 = ae[8];
+        val a11 = ae[0]
+        val a12 = ae[4]
+        val a13 = ae[8]
         val a14 = ae[12]
-        val a21 = ae[1];
-        val a22 = ae[5];
-        val a23 = ae[9];
+        val a21 = ae[1]
+        val a22 = ae[5]
+        val a23 = ae[9]
         val a24 = ae[13]
-        val a31 = ae[2];
-        val a32 = ae[6];
-        val a33 = ae[10];
+        val a31 = ae[2]
+        val a32 = ae[6]
+        val a33 = ae[10]
         val a34 = ae[14]
-        val a41 = ae[3];
-        val a42 = ae[7];
-        val a43 = ae[11];
+        val a41 = ae[3]
+        val a42 = ae[7]
+        val a43 = ae[11]
         val a44 = ae[15]
 
-        val b11 = be[0];
-        val b12 = be[4];
-        val b13 = be[8];
+        val b11 = be[0]
+        val b12 = be[4]
+        val b13 = be[8]
         val b14 = be[12]
-        val b21 = be[1];
-        val b22 = be[5];
-        val b23 = be[9];
+        val b21 = be[1]
+        val b22 = be[5]
+        val b23 = be[9]
         val b24 = be[13]
-        val b31 = be[2];
-        val b32 = be[6];
-        val b33 = be[10];
+        val b31 = be[2]
+        val b32 = be[6]
+        val b33 = be[10]
         val b34 = be[14]
-        val b41 = be[3];
-        val b42 = be[7];
-        val b43 = be[11];
+        val b41 = be[3]
+        val b42 = be[7]
+        val b43 = be[11]
         val b44 = be[15]
 
         te[0] = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41
@@ -417,7 +417,7 @@ class Matrix4(
         te[11] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43
         te[15] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44
 
-        return this;
+        return this
     }
 
     /**
@@ -439,17 +439,17 @@ class Matrix4(
         val v1 = Vector3()
         for (i in 0 until attribute.count) {
 
-            v1.x = attribute.getX(i);
-            v1.y = attribute.getY(i);
-            v1.z = attribute.getZ(i);
+            v1.x = attribute.getX(i)
+            v1.y = attribute.getY(i)
+            v1.z = attribute.getZ(i)
 
-            v1.applyMatrix4(this);
+            v1.applyMatrix4(this)
 
-            attribute.setXYZ(i, v1.x, v1.y, v1.z);
+            attribute.setXYZ(i, v1.x, v1.y, v1.z)
 
         }
 
-        return attribute;
+        return attribute
     }
 
     /**
@@ -510,7 +510,7 @@ class Matrix4(
                                 + n12 * n23 * n31
                         )
 
-                );
+                )
     }
 
     /**
@@ -563,21 +563,21 @@ class Matrix4(
         val te = this.elements
         val me = m.elements
 
-        val n11 = me[0];
-        val n21 = me[1];
-        val n31 = me[2];
+        val n11 = me[0]
+        val n21 = me[1]
+        val n31 = me[2]
         val n41 = me[3]
-        val n12 = me[4];
-        val n22 = me[5];
-        val n32 = me[6];
+        val n12 = me[4]
+        val n22 = me[5]
+        val n32 = me[6]
         val n42 = me[7]
-        val n13 = me[8];
-        val n23 = me[9];
-        val n33 = me[10];
+        val n13 = me[8]
+        val n23 = me[9]
+        val n33 = me[10]
         val n43 = me[11]
-        val n14 = me[12];
-        val n24 = me[13];
-        val n34 = me[14];
+        val n14 = me[12]
+        val n24 = me[13]
+        val n34 = me[14]
         val n44 = me[15]
 
         val t11 =
@@ -602,37 +602,37 @@ class Matrix4(
         }
         val detInv = 1f / det
 
-        te[0] = t11 * detInv;
+        te[0] = t11 * detInv
         te[1] =
-                (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) * detInv;
+                (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) * detInv
         te[2] =
-                (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) * detInv;
+                (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) * detInv
         te[3] =
-                (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) * detInv;
+                (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) * detInv
 
-        te[4] = t12 * detInv;
+        te[4] = t12 * detInv
         te[5] =
-                (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) * detInv;
+                (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) * detInv
         te[6] =
-                (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) * detInv;
+                (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) * detInv
         te[7] =
-                (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) * detInv;
+                (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) * detInv
 
-        te[8] = t13 * detInv;
+        te[8] = t13 * detInv
         te[9] =
-                (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) * detInv;
+                (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) * detInv
         te[10] =
-                (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) * detInv;
+                (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) * detInv
         te[11] =
-                (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) * detInv;
+                (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) * detInv
 
-        te[12] = t14 * detInv;
+        te[12] = t14 * detInv
         te[13] =
-                (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) * detInv;
+                (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) * detInv
         te[14] =
-                (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) * detInv;
+                (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) * detInv
         te[15] =
-                (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * detInv;
+                (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * detInv
 
         return this
     }
@@ -655,11 +655,11 @@ class Matrix4(
     }
 
     fun getMaxScaleOnAxis(): Float {
-        val te = this.elements;
+        val te = this.elements
 
-        val scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
-        val scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6];
-        val scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10];
+        val scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2]
+        val scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6]
+        val scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10]
 
         return sqrt(max(scaleXSq, max(scaleYSq, scaleZSq)))
     }
@@ -675,7 +675,7 @@ class Matrix4(
                 0f, 0f, 1f, z,
                 0f, 0f, 0f, 1f
 
-        );
+        )
 
         return this
     }
@@ -756,10 +756,10 @@ class Matrix4(
         val c = cos(angle)
         val s = sin(angle)
         val t = 1f - c
-        val x = axis.x;
-        val y = axis.y;
+        val x = axis.x
+        val y = axis.y
         val z = axis.z
-        val tx = t * x;
+        val tx = t * x
         val ty = t * y
 
         this.set(
@@ -794,48 +794,48 @@ class Matrix4(
      * Sets this matrix to the transformation composed of translation, rotation and scale.
      */
     fun compose(position: Vector3, quaternion: Quaternion, scale: Vector3): Matrix4 {
-        val te = this.elements;
+        val te = this.elements
 
         val x = quaternion.x
         val y = quaternion.y
         val z = quaternion.z
         val w = quaternion.w
 
-        val x2 = x + x;
-        val y2 = y + y;
-        val z2 = z + z;
-        val xx = x * x2;
-        val xy = x * y2;
-        val xz = x * z2;
-        val yy = y * y2;
-        val yz = y * z2;
-        val zz = z * z2;
-        val wx = w * x2;
-        val wy = w * y2;
-        val wz = w * z2;
+        val x2 = x + x
+        val y2 = y + y
+        val z2 = z + z
+        val xx = x * x2
+        val xy = x * y2
+        val xz = x * z2
+        val yy = y * y2
+        val yz = y * z2
+        val zz = z * z2
+        val wx = w * x2
+        val wy = w * y2
+        val wz = w * z2
 
         val sx = scale.x
         val sy = scale.y
-        val sz = scale.z;
+        val sz = scale.z
 
-        te[0] = (1 - (yy + zz)) * sx;
-        te[1] = (xy + wz) * sx;
-        te[2] = (xz - wy) * sx;
+        te[0] = (1 - (yy + zz)) * sx
+        te[1] = (xy + wz) * sx
+        te[2] = (xz - wy) * sx
         te[3] = 0f
 
-        te[4] = (xy - wz) * sy;
-        te[5] = (1 - (xx + zz)) * sy;
-        te[6] = (yz + wx) * sy;
+        te[4] = (xy - wz) * sy
+        te[5] = (1 - (xx + zz)) * sy
+        te[6] = (yz + wx) * sy
         te[7] = 0f
 
-        te[8] = (xz + wy) * sz;
-        te[9] = (yz - wx) * sz;
-        te[10] = (1 - (xx + yy)) * sz;
+        te[8] = (xz + wy) * sz
+        te[9] = (yz - wx) * sz
+        te[10] = (1 - (xx + yy)) * sz
         te[11] = 0f
 
-        te[12] = position.x;
-        te[13] = position.y;
-        te[14] = position.z;
+        te[12] = position.x
+        te[13] = position.y
+        te[14] = position.z
         te[15] = 1f
 
         return this
@@ -852,46 +852,46 @@ class Matrix4(
     ): Triple<Vector3, Quaternion, Vector3> {
         val vector = Vector3()
         val matrix = Matrix4()
-        val te = this.elements;
+        val te = this.elements
 
-        var sx = vector.set(te[0], te[1], te[2]).length();
-        val sy = vector.set(te[4], te[5], te[6]).length();
-        val sz = vector.set(te[8], te[9], te[10]).length();
+        var sx = vector.set(te[0], te[1], te[2]).length()
+        val sy = vector.set(te[4], te[5], te[6]).length()
+        val sz = vector.set(te[8], te[9], te[10]).length()
 
         // if determine is negative, we need to invert one scale
-        val det = this.determinant();
+        val det = this.determinant()
         if (det < 0) {
             sx = -sx
         }
 
-        position.x = te[12];
-        position.y = te[13];
-        position.z = te[14];
+        position.x = te[12]
+        position.y = te[13]
+        position.z = te[14]
 
         // scale the rotation part
-        matrix.copy(this);
+        matrix.copy(this)
 
-        val invSX = 1f / sx;
-        val invSY = 1f / sy;
-        val invSZ = 1f / sz;
+        val invSX = 1f / sx
+        val invSY = 1f / sy
+        val invSZ = 1f / sz
 
-        matrix.elements[0] *= invSX;
-        matrix.elements[1] *= invSX;
-        matrix.elements[2] *= invSX;
+        matrix.elements[0] *= invSX
+        matrix.elements[1] *= invSX
+        matrix.elements[2] *= invSX
 
-        matrix.elements[4] *= invSY;
-        matrix.elements[5] *= invSY;
-        matrix.elements[6] *= invSY;
+        matrix.elements[4] *= invSY
+        matrix.elements[5] *= invSY
+        matrix.elements[6] *= invSY
 
-        matrix.elements[8] *= invSZ;
-        matrix.elements[9] *= invSZ;
-        matrix.elements[10] *= invSZ;
+        matrix.elements[8] *= invSZ
+        matrix.elements[9] *= invSZ
+        matrix.elements[10] *= invSZ
 
-        quaternion.setFromRotationMatrix(matrix);
+        quaternion.setFromRotationMatrix(matrix)
 
-        scale.x = sx;
-        scale.y = sy;
-        scale.z = sz;
+        scale.x = sx
+        scale.y = sy
+        scale.z = sz
 
         return Triple(position, quaternion, scale)
     }
@@ -921,7 +921,7 @@ class Matrix4(
         te[2] = 0f; te[6] = 0f; te[10] = c; te[14] = d
         te[3] = 0f; te[7] = 0f; te[11] = -1f; te[15] = 0f
 
-        return this;
+        return this
     }
 
     /**

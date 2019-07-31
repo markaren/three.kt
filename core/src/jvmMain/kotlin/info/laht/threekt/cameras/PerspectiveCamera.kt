@@ -41,10 +41,10 @@ class PerspectiveCamera(
     fun setFocalLength(focalLength: Int) {
 
         // see http://www.bobatkins.com/photography/technical/field_of_view.html
-        val vExtentSlope = 0.5f * this.getFilmHeight() / focalLength;
+        val vExtentSlope = 0.5f * this.getFilmHeight() / focalLength
 
         this.fov = RAD2DEG * 2 * atan(vExtentSlope)
-        this.updateProjectionMatrix();
+        this.updateProjectionMatrix()
 
     }
 
@@ -54,13 +54,13 @@ class PerspectiveCamera(
     fun getFocalLength(): Float {
 
         val vExtentSlope = tan(DEG2RAD * 0.5.toFloat() * this.fov)
-        return 0.5f * this.getFilmHeight() / vExtentSlope;
+        return 0.5f * this.getFilmHeight() / vExtentSlope
 
     }
 
     fun getEffectiveFOV(): Float {
 
-        return RAD2DEG * 2 * atan(tan(DEG2RAD * 0.5f * this.fov) / this.zoom);
+        return RAD2DEG * 2 * atan(tan(DEG2RAD * 0.5f * this.fov) / this.zoom)
 
     }
 
@@ -147,7 +147,7 @@ class PerspectiveCamera(
             it.height = height
         }
 
-        this.updateProjectionMatrix();
+        this.updateProjectionMatrix()
 
     }
 

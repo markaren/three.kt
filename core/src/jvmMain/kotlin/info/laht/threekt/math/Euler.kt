@@ -77,107 +77,107 @@ class Euler(
 
         if (order == EulerOrder.XYZ) {
 
-            this._y = asin(clamp(m13, -1f, 1f));
+            this._y = asin(clamp(m13, -1f, 1f))
 
             if (abs(m13) < 0.99999) {
 
-                this._x = atan2(-m23, m33);
-                this._z = atan2(-m12, m11);
+                this._x = atan2(-m23, m33)
+                this._z = atan2(-m12, m11)
 
             } else {
 
-                this._x = atan2(m32, m22);
+                this._x = atan2(m32, m22)
                 this._z = 0f
 
             }
 
         } else if (order == EulerOrder.YXZ) {
 
-            this._x = asin(-clamp(m23, -1, 1));
+            this._x = asin(-clamp(m23, -1, 1))
 
             if (abs(m23) < 0.99999) {
 
-                this._y = atan2(m13, m33);
-                this._z = atan2(m21, m22);
+                this._y = atan2(m13, m33)
+                this._z = atan2(m21, m22)
 
             } else {
 
-                this._y = atan2(-m31, m11);
+                this._y = atan2(-m31, m11)
                 this._z = 0f
 
             }
 
         } else if (order == EulerOrder.ZXY) {
 
-            this._x = asin(clamp(m32, -1, 1));
+            this._x = asin(clamp(m32, -1, 1))
 
             if (abs(m32) < 0.99999) {
 
-                this._y = atan2(-m31, m33);
-                this._z = atan2(-m12, m22);
+                this._y = atan2(-m31, m33)
+                this._z = atan2(-m12, m22)
 
             } else {
 
                 this._y = 0f
-                this._z = atan2(m21, m11);
+                this._z = atan2(m21, m11)
 
             }
 
         } else if (order == EulerOrder.ZYX) {
 
-            this._y = asin(-clamp(m31, -1, 1));
+            this._y = asin(-clamp(m31, -1, 1))
 
             if (abs(m31) < 0.99999) {
 
-                this._x = atan2(m32, m33);
-                this._z = atan2(m21, m11);
+                this._x = atan2(m32, m33)
+                this._z = atan2(m21, m11)
 
             } else {
 
                 this._x = 0f
-                this._z = atan2(-m12, m22);
+                this._z = atan2(-m12, m22)
 
             }
 
         } else if (order == EulerOrder.YZX) {
 
-            this._z = asin(clamp(m21, -1, 1));
+            this._z = asin(clamp(m21, -1, 1))
 
             if (abs(m21) < 0.99999) {
 
-                this._x = atan2(-m23, m22);
-                this._y = atan2(-m31, m11);
+                this._x = atan2(-m23, m22)
+                this._y = atan2(-m31, m11)
 
             } else {
 
                 this._x = 0f
-                this._y = atan2(m13, m33);
+                this._y = atan2(m13, m33)
 
             }
 
         } else if (order == EulerOrder.XZY) {
 
-            this._z = asin(-clamp(m12, -1, 1));
+            this._z = asin(-clamp(m12, -1, 1))
 
             if (abs(m12) < 0.99999) {
 
-                this._x = atan2(m32, m22);
-                this._y = atan2(m13, m11);
+                this._x = atan2(m32, m22)
+                this._y = atan2(m13, m11)
 
             } else {
 
-                this._x = atan2(-m23, m33);
+                this._x = atan2(-m23, m33)
                 this._y = 0f
 
             }
 
         } else {
 
-            throw IllegalArgumentException("unsupported order: $order");
+            throw IllegalArgumentException("unsupported order: $order")
 
         }
 
-        this._order = order;
+        this._order = order
 
         if (update) {
             this.onChangeCallback?.invoke()
@@ -194,7 +194,7 @@ class Euler(
     }
 
     fun setFromVector3(v: Vector3, order: EulerOrder? = null): Euler {
-        return this.set(v.x, v.y, v.z, order ?: this._order);
+        return this.set(v.x, v.y, v.z, order ?: this._order)
     }
 
     fun reorder(newOrder: EulerOrder): Euler {

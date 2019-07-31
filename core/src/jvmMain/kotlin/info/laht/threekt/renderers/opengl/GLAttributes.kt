@@ -35,7 +35,7 @@ internal class GLAttributes {
 
     private fun updateBuffer(buffer: Int, attribute: BufferAttribute, bufferType: Int, bytesPerElement: Int) {
 
-        val updateRange = attribute.updateRange;
+        val updateRange = attribute.updateRange
 
         if (updateRange.count == 0) {
             println("GLObjects.updateBuffer: dynamic BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")

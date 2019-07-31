@@ -51,12 +51,12 @@ class BoxBufferGeometry(
         init {
 
             // build each side of the box geometry
-            buildPlane(2, 1, 0, - 1, - 1, depth, height, width, depthSegments, heightSegments, 0); // px
-            buildPlane(2, 1, 0, 1, - 1, depth, height, -width, depthSegments, heightSegments, 1); // nx
-            buildPlane(0, 2, 1, 1, 1, width, depth, height, widthSegments, depthSegments, 2); // py
-            buildPlane(0, 2, 1, 1, - 1, width, depth, -height, widthSegments, depthSegments, 3); // ny
-            buildPlane(0, 1, 2, 1, - 1, width, height, depth, widthSegments, heightSegments, 4); // pz
-            buildPlane(0, 1, 2, - 1, - 1, width, height, -depth, widthSegments, heightSegments, 5); // nz
+            buildPlane(2, 1, 0, - 1, - 1, depth, height, width, depthSegments, heightSegments, 0) // px
+            buildPlane(2, 1, 0, 1, - 1, depth, height, -width, depthSegments, heightSegments, 1) // nx
+            buildPlane(0, 2, 1, 1, 1, width, depth, height, widthSegments, depthSegments, 2) // py
+            buildPlane(0, 2, 1, 1, - 1, width, depth, -height, widthSegments, depthSegments, 3) // ny
+            buildPlane(0, 1, 2, 1, - 1, width, height, depth, widthSegments, heightSegments, 4) // pz
+            buildPlane(0, 1, 2, - 1, - 1, width, height, -depth, widthSegments, heightSegments, 5) // nz
 
         }
 

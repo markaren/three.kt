@@ -67,24 +67,24 @@ interface Object3D : Cloneable, EventDispatcher {
             this.updateMatrix()
         }
 
-        this.matrix.premultiply(matrix);
+        this.matrix.premultiply(matrix)
 
-        this.matrix.decompose(this.position, this.quaternion, this.scale);
+        this.matrix.decompose(this.position, this.quaternion, this.scale)
     }
 
     fun applyQuaternion(q: Quaternion): Object3D {
-        this.quaternion.premultiply(q);
+        this.quaternion.premultiply(q)
 
-        return this;
+        return this
     }
 
     fun setRotationFromAxisAngle(axis: Vector3, angle: Float) {
         // assumes axis is normalized
-        this.quaternion.setFromAxisAngle(axis, angle);
+        this.quaternion.setFromAxisAngle(axis, angle)
     }
 
     fun setRotationFromEuler(euler: Euler) {
-        this.quaternion.setFromEuler(euler, true);
+        this.quaternion.setFromEuler(euler, true)
     }
 
     fun setRotationFromMatrix(m: Matrix4) {
@@ -158,10 +158,10 @@ interface Object3D : Cloneable, EventDispatcher {
      */
     fun translateOnAxis(axis: Vector3, distance: Float): Object3D {
         val v1 = Vector3()
-        v1.copy(axis).applyQuaternion(this.quaternion);
-        this.position.add(v1.multiplyScalar(distance));
+        v1.copy(axis).applyQuaternion(this.quaternion)
+        this.position.add(v1.multiplyScalar(distance))
 
-        return this;
+        return this
     }
 
     /**
@@ -169,7 +169,7 @@ interface Object3D : Cloneable, EventDispatcher {
      * @param distance Distance.
      */
     fun translateX(distance: Float): Object3D {
-        return this.translateOnAxis(Vector3.X, distance);
+        return this.translateOnAxis(Vector3.X, distance)
     }
 
     /**
@@ -177,7 +177,7 @@ interface Object3D : Cloneable, EventDispatcher {
      * @param distance Distance.
      */
     fun translateY(distance: Float): Object3D {
-        return this.translateOnAxis(Vector3.Y, distance);
+        return this.translateOnAxis(Vector3.Y, distance)
     }
 
     /**
@@ -185,7 +185,7 @@ interface Object3D : Cloneable, EventDispatcher {
      * @param distance Distance.
      */
     fun translateZ(distance: Float): Object3D {
-        return this.translateOnAxis(Vector3.Z, distance);
+        return this.translateOnAxis(Vector3.Z, distance)
     }
 
     /**
@@ -193,7 +193,7 @@ interface Object3D : Cloneable, EventDispatcher {
      * @param vector A local vector.
      */
     fun localToWorld(vector: Vector3): Vector3 {
-        return vector.applyMatrix4(this.matrixWorld);
+        return vector.applyMatrix4(this.matrixWorld)
     }
 
     /**
@@ -201,7 +201,7 @@ interface Object3D : Cloneable, EventDispatcher {
      * @param vector A world vector.
      */
     fun worldToLocal(vector: Vector3): Vector3 {
-        return vector.applyMatrix4(Matrix4().getInverse(this.matrixWorld));
+        return vector.applyMatrix4(Matrix4().getInverse(this.matrixWorld))
     }
 
     /**
@@ -223,27 +223,27 @@ interface Object3D : Cloneable, EventDispatcher {
         val target = Vector3()
         val position = Vector3()
 
-        target.set(x, y, z);
+        target.set(x, y, z)
 
-        val parent = this.parent;
+        val parent = this.parent
 
-        this.updateWorldMatrix(true, false);
+        this.updateWorldMatrix(true, false)
 
-        position.setFromMatrixPosition(this.matrixWorld);
+        position.setFromMatrixPosition(this.matrixWorld)
 
         if (this is Camera || this is Light) {
-            m1.lookAt(position, target, this.up);
+            m1.lookAt(position, target, this.up)
         } else {
-            m1.lookAt(target, position, this.up);
+            m1.lookAt(target, position, this.up)
         }
 
-        this.quaternion.setFromRotationMatrix(m1);
+        this.quaternion.setFromRotationMatrix(m1)
 
         if (parent != null) {
 
-            m1.extractRotation(parent.matrixWorld);
-            q1.setFromRotationMatrix(m1);
-            this.quaternion.premultiply(q1.inverse());
+            m1.extractRotation(parent.matrixWorld)
+            q1.setFromRotationMatrix(m1)
+            this.quaternion.premultiply(q1.inverse())
 
         }
 
@@ -292,9 +292,9 @@ interface Object3D : Cloneable, EventDispatcher {
         m.getInverse(this.matrixWorld)
 
         `object`.parent?.also {
-            it.updateWorldMatrix(updateParents = true, updateChildren = false);
+            it.updateWorldMatrix(updateParents = true, updateChildren = false)
 
-            m.multiply(it.matrixWorld);
+            m.multiply(it.matrixWorld)
         }
 
 
@@ -303,7 +303,7 @@ interface Object3D : Cloneable, EventDispatcher {
 
         this.add(`object`)
 
-        return this;
+        return this
     }
 
     /**
@@ -364,7 +364,7 @@ interface Object3D : Cloneable, EventDispatcher {
         return target
     }
 
-    open fun getWorldDirection(target: Vector3): Vector3 {
+    fun getWorldDirection(target: Vector3): Vector3 {
         this.updateMatrixWorld(true)
 
         val e = this.matrixWorld.elements
@@ -372,7 +372,7 @@ interface Object3D : Cloneable, EventDispatcher {
         return target.set(e[8], e[9], e[10]).normalize()
     }
 
-    open fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
+    fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
         // empty
     }
 
@@ -411,7 +411,7 @@ interface Object3D : Cloneable, EventDispatcher {
     /**
      * Updates global transform of the object and its children.
      */
-    open fun updateMatrixWorld(force: Boolean = false) {
+    fun updateMatrixWorld(force: Boolean = false) {
 
         if (this.matrixAutoUpdate) {
             this.updateMatrix()
@@ -445,7 +445,7 @@ interface Object3D : Cloneable, EventDispatcher {
         val parent = this.parent
 
         if (updateParents && parent != null) {
-            parent.updateWorldMatrix(true, false);
+            parent.updateWorldMatrix(true, false)
         }
 
         if (this.matrixAutoUpdate) {
@@ -453,9 +453,9 @@ interface Object3D : Cloneable, EventDispatcher {
         }
 
         if (parent == null) {
-            this.matrixWorld.copy(this.matrix);
+            this.matrixWorld.copy(this.matrix)
         } else {
-            this.matrixWorld.multiplyMatrices(parent.matrixWorld, this.matrix);
+            this.matrixWorld.multiplyMatrices(parent.matrixWorld, this.matrix)
         }
 
         if (updateChildren) {

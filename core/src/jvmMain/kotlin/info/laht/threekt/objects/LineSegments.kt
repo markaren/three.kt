@@ -18,21 +18,21 @@ open class LineSegments @JvmOverloads constructor(
         if (geometry.index == null) {
 
             val positionAttribute = geometry.attributes.position!!
-            val lineDistances = FloatArray(positionAttribute.count * 2);
+            val lineDistances = FloatArray(positionAttribute.count * 2)
 
             for (i in 0 until positionAttribute.count step 2) {
-                start.fromBufferAttribute(positionAttribute, i);
-                end.fromBufferAttribute(positionAttribute, i + 1);
+                start.fromBufferAttribute(positionAttribute, i)
+                end.fromBufferAttribute(positionAttribute, i + 1)
 
-                lineDistances[i] = if (i == 0) 0f else lineDistances[i - 1];
-                lineDistances[i + 1] = lineDistances[i] + start.distanceTo(end);
+                lineDistances[i] = if (i == 0) 0f else lineDistances[i - 1]
+                lineDistances[i + 1] = lineDistances[i] + start.distanceTo(end)
             }
 
-            geometry.addAttribute("lineDistance", FloatBufferAttribute(lineDistances, 1));
+            geometry.addAttribute("lineDistance", FloatBufferAttribute(lineDistances, 1))
 
         } else {
 
-            println("LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.");
+            println("LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.")
 
         }
 

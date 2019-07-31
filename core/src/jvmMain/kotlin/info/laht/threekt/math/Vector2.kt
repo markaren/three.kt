@@ -440,7 +440,7 @@ class Vector2(
      * @param alpha interpolation factor in the closed interval [0, 1].
      */
     fun lerpVectors(v1: Vector2, v2: Vector2, alpha: Float): Vector2 {
-        return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
+        return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1)
     }
 
     /**
@@ -467,10 +467,10 @@ class Vector2(
      * @param offset (optional) offset into the array. Default is 0.
      */
     fun fromArray(array: FloatArray, offset: Int = 0): Vector2 {
-        this.x = array[offset];
-        this.y = array[offset + 1];
+        this.x = array[offset]
+        this.y = array[offset + 1]
 
-        return this;
+        return this
     }
 
     /**

@@ -68,7 +68,7 @@ internal class GLClipping {
 
             } else {
 
-                resetGlobalState();
+                resetGlobalState()
 
             }
 
@@ -77,11 +77,11 @@ internal class GLClipping {
             val nGlobal = if (renderingShadows) 0 else numGlobalPlanes
             val lGlobal = nGlobal * 4
 
-            var dstArray = cache["clippingState"] as FloatArray?;
+            var dstArray = cache["clippingState"] as FloatArray?
 
-            uniform.value = dstArray; // ensure unique state
+            uniform.value = dstArray // ensure unique state
 
-            dstArray = projectPlanes(planes, camera, lGlobal, fromCache);
+            dstArray = projectPlanes(planes, camera, lGlobal, fromCache)
 
             for (i in 0 until lGlobal) {
 
@@ -89,9 +89,9 @@ internal class GLClipping {
 
             }
 
-            cache["clippingState"] = dstArray;
-            this.numIntersection = if (clipIntersection) this.numPlanes else 0;
-            this.numPlanes += nGlobal;
+            cache["clippingState"] = dstArray
+            this.numIntersection = if (clipIntersection) this.numPlanes else 0
+            this.numPlanes += nGlobal
 
         }
 
@@ -100,7 +100,7 @@ internal class GLClipping {
     private fun resetGlobalState() {
         if (uniform.value != globalState) {
 
-            uniform.value = globalState;
+            uniform.value = globalState
             uniform.needsUpdate = numGlobalPlanes > 0
 
         }
@@ -124,7 +124,7 @@ internal class GLClipping {
             val viewMatrix = camera.matrixWorldInverse
 
             if (dstArray == null || dstArray.size < flatSize) {
-                dstArray = FloatArray(flatSize);
+                dstArray = FloatArray(flatSize)
             }
 
             var i4 = dstOffset

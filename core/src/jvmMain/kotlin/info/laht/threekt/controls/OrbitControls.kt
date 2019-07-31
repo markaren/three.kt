@@ -121,21 +121,21 @@ class OrbitControls(
                 when (event.button) {
                     MouseButtons.LEFT -> {
                         if (enableRotate) {
-                            handleMouseDownRotate(event);
-                            state = State.ROTATE;
+                            handleMouseDownRotate(event)
+                            state = State.ROTATE
                         }
                     }
                     MouseButtons.MIDDLE -> {
                         if (enableZoom) {
-                            handleMouseDownDolly(event);
-                            state = State.DOLLY;
+                            handleMouseDownDolly(event)
+                            state = State.DOLLY
                         }
                     }
                     MouseButtons.RIGHT -> {
                         if (enablePan) {
-                            handleMouseDownRotate(event);
-                            handleMouseDownPan(event);
-                            state = State.PAN;
+                            handleMouseDownRotate(event)
+                            handleMouseDownPan(event)
+                            state = State.PAN
                         }
                     }
                 }
@@ -149,17 +149,17 @@ class OrbitControls(
                             when (state) {
                                 State.ROTATE -> {
                                     if (enableRotate) {
-                                        handleMouseMoveRotate(event);
+                                        handleMouseMoveRotate(event)
                                     }
                                 }
                                 State.DOLLY -> {
                                     if (enableZoom) {
-                                        handleMouseMoveDolly(event);
+                                        handleMouseMoveDolly(event)
                                     }
                                 }
                                 State.PAN -> {
                                     if (enablePan)
-                                        handleMouseMovePan(event);
+                                        handleMouseMovePan(event)
                                 }
                                 State.NONE -> TODO()
                             }
@@ -177,7 +177,7 @@ class OrbitControls(
                         }
                     }
 
-                    dispatchEvent("start", this);
+                    dispatchEvent("start", this)
 
                 }
 
@@ -511,62 +511,62 @@ class OrbitControls(
     }
 
     private fun handleMouseDownRotate(event: MouseEvent) {
-        rotateStart.set(event.clientX.toFloat(), event.clientY.toFloat());
+        rotateStart.set(event.clientX.toFloat(), event.clientY.toFloat())
     }
 
     private fun handleMouseDownDolly(event: MouseEvent) {
-        dollyStart.set(event.clientX.toFloat(), event.clientY.toFloat());
+        dollyStart.set(event.clientX.toFloat(), event.clientY.toFloat())
     }
 
     private fun handleMouseDownPan(event: MouseEvent) {
-        panStart.set(event.clientX.toFloat(), event.clientY.toFloat());
+        panStart.set(event.clientX.toFloat(), event.clientY.toFloat())
     }
 
 
     private fun handleMouseMoveRotate(event: MouseEvent) {
-        rotateEnd.set(event.clientX.toFloat(), event.clientY.toFloat());
+        rotateEnd.set(event.clientX.toFloat(), event.clientY.toFloat())
 
-        rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(rotateSpeed);
+        rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(rotateSpeed)
 
-        rotateLeft(2 * PI.toFloat() * rotateDelta.x / canvas.width); // yes, height
+        rotateLeft(2 * PI.toFloat() * rotateDelta.x / canvas.width) // yes, height
 
-        rotateUp(2 * PI.toFloat() * rotateDelta.y / canvas.height);
+        rotateUp(2 * PI.toFloat() * rotateDelta.y / canvas.height)
 
-        rotateStart.copy(rotateEnd);
+        rotateStart.copy(rotateEnd)
 
-        update();
+        update()
     }
 
     private fun handleMouseMoveDolly(event: MouseEvent) {
-        dollyEnd.set(event.clientX.toFloat(), event.clientY.toFloat());
+        dollyEnd.set(event.clientX.toFloat(), event.clientY.toFloat())
 
-        dollyDelta.subVectors(dollyEnd, dollyStart);
+        dollyDelta.subVectors(dollyEnd, dollyStart)
 
         if (dollyDelta.y > 0) {
 
-            dollyIn(getZoomScale());
+            dollyIn(getZoomScale())
 
         } else if (dollyDelta.y < 0) {
 
-            dollyOut(getZoomScale());
+            dollyOut(getZoomScale())
 
         }
 
-        dollyStart.copy(dollyEnd);
+        dollyStart.copy(dollyEnd)
 
-        update();
+        update()
     }
 
     private fun handleMouseMovePan(event: MouseEvent) {
-        panEnd.set(event.clientX.toFloat(), event.clientY.toFloat());
+        panEnd.set(event.clientX.toFloat(), event.clientY.toFloat())
 
-        panDelta.subVectors(panEnd, panStart).multiplyScalar(panSpeed);
+        panDelta.subVectors(panEnd, panStart).multiplyScalar(panSpeed)
 
-        pan(panDelta.x, panDelta.y);
+        pan(panDelta.x, panDelta.y)
 
-        panStart.copy(panEnd);
+        panStart.copy(panEnd)
 
-        update();
+        update()
     }
 
     private fun handleMouseWheel(event: MouseWheelEvent) {

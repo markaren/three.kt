@@ -25,7 +25,7 @@ interface Camera: Object3D {
 
         super.updateMatrixWorld( force )
 
-        this.matrixWorldInverse.getInverse( this.matrixWorld );
+        this.matrixWorldInverse.getInverse( this.matrixWorld )
 
     }
 

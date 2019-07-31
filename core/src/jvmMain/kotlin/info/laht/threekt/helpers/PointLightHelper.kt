@@ -20,8 +20,8 @@ class PointLightHelper(
 
     init {
 
-        this.matrix = this.light.matrixWorld;
-        this.matrixAutoUpdate = false;
+        this.matrix = this.light.matrixWorld
+        this.matrixAutoUpdate = false
 
         update()
     }
@@ -31,11 +31,11 @@ class PointLightHelper(
         (material as MaterialWithColor).also { material ->
             if (this.color != null) {
 
-                material.color.set(this.color);
+                material.color.set(this.color)
 
             } else {
 
-                material.color.copy(this.light.color);
+                material.color.copy(this.light.color)
 
             }
         }
@@ -44,8 +44,8 @@ class PointLightHelper(
     }
 
     fun dispose() {
-        this.geometry.dispose();
-        this.material.dispose();
+        this.geometry.dispose()
+        this.material.dispose()
     }
 
 }

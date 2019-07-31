@@ -43,16 +43,16 @@ class SpotLightShadow : LightShadow<PerspectiveCamera>(PerspectiveCamera(50, 1f,
 
     fun update(light: SpotLight) {
 
-        val fov = RAD2DEG * 2 * light.angle;
-        val aspect = this.mapSize.width.toFloat() / this.mapSize.height;
+        val fov = RAD2DEG * 2 * light.angle
+        val aspect = this.mapSize.width.toFloat() / this.mapSize.height
         val far = light.distance
 
         if (fov != camera.fov || aspect != camera.aspect || far != camera.far) {
 
-            camera.fov = fov;
-            camera.aspect = aspect;
-            camera.far = far;
-            camera.updateProjectionMatrix();
+            camera.fov = fov
+            camera.aspect = aspect
+            camera.far = far
+            camera.updateProjectionMatrix()
 
         }
     }

@@ -10,7 +10,7 @@ internal class GLCapabilities {
 
     val precision = "highp"
 
-    val logarithmicDepthBuffer = false;
+    val logarithmicDepthBuffer = false
 
     val maxTextures = GL11.glGetInteger(GL20.GL_MAX_TEXTURE_IMAGE_UNITS)
     val maxVertexTextures = GL11.glGetInteger(GL20.GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS)

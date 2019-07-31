@@ -84,21 +84,21 @@ class Color(
 
     fun fromArray(array: FloatArray, offset: Int = 0): Color {
 
-        this.r = array[offset];
-        this.g = array[offset + 1];
-        this.b = array[offset + 2];
+        this.r = array[offset]
+        this.g = array[offset + 1]
+        this.b = array[offset + 2]
 
-        return this;
+        return this
 
     }
 
     fun toArray(array: FloatArray = FloatArray(3), offset: Int = 0): FloatArray {
 
-        array[offset + 0] = this.r;
-        array[offset + 1] = this.g;
-        array[offset + 2] = this.b;
+        array[offset + 0] = this.r
+        array[offset + 1] = this.g
+        array[offset + 2] = this.b
 
-        return array;
+        return array
 
     }
 

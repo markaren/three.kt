@@ -36,35 +36,35 @@ class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
 
         super.copy(source)
 
-        this.depthPacking = source.depthPacking;
+        this.depthPacking = source.depthPacking
 
-        this.skinning = source.skinning;
-        this.morphTargets = source.morphTargets;
+        this.skinning = source.skinning
+        this.morphTargets = source.morphTargets
 
-        this.map = source.map;
+        this.map = source.map
 
-        this.alphaMap = source.alphaMap;
+        this.alphaMap = source.alphaMap
 
-        this.displacementMap = source.displacementMap;
-        this.displacementScale = source.displacementScale;
-        this.displacementBias = source.displacementBias;
+        this.displacementMap = source.displacementMap
+        this.displacementScale = source.displacementScale
+        this.displacementBias = source.displacementBias
 
-        this.wireframe = source.wireframe;
-        this.wireframeLinewidth = source.wireframeLinewidth;depthPacking = source.depthPacking;
+        this.wireframe = source.wireframe
+        this.wireframeLinewidth = source.wireframeLinewidth;depthPacking = source.depthPacking
 
-        this.skinning = source.skinning;
-        this.morphTargets = source.morphTargets;
+        this.skinning = source.skinning
+        this.morphTargets = source.morphTargets
 
-        this.map = source.map;
+        this.map = source.map
 
-        this.alphaMap = source.alphaMap;
+        this.alphaMap = source.alphaMap
 
-        this.displacementMap = source.displacementMap;
-        this.displacementScale = source.displacementScale;
-        this.displacementBias = source.displacementBias;
+        this.displacementMap = source.displacementMap
+        this.displacementScale = source.displacementScale
+        this.displacementBias = source.displacementBias
 
-        this.wireframe = source.wireframe;
-        this.wireframeLinewidth = source.wireframeLinewidth;
+        this.wireframe = source.wireframe
+        this.wireframeLinewidth = source.wireframeLinewidth
 
         return this
 

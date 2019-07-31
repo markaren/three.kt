@@ -189,7 +189,7 @@ class GLShadowMap internal constructor(
 
                 if (shadow is SpotLightShadow) {
 
-                    shadow.update(light as SpotLight);
+                    shadow.update(light as SpotLight)
 
                 }
 

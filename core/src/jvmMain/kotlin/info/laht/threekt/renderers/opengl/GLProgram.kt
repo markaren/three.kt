@@ -55,9 +55,9 @@ internal class GLProgram(
 
         val shadowMapTypeDefine = "SHADOWMAP_TYPE_BASIC"
 
-        var envMapTypeDefine = "ENVMAP_TYPE_CUBE";
-        var envMapModeDefine = "ENVMAP_MODE_REFLECTION";
-        var envMapBlendingDefine = "ENVMAP_BLENDING_MULTIPLY";
+        var envMapTypeDefine = "ENVMAP_TYPE_CUBE"
+        var envMapModeDefine = "ENVMAP_MODE_REFLECTION"
+        var envMapBlendingDefine = "ENVMAP_BLENDING_MULTIPLY"
 
         if (parameters.envMap) {
 
@@ -67,7 +67,7 @@ internal class GLProgram(
                 TextureMapping.CubeUVReflection, TextureMapping.CubeUVRefraction -> envMapTypeDefine = "ENVMAP_TYPE_CUBE_UV"
                 TextureMapping.EquirectangularReflection, TextureMapping.EquirectangularRefraction -> envMapTypeDefine =
                     "ENVMAP_TYPE_EQUIREC"
-                TextureMapping.SphericalReflection -> envMapTypeDefine = "ENVMAP_TYPE_SPHERE";
+                TextureMapping.SphericalReflection -> envMapTypeDefine = "ENVMAP_TYPE_SPHERE"
 
             }
 
@@ -314,13 +314,13 @@ internal class GLProgram(
 
         }
 
-        vertexShader = parseIncludes(vertexShader);
-        vertexShader = replaceLightNums(vertexShader, parameters);
-        vertexShader = replaceClippingPlaneNums(vertexShader, parameters);
+        vertexShader = parseIncludes(vertexShader)
+        vertexShader = replaceLightNums(vertexShader, parameters)
+        vertexShader = replaceClippingPlaneNums(vertexShader, parameters)
 
-        fragmentShader = parseIncludes(fragmentShader);
-        fragmentShader = replaceLightNums(fragmentShader, parameters);
-        fragmentShader = replaceClippingPlaneNums(fragmentShader, parameters);
+        fragmentShader = parseIncludes(fragmentShader)
+        fragmentShader = replaceLightNums(fragmentShader, parameters)
+        fragmentShader = replaceClippingPlaneNums(fragmentShader, parameters)
 
         if (material !is RawShaderMaterial) {
 
@@ -365,11 +365,11 @@ internal class GLProgram(
             ).joinToString("\n") + "\n" + prefixFragment
         }
 
-        val vertexGlsl = prefixVertex + vertexShader;
-        val fragmentGlsl = prefixFragment + fragmentShader;
+        val vertexGlsl = prefixVertex + vertexShader
+        val fragmentGlsl = prefixFragment + fragmentShader
 
-        glVertexShader = createShader(GL20.GL_VERTEX_SHADER, vertexGlsl);
-        glFragmentShader = createShader(GL20.GL_FRAGMENT_SHADER, fragmentGlsl);
+        glVertexShader = createShader(GL20.GL_VERTEX_SHADER, vertexGlsl)
+        glFragmentShader = createShader(GL20.GL_FRAGMENT_SHADER, fragmentGlsl)
 
         GL20.glAttachShader(program, glVertexShader)
         GL20.glAttachShader(program, glFragmentShader)
@@ -382,31 +382,31 @@ internal class GLProgram(
 
         if (renderer.checkShaderErrors) {
 
-            val programLog = GL20.glGetProgramInfoLog(program).trim();
+            val programLog = GL20.glGetProgramInfoLog(program).trim()
 //                val vertexLog = GL20.glGetShaderInfoLog( glVertexShader ).trim();
 //                val fragmentLog = GL20.glGetShaderInfoLog( glFragmentShader ).trim();
 
             if (GL20.glGetProgrami(program, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
 
-                val vertexErrors = getShaderErrors(glVertexShader, "vertex");
-                val fragmentErrors = getShaderErrors(glFragmentShader, "fragment");
+                val vertexErrors = getShaderErrors(glVertexShader, "vertex")
+                val fragmentErrors = getShaderErrors(glFragmentShader, "fragment")
 
                 println(
                     "GLProgram: shader error: ${GL11.glGetError()} ${GL20.GL_VALIDATE_STATUS} ${GL20.glGetProgrami(
                         program,
                         GL20.GL_VALIDATE_STATUS
                     )} glGetProgramInfoLog  $programLog $vertexErrors $fragmentErrors"
-                );
+                )
 
             } else if (programLog != "") {
 
-                println("GLProgram: gl.getProgramInfoLog() $programLog");
+                println("GLProgram: gl.getProgramInfoLog() $programLog")
 
             }
         }
 
-        GL20.glDeleteShader(glVertexShader);
-        GL20.glDeleteShader(glFragmentShader);
+        GL20.glDeleteShader(glVertexShader)
+        GL20.glDeleteShader(glFragmentShader)
 
 
     }
@@ -485,12 +485,12 @@ internal class GLProgram(
 
         fun getTexelDecodingFunction(functionName: String, encoding: TextureEncoding): String {
             val components = getEncodingComponents(encoding)
-            return "vec4 $functionName( vec4 value ) { return ${components.first}ToLinear ${components.second}; }";
+            return "vec4 $functionName( vec4 value ) { return ${components.first}ToLinear ${components.second}; }"
         }
 
         fun getTexelEncodingFunction(functionName: String, encoding: TextureEncoding): String {
             val components = getEncodingComponents(encoding)
-            return "vec4 $functionName( vec4 value ) { return LinearTo${components.first}${components.second}; }";
+            return "vec4 $functionName( vec4 value ) { return LinearTo${components.first}${components.second}; }"
         }
 
         fun getToneMappingFunction(functionName: String, toneMapping: ToneMapping): String {
@@ -506,7 +506,7 @@ internal class GLProgram(
 
             }
 
-            return "vec3 $functionName( vec3 color ) { return ${toneMappingName}ToneMapping( color ); }";
+            return "vec3 $functionName( vec3 color ) { return ${toneMappingName}ToneMapping( color ); }"
 
         }
 
@@ -539,14 +539,14 @@ internal class GLProgram(
                 .replace("NUM_SPOT_LIGHTS".toRegex(), "${parameters.numSpotLights}")
                 .replace("NUM_RECT_AREA_LIGHTS".toRegex(), "${parameters.numRectAreaLights}")
                 .replace("NUM_POINT_LIGHTS".toRegex(), "${parameters.numPointLights}")
-                .replace("NUM_HEMI_LIGHTS".toRegex(), "${parameters.numHemiLights}");
+                .replace("NUM_HEMI_LIGHTS".toRegex(), "${parameters.numHemiLights}")
         }
 
         private fun replaceClippingPlaneNums(string: String, parameters: GLPrograms.Parameters): String {
 
             return string
                 .replace("NUM_CLIPPING_PLANES", "${parameters.numClippingPlanes}")
-                .replace("UNION_CLIPPING_PLANES", "${(parameters.numClippingPlanes - parameters.numClipIntersection)}");
+                .replace("UNION_CLIPPING_PLANES", "${(parameters.numClippingPlanes - parameters.numClipIntersection)}")
 
         }
 

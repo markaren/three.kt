@@ -173,11 +173,11 @@ class IntBufferAttribute(
     @Suppress("NAME_SHADOWING")
     fun copyAt(index1: Int, attribute: IntBufferAttribute, index2: Int): IntBufferAttribute {
 
-        val index1 = index1 * this.itemSize;
-        val index2 = index2 * attribute.itemSize;
+        val index1 = index1 * this.itemSize
+        val index2 = index2 * attribute.itemSize
 
         for (i in 0 until itemSize) {
-            buffer[index1 + i] = attribute.buffer[index2 + i];
+            buffer[index1 + i] = attribute.buffer[index2 + i]
         }
 
         return this
@@ -350,11 +350,11 @@ class FloatBufferAttribute(
     @Suppress("NAME_SHADOWING")
     fun copyAt(index1: Int, attribute: FloatBufferAttribute, index2: Int): FloatBufferAttribute {
 
-        val index1 = index1 * this.itemSize;
-        val index2 = index2 * attribute.itemSize;
+        val index1 = index1 * this.itemSize
+        val index2 = index2 * attribute.itemSize
 
         for (i in 0 until itemSize) {
-            buffer[index1 + i] = attribute.buffer[index2 + i];
+            buffer[index1 + i] = attribute.buffer[index2 + i]
         }
 
         return this
@@ -401,6 +401,6 @@ private fun ByteBuffer.clone(): ByteBuffer {
 }
 
 private fun getAllocationSize(elements: Int, elementShift: Int): Int {
-    APIUtil.apiCheckAllocation(elements, APIUtil.apiGetBytes(elements, elementShift), 0x7FFF_FFFFL);
+    APIUtil.apiCheckAllocation(elements, APIUtil.apiGetBytes(elements, elementShift), 0x7FFF_FFFFL)
     return elements shl elementShift
 }

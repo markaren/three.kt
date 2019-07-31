@@ -22,13 +22,13 @@ internal class GLObjects(
 
         if (updateList[buffergeometry.id] != frame) {
 
-            geometries.update(buffergeometry);
+            geometries.update(buffergeometry)
 
-            updateList[buffergeometry.id] = frame;
+            updateList[buffergeometry.id] = frame
 
         }
 
-        return buffergeometry;
+        return buffergeometry
 
     }
 

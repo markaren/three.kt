@@ -47,30 +47,30 @@ class MeshMatcapMaterial: Material(), MaterialWithColor, MaterialWithSkinning, M
             put("MATCAP", "")
         }
 
-        this.color.copy( source.color );
+        this.color.copy( source.color )
 
-        this.matcap = source.matcap;
+        this.matcap = source.matcap
 
-        this.map = source.map;
+        this.map = source.map
 
-        this.bumpMap = source.bumpMap;
-        this.bumpScale = source.bumpScale;
+        this.bumpMap = source.bumpMap
+        this.bumpScale = source.bumpScale
 
-        this.normalMap = source.normalMap;
-        this.normalMapType = source.normalMapType;
-        this.normalScale.copy( source.normalScale );
+        this.normalMap = source.normalMap
+        this.normalMapType = source.normalMapType
+        this.normalScale.copy( source.normalScale )
 
-        this.displacementMap = source.displacementMap;
-        this.displacementScale = source.displacementScale;
-        this.displacementBias = source.displacementBias;
+        this.displacementMap = source.displacementMap
+        this.displacementScale = source.displacementScale
+        this.displacementBias = source.displacementBias
 
-        this.alphaMap = source.alphaMap;
+        this.alphaMap = source.alphaMap
 
-        this.skinning = source.skinning;
-        this.morphTargets = source.morphTargets;
-        this.morphNormals = source.morphNormals;
+        this.skinning = source.skinning
+        this.morphTargets = source.morphTargets
+        this.morphNormals = source.morphNormals
 
-        return this;
+        return this
 
     }
 

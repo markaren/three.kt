@@ -140,7 +140,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     fun setFromPoints ( points: List<Vector3> ): BufferGeometry {
 
-        val position = FloatBufferAttribute(points.size*3, 3);
+        val position = FloatBufferAttribute(points.size*3, 3)
 
         points.forEachIndexed {i, v ->
 
@@ -149,9 +149,9 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
             position[i+2] = v.z
         }
 
-        this.addAttribute( "position",  position );
+        this.addAttribute( "position",  position )
 
-        return this;
+        return this
 
     }
 

@@ -28,14 +28,14 @@ class SpriteMaterial : Material(), MaterialWithSizeAttenuation, MaterialWithColo
 
         super.copy(source)
 
-        this.color.copy( source.color );
-        this.map = source.map;
+        this.color.copy( source.color )
+        this.map = source.map
 
-        this.rotation = source.rotation;
+        this.rotation = source.rotation
 
-        this.sizeAttenuation = source.sizeAttenuation;
+        this.sizeAttenuation = source.sizeAttenuation
 
-        return this;
+        return this
 
     }
 

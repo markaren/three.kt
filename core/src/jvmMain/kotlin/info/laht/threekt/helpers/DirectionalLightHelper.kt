@@ -20,10 +20,10 @@ class DirectionalLightHelper(
 
     init {
 
-        this.light.updateMatrixWorld();
+        this.light.updateMatrixWorld()
 
         this.matrix = light.matrixWorld
-        this.matrixAutoUpdate = false;
+        this.matrixAutoUpdate = false
 
         val material = LineBasicMaterial().apply {
             fog = false

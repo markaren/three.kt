@@ -29,34 +29,34 @@ class Spherical(
 
     fun makeSafe(): Spherical {
 
-        this.phi = max(EPS, min(PI.toFloat() - EPS, this.phi));
+        this.phi = max(EPS, min(PI.toFloat() - EPS, this.phi))
 
         return this
     }
 
     fun setFromVector3 ( v: Vector3 ): Spherical {
 
-        return this.setFromCartesianCoords( v.x, v.y, v.z );
+        return this.setFromCartesianCoords( v.x, v.y, v.z )
 
     }
 
     fun setFromCartesianCoords ( x: Float, y: Float, z: Float ): Spherical {
 
-        this.radius = sqrt( x * x + y * y + z * z );
+        this.radius = sqrt( x * x + y * y + z * z )
 
         if ( this.radius == 0f ) {
 
-            this.theta = 0f;
-            this.phi = 0f;
+            this.theta = 0f
+            this.phi = 0f
 
         } else {
 
-            this.theta = atan2( x, z );
-            this.phi = acos( clamp( y / this.radius, - 1, 1 ) );
+            this.theta = atan2( x, z )
+            this.phi = acos( clamp( y / this.radius, - 1, 1 ) )
 
         }
 
-        return this;
+        return this
 
     }
 

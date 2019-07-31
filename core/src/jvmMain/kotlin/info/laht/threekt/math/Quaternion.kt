@@ -79,55 +79,55 @@ class Quaternion(
         // 	20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/
         //	content/SpinCalc.m
 
-        val c1 = cos(x / 2);
-        val c2 = cos(y / 2);
-        val c3 = cos(z / 2);
+        val c1 = cos(x / 2)
+        val c2 = cos(y / 2)
+        val c3 = cos(z / 2)
 
-        val s1 = sin(x / 2);
-        val s2 = sin(y / 2);
-        val s3 = sin(z / 2);
+        val s1 = sin(x / 2)
+        val s2 = sin(y / 2)
+        val s3 = sin(z / 2)
 
         if (euler.order == EulerOrder.XYZ) {
 
-            this._x = s1 * c2 * c3 + c1 * s2 * s3;
-            this._y = c1 * s2 * c3 - s1 * c2 * s3;
-            this._z = c1 * c2 * s3 + s1 * s2 * c3;
-            this._w = c1 * c2 * c3 - s1 * s2 * s3;
+            this._x = s1 * c2 * c3 + c1 * s2 * s3
+            this._y = c1 * s2 * c3 - s1 * c2 * s3
+            this._z = c1 * c2 * s3 + s1 * s2 * c3
+            this._w = c1 * c2 * c3 - s1 * s2 * s3
 
         } else if (euler.order == EulerOrder.YXZ) {
 
-            this._x = s1 * c2 * c3 + c1 * s2 * s3;
-            this._y = c1 * s2 * c3 - s1 * c2 * s3;
-            this._z = c1 * c2 * s3 - s1 * s2 * c3;
-            this._w = c1 * c2 * c3 + s1 * s2 * s3;
+            this._x = s1 * c2 * c3 + c1 * s2 * s3
+            this._y = c1 * s2 * c3 - s1 * c2 * s3
+            this._z = c1 * c2 * s3 - s1 * s2 * c3
+            this._w = c1 * c2 * c3 + s1 * s2 * s3
 
         } else if (euler.order == EulerOrder.ZXY) {
 
-            this._x = s1 * c2 * c3 - c1 * s2 * s3;
-            this._y = c1 * s2 * c3 + s1 * c2 * s3;
-            this._z = c1 * c2 * s3 + s1 * s2 * c3;
-            this._w = c1 * c2 * c3 - s1 * s2 * s3;
+            this._x = s1 * c2 * c3 - c1 * s2 * s3
+            this._y = c1 * s2 * c3 + s1 * c2 * s3
+            this._z = c1 * c2 * s3 + s1 * s2 * c3
+            this._w = c1 * c2 * c3 - s1 * s2 * s3
 
         } else if (euler.order == EulerOrder.ZYX) {
 
-            this._x = s1 * c2 * c3 - c1 * s2 * s3;
-            this._y = c1 * s2 * c3 + s1 * c2 * s3;
-            this._z = c1 * c2 * s3 - s1 * s2 * c3;
-            this._w = c1 * c2 * c3 + s1 * s2 * s3;
+            this._x = s1 * c2 * c3 - c1 * s2 * s3
+            this._y = c1 * s2 * c3 + s1 * c2 * s3
+            this._z = c1 * c2 * s3 - s1 * s2 * c3
+            this._w = c1 * c2 * c3 + s1 * s2 * s3
 
         } else if (euler.order == EulerOrder.YZX) {
 
-            this._x = s1 * c2 * c3 + c1 * s2 * s3;
-            this._y = c1 * s2 * c3 + s1 * c2 * s3;
-            this._z = c1 * c2 * s3 - s1 * s2 * c3;
-            this._w = c1 * c2 * c3 - s1 * s2 * s3;
+            this._x = s1 * c2 * c3 + c1 * s2 * s3
+            this._y = c1 * s2 * c3 + s1 * c2 * s3
+            this._z = c1 * c2 * s3 - s1 * s2 * c3
+            this._w = c1 * c2 * c3 - s1 * s2 * s3
 
         } else if (euler.order == EulerOrder.XZY) {
 
-            this._x = s1 * c2 * c3 - c1 * s2 * s3;
-            this._y = c1 * s2 * c3 - s1 * c2 * s3;
-            this._z = c1 * c2 * s3 + s1 * s2 * c3;
-            this._w = c1 * c2 * c3 + s1 * s2 * s3;
+            this._x = s1 * c2 * c3 - c1 * s2 * s3
+            this._y = c1 * s2 * c3 - s1 * c2 * s3
+            this._z = c1 * c2 * s3 + s1 * s2 * c3
+            this._w = c1 * c2 * c3 + s1 * s2 * s3
 
         }
 
@@ -135,21 +135,21 @@ class Quaternion(
             this.onChangeCallback?.invoke()
         }
 
-        return this;
+        return this
     }
 
     fun setFromAxisAngle(axisX: Float, axisY: Float, axisZ: Float, angle: Float): Quaternion {
         val halfAngle = angle / 2
-        val s = sin(halfAngle);
+        val s = sin(halfAngle)
 
-        this._x = axisX * s;
-        this._y = axisY * s;
-        this._z = axisZ * s;
-        this._w = cos(halfAngle);
+        this._x = axisX * s
+        this._y = axisY * s
+        this._z = axisZ * s
+        this._w = cos(halfAngle)
 
         this.onChangeCallback?.invoke()
 
-        return this;
+        return this
     }
 
     /**
@@ -171,14 +171,14 @@ class Quaternion(
 
         val te = m.elements
 
-        val m11 = te[0];
-        val m12 = te[4];
+        val m11 = te[0]
+        val m12 = te[4]
         val m13 = te[8]
-        val m21 = te[1];
-        val m22 = te[5];
+        val m21 = te[1]
+        val m22 = te[5]
         val m23 = te[9]
-        val m31 = te[2];
-        val m32 = te[6];
+        val m31 = te[2]
+        val m32 = te[6]
         val m33 = te[10]
 
         val trace = m11 + m22 + m33
@@ -186,45 +186,45 @@ class Quaternion(
 
         if (trace > 0) {
 
-            s = 0.5.toFloat() / sqrt(trace + 1.toFloat());
+            s = 0.5.toFloat() / sqrt(trace + 1.toFloat())
 
-            this._w = 0.25.toFloat() / s;
-            this._x = (m32 - m23) * s;
-            this._y = (m13 - m31) * s;
-            this._z = (m21 - m12) * s;
+            this._w = 0.25.toFloat() / s
+            this._x = (m32 - m23) * s
+            this._y = (m13 - m31) * s
+            this._z = (m21 - m12) * s
 
         } else if (m11 > m22 && m11 > m33) {
 
-            s = 2.toFloat() * sqrt(1.toFloat() + m11 - m22 - m33);
+            s = 2.toFloat() * sqrt(1.toFloat() + m11 - m22 - m33)
 
-            this._w = (m32 - m23) / s;
-            this._x = 0.25.toFloat() * s;
-            this._y = (m12 + m21) / s;
-            this._z = (m13 + m31) / s;
+            this._w = (m32 - m23) / s
+            this._x = 0.25.toFloat() * s
+            this._y = (m12 + m21) / s
+            this._z = (m13 + m31) / s
 
         } else if (m22 > m33) {
 
-            s = 2.toFloat() * sqrt(1.toFloat() + m22 - m11 - m33);
+            s = 2.toFloat() * sqrt(1.toFloat() + m22 - m11 - m33)
 
-            this._w = (m13 - m31) / s;
-            this._x = (m12 + m21) / s;
-            this._y = 0.25.toFloat() * s;
-            this._z = (m23 + m32) / s;
+            this._w = (m13 - m31) / s
+            this._x = (m12 + m21) / s
+            this._y = 0.25.toFloat() * s
+            this._z = (m23 + m32) / s
 
         } else {
 
-            s = 2.toFloat() * sqrt(1.toFloat() + m33 - m11 - m22);
+            s = 2.toFloat() * sqrt(1.toFloat() + m33 - m11 - m22)
 
-            this._w = (m21 - m12) / s;
-            this._x = (m13 + m31) / s;
-            this._y = (m23 + m32) / s;
-            this._z = 0.25.toFloat() * s;
+            this._w = (m21 - m12) / s
+            this._x = (m13 + m31) / s
+            this._y = (m23 + m32) / s
+            this._z = 0.25.toFloat() * s
 
         }
 
         this.onChangeCallback?.invoke()
 
-        return this;
+        return this
     }
 
     fun setFromUnitVectors(vFrom: Vector3, vTo: Vector3): Quaternion {
@@ -269,26 +269,26 @@ class Quaternion(
     }
 
     fun angleTo(q: Quaternion): Float {
-        return 2 * acos(abs(clamp(this.dot(q), -1, 1)));
+        return 2 * acos(abs(clamp(this.dot(q), -1, 1)))
     }
 
     fun rotateTowards(q: Quaternion, step: Float): Quaternion {
-        val angle = this.angleTo(q);
+        val angle = this.angleTo(q)
 
-        if (angle == 0.toFloat()) return this;
+        if (angle == 0.toFloat()) return this
 
-        val t = min(1.toFloat(), step / angle);
+        val t = min(1.toFloat(), step / angle)
 
-        this.slerp(q, t);
+        this.slerp(q, t)
 
-        return this;
+        return this
     }
 
     /**
      * Inverts this quaternion.
      */
     fun inverse(): Quaternion {
-        return this.conjugate();
+        return this.conjugate()
     }
 
     fun conjugate(): Quaternion {
@@ -298,7 +298,7 @@ class Quaternion(
 
         this.onChangeCallback?.invoke()
 
-        return this;
+        return this
     }
 
     fun dot(v: Quaternion): Float {
@@ -321,7 +321,7 @@ class Quaternion(
      * Normalizes this quaternion.
      */
     fun normalize(): Quaternion {
-        var l = this.length();
+        var l = this.length()
 
         if (l == 0.toFloat()) {
 
@@ -343,18 +343,18 @@ class Quaternion(
 
         this.onChangeCallback?.invoke()
 
-        return this;
+        return this
     }
 
     /**
      * Multiplies this quaternion by b.
      */
     fun multiply(q: Quaternion): Quaternion {
-        return this.multiplyQuaternions(this, q);
+        return this.multiplyQuaternions(this, q)
     }
 
     fun premultiply(q: Quaternion): Quaternion {
-        return this.multiplyQuaternions(q, this);
+        return this.multiplyQuaternions(q, this)
     }
 
     /**
@@ -362,23 +362,23 @@ class Quaternion(
      * Adapted from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm.
      */
     fun multiplyQuaternions(a: Quaternion, b: Quaternion): Quaternion {
-        val qax = a._x;
-        val qay = a._y;
-        val qaz = a._z;
-        val qaw = a._w;
-        val qbx = b._x;
-        val qby = b._y;
-        val qbz = b._z;
-        val qbw = b._w;
+        val qax = a._x
+        val qay = a._y
+        val qaz = a._z
+        val qaw = a._w
+        val qbx = b._x
+        val qby = b._y
+        val qbz = b._z
+        val qbw = b._w
 
-        this._x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
-        this._y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz;
-        this._z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
-        this._w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
+        this._x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby
+        this._y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz
+        this._z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx
+        this._w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz
 
         this.onChangeCallback?.invoke()
 
-        return this;
+        return this
     }
 
     fun slerp(qb: Quaternion, t: Float): Quaternion {
@@ -389,9 +389,9 @@ class Quaternion(
             return this.copy(qb)
         }
 
-        val x = this._x;
-        val y = this._y;
-        val z = this._z;
+        val x = this._x
+        val y = this._y
+        val z = this._z
         val w = this._w
 
         // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
@@ -420,7 +420,7 @@ class Quaternion(
             this._y = y
             this._z = z
 
-            return this;
+            return this
 
         }
 
@@ -434,26 +434,26 @@ class Quaternion(
             this._y = s * y + t * this._y
             this._z = s * z + t * this._z
 
-            this.normalize();
+            this.normalize()
             this.onChangeCallback?.invoke()
 
-            return this;
+            return this
 
         }
 
         val sinHalfTheta = sqrt(sqrSinHalfTheta).toFloat()
         val halfTheta = atan2(sinHalfTheta, cosHalfTheta)
         val ratioA = sin((1 - t) * halfTheta) / sinHalfTheta
-        val ratioB = sin(t * halfTheta) / sinHalfTheta;
+        val ratioB = sin(t * halfTheta) / sinHalfTheta
 
-        this._w = (w * ratioA + this._w * ratioB);
-        this._x = (x * ratioA + this._x * ratioB);
-        this._y = (y * ratioA + this._y * ratioB);
-        this._z = (z * ratioA + this._z * ratioB);
+        this._w = (w * ratioA + this._w * ratioB)
+        this._x = (x * ratioA + this._x * ratioB)
+        this._y = (y * ratioA + this._y * ratioB)
+        this._z = (z * ratioA + this._z * ratioB)
 
         this.onChangeCallback?.invoke()
 
-        return this;
+        return this
     }
 
 
