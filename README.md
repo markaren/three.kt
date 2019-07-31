@@ -21,6 +21,14 @@ a lot of features are still missing and the API can change rapidly.
 
 Right now, this is mostly interesting for developers that want to contribute.
 
+### How to run the samples?
+
+This project has been setup as a kotlin multi-platform project. 
+Due to some issue loading files from the resources folder in this context, 
+`right click -> run` will not work. As a temporary workaround, 
+please run the associated gradle tasks instead. 
+E.g. `BasicExample.kt` will have an associated `runBasicExample` gradle task.  
+
 #### API (subject to changes)
 
 ```kotlin
