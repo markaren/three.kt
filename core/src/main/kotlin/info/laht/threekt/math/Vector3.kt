@@ -3,6 +3,8 @@ package info.laht.threekt.math
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.FloatBufferAttribute
+import org.lwjgl.BufferUtils
+import java.nio.FloatBuffer
 import kotlin.math.*
 
 class Vector3(
@@ -573,6 +575,11 @@ class Vector3(
         this.z = attribute.getZ( index )
 
         return this
+    }
+
+    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
+        val buf = buffer ?: BufferUtils.createFloatBuffer(3)
+        return buf.put(x).put(y).put(z)
     }
 
     override fun equals(other: Any?): Boolean {

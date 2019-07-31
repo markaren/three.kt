@@ -2,12 +2,14 @@ package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.FloatBufferAttribute
+import org.lwjgl.BufferUtils
+import java.nio.FloatBuffer
 import kotlin.math.*
 
 
 class Vector2(
-    var x: Float,
-    var y: Float
+        var x: Float,
+        var y: Float
 ) : Cloneable, Flattable {
 
     override val size = 2
@@ -265,7 +267,7 @@ class Vector2(
         var length = this.length()
         if (length.isNaN()) length = 1f
 
-        return this.divideScalar( length ).multiplyScalar( max( min, min( max, length ) ) )
+        return this.divideScalar(length).multiplyScalar(max(min, min(max, length)))
     }
 
     /**
@@ -442,6 +444,24 @@ class Vector2(
     }
 
     /**
+     * Rotates the vector around center by angle radians.
+     * @param center the point around which to rotate.
+     * @param angle the angle to rotate, in radians.
+     */
+    fun rotateAround(center: Vector2, angle: Float): Vector2 {
+        val c = cos(angle)
+        val s = sin(angle)
+
+        val x = this.x - center.x
+        val y = this.y - center.y
+
+        this.x = x * c - y * s + center.x
+        this.y = x * s + y * c + center.y
+
+        return this
+    }
+
+    /**
      * Sets this vector's x value to be array[offset] and y value to be array[offset + 1].
      * @param array the source array.
      * @param offset (optional) offset into the array. Default is 0.
@@ -483,22 +503,32 @@ class Vector2(
         return this
     }
 
-    /**
-     * Rotates the vector around center by angle radians.
-     * @param center the point around which to rotate.
-     * @param angle the angle to rotate, in radians.
-     */
-    fun rotateAround(center: Vector2, angle: Float): Vector2 {
-        val c = cos(angle)
-        val s = sin(angle)
-
-        val x = this.x - center.x
-        val y = this.y - center.y
-
-        this.x = x * c - y * s + center.x
-        this.y = x * s + y * c + center.y
-
-        return this
+    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
+        val buf = buffer ?: BufferUtils.createFloatBuffer(3)
+        return buf.put(x).put(y)
     }
+
+    override fun toString(): String {
+        return "Vector2(x=$x, y=$y)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Vector2
+
+        if (x != other.x) return false
+        if (y != other.y) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = x.hashCode()
+        result = 31 * result + y.hashCode()
+        return result
+    }
+
 
 }

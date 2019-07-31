@@ -2,23 +2,25 @@ package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.FloatBufferAttribute
+import org.lwjgl.BufferUtils
+import java.nio.FloatBuffer
 import kotlin.math.cos
 import kotlin.math.sin
 
 class Matrix3(
-    val elements: FloatArray =  floatArrayOf(
-        1f,0f,0f,
-        0f,1f,0f,
-        0f,0f,1f
-    )
+        val elements: FloatArray = floatArrayOf(
+                1f, 0f, 0f,
+                0f, 1f, 0f,
+                0f, 0f, 1f
+        )
 ) : Cloneable, Flattable {
 
     override val size = 9
 
     fun set(
-        n11: Float, n12: Float, n13: Float,
-        n21: Float, n22: Float, n23: Float,
-        n31: Float, n32: Float, n33: Float
+            n11: Float, n12: Float, n13: Float,
+            n21: Float, n22: Float, n23: Float,
+            n31: Float, n32: Float, n33: Float
     ): Matrix3 {
         val te = this.elements;
 
@@ -31,9 +33,9 @@ class Matrix3(
 
     fun identity(): Matrix3 {
         return set(
-            1f, 0f, 0f,
-            0f, 1f, 0f,
-            0f, 0f, 1f
+                1f, 0f, 0f,
+                0f, 1f, 0f,
+                0f, 0f, 1f
         )
     }
 
@@ -57,9 +59,9 @@ class Matrix3(
 
         this.set(
 
-            me[0], me[4], me[8],
-            me[1], me[5], me[9],
-            me[2], me[6], me[10]
+                me[0], me[4], me[8],
+                me[1], me[5], me[9],
+                me[2], me[6], me[10]
 
         );
 
@@ -262,9 +264,9 @@ class Matrix3(
         val s = sin(rotation);
 
         this.set(
-            sx * c, sx * s, -sx * (c * cx + s * cy) + cx + tx,
-            -sy * s, sy * c, -sy * (-s * cx + c * cy) + cy + ty,
-            0f, 0f, 1f
+                sx * c, sx * s, -sx * (c * cx + s * cy) + cx + tx,
+                -sy * s, sy * c, -sy * (-s * cx + c * cy) + cy + ty,
+                0f, 0f, 1f
         );
 
     }
@@ -325,6 +327,16 @@ class Matrix3(
 
     override fun toArray(array: FloatArray?, offset: Int): FloatArray {
         return elements.copyInto(array ?: FloatArray(9), offset)
+    }
+
+    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
+
+        val buf = buffer ?: BufferUtils.createFloatBuffer(size)
+        elements.forEachIndexed { i, v ->
+            buf.put(i + offset, v)
+        }
+
+        return buf
     }
 
     override fun equals(other: Any?): Boolean {

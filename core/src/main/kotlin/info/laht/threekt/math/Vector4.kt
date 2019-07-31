@@ -2,6 +2,8 @@ package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.FloatBufferAttribute
+import org.lwjgl.BufferUtils
+import java.nio.FloatBuffer
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -291,6 +293,10 @@ class Vector4(
 
     }
 
+    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
+        val buf = buffer ?: BufferUtils.createFloatBuffer(2)
+        return buf.put(x).put(y).put(z).put(w)
+    }
 
     override fun clone(): Vector4 {
         return Vector4(x, y, z, w)

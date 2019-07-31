@@ -2,15 +2,18 @@ package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.FloatBufferAttribute
+import org.lwjgl.BufferUtils
+import java.nio.FloatBuffer
+import java.util.*
 import kotlin.math.*
 
 class Matrix4(
-    val elements: FloatArray = floatArrayOf(
-        1f,0f,0f,0f,
-        0f,1f,0f,0f,
-        0f,0f,1f,0f,
-        0f,0f,0f,1f
-    )
+        val elements: FloatArray = floatArrayOf(
+                1f, 0f, 0f, 0f,
+                0f, 1f, 0f, 0f,
+                0f, 0f, 1f, 0f,
+                0f, 0f, 0f, 1f
+        )
 ) : Cloneable, Flattable {
 
     override val size = 16
@@ -20,22 +23,22 @@ class Matrix4(
      * Sets all fields of this matrix.
      */
     fun set(
-        n11: Float,
-        n12: Float,
-        n13: Float,
-        n14: Float,
-        n21: Float,
-        n22: Float,
-        n23: Float,
-        n24: Float,
-        n31: Float,
-        n32: Float,
-        n33: Float,
-        n34: Float,
-        n41: Float,
-        n42: Float,
-        n43: Float,
-        n44: Float
+            n11: Float,
+            n12: Float,
+            n13: Float,
+            n14: Float,
+            n21: Float,
+            n22: Float,
+            n23: Float,
+            n24: Float,
+            n31: Float,
+            n32: Float,
+            n33: Float,
+            n34: Float,
+            n41: Float,
+            n42: Float,
+            n43: Float,
+            n44: Float
     ): Matrix4 {
         val te = this.elements;
 
@@ -53,10 +56,10 @@ class Matrix4(
     fun identity(): Matrix4 {
         return set(
 
-            1f, 0f, 0f, 0f,
-            0f, 1f, 0f, 0f,
-            0f, 0f, 1f, 0f,
-            0f, 0f, 0f, 1f
+                1f, 0f, 0f, 0f,
+                0f, 1f, 0f, 0f,
+                0f, 0f, 1f, 0f,
+                0f, 0f, 0f, 1f
 
         )
     }
@@ -91,10 +94,10 @@ class Matrix4(
 
     fun makeBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix4 {
         return set(
-            xAxis.x, yAxis.x, zAxis.x, 0f,
-            xAxis.y, yAxis.y, zAxis.y, 0f,
-            xAxis.z, yAxis.z, zAxis.z, 0f,
-            0f, 0f, 0f, 1f
+                xAxis.x, yAxis.x, zAxis.x, 0f,
+                xAxis.y, yAxis.y, zAxis.y, 0f,
+                xAxis.z, yAxis.z, zAxis.z, 0f,
+                0f, 0f, 0f, 1f
         );
     }
 
@@ -345,11 +348,11 @@ class Matrix4(
      * Multiplies this matrix by m.
      */
     fun multiply(m: Matrix4): Matrix4 {
-        return this.multiplyMatrices( this, m );
+        return this.multiplyMatrices(this, m);
     }
 
     fun premultiply(m: Matrix4): Matrix4 {
-        return this.multiplyMatrices( m, this );
+        return this.multiplyMatrices(m, this);
     }
 
     /**
@@ -434,15 +437,15 @@ class Matrix4(
 
     fun applyToBufferAttribute(attribute: FloatBufferAttribute): FloatBufferAttribute {
         val v1 = Vector3()
-        for ( i in 0 until attribute.count ) {
+        for (i in 0 until attribute.count) {
 
-            v1.x = attribute.getX( i );
-            v1.y = attribute.getY( i );
-            v1.z = attribute.getZ( i );
+            v1.x = attribute.getX(i);
+            v1.y = attribute.getY(i);
+            v1.z = attribute.getZ(i);
 
-            v1.applyMatrix4( this );
+            v1.applyMatrix4(this);
 
-            attribute.setXYZ( i, v1.x, v1.y, v1.z );
+            attribute.setXYZ(i, v1.x, v1.y, v1.z);
 
         }
 
@@ -578,13 +581,13 @@ class Matrix4(
         val n44 = me[15]
 
         val t11 =
-            n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44
+                n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44
         val t12 =
-            n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44
+                n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44
         val t13 =
-            n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44
+                n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44
         val t14 =
-            n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34
+                n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34
 
         val det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14
 
@@ -601,35 +604,35 @@ class Matrix4(
 
         te[0] = t11 * detInv;
         te[1] =
-            (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) * detInv;
+                (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) * detInv;
         te[2] =
-            (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) * detInv;
+                (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) * detInv;
         te[3] =
-            (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) * detInv;
+                (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) * detInv;
 
         te[4] = t12 * detInv;
         te[5] =
-            (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) * detInv;
+                (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) * detInv;
         te[6] =
-            (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) * detInv;
+                (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) * detInv;
         te[7] =
-            (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) * detInv;
+                (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) * detInv;
 
         te[8] = t13 * detInv;
         te[9] =
-            (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) * detInv;
+                (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) * detInv;
         te[10] =
-            (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) * detInv;
+                (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) * detInv;
         te[11] =
-            (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) * detInv;
+                (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) * detInv;
 
         te[12] = t14 * detInv;
         te[13] =
-            (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) * detInv;
+                (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) * detInv;
         te[14] =
-            (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) * detInv;
+                (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) * detInv;
         te[15] =
-            (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * detInv;
+                (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * detInv;
 
         return this
     }
@@ -667,10 +670,10 @@ class Matrix4(
     fun makeTranslation(x: Float, y: Float, z: Float): Matrix4 {
         this.set(
 
-            1f, 0f, 0f, x,
-            0f, 1f, 0f, y,
-            0f, 0f, 1f, z,
-            0f, 0f, 0f, 1f
+                1f, 0f, 0f, x,
+                0f, 1f, 0f, y,
+                0f, 0f, 1f, z,
+                0f, 0f, 0f, 1f
 
         );
 
@@ -688,10 +691,10 @@ class Matrix4(
 
         this.set(
 
-            1f, 0f, 0f, 0f,
-            0f, c, -s, 0f,
-            0f, s, c, 0f,
-            0f, 0f, 0f, 1f
+                1f, 0f, 0f, 0f,
+                0f, c, -s, 0f,
+                0f, s, c, 0f,
+                0f, 0f, 0f, 1f
 
         )
 
@@ -709,10 +712,10 @@ class Matrix4(
 
         this.set(
 
-            c, 0f, s, 0f,
-            0f, 1f, 0f, 0f,
-            -s, 0f, c, 0f,
-            0f, 0f, 0f, 1f
+                c, 0f, s, 0f,
+                0f, 1f, 0f, 0f,
+                -s, 0f, c, 0f,
+                0f, 0f, 0f, 1f
 
         )
 
@@ -730,10 +733,10 @@ class Matrix4(
 
         this.set(
 
-            c, -s, 0f, 0f,
-            s, c, 0f, 0f,
-            0f, 0f, 1f, 0f,
-            0f, 0f, 0f, 1f
+                c, -s, 0f, 0f,
+                s, c, 0f, 0f,
+                0f, 0f, 1f, 0f,
+                0f, 0f, 0f, 1f
 
         )
 
@@ -761,10 +764,10 @@ class Matrix4(
 
         this.set(
 
-            tx * x + c, tx * y - s * z, tx * z + s * y, 0f,
-            tx * y + s * z, ty * y + c, ty * z - s * x, 0f,
-            tx * z - s * y, ty * z + s * x, t * z * z + c, 0f,
-            0f, 0f, 0f, 1f
+                tx * x + c, tx * y - s * z, tx * z + s * y, 0f,
+                tx * y + s * z, ty * y + c, ty * z - s * x, 0f,
+                tx * z - s * y, ty * z + s * x, t * z * z + c, 0f,
+                0f, 0f, 0f, 1f
 
         )
 
@@ -777,10 +780,10 @@ class Matrix4(
     fun makeScale(x: Float, y: Float, z: Float): Matrix4 {
         this.set(
 
-            x, 0f, 0f, 0f,
-            0f, y, 0f, 0f,
-            0f, 0f, z, 0f,
-            0f, 0f, 0f, 1f
+                x, 0f, 0f, 0f,
+                0f, y, 0f, 0f,
+                0f, 0f, z, 0f,
+                0f, 0f, 0f, 1f
 
         )
 
@@ -843,9 +846,9 @@ class Matrix4(
      * If parameters are not passed, new instances will be created.
      */
     fun decompose(
-        position: Vector3 = Vector3(),
-        quaternion: Quaternion = Quaternion(),
-        scale: Vector3 = Vector3()
+            position: Vector3 = Vector3(),
+            quaternion: Quaternion = Quaternion(),
+            scale: Vector3 = Vector3()
     ): Triple<Vector3, Quaternion, Vector3> {
         val vector = Vector3()
         val matrix = Matrix4()
@@ -897,12 +900,12 @@ class Matrix4(
      * Creates a perspective projection matrix.
      */
     fun makePerspective(
-        left: Float,
-        right: Float,
-        top: Float,
-        bottom: Float,
-        near: Float,
-        far: Float
+            left: Float,
+            right: Float,
+            top: Float,
+            bottom: Float,
+            near: Float,
+            far: Float
     ): Matrix4 {
         val te = this.elements
         val x = 2 * near / (right - left)
@@ -925,12 +928,12 @@ class Matrix4(
      * Creates an orthographic projection matrix.
      */
     fun makeOrthographic(
-        left: Float,
-        right: Float,
-        top: Float,
-        bottom: Float,
-        near: Float,
-        far: Float
+            left: Float,
+            right: Float,
+            top: Float,
+            bottom: Float,
+            near: Float,
+            far: Float
     ): Matrix4 {
         val te = this.elements
         val w = 1f / (right - left)
@@ -959,5 +962,36 @@ class Matrix4(
     override fun toArray(array: FloatArray?, offset: Int): FloatArray {
         return elements.copyInto(array ?: FloatArray(16), offset)
     }
+
+    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
+
+        val buf = buffer ?: BufferUtils.createFloatBuffer(size)
+        elements.forEachIndexed { i, v ->
+            buf.put(i + offset, v)
+        }
+
+        return buf
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Matrix4
+
+        if (!elements.contentEquals(other.elements)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return elements.contentHashCode()
+    }
+
+
+    override fun toString(): String {
+        return "Matrix4(elements=${Arrays.toString(elements)})"
+    }
+
 
 }
