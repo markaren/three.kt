@@ -25,14 +25,14 @@ class OrthographicCamera(
 
         super<AbstractCamera>.copy(source, true)
 
-        this.left = source.left;
-        this.right = source.right;
-        this.top = source.top;
-        this.bottom = source.bottom;
-        this.near = source.near;
-        this.far = source.far;
+        this.left = source.left
+        this.right = source.right
+        this.top = source.top
+        this.bottom = source.bottom
+        this.near = source.near
+        this.far = source.far
 
-        this.zoom = source.zoom;
+        this.zoom = source.zoom
 
         source.view?.also { this.view = it.copy() }
 
@@ -56,58 +56,58 @@ class OrthographicCamera(
         }
 
         view?.also { view ->
-            view.enabled = true;
-            view.fullWidth = fullWidth;
-            view.fullHeight = fullHeight;
-            view.offsetX = x;
-            view.offsetY = y;
-            view.width = width;
-            view.height = height;
+            view.enabled = true
+            view.fullWidth = fullWidth
+            view.fullHeight = fullHeight
+            view.offsetX = x
+            view.offsetY = y
+            view.width = width
+            view.height = height
         }
 
-        this.updateProjectionMatrix();
+        this.updateProjectionMatrix()
     }
 
     fun clearViewOffset() {
 
         this.view?.also {
-            it.enabled = false;
+            it.enabled = false
         }
 
-        this.updateProjectionMatrix();
+        this.updateProjectionMatrix()
     }
 
     override fun updateProjectionMatrix() {
-        val dx = (this.right - this.left) / (2 * this.zoom);
-        val dy = (this.top - this.bottom) / (2 * this.zoom);
-        val cx = (this.right + this.left) / 2;
-        val cy = (this.top + this.bottom) / 2;
+        val dx = (this.right - this.left) / (2 * this.zoom)
+        val dy = (this.top - this.bottom) / (2 * this.zoom)
+        val cx = (this.right + this.left) / 2
+        val cy = (this.top + this.bottom) / 2
 
-        var left = cx - dx;
-        var right = cx + dx;
-        var top = cy + dy;
-        var bottom = cy - dy;
+        var left = cx - dx
+        var right = cx + dx
+        var top = cy + dy
+        var bottom = cy - dy
 
         this.view?.also {  view ->
 
             if (view.enabled) {
 
-                val zoomW = this.zoom / (view.width / view.fullWidth);
-                val zoomH = this.zoom / (view.height / view.fullHeight);
-                val scaleW = (this.right - this.left) / view.width;
-                val scaleH = (this.top - this.bottom) / view.height;
+                val zoomW = this.zoom / (view.width / view.fullWidth)
+                val zoomH = this.zoom / (view.height / view.fullHeight)
+                val scaleW = (this.right - this.left) / view.width
+                val scaleH = (this.top - this.bottom) / view.height
 
-                left += scaleW * (view.offsetX / zoomW);
-                right = left + scaleW * (view.width / zoomW);
-                top -= scaleH * (view.offsetY / zoomH);
-                bottom = top - scaleH * (view.height / zoomH);
+                left += scaleW * (view.offsetX / zoomW)
+                right = left + scaleW * (view.width / zoomW)
+                top -= scaleH * (view.offsetY / zoomH)
+                bottom = top - scaleH * (view.height / zoomH)
 
             }
 
         }
 
-        this.projectionMatrix.makeOrthographic(left, right, top, bottom, this.near, this.far);
+        this.projectionMatrix.makeOrthographic(left, right, top, bottom, this.near, this.far)
 
-        this.projectionMatrixInverse.getInverse(this.projectionMatrix);
+        this.projectionMatrixInverse.getInverse(this.projectionMatrix)
     }
 }

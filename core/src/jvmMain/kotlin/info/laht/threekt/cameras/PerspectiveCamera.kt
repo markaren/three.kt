@@ -211,5 +211,3 @@ class PerspectiveCamera(
         return PerspectiveCamera().copy(this, true)
     }
 }
-
-

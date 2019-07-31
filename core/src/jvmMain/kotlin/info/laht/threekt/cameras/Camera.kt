@@ -5,7 +5,6 @@ import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.math.Matrix4
 import info.laht.threekt.math.Vector3
 
-
 interface Camera: Object3D {
     val matrixWorldInverse: Matrix4
 
@@ -81,4 +80,3 @@ interface CameraCanUpdateProjectionMatrix: Camera {
     fun updateProjectionMatrix()
 
 }
-
