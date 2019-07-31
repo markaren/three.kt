@@ -20,7 +20,7 @@ class MeshToonMaterial: MeshPhongMaterial() {
 
         super.copy(source)
 
-        this.gradientMap = source.gradientMap;
+        this.gradientMap = source.gradientMap
 
         return this
 
