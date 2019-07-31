@@ -1,6 +1,5 @@
 package info.laht.threekt.core
 
-
 class Uniform(
     var value: Any?,
     private val properties: MutableMap<String, Any?> = mutableMapOf()
