@@ -117,3 +117,15 @@ internal inline fun <reified T> MutableList<T>.safeSet(v1: T, v2: T, v3: T, v4: 
         set(3, v4)
     }
 }
+
+
+internal infix fun FloatArray.contentEquals(list: List<Float>): Boolean {
+
+    if (size != list.size) return false
+
+    for (i in 0 until size) {
+        if (get(i) != list[0]) return false
+    }
+
+    return true
+}
