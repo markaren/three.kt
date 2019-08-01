@@ -119,13 +119,32 @@ internal inline fun <reified T> MutableList<T>.safeSet(v1: T, v2: T, v3: T, v4: 
 }
 
 
-internal infix fun FloatArray.contentEquals(list: List<Float>): Boolean {
+internal fun FloatArray.contentEquals(list: List<Float>, allowLongerList: Boolean = false): Boolean {
 
-    if (size != list.size) return false
+    if (allowLongerList) {
+        if (size > list.size) return false
+    } else {
+        if (size != list.size) return false
+    }
 
     for (i in 0 until size) {
         if (get(i) != list[0]) return false
     }
 
     return true
+}
+
+
+internal fun FloatArray.copyInto(list: MutableList<Float>): MutableList<Float> {
+
+    while (list.size <= size) {
+        list.add(0f)
+    }
+
+    forEach {
+        list.add(it)
+    }
+
+    return list
+
 }
