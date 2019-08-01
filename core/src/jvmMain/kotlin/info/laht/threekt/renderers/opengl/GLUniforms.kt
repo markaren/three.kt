@@ -1,5 +1,7 @@
 package info.laht.threekt.renderers.opengl
 
+import info.laht.threekt.contentEquals
+import info.laht.threekt.copyInto
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.*
 import info.laht.threekt.safeSet
@@ -242,7 +244,7 @@ private class SingleUniform(
         private val addr: Int
 ) : UniformObject(id) {
 
-    private val cache = mutableListOf<Any>()
+    private val floatCache = mutableListOf<Float>()
 
     private val setValue = getSingularSetter(activeInfo)
 
@@ -325,9 +327,9 @@ private class SingleUniform(
 
         when (v) {
             is Float -> {
-                if (cache.getOrNull(0) == v) return
+                if (floatCache.getOrNull(0) == v) return
                 GL20.glUniform1f(addr, v)
-                cache.safeSet(v)
+                floatCache.safeSet(v)
             }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
@@ -336,14 +338,14 @@ private class SingleUniform(
     fun setValueV2f(v: Any) {
         when (v) {
             is FloatArray -> {
-                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1]) return
+                if (floatCache.getOrNull(0) == v[0] && floatCache.getOrNull(1) == v[1]) return
                 GL20.glUniform2fv(addr, v)
-                cache.safeSet(v[0], v[1])
+                floatCache.safeSet(v[0], v[1])
             }
             is Vector2 -> {
-                if (cache.getOrNull(0) == v.x && cache.getOrNull(1) == v.y) return
+                if (floatCache.getOrNull(0) == v.x && floatCache.getOrNull(1) == v.y) return
                 GL20.glUniform2f(addr, v.x, v.y)
-                cache.safeSet(v.x, v.y)
+                floatCache.safeSet(v.x, v.y)
             }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
@@ -352,19 +354,19 @@ private class SingleUniform(
     fun setValueV3f(v: Any) {
         when (v) {
             is FloatArray -> {
-                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1] && cache.getOrNull(2) == v[2]) return
+                if (floatCache.getOrNull(0) == v[0] && floatCache.getOrNull(1) == v[1] && floatCache.getOrNull(2) == v[2]) return
                 GL20.glUniform3fv(addr, v)
-                cache.safeSet(v[0], v[1], v[2])
+                floatCache.safeSet(v[0], v[1], v[2])
             }
             is Vector3 -> {
-                if (cache.getOrNull(0) == v.x && cache.getOrNull(1) == v.y && cache.getOrNull(2) == v.z) return
+                if (floatCache.getOrNull(0) == v.x && floatCache.getOrNull(1) == v.y && floatCache.getOrNull(2) == v.z) return
                 GL20.glUniform3f(addr, v.x, v.y, v.z)
-                cache.safeSet(v.x, v.y, v.z)
+                floatCache.safeSet(v.x, v.y, v.z)
             }
             is Color -> {
-                if (cache.getOrNull(0) == v.r && cache.getOrNull(1) == v.g && cache.getOrNull(2) == v.b) return
+                if (floatCache.getOrNull(0) == v.r && floatCache.getOrNull(1) == v.g && floatCache.getOrNull(2) == v.b) return
                 GL20.glUniform3f(addr, v.r, v.g, v.b)
-                cache.safeSet(v.r, v.g, v.b)
+                floatCache.safeSet(v.r, v.g, v.b)
             }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
@@ -373,14 +375,14 @@ private class SingleUniform(
     fun setValueV4f(v: Any) {
         when (v) {
             is FloatArray -> {
-                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1] && cache.getOrNull(2) == v[2] && cache.getOrNull(3) == v[3]) return
+                if (floatCache.getOrNull(0) == v[0] && floatCache.getOrNull(1) == v[1] && floatCache.getOrNull(2) == v[2] && floatCache.getOrNull(3) == v[3]) return
                 GL20.glUniform4fv(addr, v)
-                cache.safeSet(v[0], v[1], v[2], v[3])
+                floatCache.safeSet(v[0], v[1], v[2], v[3])
             }
             is Vector4 -> {
-                if (cache.getOrNull(0) == v.x && cache.getOrNull(1) == v.y && cache.getOrNull(2) == v.z && cache.getOrNull(3) == v.w) return
+                if (floatCache.getOrNull(0) == v.x && floatCache.getOrNull(1) == v.y && floatCache.getOrNull(2) == v.z && floatCache.getOrNull(3) == v.w) return
                 GL20.glUniform4f(addr, v.x, v.y, v.z, v.w)
-                cache.safeSet(v.x, v.y, v.z, v.w)
+                floatCache.safeSet(v.x, v.y, v.z, v.w)
             }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
@@ -388,14 +390,22 @@ private class SingleUniform(
 
     fun setValueM3(v: Any) {
         when (v) {
-            is Matrix3 -> GL20.glUniformMatrix3fv(addr, false, v.toArray(mat3array))
+            is Matrix3 -> {
+                if (v.elements.contentEquals(floatCache, true)) return
+                GL20.glUniformMatrix3fv(addr, false, v.toArray(mat3array))
+                v.elements.copyInto(floatCache)
+            }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
     }
 
     fun setValueM4(v: Any) {
         when (v) {
-            is Matrix4 -> GL20.glUniformMatrix4fv(addr, false, v.toArray(mat4array))
+            is Matrix4 -> {
+                if (v.elements.contentEquals(floatCache)) return
+                GL20.glUniformMatrix4fv(addr, false, v.toArray(mat4array))
+                v.elements.copyInto(floatCache)
+            }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
         }
     }
