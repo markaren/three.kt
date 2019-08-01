@@ -336,8 +336,8 @@ private class SingleUniform(
     fun setValueV2f(v: Any) {
         when (v) {
             is FloatArray -> {
-                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1])
-                    GL20.glUniform2fv(addr, v)
+                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1]) return
+                GL20.glUniform2fv(addr, v)
                 cache.safeSet(v[0], v[1])
             }
             is Vector2 -> {
@@ -352,8 +352,8 @@ private class SingleUniform(
     fun setValueV3f(v: Any) {
         when (v) {
             is FloatArray -> {
-                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1] && cache.getOrNull(2) == v[2])
-                    GL20.glUniform3fv(addr, v)
+                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1] && cache.getOrNull(2) == v[2]) return
+                GL20.glUniform3fv(addr, v)
                 cache.safeSet(v[0], v[1], v[2])
             }
             is Vector3 -> {
@@ -373,8 +373,8 @@ private class SingleUniform(
     fun setValueV4f(v: Any) {
         when (v) {
             is FloatArray -> {
-                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1] && cache.getOrNull(2) == v[2] && cache.getOrNull(3) == v[3])
-                    GL20.glUniform4fv(addr, v)
+                if (cache.getOrNull(0) == v[0] && cache.getOrNull(1) == v[1] && cache.getOrNull(2) == v[2] && cache.getOrNull(3) == v[3]) return
+                GL20.glUniform4fv(addr, v)
                 cache.safeSet(v[0], v[1], v[2], v[3])
             }
             is Vector4 -> {
