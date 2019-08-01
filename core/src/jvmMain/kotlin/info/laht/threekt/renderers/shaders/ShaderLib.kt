@@ -256,8 +256,28 @@ object ShaderLib {
         ShaderChunk.normal_frag
     )
 
+    private val map = mapOf(
+        "basic" to basic,
+        "lambert" to lambert,
+        "phong" to phong,
+        "standard" to standard,
+        "matcap" to matcap,
+        "points" to points,
+        "dashed" to dashed,
+        "depth" to depth,
+        "normal" to normal,
+        "sprite" to sprite,
+        "background" to background,
+        "cube" to cube,
+        "equirect" to equirect,
+        "distanceRGBA" to distanceRGBA,
+        "shadow" to shadow,
+        "physial" to physical
+
+    )
+
     operator fun get(name: String): Shader {
-        return ShaderLib::class.java.getDeclaredField(name).get(this) as Shader
+        return map.getValue(name)
     }
 
 }
