@@ -75,7 +75,7 @@ class Canvas @JvmOverloads constructor(
         val window = glfwCreateWindow(width, height, options.title, 0, 0)
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window) { window, key, _, action, _ ->
+        glfwSetKeyCallback(window) { _, key, _, action, _ ->
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(window, true) // We will detect this in the rendering loop
             } else {
@@ -83,7 +83,7 @@ class Canvas @JvmOverloads constructor(
             }
         }
 
-        glfwSetMouseButtonCallback(window) { window, button, action, mods ->
+        glfwSetMouseButtonCallback(window) { _, button, action, _ ->
             mouseEvent.button = button
             when (action) {
                 0 -> onMouseUp?.invoke(mouseEvent)
@@ -91,12 +91,12 @@ class Canvas @JvmOverloads constructor(
             }
         }
 
-        glfwSetCursorPosCallback(window) { window, xpos, ypos ->
+        glfwSetCursorPosCallback(window) { _, xpos, ypos ->
             mouseEvent.updateCoordinates(xpos.toInt(), ypos.toInt())
             onMouseMove?.invoke(mouseEvent)
         }
 
-        glfwSetScrollCallback(window) { window, xoffset, yoffset ->
+        glfwSetScrollCallback(window) { _, xoffset, yoffset ->
             onMouseWheel?.invoke(MouseWheelEvent(xoffset.toFloat(), yoffset.toFloat()))
         }
 
