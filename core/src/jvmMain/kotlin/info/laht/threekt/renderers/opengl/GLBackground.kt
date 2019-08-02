@@ -8,12 +8,13 @@ import info.laht.threekt.materials.ShaderMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix3
 import info.laht.threekt.objects.Mesh
-import info.laht.threekt.renderers.GLRenderTargetCube
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.renderers.shaders.ShaderLib
 import info.laht.threekt.renderers.shaders.cloneUniforms
-import info.laht.threekt.scenes.*
-import info.laht.threekt.textures.CubeTexture
+import info.laht.threekt.scenes.ColorBackground
+import info.laht.threekt.scenes.RenderTargetBackGround
+import info.laht.threekt.scenes.Scene
+import info.laht.threekt.scenes.TextureBackground
 import info.laht.threekt.textures.Texture
 
 internal class GLBackground (
@@ -47,9 +48,9 @@ internal class GLBackground (
             currentBackground = null
             currentBackgroundVersion = 0
 
-        } else if (background is Color) {
+        } else if (background is ColorBackground) {
 
-            setClear(background, 1f)
+            setClear(background.color, 1f)
             forceClear = true
             currentBackground = null
             currentBackgroundVersion = 0
@@ -60,7 +61,7 @@ internal class GLBackground (
             renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil)
         }
 
-        if (background is CubeTexture || background is GLRenderTargetCube) {
+        if (background is TextureBackground || background is RenderTargetBackGround) {
 
             val boxMesh = this.boxMesh ?: Mesh(
                 BoxBufferGeometry(1f, 1f, 1f),
@@ -89,13 +90,13 @@ internal class GLBackground (
             objects.update(boxMesh)
 
             val texture = when (background) {
-                is Texture -> background
-                is GLRenderTargetCube -> background.texture
+                is TextureBackground -> background.texture
+                is RenderTargetBackGround -> background.renderTarget.texture
                 else -> throw IllegalStateException()
             }
 
             material.uniforms["tCube"]?.value = texture
-            material.uniforms["tFlip"]?.value = if (background is GLRenderTargetCube) 1 else -1
+            material.uniforms["tFlip"]?.value = if (background is RenderTargetBackGround) 1 else -1
 
             if (currentBackground != background ||
                 currentBackgroundVersion != texture.version

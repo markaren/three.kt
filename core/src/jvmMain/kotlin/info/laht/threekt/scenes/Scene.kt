@@ -7,7 +7,7 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.renderers.GLRenderTarget
 import info.laht.threekt.renderers.GLRenderTargetCube
 import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.textures.Texture
+import info.laht.threekt.textures.CubeTexture
 
 class Scene: Object3DImpl() {
 
@@ -19,22 +19,22 @@ class Scene: Object3DImpl() {
 
     var onBeforeRenderScene: ((GLRenderer, Scene, Camera, GLRenderTarget?) -> Unit)? = null
 
-    internal var background: Any? = null
+    internal var background: Background? = null
 
     fun setBackground(color: Int) {
         setBackground(Color(color))
     }
 
     fun setBackground(color: Color) {
-        background = color
+        background = ColorBackground(color)
     }
 
-    fun setBackground(texture: Texture) {
-        background = texture
+    fun setBackground(texture: CubeTexture) {
+        background = TextureBackground(texture)
     }
 
     fun setBackground(renderTarget: GLRenderTargetCube) {
-        background = renderTarget
+        background = RenderTargetBackGround(renderTarget)
     }
 
     fun copy( source: Scene, recursive: Boolean ): Scene {
@@ -56,3 +56,17 @@ class Scene: Object3DImpl() {
     }
 
 }
+
+internal sealed class Background
+
+internal class ColorBackground(
+        val color: Color
+): Background()
+
+internal class TextureBackground(
+        val texture: CubeTexture
+): Background()
+
+internal class RenderTargetBackGround(
+        val renderTarget: GLRenderTargetCube
+): Background()
