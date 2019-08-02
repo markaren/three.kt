@@ -106,6 +106,10 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     }
 
+    fun scale(scale: Float): BufferGeometry {
+        return scale(scale, scale, scale)
+    }
+
     fun scale(x: Float, y: Float, z: Float): BufferGeometry {
 
         // scale geometry
