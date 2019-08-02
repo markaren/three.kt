@@ -1,11 +1,7 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
-import info.laht.threekt.core.FloatBufferAttribute
-import org.lwjgl.BufferUtils
-import java.nio.FloatBuffer
 import kotlin.math.*
-
 
 class Vector2(
         var x: Float,
@@ -489,23 +485,6 @@ class Vector2(
             array[0] = x
             array[1] = y
         }
-    }
-
-    /**
-     * Sets this vector's x and y values from the attribute.
-     * @param attribute the source attribute.
-     * @param index index in the attribute.
-     */
-    fun fromBufferAttribute(attribute: FloatBufferAttribute, index: Int): Vector2 {
-        this.x = attribute.getX(index)
-        this.y = attribute.getY(index)
-
-        return this
-    }
-
-    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
-        val buf = buffer ?: BufferUtils.createFloatBuffer(3)
-        return buf.put(x).put(y)
     }
 
     override fun toString(): String {

@@ -1,5 +1,7 @@
 package info.laht.threekt.math
 
+import kotlin.jvm.JvmOverloads
+
 class Line3 @JvmOverloads constructor(
     var start: Vector3 = Vector3(),
     var end: Vector3 = Vector3()
@@ -82,9 +84,7 @@ class Line3 @JvmOverloads constructor(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Line3
+        if (other !is Line3) return false
 
         if (start != other.start) return false
         if (end != other.end) return false

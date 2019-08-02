@@ -1,10 +1,6 @@
 package info.laht.threekt.math
 
-import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Cloneable
-import info.laht.threekt.core.FloatBufferAttribute
-import org.lwjgl.BufferUtils
-import java.nio.FloatBuffer
 import kotlin.math.*
 
 class Vector3(
@@ -225,14 +221,6 @@ class Vector3(
         this.z = iz * qw + iw * - qz + ix * - qy - iy * - qx
 
         return this
-    }
-
-    fun project(camera: Camera): Vector3 {
-        return this.applyMatrix4( camera.matrixWorldInverse ).applyMatrix4( camera.projectionMatrix )
-    }
-
-    fun unproject(camera: Camera): Vector3 {
-        return this.applyMatrix4( camera.projectionMatrixInverse ).applyMatrix4( camera.matrixWorld )
     }
 
     fun transformDirection(m: Matrix4): Vector3 {
@@ -569,24 +557,9 @@ class Vector3(
         return array
     }
 
-    fun fromBufferAttribute( attribute: FloatBufferAttribute, index: Int): Vector3 {
-        this.x = attribute.getX( index )
-        this.y = attribute.getY( index )
-        this.z = attribute.getZ( index )
-
-        return this
-    }
-
-    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
-        val buf = buffer ?: BufferUtils.createFloatBuffer(3)
-        return buf.put(x).put(y).put(z)
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Vector3
+        if (other !is Vector3) return false
 
         if (x != other.x) return false
         if (y != other.y) return false

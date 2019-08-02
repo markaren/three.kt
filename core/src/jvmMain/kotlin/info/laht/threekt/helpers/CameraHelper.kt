@@ -9,6 +9,7 @@ import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector3
+import info.laht.threekt.math.unproject
 import info.laht.threekt.objects.LineSegments
 
 class CameraHelper(

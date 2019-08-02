@@ -1,9 +1,6 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
-import info.laht.threekt.core.FloatBufferAttribute
-import org.lwjgl.BufferUtils
-import java.nio.FloatBuffer
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -281,23 +278,6 @@ class Vector4(
         return array
     }
 
-
-    fun fromBufferAttribute(attribute: FloatBufferAttribute, index: Int): Vector4 {
-
-        this.x = attribute.getX(index)
-        this.y = attribute.getY(index)
-        this.z = attribute.getZ(index)
-        this.w = attribute.getW(index)
-
-        return this
-
-    }
-
-    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
-        val buf = buffer ?: BufferUtils.createFloatBuffer(2)
-        return buf.put(x).put(y).put(z).put(w)
-    }
-
     override fun clone(): Vector4 {
         return Vector4(x, y, z, w)
     }
@@ -308,9 +288,7 @@ class Vector4(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Vector4
+        if (other !is Vector4) return false
 
         if (x != other.x) return false
         if (y != other.y) return false
