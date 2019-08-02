@@ -7,13 +7,14 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-
 object ImageLoader {
 
     private val cache = mutableMapOf<String, Image>()
 
     @JvmOverloads
     fun load(file: File, flipY: Boolean = true): Image {
+
+        val isJpg = file.name.endsWith(".jpg", true) || file.name.endsWith(".jpeg", true)
 
         return cache.computeIfAbsent(file.absolutePath) {
             var img = ImageIO.read(file)
@@ -25,14 +26,18 @@ object ImageLoader {
             val pixels = IntArray(res)
             img.getRGB(0, 0, img.width, img.height, pixels, 0, img.width)
 
-            val buffer = BufferUtils.createByteBuffer(res * 4)
+            val buffer = BufferUtils.createByteBuffer(res * if (isJpg) 3 else 4)
             for (y in 0 until img.height) {
                 for (x in 0 until img.width) {
                     val pixel = pixels[y * img.width + x]
                     buffer.put((pixel shr 16 and 0xFF).toByte()) // Red component
                     buffer.put((pixel shr 8 and 0xFF).toByte()) // Green component
                     buffer.put((pixel and 0xFF).toByte()) // Blue component
-                    buffer.put((pixel shr 24 and 0xFF).toByte()) // Alpha component. Only for RGBA
+
+                    if (!isJpg) {
+                        buffer.put((pixel shr 24 and 0xFF).toByte()) // Alpha component. Only for RGBA
+                    }
+
                 }
             }
 

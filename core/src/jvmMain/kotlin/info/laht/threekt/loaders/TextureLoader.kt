@@ -10,9 +10,11 @@ object TextureLoader {
     @JvmOverloads
     fun load(file: File, flipY: Boolean = true): Texture {
 
+        val isJpg = file.name.endsWith(".jpg", true) || file.name.endsWith(".jpeg", true)
+
         val texture = Texture(
             image = ImageLoader.load(file, flipY),
-            format = TextureFormat.RGBA,
+            format = if (isJpg) TextureFormat.RGB else TextureFormat.RGBA,
             type = TextureType.UnsignedByte
         )
         texture.needsUpdate = true
