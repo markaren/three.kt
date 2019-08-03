@@ -163,7 +163,7 @@ class PerspectiveCamera(
      */
     override fun updateProjectionMatrix() {
         val near = this.near
-        var top = near * tan( DEG2RAD * 0.5 * this.fov ).toFloat() / this.zoom
+        var top = near * tan(DEG2RAD * 0.5 * this.fov).toFloat() / this.zoom
         var height = 2 * top
         var width = this.aspect * height
         var left = -0.5f * width
@@ -178,13 +178,13 @@ class PerspectiveCamera(
         }
 
         val skew = this.filmOffset
-        if ( skew != 0 ) {
+        if (skew != 0) {
             left += near * skew / this.getFilmWidth()
         }
 
-        this.projectionMatrix.makePerspective( left, left + width, top, top - height, near, this.far )
+        this.projectionMatrix.makePerspective(left, left + width, top, top - height, near, this.far)
 
-        this.projectionMatrixInverse.getInverse( this.projectionMatrix )
+        this.projectionMatrixInverse.getInverse(this.projectionMatrix)
     }
 
     fun copy(source: PerspectiveCamera, recursive: Boolean): PerspectiveCamera {

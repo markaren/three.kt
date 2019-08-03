@@ -1,6 +1,9 @@
 package info.laht.threekt.renderers
 
-import info.laht.threekt.*
+import info.laht.threekt.Canvas
+import info.laht.threekt.DrawMode
+import info.laht.threekt.Side
+import info.laht.threekt.ToneMapping
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.*
 import info.laht.threekt.extras.objects.ImmediateRenderObject
@@ -21,6 +24,7 @@ import org.lwjgl.opengl.GL13
 import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL30
+import kotlin.collections.set
 import kotlin.math.max
 import kotlin.math.min
 
@@ -439,7 +443,7 @@ class GLRenderer(
 
     }
 
-    fun render(scene: Scene, camera: Camera, swapBuffers: Boolean = true ) {
+    fun render(scene: Scene, camera: Camera, swapBuffers: Boolean = true) {
 
         currentGeometryProgram.geometry = null
         currentGeometryProgram.program = null

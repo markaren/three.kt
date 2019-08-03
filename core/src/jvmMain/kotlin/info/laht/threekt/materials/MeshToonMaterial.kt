@@ -2,7 +2,7 @@ package info.laht.threekt.materials
 
 import info.laht.threekt.textures.Texture
 
-class MeshToonMaterial: MeshPhongMaterial() {
+class MeshToonMaterial : MeshPhongMaterial() {
 
     public override var gradientMap: Texture? = null
 
@@ -16,7 +16,7 @@ class MeshToonMaterial: MeshPhongMaterial() {
         return MeshToonMaterial().copy(this)
     }
 
-    fun copy( source: MeshToonMaterial ): MeshToonMaterial {
+    fun copy(source: MeshToonMaterial): MeshToonMaterial {
 
         super.copy(source)
 

@@ -1,6 +1,6 @@
 package info.laht.threekt.materials
 
-class LineDashedMaterial: LineBasicMaterial() {
+class LineDashedMaterial : LineBasicMaterial() {
 
     var scale = 1f
     var dashSize = 3f
@@ -10,7 +10,7 @@ class LineDashedMaterial: LineBasicMaterial() {
         return LineDashedMaterial().copy(this)
     }
 
-    fun copy( source: LineDashedMaterial ): LineDashedMaterial {
+    fun copy(source: LineDashedMaterial): LineDashedMaterial {
 
         super.copy(source)
 
@@ -20,5 +20,5 @@ class LineDashedMaterial: LineBasicMaterial() {
 
         return this
     }
-    
+
 }

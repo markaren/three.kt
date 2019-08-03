@@ -3,7 +3,7 @@ package info.laht.threekt.materials
 import info.laht.threekt.TextureEncoding
 import info.laht.threekt.textures.Texture
 
-class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithWireframe {
+class MeshDepthMaterial : Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithWireframe {
 
     var depthPacking = TextureEncoding.BasicDepthPacking
 
@@ -32,7 +32,7 @@ class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
         return MeshDepthMaterial().copy(this)
     }
 
-    fun copy( source: MeshDepthMaterial ): MeshDepthMaterial {
+    fun copy(source: MeshDepthMaterial): MeshDepthMaterial {
 
         super.copy(source)
 
@@ -69,5 +69,5 @@ class MeshDepthMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
         return this
 
     }
-    
+
 }

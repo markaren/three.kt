@@ -97,7 +97,7 @@ private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
 
 
 internal class GLUniforms(
-        program: Int
+    program: Int
 ) : Container {
 
     override val seq = mutableListOf<UniformObject>()
@@ -206,8 +206,8 @@ internal class GLUniforms(
 }
 
 private class ActiveUniformInfo(
-        program: Int,
-        index: Int
+    program: Int,
+    index: Int
 ) {
 
     val name: String
@@ -231,7 +231,7 @@ private class ActiveUniformInfo(
 }
 
 internal sealed class UniformObject(
-        val id: String
+    val id: String
 ) {
 
     abstract fun setValue(v: Any, textures: GLTextures? = null)
@@ -239,9 +239,9 @@ internal sealed class UniformObject(
 }
 
 private class SingleUniform(
-        id: String,
-        activeInfo: ActiveUniformInfo,
-        private val addr: Int
+    id: String,
+    activeInfo: ActiveUniformInfo,
+    private val addr: Int
 ) : UniformObject(id) {
 
     private val floatCache = mutableListOf<Float>()
@@ -375,12 +375,18 @@ private class SingleUniform(
     fun setValueV4f(v: Any) {
         when (v) {
             is FloatArray -> {
-                if (floatCache.getOrNull(0) == v[0] && floatCache.getOrNull(1) == v[1] && floatCache.getOrNull(2) == v[2] && floatCache.getOrNull(3) == v[3]) return
+                if (floatCache.getOrNull(0) == v[0] && floatCache.getOrNull(1) == v[1] && floatCache.getOrNull(2) == v[2] && floatCache.getOrNull(
+                        3
+                    ) == v[3]
+                ) return
                 GL20.glUniform4fv(addr, v)
                 floatCache.safeSet(v[0], v[1], v[2], v[3])
             }
             is Vector4 -> {
-                if (floatCache.getOrNull(0) == v.x && floatCache.getOrNull(1) == v.y && floatCache.getOrNull(2) == v.z && floatCache.getOrNull(3) == v.w) return
+                if (floatCache.getOrNull(0) == v.x && floatCache.getOrNull(1) == v.y && floatCache.getOrNull(2) == v.z && floatCache.getOrNull(
+                        3
+                    ) == v.w
+                ) return
                 GL20.glUniform4f(addr, v.x, v.y, v.z, v.w)
                 floatCache.safeSet(v.x, v.y, v.z, v.w)
             }
@@ -417,9 +423,9 @@ private class SingleUniform(
 }
 
 private class PureArrayUniform(
-        id: String,
-        activeInfo: ActiveUniformInfo,
-        private val addr: Int
+    id: String,
+    activeInfo: ActiveUniformInfo,
+    private val addr: Int
 ) : UniformObject(id) {
 
     private val setValue = getPureArraySetter(activeInfo.type, addr, activeInfo.size)
@@ -439,16 +445,16 @@ private class PureArrayUniform(
 
             0x8b5b -> { v, _ ->
                 GL20.glUniformMatrix3fv(
-                        addr,
-                        false,
-                        flatten(v as List<Flattable>, size, 9)
+                    addr,
+                    false,
+                    flatten(v as List<Flattable>, size, 9)
                 )
             } // _MAT3
             0x8b5c -> { v, _ ->
                 GL20.glUniformMatrix3fv(
-                        addr,
-                        false,
-                        flatten(v as List<Flattable>, size, 16)
+                    addr,
+                    false,
+                    flatten(v as List<Flattable>, size, 16)
                 )
             } // _MAT4
 
@@ -485,7 +491,7 @@ private class PureArrayUniform(
 }
 
 private class StructuredUniform(
-        id: String
+    id: String
 ) : UniformObject(id), Container {
 
     override val seq = mutableListOf<UniformObject>()

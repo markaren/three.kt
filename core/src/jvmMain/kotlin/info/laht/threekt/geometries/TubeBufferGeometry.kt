@@ -14,11 +14,11 @@ import kotlin.math.sin
 typealias TubeGeometry = TubeBufferGeometry
 
 class TubeBufferGeometry(
-        val path: Curve3,
-        val tubularSegments: Int = 64,
-        val radius: Float = 1f,
-        val radialSegments: Int = 8,
-        val closed: Boolean = false
+    val path: Curve3,
+    val tubularSegments: Int = 64,
+    val radius: Float = 1f,
+    val radialSegments: Int = 8,
+    val closed: Boolean = false
 ) : BufferGeometry() {
 
     val frames = path.computeFrenetFrames(tubularSegments, closed)
@@ -49,7 +49,7 @@ class TubeBufferGeometry(
 
             // generate normals and vertices for the current segment
 
-            for (j in 0 .. radialSegments) {
+            for (j in 0..radialSegments) {
 
                 val v = j.toFloat() / radialSegments * TWO_PI
 
@@ -79,9 +79,9 @@ class TubeBufferGeometry(
 
         fun generateIndices() {
 
-            for (j in 1 .. tubularSegments) {
+            for (j in 1..tubularSegments) {
 
-                for (i in 1 .. radialSegments) {
+                for (i in 1..radialSegments) {
 
                     val a = (radialSegments + 1) * (j - 1) + (i - 1)
                     val b = (radialSegments + 1) * j + (i - 1)

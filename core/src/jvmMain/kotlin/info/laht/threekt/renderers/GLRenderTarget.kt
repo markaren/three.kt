@@ -78,12 +78,12 @@ open class GLRenderTarget(
 
     }
 
-    fun copy( source: GLRenderTarget ): GLRenderTarget {
+    fun copy(source: GLRenderTarget): GLRenderTarget {
 
         this.width = source.width
         this.height = source.height
 
-        this.viewport.copy( source.viewport )
+        this.viewport.copy(source.viewport)
 
         this.texture = source.texture.clone()
 

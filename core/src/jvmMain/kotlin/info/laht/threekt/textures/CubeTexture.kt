@@ -1,3 +1,3 @@
 package info.laht.threekt.textures
 
-class CubeTexture: Texture()
+class CubeTexture : Texture()

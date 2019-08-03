@@ -32,15 +32,15 @@ class Clock(
     fun getDelta(): Float {
         var diff = 0f
 
-        if ( this.autoStart && ! this.running ) {
+        if (this.autoStart && !this.running) {
             start()
             return 0f
         }
 
-        if ( this.running ) {
+        if (this.running) {
 
             val newTime = System.currentTimeMillis()
-            diff = ( newTime - this.oldTime ).toFloat() / 1000f
+            diff = (newTime - this.oldTime).toFloat() / 1000f
             this.oldTime = newTime
 
             elapsedTime += diff

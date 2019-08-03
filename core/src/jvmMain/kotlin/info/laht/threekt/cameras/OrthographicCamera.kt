@@ -21,7 +21,7 @@ class OrthographicCamera(
         return OrthographicCamera().copy(this)
     }
 
-    fun copy ( source: OrthographicCamera ): OrthographicCamera {
+    fun copy(source: OrthographicCamera): OrthographicCamera {
 
         super<AbstractCamera>.copy(source, true)
 
@@ -88,7 +88,7 @@ class OrthographicCamera(
         var top = cy + dy
         var bottom = cy - dy
 
-        this.view?.also {  view ->
+        this.view?.also { view ->
 
             if (view.enabled) {
 

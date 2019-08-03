@@ -1,4 +1,3 @@
-
 package info.laht.threekt.renderers.shaders.lib
 
 internal val __meshphong_vert = """ 

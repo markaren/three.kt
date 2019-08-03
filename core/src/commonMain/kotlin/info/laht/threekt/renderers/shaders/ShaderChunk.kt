@@ -1,7 +1,7 @@
 package info.laht.threekt.renderers.shaders
 
-import info.laht.threekt.renderers.shaders.lib.*
 import info.laht.threekt.renderers.shaders.chunk.*
+import info.laht.threekt.renderers.shaders.lib.*
 
 object ShaderChunk {
 

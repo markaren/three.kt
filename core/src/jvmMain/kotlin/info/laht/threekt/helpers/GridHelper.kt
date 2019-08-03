@@ -12,7 +12,7 @@ class GridHelper(
     divisions: Int = 10,
     color1: Color = Color(0x444444),
     color2: Color = Color(0x888888)
-): LineSegments(create(size, divisions, color1, color2), LineBasicMaterial().apply { vertexColors = Colors.Vertex }) {
+) : LineSegments(create(size, divisions, color1, color2), LineBasicMaterial().apply { vertexColors = Colors.Vertex }) {
 
     private companion object {
 
@@ -22,7 +22,7 @@ class GridHelper(
             val halfSize = size.toFloat() / 2
 
             val vertices = mutableListOf<Float>()
-            val colors = FloatArray((divisions+1)*12)
+            val colors = FloatArray((divisions + 1) * 12)
 
             var i = 0
             var j = 0

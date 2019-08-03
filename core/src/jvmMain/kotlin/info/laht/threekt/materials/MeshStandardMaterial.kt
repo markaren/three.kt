@@ -5,9 +5,10 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
-open class MeshStandardMaterial: Material(), MaterialWithColor, MaterialWithEmissive, MaterialWithWireframe, MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals {
+open class MeshStandardMaterial : Material(), MaterialWithColor, MaterialWithEmissive, MaterialWithWireframe,
+    MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals {
 
-    override val color = Color( 0xffffff ) // diffuse
+    override val color = Color(0xffffff) // diffuse
     var roughness = 0.5f
     var metalness = 0.5f
 
@@ -19,7 +20,7 @@ open class MeshStandardMaterial: Material(), MaterialWithColor, MaterialWithEmis
     public override var aoMap: Texture? = null
     public override var aoMapIntensity = 1f
 
-    override var emissive = Color( 0x000000 )
+    override var emissive = Color(0x000000)
     override var emissiveIntensity = 1f
     public override var emissiveMap: Texture? = null
 
@@ -28,7 +29,7 @@ open class MeshStandardMaterial: Material(), MaterialWithColor, MaterialWithEmis
 
     public override var normalMap: Texture? = null
     public override var normalMapType = NormalMapType.TangentSpace
-    val normalScale = Vector2( 1, 1 )
+    val normalScale = Vector2(1, 1)
 
     public override var displacementMap: Texture? = null
     public override var displacementScale = 1f
@@ -62,7 +63,7 @@ open class MeshStandardMaterial: Material(), MaterialWithColor, MaterialWithEmis
         return MeshStandardMaterial().copy(this)
     }
 
-    fun copy( source: MeshStandardMaterial ): MeshStandardMaterial {
+    fun copy(source: MeshStandardMaterial): MeshStandardMaterial {
 
         super.copy(source)
 
@@ -71,7 +72,7 @@ open class MeshStandardMaterial: Material(), MaterialWithColor, MaterialWithEmis
             put("STANDARD", "")
         }
 
-        this.color.copy( source.color )
+        this.color.copy(source.color)
         this.roughness = source.roughness
         this.metalness = source.metalness
 
@@ -83,7 +84,7 @@ open class MeshStandardMaterial: Material(), MaterialWithColor, MaterialWithEmis
         this.aoMap = source.aoMap
         this.aoMapIntensity = source.aoMapIntensity
 
-        this.emissive.copy( source.emissive )
+        this.emissive.copy(source.emissive)
         this.emissiveMap = source.emissiveMap
         this.emissiveIntensity = source.emissiveIntensity
 
@@ -92,7 +93,7 @@ open class MeshStandardMaterial: Material(), MaterialWithColor, MaterialWithEmis
 
         this.normalMap = source.normalMap
         this.normalMapType = source.normalMapType
-        this.normalScale.copy( source.normalScale )
+        this.normalScale.copy(source.normalScale)
 
         this.displacementMap = source.displacementMap
         this.displacementScale = source.displacementScale
@@ -119,5 +120,5 @@ open class MeshStandardMaterial: Material(), MaterialWithColor, MaterialWithEmis
         return this
 
     }
-    
+
 }

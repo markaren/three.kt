@@ -64,7 +64,8 @@ internal class GLProgram(
             when (material.envMap?.mapping) {
 
                 TextureMapping.CubeReflection, TextureMapping.CubeRefraction -> envMapTypeDefine = "ENVMAP_TYPE_CUBE"
-                TextureMapping.CubeUVReflection, TextureMapping.CubeUVRefraction -> envMapTypeDefine = "ENVMAP_TYPE_CUBE_UV"
+                TextureMapping.CubeUVReflection, TextureMapping.CubeUVRefraction -> envMapTypeDefine =
+                    "ENVMAP_TYPE_CUBE_UV"
                 TextureMapping.EquirectangularReflection, TextureMapping.EquirectangularRefraction -> envMapTypeDefine =
                     "ENVMAP_TYPE_EQUIREC"
                 TextureMapping.SphericalReflection -> envMapTypeDefine = "ENVMAP_TYPE_SPHERE"
@@ -72,7 +73,8 @@ internal class GLProgram(
             }
 
             when (material.envMap?.mapping) {
-                TextureMapping.CubeRefraction, TextureMapping.EquirectangularRefraction -> envMapModeDefine = "ENVMAP_MODE_REFRACTION"
+                TextureMapping.CubeRefraction, TextureMapping.EquirectangularRefraction -> envMapModeDefine =
+                    "ENVMAP_MODE_REFRACTION"
             }
 
             when (material.combine) {
@@ -276,7 +278,7 @@ internal class GLProgram(
                 "uniform vec3 cameraPosition;",
 
                 if ((parameters.toneMapping != ToneMapping.None)) "#define TONE_MAPPING" else "",
-                if ((parameters.toneMapping != ToneMapping.None)) ShaderChunk["tonemapping_pars_fragment"]!! else "", // this code is required here because it is used by the toneMapping() function defined below
+                if ((parameters.toneMapping != ToneMapping.None)) ShaderChunk["tonemapping_pars_fragment"] else "", // this code is required here because it is used by the toneMapping() function defined below
                 if ((parameters.toneMapping != ToneMapping.None)) getToneMappingFunction(
                     "toneMapping",
                     parameters.toneMapping
@@ -284,7 +286,7 @@ internal class GLProgram(
 
                 if (parameters.dithering) "#define DITHERING" else "",
 
-                ShaderChunk["encodings_pars_fragment"]!!, // this code is required here because it is used by the various encoding/decoding function defined below
+                ShaderChunk["encodings_pars_fragment"], // this code is required here because it is used by the various encoding/decoding function defined below
                 getTexelDecodingFunction(
                     "mapTexelToLinear",
                     parameters.mapEncoding
@@ -383,8 +385,8 @@ internal class GLProgram(
         if (renderer.checkShaderErrors) {
 
             val programLog = GL20.glGetProgramInfoLog(program).trim()
-//                val vertexLog = GL20.glGetShaderInfoLog( glVertexShader ).trim();
-//                val fragmentLog = GL20.glGetShaderInfoLog( glFragmentShader ).trim();
+            val vertexLog = GL20.glGetShaderInfoLog(glVertexShader).trim();
+            val fragmentLog = GL20.glGetShaderInfoLog(glFragmentShader).trim();
 
             if (GL20.glGetProgrami(program, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
 
@@ -407,7 +409,6 @@ internal class GLProgram(
 
         GL20.glDeleteShader(glVertexShader)
         GL20.glDeleteShader(glFragmentShader)
-
 
     }
 
@@ -557,11 +558,7 @@ internal class GLProgram(
             return regex.replace(string) { m ->
 
                 val include = m.groups[1]!!.value
-                parseIncludes(
-                    ShaderChunk[include] ?: throw IllegalArgumentException(
-                        "Can not resolve #include < $include >"
-                    )
-                )
+                parseIncludes(ShaderChunk[include])
 
             }
 

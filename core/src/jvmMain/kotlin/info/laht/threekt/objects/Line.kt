@@ -7,9 +7,9 @@ import info.laht.threekt.math.Vector3
 open class Line @JvmOverloads constructor(
 
     geometry: BufferGeometry? = null,
-    material: LineBasicMaterial? =null
+    material: LineBasicMaterial? = null
 
-): Object3DImpl(), GeometryObject, MaterialObject {
+) : Object3DImpl(), GeometryObject, MaterialObject {
 
     override var geometry = geometry ?: BufferGeometry()
     override var material = material ?: LineBasicMaterial()
@@ -36,7 +36,7 @@ open class Line @JvmOverloads constructor(
             geometry.addAttribute("lineDistance", FloatBufferAttribute(lineDistances.toFloatArray(), 1))
 
         } else {
-            println( "Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry." )
+            println("Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.")
         }
 
         return this
@@ -49,6 +49,6 @@ open class Line @JvmOverloads constructor(
 }
 
 class LineLoop(
-        geometry: BufferGeometry,
-        material: LineBasicMaterial
+    geometry: BufferGeometry,
+    material: LineBasicMaterial
 ) : Line(geometry, material)

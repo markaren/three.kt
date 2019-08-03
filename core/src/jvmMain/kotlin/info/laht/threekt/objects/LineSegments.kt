@@ -8,7 +8,7 @@ import info.laht.threekt.math.Vector3
 open class LineSegments @JvmOverloads constructor(
     geometry: BufferGeometry? = null,
     material: LineBasicMaterial? = null
-): Line(geometry, material) {
+) : Line(geometry, material) {
 
     override fun computeLineDistances(): LineSegments {
 

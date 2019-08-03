@@ -19,8 +19,8 @@ internal class GLLights {
     internal val state = GLLightsState()
 
     private var vector3 = Vector3()
-//    private var matrix4 = Matrix4()
-//    private var matrix42 = Matrix4()
+    private var matrix4 = Matrix4()
+    private var matrix42 = Matrix4()
 
     fun setup(lights: List<Light>, shadows: List<Object3D>, camera: Camera) {
 
@@ -163,11 +163,11 @@ internal class GLLights {
         val hash = state.hash
 
         if (hash.directionalLength != directionalLength ||
-                hash.pointLength != pointLength ||
-                hash.spotLength != spotLength ||
-                hash.rectAreaLength != rectAreaLength ||
-                hash.hemiLength != hemiLength ||
-                hash.shadowsLength != shadows.size
+            hash.pointLength != pointLength ||
+            hash.spotLength != spotLength ||
+            hash.rectAreaLength != rectAreaLength ||
+            hash.hemiLength != hemiLength ||
+            hash.shadowsLength != shadows.size
         ) {
 
             state.directional.shrinkToFit(directionalLength)
@@ -258,15 +258,15 @@ internal class DirectionalLightUniforms : LightUniforms() {
 
     init {
         putAll(
-                mapOf(
-                        "direction" to Vector3(),
-                        "color" to Color(),
+            mapOf(
+                "direction" to Vector3(),
+                "color" to Color(),
 
-                        "shadow" to false,
-                        "shadowBias" to 0f,
-                        "shadowRadius" to 1f,
-                        "shadowMapSize" to Vector2()
-                )
+                "shadow" to false,
+                "shadowBias" to 0f,
+                "shadowRadius" to 1f,
+                "shadowMapSize" to Vector2()
+            )
         )
     }
 
@@ -308,20 +308,20 @@ internal class SpotLightUniforms : LightUniforms() {
 
     init {
         putAll(
-                mapOf(
-                        "position" to Vector3(),
-                        "direction" to Vector3(),
-                        "color" to Color(),
-                        "distance" to 0f,
-                        "coneCos" to 0f,
-                        "penumbraCos" to 0f,
-                        "decay" to 0f,
+            mapOf(
+                "position" to Vector3(),
+                "direction" to Vector3(),
+                "color" to Color(),
+                "distance" to 0f,
+                "coneCos" to 0f,
+                "penumbraCos" to 0f,
+                "decay" to 0f,
 
-                        "shadow" to false,
-                        "shadowBias" to 0f,
-                        "shadowRadius" to 1f,
-                        "shadowMapSize" to Vector2()
-                )
+                "shadow" to false,
+                "shadowBias" to 0f,
+                "shadowRadius" to 1f,
+                "shadowMapSize" to Vector2()
+            )
         )
     }
 
@@ -388,19 +388,19 @@ internal class PointLightUniforms : LightUniforms() {
 
     init {
         putAll(
-                mapOf(
-                        "position" to Vector3(),
-                        "color" to Color(),
-                        "distance" to 0f,
-                        "decay" to 0f,
+            mapOf(
+                "position" to Vector3(),
+                "color" to Color(),
+                "distance" to 0f,
+                "decay" to 0f,
 
-                        "shadow" to false,
-                        "shadowBias" to 0f,
-                        "shadowRadius" to 1f,
-                        "shadowMapSize" to Vector2(),
-                        "shadowCameraNear" to 1f,
-                        "shadowCameraFar" to 1000f
-                )
+                "shadow" to false,
+                "shadowBias" to 0f,
+                "shadowRadius" to 1f,
+                "shadowMapSize" to Vector2(),
+                "shadowCameraNear" to 1f,
+                "shadowCameraFar" to 1000f
+            )
         )
     }
 
@@ -462,11 +462,11 @@ internal class HemisphereLightUniforms : LightUniforms() {
 
     init {
         putAll(
-                mapOf(
-                        "direction" to Vector3(),
-                        "skyColor" to Color(),
-                        "groundColor" to Color()
-                )
+            mapOf(
+                "direction" to Vector3(),
+                "skyColor" to Color(),
+                "groundColor" to Color()
+            )
         )
     }
 
@@ -492,12 +492,12 @@ internal class RectAreaLightUniforms : LightUniforms() {
 
     init {
         putAll(
-                mapOf(
-                        "color" to Color(),
-                        "position" to Vector3(),
-                        "halfWidth" to Vector3(),
-                        "halfHeight" to Vector3()
-                )
+            mapOf(
+                "color" to Color(),
+                "position" to Vector3(),
+                "halfWidth" to Vector3(),
+                "halfHeight" to Vector3()
+            )
         )
     }
 

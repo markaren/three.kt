@@ -25,7 +25,7 @@ abstract class Curve3 {
 
     fun getPoints(divisions: Int = 5): List<Vector3> {
 
-        return (0 .. divisions).map {
+        return (0..divisions).map {
             getPoint(it.toFloat())
         }
 
@@ -47,8 +47,8 @@ abstract class Curve3 {
     fun getLengths(divisions: Int = arcLengthDivisions): FloatArray {
 
         if (this.cacheArcLengths != null &&
-                (this.cacheArcLengths?.size == divisions + 1) &&
-                !this.needsUpdate
+            (this.cacheArcLengths?.size == divisions + 1) &&
+            !this.needsUpdate
         ) {
 
             return this.cacheArcLengths!!
@@ -57,13 +57,13 @@ abstract class Curve3 {
 
         this.needsUpdate = false
 
-        val cache = FloatArray(divisions+1)
+        val cache = FloatArray(divisions + 1)
         var last = this.getPoint(0f)
         var sum = 0f
 
         cache[0] = 0f
 
-        for (p in 1 .. divisions) {
+        for (p in 1..divisions) {
 
             val current = this.getPoint(p.toFloat() / divisions)
             sum += current.distanceTo(last)
@@ -194,7 +194,7 @@ abstract class Curve3 {
 
         // compute the tangent vectors for each segment on the curve
 
-        for (i in 0 .. segments) {
+        for (i in 0..segments) {
 
             val u = i.toFloat() / segments
 
@@ -243,7 +243,7 @@ abstract class Curve3 {
 
         var theta: Float
 
-        for (i in 1 .. segments) {
+        for (i in 1..segments) {
 
             normals.add(normals[i - 1].clone())
 
@@ -278,7 +278,7 @@ abstract class Curve3 {
 
             }
 
-            for (i in 1 .. segments) {
+            for (i in 1..segments) {
 
                 // twist a little...
                 normals[i].applyMatrix4(mat.makeRotationAxis(tangents[i], theta * i))
@@ -295,7 +295,7 @@ abstract class Curve3 {
 }
 
 class FrenetFrames(
-        val tangents: List<Vector3>,
-        val normals: List<Vector3>,
-        val binormals: List<Vector3>
+    val tangents: List<Vector3>,
+    val normals: List<Vector3>,
+    val binormals: List<Vector3>
 )

@@ -120,19 +120,19 @@ class CameraHelper(
         val vector = Vector3()
         val camera = AbstractCamera()
 
-        val position = geometry.getAttribute( "position" ) as FloatBufferAttribute
-        
-        fun setPoint( point: String, x: Number, y: Number, z: Number ) {
+        val position = geometry.getAttribute("position") as FloatBufferAttribute
 
-            vector.set( x, y, z ).unproject( camera )
+        fun setPoint(point: String, x: Number, y: Number, z: Number) {
 
-            val points = pointMap[ point ]
+            vector.set(x, y, z).unproject(camera)
 
-            if ( points != null ) {
+            val points = pointMap[point]
+
+            if (points != null) {
 
                 for (i in 0 until points.size) {
 
-                    position.setXYZ( points[ i ], vector.x, vector.y, vector.z )
+                    position.setXYZ(points[i], vector.x, vector.y, vector.z)
 
                 }
 
@@ -146,44 +146,44 @@ class CameraHelper(
         // we need just camera projection matrix inverse
         // world matrix must be identity
 
-        camera.projectionMatrixInverse.copy( this.camera.projectionMatrixInverse )
+        camera.projectionMatrixInverse.copy(this.camera.projectionMatrixInverse)
 
         // center / target
 
-        setPoint( "c", 0, 0, - 1 )
-        setPoint( "t", 0, 0, 1 )
+        setPoint("c", 0, 0, -1)
+        setPoint("t", 0, 0, 1)
 
         // near
 
-        setPoint( "n1", - w, - h, - 1 )
-        setPoint( "n2", w, - h, - 1 )
-        setPoint( "n3", - w, h, - 1 )
-        setPoint( "n4", w, h, - 1 )
+        setPoint("n1", -w, -h, -1)
+        setPoint("n2", w, -h, -1)
+        setPoint("n3", -w, h, -1)
+        setPoint("n4", w, h, -1)
 
         // far
 
-        setPoint( "f1", - w, - h, 1 )
-        setPoint( "f2", w, - h, 1 )
-        setPoint( "f3", - w, h, 1 )
-        setPoint( "f4", w, h, 1 )
+        setPoint("f1", -w, -h, 1)
+        setPoint("f2", w, -h, 1)
+        setPoint("f3", -w, h, 1)
+        setPoint("f4", w, h, 1)
 
         // up
 
-        setPoint( "u1", w * 0.7, h * 1.1, - 1 )
-        setPoint( "u2", - w * 0.7, h * 1.1, - 1 )
-        setPoint( "u3", 0, h * 2, - 1 )
+        setPoint("u1", w * 0.7, h * 1.1, -1)
+        setPoint("u2", -w * 0.7, h * 1.1, -1)
+        setPoint("u3", 0, h * 2, -1)
 
         // cross
 
-        setPoint( "cf1", - w, 0, 1 )
-        setPoint( "cf2", w, 0, 1 )
-        setPoint( "cf3", 0, - h, 1 )
-        setPoint( "cf4", 0, h, 1 )
+        setPoint("cf1", -w, 0, 1)
+        setPoint("cf2", w, 0, 1)
+        setPoint("cf3", 0, -h, 1)
+        setPoint("cf4", 0, h, 1)
 
-        setPoint( "cn1", - w, 0, - 1 )
-        setPoint( "cn2", w, 0, - 1 )
-        setPoint( "cn3", 0, - h, - 1 )
-        setPoint( "cn4", 0, h, - 1 )
+        setPoint("cn1", -w, 0, -1)
+        setPoint("cn2", w, 0, -1)
+        setPoint("cn3", 0, -h, -1)
+        setPoint("cn4", 0, h, -1)
 
         position.needsUpdate = true
 

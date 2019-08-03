@@ -1,4 +1,3 @@
-
 package info.laht.threekt.renderers.shaders.chunk
 
 internal val __envmap_physical_pars_fragment = """ 

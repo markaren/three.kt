@@ -1,4 +1,3 @@
-
 package info.laht.threekt.renderers.shaders.chunk
 
 internal val __clipping_planes_fragment = """ 

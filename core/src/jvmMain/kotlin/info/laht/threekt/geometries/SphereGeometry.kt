@@ -19,7 +19,7 @@ class SphereBufferGeometry(
     val phiLength: Float = TWO_PI,
     val thetaStart: Float = 0f,
     val thetaLength: Float = Math.PI.toFloat()
-): BufferGeometry() {
+) : BufferGeometry() {
 
     init {
 
@@ -114,5 +114,5 @@ class SphereBufferGeometry(
         }
 
     }
-    
+
 }

@@ -1,7 +1,6 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.cameras.Camera
-import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.objects.Mesh
@@ -16,11 +15,11 @@ fun Vector2.toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
 }
 
 fun Vector3.project(camera: Camera): Vector3 {
-    return this.applyMatrix4( camera.matrixWorldInverse ).applyMatrix4( camera.projectionMatrix )
+    return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(camera.projectionMatrix)
 }
 
 fun Vector3.unproject(camera: Camera): Vector3 {
-    return this.applyMatrix4( camera.projectionMatrixInverse ).applyMatrix4( camera.matrixWorld )
+    return this.applyMatrix4(camera.projectionMatrixInverse).applyMatrix4(camera.matrixWorld)
 }
 
 fun Vector3.toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {

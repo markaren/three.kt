@@ -21,13 +21,13 @@ class SkinnedMesh(
         TODO()
     }
 
-    override fun updateMatrixWorld(force: Boolean ) {
+    override fun updateMatrixWorld(force: Boolean) {
         super.updateMatrixWorld(force)
 
         when {
-            this.bindMode == "attached" -> this.bindMatrixInverse.getInverse( this.matrixWorld )
-            this.bindMode == "detached" -> this.bindMatrixInverse.getInverse( this.bindMatrix )
-            else -> println( "SkinnedMesh: Unrecognized bindMode: $bindMode" )
+            this.bindMode == "attached" -> this.bindMatrixInverse.getInverse(this.matrixWorld)
+            this.bindMode == "detached" -> this.bindMatrixInverse.getInverse(this.bindMatrix)
+            else -> println("SkinnedMesh: Unrecognized bindMode: $bindMode")
         }
 
     }

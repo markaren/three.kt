@@ -2,11 +2,12 @@ package info.laht.threekt.materials
 
 import info.laht.threekt.math.Color
 
-class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithEmissive, MaterialWithWireframe, MaterialWithReflectivity {
+class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphTarget,
+    MaterialWithMorphNormals, MaterialWithEmissive, MaterialWithWireframe, MaterialWithReflectivity {
 
-    override val color = Color( 0xffffff )
+    override val color = Color(0xffffff)
 
-    override val emissive = Color( 0x000000 )
+    override val emissive = Color(0x000000)
     override var emissiveIntensity = 1f
 
     override var reflectivity = 1f
@@ -23,11 +24,11 @@ class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning,
         return MeshLambertMaterial().copy(this)
     }
 
-    fun copy( source: MeshLambertMaterial ): MeshLambertMaterial {
+    fun copy(source: MeshLambertMaterial): MeshLambertMaterial {
 
         super.copy(source)
 
-        this.color.copy( source.color )
+        this.color.copy(source.color)
 
         this.map = source.map
 
@@ -37,7 +38,7 @@ class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning,
         this.aoMap = source.aoMap
         this.aoMapIntensity = source.aoMapIntensity
 
-        this.emissive.copy( source.emissive )
+        this.emissive.copy(source.emissive)
         this.emissiveMap = source.emissiveMap
         this.emissiveIntensity = source.emissiveIntensity
 

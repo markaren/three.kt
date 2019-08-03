@@ -77,27 +77,27 @@ internal class GLState {
         }
     }
 
-    fun enableAttribute( attribute: Int ) {
+    fun enableAttribute(attribute: Int) {
 
-        enableAttributeAndDivisor( attribute, 0 )
+        enableAttributeAndDivisor(attribute, 0)
 
     }
 
-    fun enableAttributeAndDivisor( attribute: Int, meshPerAttribute: Int ) {
+    fun enableAttributeAndDivisor(attribute: Int, meshPerAttribute: Int) {
 
-        newAttributes[ attribute ] = 1
+        newAttributes[attribute] = 1
 
-        if ( enabledAttributes[ attribute ] == 0 ) {
+        if (enabledAttributes[attribute] == 0) {
 
-            GL20.glEnableVertexAttribArray( attribute )
-            enabledAttributes[ attribute ] = 1
+            GL20.glEnableVertexAttribArray(attribute)
+            enabledAttributes[attribute] = 1
 
         }
 
-        if ( attributeDivisors[ attribute ] != meshPerAttribute ) {
+        if (attributeDivisors[attribute] != meshPerAttribute) {
 
             GL33.glVertexAttribDivisor(attribute, meshPerAttribute)
-            attributeDivisors[ attribute ] = meshPerAttribute
+            attributeDivisors[attribute] = meshPerAttribute
 
         }
 
@@ -105,12 +105,12 @@ internal class GLState {
 
     fun disableUnusedAttributes() {
 
-        for ( i in 0 until enabledAttributes.size ) {
+        for (i in 0 until enabledAttributes.size) {
 
-            if ( enabledAttributes[ i ] != newAttributes[ i ] ) {
+            if (enabledAttributes[i] != newAttributes[i]) {
 
-                GL20.glDisableVertexAttribArray( i )
-                enabledAttributes[ i ] = 0
+                GL20.glDisableVertexAttribArray(i)
+                enabledAttributes[i] = 0
 
             }
 
@@ -150,11 +150,11 @@ internal class GLState {
         }
     }
 
-    fun useProgram( program: Int ): Boolean {
+    fun useProgram(program: Int): Boolean {
 
-        if ( currentProgram != program ) {
+        if (currentProgram != program) {
 
-            GL20.glUseProgram( program )
+            GL20.glUseProgram(program)
 
             currentProgram = program
 
@@ -484,7 +484,12 @@ internal class GLState {
 
         if (currentScissor != scissor) {
 
-            GL11.glScissor(scissor.x.roundToInt(), scissor.y.roundToInt(), scissor.z.roundToInt(), scissor.w.roundToInt())
+            GL11.glScissor(
+                scissor.x.roundToInt(),
+                scissor.y.roundToInt(),
+                scissor.z.roundToInt(),
+                scissor.w.roundToInt()
+            )
             currentScissor.copy(scissor)
 
         }
@@ -495,7 +500,12 @@ internal class GLState {
 
         if (currentViewport != viewport) {
 
-            GL11.glViewport(viewport.x.roundToInt(), viewport.y.roundToInt(), viewport.z.roundToInt(), viewport.w.roundToInt())
+            GL11.glViewport(
+                viewport.x.roundToInt(),
+                viewport.y.roundToInt(),
+                viewport.z.roundToInt(),
+                viewport.w.roundToInt()
+            )
             currentViewport.copy(viewport)
 
         }
@@ -569,7 +579,7 @@ internal class GLState {
             locked = false
 
             currentColorMask = null
-            currentColorClear.set(-1f, 0f,0f, 0f) // set to invalid state
+            currentColorClear.set(-1f, 0f, 0f, 0f) // set to invalid state
         }
 
     }
@@ -609,7 +619,6 @@ internal class GLState {
                     DepthMode.GreaterEqualDepth -> GL11.glDepthFunc(GL11.GL_GEQUAL)
                     DepthMode.GreaterDepth -> GL11.glDepthFunc(GL11.GL_GREATER)
                     DepthMode.NotEqualDepth -> GL11.glDepthFunc(GL11.GL_NOTEQUAL)
-                    else -> GL11.glDepthFunc(GL11.GL_LEQUAL)
                 }
 
                 currentDepthFunc = depthFunc

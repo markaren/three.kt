@@ -2,9 +2,9 @@ package info.laht.threekt.materials
 
 import info.laht.threekt.math.Color
 
-open class LineBasicMaterial: Material(), MaterialWithColor, MaterialWithLineWidth {
+open class LineBasicMaterial : Material(), MaterialWithColor, MaterialWithLineWidth {
 
-    override val color = Color( 0xffffff )
+    override val color = Color(0xffffff)
 
     override var linewidth = 1f
 
@@ -18,11 +18,11 @@ open class LineBasicMaterial: Material(), MaterialWithColor, MaterialWithLineWid
         return LineBasicMaterial().copy(this)
     }
 
-    fun copy( source: LineBasicMaterial ): LineBasicMaterial {
+    fun copy(source: LineBasicMaterial): LineBasicMaterial {
 
         super.copy(source)
 
-        this.color.copy( source.color )
+        this.color.copy(source.color)
 
         this.linewidth = source.linewidth
 

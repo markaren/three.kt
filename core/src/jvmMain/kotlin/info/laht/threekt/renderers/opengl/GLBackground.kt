@@ -17,7 +17,7 @@ import info.laht.threekt.scenes.Scene
 import info.laht.threekt.scenes.TextureBackground
 import info.laht.threekt.textures.Texture
 
-internal class GLBackground (
+internal class GLBackground(
     private val renderer: GLRenderer,
     private val state: GLState,
     private val objects: GLObjects

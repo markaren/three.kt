@@ -23,8 +23,8 @@ import info.laht.threekt.textures.Texture
 import kotlin.math.sign
 
 class Water(
-        geometry: BufferGeometry,
-        private val options: Options
+    geometry: BufferGeometry,
+    private val options: Options
 ) : Mesh(geometry, ShaderMaterial()) {
 
     val uniforms = (material as ShaderMaterial).uniforms
@@ -51,12 +51,14 @@ class Water(
 
     init {
 
-        renderTarget = GLRenderTarget(options.textureWidth, options.textureHeight, GLRenderTarget.Options(
+        renderTarget = GLRenderTarget(
+            options.textureWidth, options.textureHeight, GLRenderTarget.Options(
                 minFilter = TextureFilter.Linear,
                 magFilter = TextureFilter.Linear,
                 format = TextureFormat.RGB,
                 stencilBuffer = false
-        ))
+            )
+        )
 
         if (!isPowerOfTwo(options.textureWidth) || !isPowerOfTwo(options.textureHeight)) {
             renderTarget.texture.generateMipmaps = false
@@ -143,10 +145,10 @@ class Water(
 
         // Update the texture matrix
         textureMatrix.set(
-                0.5f, 0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.0f, 0.5f,
-                0.0f, 0.0f, 0.5f, 0.5f,
-                0.0f, 0.0f, 0.0f, 1.0f
+            0.5f, 0.0f, 0.0f, 0.5f,
+            0.0f, 0.5f, 0.0f, 0.5f,
+            0.0f, 0.0f, 0.5f, 0.5f,
+            0.0f, 0.0f, 0.0f, 1.0f
         )
         textureMatrix.multiply(mirrorCamera.projectionMatrix)
         textureMatrix.multiply(mirrorCamera.matrixWorldInverse)
@@ -200,20 +202,20 @@ class Water(
 
     class Options(
 
-            val textureWidth: Int = 512,
-            val textureHeight: Int = 512,
+        val textureWidth: Int = 512,
+        val textureHeight: Int = 512,
 
-            val clipBias: Float = 0f,
-            val alpha: Float = 1f,
-            val time: Float = 0f,
-            val waterNormals: Texture,
-            val sunDirection: Vector3 = Vector3(0.70707f, 0.70707f, 0.0f),
-            val sunColor: Color = Color(0xffffff),
-            val waterColor: Color = Color(0x7F7F7F),
-            val eye: Vector3 = Vector3(),
-            val distortionScale: Float = 20f,
-            val side: Side = Side.Front,
-            val fog: Boolean = false
+        val clipBias: Float = 0f,
+        val alpha: Float = 1f,
+        val time: Float = 0f,
+        val waterNormals: Texture,
+        val sunDirection: Vector3 = Vector3(0.70707f, 0.70707f, 0.0f),
+        val sunColor: Color = Color(0xffffff),
+        val waterColor: Color = Color(0x7F7F7F),
+        val eye: Vector3 = Vector3(),
+        val distortionScale: Float = 20f,
+        val side: Side = Side.Front,
+        val fog: Boolean = false
 
     )
 
@@ -222,26 +224,26 @@ class Water(
 val mirrorShader by lazy {
 
     Shader(
-            uniforms = mergeUniforms(
-                    listOf(
-                            UniformsLib.fog,
-                            UniformsLib.lights,
-                            mapOf(
-                                    "normalSampler" to Uniform(null),
-                                    "mirrorSampler" to Uniform(null),
-                                    "alpha" to Uniform(1f),
-                                    "time" to Uniform(0f),
-                                    "size" to Uniform(1f),
-                                    "distortionScale" to Uniform(20f),
-                                    "textureMatrix" to Uniform(Matrix4()),
-                                    "sunColor" to Uniform(Color(0x7F7F7F)),
-                                    "sunDirection" to Uniform(Vector3(0.70707f, 0.70707f, 0f)),
-                                    "eye" to Uniform(Vector3()),
-                                    "waterColor" to Uniform(Color(0x555555))
-                            )
-                    )
-            ),
-            vertexShader = """
+        uniforms = mergeUniforms(
+            listOf(
+                UniformsLib.fog,
+                UniformsLib.lights,
+                mapOf(
+                    "normalSampler" to Uniform(null),
+                    "mirrorSampler" to Uniform(null),
+                    "alpha" to Uniform(1f),
+                    "time" to Uniform(0f),
+                    "size" to Uniform(1f),
+                    "distortionScale" to Uniform(20f),
+                    "textureMatrix" to Uniform(Matrix4()),
+                    "sunColor" to Uniform(Color(0x7F7F7F)),
+                    "sunDirection" to Uniform(Vector3(0.70707f, 0.70707f, 0f)),
+                    "eye" to Uniform(Vector3()),
+                    "waterColor" to Uniform(Color(0x555555))
+                )
+            )
+        ),
+        vertexShader = """
                 uniform mat4 textureMatrix;
                 uniform float time;
     
@@ -263,7 +265,7 @@ val mirrorShader by lazy {
     
                 }
             """.trimIndent(),
-            fragmentShader = """
+        fragmentShader = """
                 uniform sampler2D mirrorSampler;
                 uniform float alpha;
                 uniform float time;

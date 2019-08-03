@@ -24,11 +24,11 @@ class SpriteMaterial : Material(), MaterialWithSizeAttenuation, MaterialWithColo
         return SpriteMaterial().copy(this)
     }
 
-    fun copy( source: SpriteMaterial ): SpriteMaterial {
+    fun copy(source: SpriteMaterial): SpriteMaterial {
 
         super.copy(source)
 
-        this.color.copy( source.color )
+        this.color.copy(source.color)
         this.map = source.map
 
         this.rotation = source.rotation

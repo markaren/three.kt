@@ -4,7 +4,8 @@ import info.laht.threekt.TextureCombineOperation
 import info.laht.threekt.math.Color
 import info.laht.threekt.textures.Texture
 
-class MeshBasicMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithColor, MaterialWithWireframe, MaterialWithReflectivity {
+class MeshBasicMaterial : Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithColor,
+    MaterialWithWireframe, MaterialWithReflectivity {
 
     override val color = Color.fromHex(0xffffff)
 
@@ -41,10 +42,10 @@ class MeshBasicMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinni
         return MeshBasicMaterial().copy(this)
     }
 
-    fun copy( source: MeshBasicMaterial ): MeshBasicMaterial {
+    fun copy(source: MeshBasicMaterial): MeshBasicMaterial {
         super.copy(source)
 
-        this.color.copy( source.color )
+        this.color.copy(source.color)
 
         this.map = source.map
 

@@ -13,10 +13,10 @@ private const val fov = 90f
 private const val aspect = 1f
 
 class CubeCamera(
-        near: Float,
-        far: Float,
-        cubeResolution: Int,
-        options: GLRenderTarget.Options? = null
+    near: Float,
+    far: Float,
+    cubeResolution: Int,
+    options: GLRenderTarget.Options? = null
 ) : Object3DImpl() {
 
     var renderTarget: GLRenderTargetCube
@@ -64,9 +64,9 @@ class CubeCamera(
         this.add(cameraNZ)
 
         val options = options ?: GLRenderTarget.Options(
-                format = TextureFormat.RGB,
-                minFilter = TextureFilter.Linear,
-                magFilter = TextureFilter.Linear
+            format = TextureFormat.RGB,
+            minFilter = TextureFilter.Linear,
+            magFilter = TextureFilter.Linear
         )
 
         renderTarget = GLRenderTargetCube(cubeResolution, cubeResolution, options)
@@ -76,7 +76,7 @@ class CubeCamera(
 
     fun update(renderer: GLRenderer, scene: Scene) {
 
-        if ( this.parent == null ) {
+        if (this.parent == null) {
             this.updateMatrixWorld()
         }
 
@@ -87,27 +87,27 @@ class CubeCamera(
 
         renderTarget.texture.generateMipmaps = false
 
-        renderer.setRenderTarget( renderTarget, 0 )
-        renderer.render( scene, cameraPX )
+        renderer.setRenderTarget(renderTarget, 0)
+        renderer.render(scene, cameraPX)
 
-        renderer.setRenderTarget( renderTarget, 1 )
-        renderer.render( scene, cameraNX )
+        renderer.setRenderTarget(renderTarget, 1)
+        renderer.render(scene, cameraNX)
 
-        renderer.setRenderTarget( renderTarget, 2 )
-        renderer.render( scene, cameraPY )
+        renderer.setRenderTarget(renderTarget, 2)
+        renderer.render(scene, cameraPY)
 
-        renderer.setRenderTarget( renderTarget, 3 )
-        renderer.render( scene, cameraNY )
+        renderer.setRenderTarget(renderTarget, 3)
+        renderer.render(scene, cameraNY)
 
-        renderer.setRenderTarget( renderTarget, 4 )
-        renderer.render( scene, cameraPZ )
+        renderer.setRenderTarget(renderTarget, 4)
+        renderer.render(scene, cameraPZ)
 
         renderTarget.texture.generateMipmaps = generateMipmaps
 
-        renderer.setRenderTarget( renderTarget, 5 )
-        renderer.render( scene, cameraNZ )
+        renderer.setRenderTarget(renderTarget, 5)
+        renderer.render(scene, cameraNZ)
 
-        renderer.setRenderTarget( currentRenderTarget )
+        renderer.setRenderTarget(currentRenderTarget)
 
     }
 
@@ -117,15 +117,15 @@ class CubeCamera(
 
         val renderTarget = this.renderTarget
 
-        for ( i in 0 until 6 ) {
+        for (i in 0 until 6) {
 
-            renderer.setRenderTarget( renderTarget, i )
+            renderer.setRenderTarget(renderTarget, i)
 
-            renderer.clear( color, depth, stencil )
+            renderer.clear(color, depth, stencil)
 
         }
 
-        renderer.setRenderTarget( currentRenderTarget )
+        renderer.setRenderTarget(currentRenderTarget)
 
     }
 

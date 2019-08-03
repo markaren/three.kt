@@ -50,7 +50,7 @@ class DirectionalLightHelper(
                     floatArrayOf(
                         0f, 0f, 0f,
                         0f, 0f, 1f
-                        ), 3
+                    ), 3
                 )
             )
         }, material)
@@ -68,25 +68,25 @@ class DirectionalLightHelper(
         val v2 = Vector3()
         val v3 = Vector3()
 
-        v1.setFromMatrixPosition( this.light.matrixWorld )
-        v2.setFromMatrixPosition( this.light.target.matrixWorld )
-        v3.subVectors( v2, v1 )
+        v1.setFromMatrixPosition(this.light.matrixWorld)
+        v2.setFromMatrixPosition(this.light.target.matrixWorld)
+        v3.subVectors(v2, v1)
 
-        this.lightPlane.lookAt( v2 )
+        this.lightPlane.lookAt(v2)
 
-        if ( this.color !== null ) {
+        if (this.color !== null) {
 
-            this.lightPlane.material.color.set( this.color )
-            this.targetLine.material.color.set( this.color )
+            this.lightPlane.material.color.set(this.color)
+            this.targetLine.material.color.set(this.color)
 
         } else {
 
-            this.lightPlane.material.color.copy( this.light.color )
-            this.targetLine.material.color.copy( this.light.color )
+            this.lightPlane.material.color.copy(this.light.color)
+            this.targetLine.material.color.copy(this.light.color)
 
         }
 
-        this.targetLine.lookAt( v2 )
+        this.targetLine.lookAt(v2)
         this.targetLine.scale.z = v3.length()
     }
 

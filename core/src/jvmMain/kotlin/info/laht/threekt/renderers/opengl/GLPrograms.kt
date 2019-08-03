@@ -1,6 +1,9 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.*
+import info.laht.threekt.NormalMapType
+import info.laht.threekt.Side
+import info.laht.threekt.TextureEncoding
+import info.laht.threekt.TextureMapping
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.core.Shader
 import info.laht.threekt.materials.*

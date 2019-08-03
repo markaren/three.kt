@@ -3,7 +3,7 @@ package info.laht.threekt.materials
 import info.laht.threekt.math.Vector3
 import info.laht.threekt.textures.Texture
 
-class MeshDistanceMaterial: Material(), MaterialWithMorphTarget, MaterialWithSkinning {
+class MeshDistanceMaterial : Material(), MaterialWithMorphTarget, MaterialWithSkinning {
 
     val referencePosition = Vector3()
     var nearDistance = 1f
@@ -19,7 +19,7 @@ class MeshDistanceMaterial: Material(), MaterialWithMorphTarget, MaterialWithSki
     public override var displacementMap: Texture? = null
     public override var displacementScale = 1f
     public override var displacementBias = 0f
-    
+
     init {
 
         fog = false
@@ -31,11 +31,11 @@ class MeshDistanceMaterial: Material(), MaterialWithMorphTarget, MaterialWithSki
         return MeshDistanceMaterial().copy(this)
     }
 
-    fun copy( source: MeshDistanceMaterial ): MeshDistanceMaterial {
-        
+    fun copy(source: MeshDistanceMaterial): MeshDistanceMaterial {
+
         super.copy(source)
-        
-        this.referencePosition.copy( source.referencePosition )
+
+        this.referencePosition.copy(source.referencePosition)
         this.nearDistance = source.nearDistance
         this.farDistance = source.farDistance
 

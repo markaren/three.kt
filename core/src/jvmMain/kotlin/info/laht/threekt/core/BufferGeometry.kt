@@ -25,7 +25,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     internal val groups = mutableListOf<GeometryGroup>()
 
-    internal var drawRange = DrawRange(0, Int.MAX_VALUE/2)
+    internal var drawRange = DrawRange(0, Int.MAX_VALUE / 2)
 
     fun setIndex(index: IntBufferAttribute): BufferGeometry {
         this.index = index
@@ -141,18 +141,18 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     }
 
-    fun setFromPoints ( points: List<Vector3> ): BufferGeometry {
+    fun setFromPoints(points: List<Vector3>): BufferGeometry {
 
-        val position = FloatBufferAttribute(points.size*3, 3)
+        val position = FloatBufferAttribute(points.size * 3, 3)
 
-        points.forEachIndexed {i, v ->
+        points.forEachIndexed { i, v ->
 
-            position[i+0] = v.x
-            position[i+1] = v.y
-            position[i+2] = v.z
+            position[i + 0] = v.x
+            position[i + 1] = v.y
+            position[i + 2] = v.z
         }
 
-        this.addAttribute( "position",  position )
+        this.addAttribute("position", position)
 
         return this
 
@@ -446,7 +446,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     }
 
-    fun copy( source: BufferGeometry ): BufferGeometry {
+    fun copy(source: BufferGeometry): BufferGeometry {
 
         // reset
 
@@ -464,15 +464,15 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
         // index
 
         source.index?.also {
-            this.setIndex( it.clone() )
+            this.setIndex(it.clone())
         }
 
         // attributes
 
         val attributes = source.attributes
-        for ( name in attributes.keys ) {
+        for (name in attributes.keys) {
 
-            attributes[ name ]?.also { attribute ->
+            attributes[name]?.also { attribute ->
                 this.addAttribute(name, attribute.clone())
             }
 
@@ -500,13 +500,13 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
         // groups
         source.groups.forEach { group ->
 
-            this.addGroup( group.start, group.count, group.materialIndex )
+            this.addGroup(group.start, group.count, group.materialIndex)
 
         }
 
         val boundingBox = source.boundingBox
 
-        if ( boundingBox != null ) {
+        if (boundingBox != null) {
 
             this.boundingBox = boundingBox.clone()
 
@@ -516,7 +516,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
         val boundingSphere = source.boundingSphere
 
-        if ( boundingSphere != null ) {
+        if (boundingSphere != null) {
 
             this.boundingSphere = boundingSphere.clone()
 

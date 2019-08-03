@@ -7,13 +7,13 @@ import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.core.Raycaster
 import kotlin.math.abs
 
-class LOD: Object3DImpl() {
+class LOD : Object3DImpl() {
 
     private val levels = mutableListOf<Level>()
 
     var autoUpdate = true
 
-    fun copy( source: LOD ): LOD {
+    fun copy(source: LOD): LOD {
 
         super.copy(source, true)
 
@@ -45,7 +45,7 @@ class LOD: Object3DImpl() {
 
     }
 
-    fun getObjectForDistance( distance: Float ): Object3D {
+    fun getObjectForDistance(distance: Float): Object3D {
 
         var l = 0
         for (i in 1 until levels.size) {

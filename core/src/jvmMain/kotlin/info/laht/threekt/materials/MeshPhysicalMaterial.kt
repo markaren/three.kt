@@ -18,7 +18,7 @@ class MeshPhysicalMaterial : MeshStandardMaterial() {
         return MeshPhysicalMaterial().copy(this)
     }
 
-    fun copy( source: MeshPhysicalMaterial ): MeshPhysicalMaterial {
+    fun copy(source: MeshPhysicalMaterial): MeshPhysicalMaterial {
 
         super.copy(source)
 

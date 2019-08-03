@@ -13,9 +13,9 @@ import info.laht.threekt.scenes.Scene
 import info.laht.threekt.textures.Texture
 
 class GLRenderTargetCube(
-        width: Int,
-        height: Int,
-        options: Options? = null
+    width: Int,
+    height: Int,
+    options: Options? = null
 ) : GLRenderTarget(width, height, options) {
 
     fun fromEquirectangularTexture(renderer: GLRenderer, texture: Texture): GLRenderTargetCube {
@@ -23,10 +23,10 @@ class GLRenderTargetCube(
         val scene = Scene()
 
         val shader = Shader(
-                uniforms = mutableMapOf(
-                        "tEquirect" to Uniform(null)
-                ),
-                vertexShader = """
+            uniforms = mutableMapOf(
+                "tEquirect" to Uniform(null)
+            ),
+            vertexShader = """
                     varying vec3 vWorldDirection;
 
                     vec3 transformDirection( in vec3 dir, in mat4 matrix ) {
@@ -44,7 +44,7 @@ class GLRenderTargetCube(
         
                     }
                 """.trimIndent(),
-                fragmentShader = """
+            fragmentShader = """
                     uniform sampler2D tEquirect;
 
                     varying vec3 vWorldDirection;
@@ -79,7 +79,7 @@ class GLRenderTargetCube(
 
         material.uniforms["tEquirect"]!!.value = texture
 
-        val mesh = Mesh(BoxBufferGeometry(5f, 5f, 5f ), material)
+        val mesh = Mesh(BoxBufferGeometry(5f, 5f, 5f), material)
         scene.add(mesh)
 
         val camera = CubeCamera(1f, 10f, 1)

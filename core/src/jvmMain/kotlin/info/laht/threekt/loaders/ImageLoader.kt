@@ -60,10 +60,12 @@ object ImageLoader {
     }
 
     private fun createTransformed(
-            image: BufferedImage, at: AffineTransform): BufferedImage {
+        image: BufferedImage, at: AffineTransform
+    ): BufferedImage {
         val newImage = BufferedImage(
-                image.width, image.height,
-                BufferedImage.TYPE_INT_ARGB)
+            image.width, image.height,
+            BufferedImage.TYPE_INT_ARGB
+        )
         val g = newImage.createGraphics()
         g.transform(at)
         g.drawImage(image, 0, 0, null)

@@ -4,14 +4,15 @@ import info.laht.threekt.NormalMapType
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
-class MeshNormalMaterial: Material(), MaterialWithWireframe, MaterialWithMorphNormals, MaterialWithMorphTarget, MaterialWithSkinning {
+class MeshNormalMaterial : Material(), MaterialWithWireframe, MaterialWithMorphNormals, MaterialWithMorphTarget,
+    MaterialWithSkinning {
 
     public override var bumpMap: Texture? = null
     public override var bumpScale = 1f
 
     public override var normalMap: Texture? = null
     public override var normalMapType = NormalMapType.TangentSpace
-    val normalScale = Vector2( 1, 1 )
+    val normalScale = Vector2(1, 1)
 
     public override var displacementMap: Texture? = null
     public override var displacementScale = 1f
@@ -35,7 +36,7 @@ class MeshNormalMaterial: Material(), MaterialWithWireframe, MaterialWithMorphNo
         return MeshNormalMaterial().copy(this)
     }
 
-    fun copy( source: MeshNormalMaterial ): MeshNormalMaterial {
+    fun copy(source: MeshNormalMaterial): MeshNormalMaterial {
 
         super.copy(source)
 
@@ -44,7 +45,7 @@ class MeshNormalMaterial: Material(), MaterialWithWireframe, MaterialWithMorphNo
 
         this.normalMap = source.normalMap
         this.normalMapType = source.normalMapType
-        this.normalScale.copy( source.normalScale )
+        this.normalScale.copy(source.normalScale)
 
         this.displacementMap = source.displacementMap
         this.displacementScale = source.displacementScale

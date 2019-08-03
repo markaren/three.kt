@@ -5,9 +5,10 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
-class MeshMatcapMaterial: Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphNormals, MaterialWithMorphTarget {
+class MeshMatcapMaterial : Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphNormals,
+    MaterialWithMorphTarget {
 
-    override val color = Color( 0xffffff ) // diffuse
+    override val color = Color(0xffffff) // diffuse
 
     public override var matcap: Texture? = null
 
@@ -18,7 +19,7 @@ class MeshMatcapMaterial: Material(), MaterialWithColor, MaterialWithSkinning, M
 
     public override var normalMap: Texture? = null
     public override var normalMapType = NormalMapType.TangentSpace
-    var normalScale = Vector2( 1, 1 )
+    var normalScale = Vector2(1, 1)
 
     public override var displacementMap: Texture? = null
     public override var displacementScale = 1f
@@ -38,7 +39,7 @@ class MeshMatcapMaterial: Material(), MaterialWithColor, MaterialWithSkinning, M
 
     }
 
-    fun copy( source: MeshMatcapMaterial ): MeshMatcapMaterial {
+    fun copy(source: MeshMatcapMaterial): MeshMatcapMaterial {
 
         super.copy(source)
 
@@ -47,7 +48,7 @@ class MeshMatcapMaterial: Material(), MaterialWithColor, MaterialWithSkinning, M
             put("MATCAP", "")
         }
 
-        this.color.copy( source.color )
+        this.color.copy(source.color)
 
         this.matcap = source.matcap
 
@@ -58,7 +59,7 @@ class MeshMatcapMaterial: Material(), MaterialWithColor, MaterialWithSkinning, M
 
         this.normalMap = source.normalMap
         this.normalMapType = source.normalMapType
-        this.normalScale.copy( source.normalScale )
+        this.normalScale.copy(source.normalScale)
 
         this.displacementMap = source.displacementMap
         this.displacementScale = source.displacementScale

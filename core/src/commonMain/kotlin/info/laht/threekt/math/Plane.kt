@@ -135,7 +135,7 @@ data class Plane @JvmOverloads constructor(
 
     @JvmOverloads
     fun coplanarPoint(target: Vector3 = Vector3()): Vector3 {
-        return target.copy( this.normal ).multiplyScalar( - this.constant )
+        return target.copy(this.normal).multiplyScalar(-this.constant)
     }
 
     @JvmOverloads

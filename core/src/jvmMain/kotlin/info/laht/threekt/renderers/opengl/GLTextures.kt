@@ -1,6 +1,9 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.*
+import info.laht.threekt.TextureFilter
+import info.laht.threekt.TextureFormat
+import info.laht.threekt.TextureType
+import info.laht.threekt.TextureWrapping
 import info.laht.threekt.core.Event
 import info.laht.threekt.core.EventLister
 import info.laht.threekt.renderers.GLMultisampleRenderTarget

@@ -7,8 +7,8 @@ import info.laht.threekt.math.*
 
 
 open class Mesh(
-        override var geometry: BufferGeometry,
-        override val materials: MutableList<Material>
+    override var geometry: BufferGeometry,
+    override val materials: MutableList<Material>
 ) : Object3DImpl(), GeometryObject, MaterialsObject {
 
     var drawMode = DrawMode.Triangles

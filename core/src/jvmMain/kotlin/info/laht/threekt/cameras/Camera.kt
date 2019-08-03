@@ -5,38 +5,38 @@ import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.math.Matrix4
 import info.laht.threekt.math.Vector3
 
-interface Camera: Object3D {
+interface Camera : Object3D {
     val matrixWorldInverse: Matrix4
 
     val projectionMatrix: Matrix4
     val projectionMatrixInverse: Matrix4
 
-    override fun getWorldDirection( target: Vector3 ): Vector3 {
+    override fun getWorldDirection(target: Vector3): Vector3 {
 
-        this.updateMatrixWorld( true )
+        this.updateMatrixWorld(true)
 
         val e = this.matrixWorld.elements
 
-        return target.set( - e[ 8 ], - e[ 9 ], - e[ 10 ] ).normalize()
+        return target.set(-e[8], -e[9], -e[10]).normalize()
 
     }
 
-    override fun updateMatrixWorld ( force: Boolean ) {
+    override fun updateMatrixWorld(force: Boolean) {
 
-        super.updateMatrixWorld( force )
+        super.updateMatrixWorld(force)
 
-        this.matrixWorldInverse.getInverse( this.matrixWorld )
+        this.matrixWorldInverse.getInverse(this.matrixWorld)
 
     }
 
-    fun copy( source: Camera, recursive: Boolean): Camera {
+    fun copy(source: Camera, recursive: Boolean): Camera {
 
         super.copy(source, recursive)
 
-        this.matrixWorldInverse.copy( source.matrixWorldInverse )
+        this.matrixWorldInverse.copy(source.matrixWorldInverse)
 
-        this.projectionMatrix.copy( source.projectionMatrix )
-        this.projectionMatrixInverse.copy( source.projectionMatrixInverse )
+        this.projectionMatrix.copy(source.projectionMatrix)
+        this.projectionMatrixInverse.copy(source.projectionMatrixInverse)
 
         return this
 
@@ -46,7 +46,7 @@ interface Camera: Object3D {
 
 }
 
-open class AbstractCamera: Camera, Object3DImpl() {
+open class AbstractCamera : Camera, Object3DImpl() {
 
     override val matrixWorldInverse = Matrix4()
 
@@ -62,20 +62,20 @@ open class AbstractCamera: Camera, Object3DImpl() {
 }
 
 
-interface CameraWithZoom: Camera {
+interface CameraWithZoom : Camera {
 
     var zoom: Float
 
 }
 
-interface CameraWithNearAndFar: Camera {
+interface CameraWithNearAndFar : Camera {
 
     var near: Float
     var far: Float
 
 }
 
-interface CameraCanUpdateProjectionMatrix: Camera {
+interface CameraCanUpdateProjectionMatrix : Camera {
 
     fun updateProjectionMatrix()
 
