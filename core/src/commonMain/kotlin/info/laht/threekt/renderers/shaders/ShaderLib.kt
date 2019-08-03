@@ -242,7 +242,7 @@ object ShaderLib {
     val physical = Shader(
         mergeUniforms(
             listOf(
-                ShaderLib.standard.uniforms,
+                standard.uniforms,
                 UniformsLib.bumpmap,
                 UniformsLib.normalmap,
                 UniformsLib.displacementmap,
