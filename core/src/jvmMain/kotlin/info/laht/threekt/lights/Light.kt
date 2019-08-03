@@ -67,6 +67,27 @@ internal class LightProbe(
 
 }
 
+
+class DirectionalLight(
+    color: Color? = null,
+    intensity: Number? = null
+) : Light(color, intensity), LightWithShadow, LightWithTarget {
+
+    constructor(color: Int, intensity: Number?) : this(Color(color), intensity)
+
+    override var target = Object3DImpl()
+
+    override var shadow = DirectionalLightShadow()
+
+    init {
+
+        this.position.copy(Object3D.defaultUp)
+        this.updateMatrix()
+
+    }
+
+}
+
 class PointLight(
     color: Color? = null,
     intensity: Number? = null,
@@ -91,6 +112,29 @@ class PointLight(
         this.decay = source.decay
 
         this.shadow.copy(source.shadow)
+
+        return this
+
+    }
+
+}
+
+class RectAreaLight(
+    color: Color? = null,
+    intensity: Number? = null,
+    width: Number? = null,
+    height: Number? = null
+) : Light(color, intensity) {
+
+    var width = width?.toFloat() ?: 10f
+    var height = height?.toFloat() ?: 10f
+
+    fun copy(source: RectAreaLight): RectAreaLight {
+
+        super.copy(source)
+
+        this.width = source.width
+        this.height = source.height
 
         return this
 
@@ -147,21 +191,19 @@ class SpotLight(
 
 }
 
-class DirectionalLight(
-    color: Color? = null,
+class HemisphereLight(
+    val skyColor: Color,
+    val groundColor: Color,
     intensity: Number? = null
-): Light(color, intensity), LightWithShadow, LightWithTarget {
+) : Light(skyColor, intensity) {
 
-    constructor(color: Int, intensity: Number?): this(Color(color), intensity)
+    fun copy(source: HemisphereLight): HemisphereLight {
 
-    override var target = Object3DImpl()
+        super.copy(source)
 
-    override var shadow = DirectionalLightShadow()
+        groundColor.copy(source.groundColor)
 
-    init {
-
-        this.position.copy( Object3D.defaultUp )
-        this.updateMatrix()
+        return this
 
     }
 
