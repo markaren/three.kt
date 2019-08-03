@@ -122,6 +122,34 @@ internal class GLLights {
 
                     spotLength++
                 }
+                is RectAreaLight -> {
+                    val uniforms = cache[light] as RectAreaLightUniforms
+
+                    // (a) intensity is the total visible light emitted
+                    //uniforms.color.copy( color ).multiplyScalar( intensity / ( light.width * light.height * Math.PI ) );
+
+                    // (b) intensity is the brightness of the light
+                    uniforms.color.copy(color).multiplyScalar(intensity)
+
+                    uniforms.position.setFromMatrixPosition(light.matrixWorld)
+                    uniforms.position.applyMatrix4(viewMatrix)
+
+                    // extract local rotation of light to derive width/height half vectors
+                    matrix42.identity()
+                    matrix4.copy(light.matrixWorld)
+                    matrix4.premultiply(viewMatrix)
+                    matrix42.extractRotation(matrix4)
+
+                    uniforms.halfWidth.set(light.width * 0.5, 0.0, 0.0)
+                    uniforms.halfHeight.set(0.0, light.height * 0.5, 0.0)
+
+                    uniforms.halfWidth.applyMatrix4(matrix42)
+                    uniforms.halfHeight.applyMatrix4(matrix42)
+
+                    state.rectArea[rectAreaLength] = uniforms
+
+                    rectAreaLength++
+                }
                 is PointLight -> {
                     val uniforms = cache[light] as PointLightUniforms
 
@@ -151,6 +179,20 @@ internal class GLLights {
                     state.point.safeSet(pointLength, uniforms)
 
                     pointLength++
+                }
+                is HemisphereLight -> {
+                    var uniforms = cache[light] as HemisphereLightUniforms
+
+                    uniforms.direction.setFromMatrixPosition( light.matrixWorld )
+                    uniforms.direction.transformDirection( viewMatrix )
+                    uniforms.direction.normalize()
+
+                    uniforms.skyColor.copy( light.color ).multiplyScalar( intensity )
+                    uniforms.groundColor.copy( light.groundColor ).multiplyScalar( intensity )
+
+                    state.hemi[ hemiLength ] = uniforms
+
+                    hemiLength ++
                 }
             }
 
