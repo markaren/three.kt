@@ -5,7 +5,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
-
 open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() {
 
     internal val id = geometryIdCount++
