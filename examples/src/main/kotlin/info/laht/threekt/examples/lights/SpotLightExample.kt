@@ -29,7 +29,9 @@ object SpotLightExample {
 
             val scene = Scene()
 
-            val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)
+            val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000).apply {
+                position.z = 10f
+            }
             val renderer = GLRenderer(canvas).apply {
                 checkShaderErrors = true
             }
@@ -45,7 +47,6 @@ object SpotLightExample {
                 scene.add(it)
             }
 
-
             val box = Mesh(BoxGeometry(1f), MeshPhongMaterial().apply {
                 color.set(0x00ff00)
             }).also {
@@ -53,7 +54,7 @@ object SpotLightExample {
                 scene.add(it)
             }
 
-             Mesh(BoxGeometry(1f), MeshPhongMaterial().apply {
+            Mesh(BoxGeometry(1f), MeshPhongMaterial().apply {
                 color.set(0x0000ff)
             }).also {
                 it.position.x = 2f
@@ -69,15 +70,13 @@ object SpotLightExample {
                 box.add(it)
             }
 
-            camera.position.z = 10f
-
-            val controls = OrbitControls(camera, canvas)
+            OrbitControls(camera, canvas)
 
             AmbientLight(0xffffff, 0.25f).also {
                 scene.add(it)
             }
 
-            val spotLight = SpotLight(Color.fromHex(Color.white)).also {
+            SpotLight(Color.fromHex(Color.white)).also {
                 it.intensity = 0.3f
                 it.position.y = 3f
                 it.castShadow = true

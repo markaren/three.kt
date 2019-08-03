@@ -37,11 +37,11 @@ object ReflectorExample {
             val camera = PerspectiveCamera(45, canvas.aspect, 1, 500).apply {
                 position.set(0f, 7.5f, 16.0f)
             }
-            val controls = OrbitControls(camera, canvas)
+            OrbitControls(camera, canvas)
 
             val planeGeometry = PlaneGeometry(10f, 10f)
 
-            val mirror = Reflector(
+            Reflector(
                 planeGeometry, Reflector.Options(
                     clipBias = 0.003f,
                     color = Color(0x777777),
@@ -54,7 +54,7 @@ object ReflectorExample {
                 scene.add(it)
             }
 
-            val box = Mesh(BoxBufferGeometry(1f), MeshPhongMaterial().apply {
+            Mesh(BoxBufferGeometry(1f), MeshPhongMaterial().apply {
                 color.set(0x00ff00)
                 emissive.set(0x333333)
                 flatShading = true
@@ -63,7 +63,7 @@ object ReflectorExample {
                 scene.add(it)
             }
 
-            val pointLight = PointLight(0xcccccc, 1.5).also {
+            PointLight(0xcccccc, 1.5).also {
                 it.position.y = 3f
                 it.position.z = 3f
                 scene.add(it)
