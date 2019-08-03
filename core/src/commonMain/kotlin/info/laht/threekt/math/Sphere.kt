@@ -6,7 +6,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
 
-class Sphere(
+data class Sphere(
     val center: Vector3 = Vector3(),
     var radius: Float = 0f
 ): Cloneable {
@@ -114,26 +114,6 @@ class Sphere(
         this.center.copy(sphere.center)
         this.radius = sphere.radius
         return this
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Sphere) return false
-
-        if (center != other.center) return false
-        if (radius != other.radius) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = center.hashCode()
-        result = 31 * result + radius.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Sphere(center=$center, radius=$radius)"
     }
 
 }

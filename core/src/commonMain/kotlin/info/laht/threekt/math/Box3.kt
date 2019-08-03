@@ -3,7 +3,7 @@ package info.laht.threekt.math
 import info.laht.threekt.core.Cloneable
 import kotlin.jvm.JvmOverloads
 
-class Box3 @JvmOverloads constructor(
+data class Box3 @JvmOverloads constructor(
     var min: Vector3 = Vector3(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
     var max: Vector3 = Vector3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY)
 ): Cloneable {
@@ -277,26 +277,6 @@ class Box3 @JvmOverloads constructor(
         this.max.copy(box.max)
 
         return this
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Box3) return false
-
-        if (min != other.min) return false
-        if (max != other.max) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = min.hashCode()
-        result = 31 * result + max.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Box3(min=$min, max=$max)"
     }
 
     companion object {

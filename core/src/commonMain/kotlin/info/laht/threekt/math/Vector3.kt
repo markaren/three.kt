@@ -3,7 +3,7 @@ package info.laht.threekt.math
 import info.laht.threekt.core.Cloneable
 import kotlin.math.*
 
-class Vector3(
+data class Vector3(
     var x: Float,
     var y: Float,
     var z: Float
@@ -54,9 +54,7 @@ class Vector3(
     /**
      * Clones Vector3 vector.
      */
-    override fun clone(): Vector3 {
-        return Vector3(x, y, z)
-    }
+    override fun clone() = copy()
 
     /**
      * Copies value of v to Vector3 vector.
@@ -555,28 +553,6 @@ class Vector3(
         array[offset + 2] = this.z
 
         return array
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Vector3) return false
-
-        if (x != other.x) return false
-        if (y != other.y) return false
-        if (z != other.z) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = x.hashCode()
-        result = 31 * result + y.hashCode()
-        result = 31 * result + z.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Vector3(x=$x, y=$y, z=$z)"
     }
 
     companion object {

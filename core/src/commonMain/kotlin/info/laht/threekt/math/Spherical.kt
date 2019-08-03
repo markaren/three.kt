@@ -5,7 +5,7 @@ import kotlin.math.*
 
 private const val EPS = 0.000001f
 
-class Spherical(
+data class Spherical(
         var radius: Float = 1f,
         var phi: Float = 0f,
         var theta: Float = 0f
@@ -19,9 +19,7 @@ class Spherical(
         return this
     }
 
-    override fun clone(): Spherical {
-        return Spherical(radius, phi, theta)
-    }
+    override fun clone() = copy()
 
     fun copy(source: Spherical): Spherical {
         return set(source.radius, source.phi, source.theta)
@@ -58,10 +56,6 @@ class Spherical(
 
         return this
 
-    }
-
-    override fun toString(): String {
-        return "Spherical(radius=$radius, phi=$phi, theta=$theta)"
     }
 
 }

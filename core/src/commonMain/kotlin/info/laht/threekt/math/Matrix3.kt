@@ -1,6 +1,7 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
+import kotlin.jvm.JvmOverloads
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -311,7 +312,7 @@ class Matrix3(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other == null || this::class != other::class) return false
 
         other as Matrix3
 

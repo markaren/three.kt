@@ -3,7 +3,7 @@ package info.laht.threekt.math
 import info.laht.threekt.core.Cloneable
 import kotlin.math.*
 
-class Vector2(
+data class Vector2(
         var x: Float,
         var y: Float
 ) : Cloneable, Flattable {
@@ -74,9 +74,7 @@ class Vector2(
     /**
      * Returns a new Vector2 instance with the same `x` and `y` values.
      */
-    override fun clone(): Vector2 {
-        return Vector2(x, y)
-    }
+    override fun clone() = copy()
 
     /**
      * Copies value of v to this vector.
@@ -485,28 +483,6 @@ class Vector2(
             array[0] = x
             array[1] = y
         }
-    }
-
-    override fun toString(): String {
-        return "Vector2(x=$x, y=$y)"
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Vector2
-
-        if (x != other.x) return false
-        if (y != other.y) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = x.hashCode()
-        result = 31 * result + y.hashCode()
-        return result
     }
 
 
