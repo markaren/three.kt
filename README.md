@@ -3,7 +3,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/markaren/three.kt/issues)
 
-
 [![Gitter](https://badges.gitter.im/markaren/three.kt.svg)](https://gitter.im/markaren/three.kt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![CircleCI](https://circleci.com/gh/markaren/three.kt.svg?style=svg)](https://circleci.com/gh/markaren/three.kt)
 
@@ -15,6 +14,7 @@ Be warned, while the basics works, such as:
 * OrbitControls
 * Ambient, Directional, Point and Spot lights
 * RenderTarget, 2D textures
+* OBJ and STL loaders
 * Other stuff like Reflector (mirror) and water
  
 a lot of features are still missing and the API can change rapidly.
