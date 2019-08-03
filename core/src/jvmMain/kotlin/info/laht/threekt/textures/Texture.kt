@@ -11,7 +11,6 @@ import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 
-
 open class Texture(
     var image: Image? = null,
     mapping: TextureMapping? = null,

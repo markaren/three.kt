@@ -21,7 +21,6 @@ import kotlin.math.roundToInt
 
 class GLShadowMap internal constructor(
     private val renderer: GLRenderer,
-    private val objects: GLObjects,
     maxTextureSize: Int
 ) {
 
@@ -383,7 +382,7 @@ class GLShadowMap internal constructor(
 
                 `object`.modelViewMatrix.multiplyMatrices(shadowCamera.matrixWorldInverse, `object`.matrixWorld)
 
-                val geometry = objects.update(`object`)
+                val geometry = renderer.objects.update(`object`)
 
 
                 if (`object` is MaterialsObject && `object`.isMultiMaterial) {
