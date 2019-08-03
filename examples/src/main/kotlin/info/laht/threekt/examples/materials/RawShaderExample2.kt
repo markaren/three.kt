@@ -2,9 +2,7 @@ package info.laht.threekt.examples.materials
 
 import info.laht.threekt.Canvas
 import info.laht.threekt.CanvasOptions
-import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
-import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.materials.RawShaderMaterial
@@ -233,7 +231,6 @@ object RawShaderExample2 {
                 checkShaderErrors = true
             }
 
-            OrbitControls(camera, canvas)
             val geometry = PlaneBufferGeometry(100f, 100f)
 
             val material = RawShaderMaterial().also {
@@ -241,8 +238,6 @@ object RawShaderExample2 {
                 it.uniforms["iResolution"] = Uniform(Vector2(canvas.width, canvas.height))
                 it.vertexShader = vertexShader
                 it.fragmentShader = fragmentShader
-                it.side = Side.Double
-                it.transparent = true
             }
 
             val mesh = Mesh(geometry, material)
