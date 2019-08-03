@@ -298,20 +298,6 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
         dispatchEvent("dispose", this)
     }
 
-//    internal inline operator fun <reified T> get(field: String): T? {
-//        return getFieldInHiarchy(javaClass, field)?.let {
-//            it.isAccessible = true
-//            it.get(this) as T
-//        }
-//    }
-//
-//    internal inline operator fun <reified T> set(field: String, value: T) {
-//        javaClass.getDeclaredField(field)?.also {
-//            it.isAccessible = true
-//            it.set(this, value)
-//        }
-//    }
-
     private companion object {
         var materialId = 0
     }
