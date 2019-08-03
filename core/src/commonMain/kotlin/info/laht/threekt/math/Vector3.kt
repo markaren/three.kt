@@ -7,13 +7,13 @@ data class Vector3(
     var x: Float,
     var y: Float,
     var z: Float
-): Cloneable, Flattable {
+) : Cloneable, Flattable {
 
     override val size = 3
 
     constructor() : this(0f, 0f, 0f)
 
-    constructor(x: Int, y: Int, z: Int): this(x.toFloat(), y.toFloat(), z.toFloat())
+    constructor(x: Int, y: Int, z: Int) : this(x.toFloat(), y.toFloat(), z.toFloat())
 
     /**
      * Sets value of Vector3 vector.
@@ -160,12 +160,12 @@ data class Vector3(
 
     fun applyEuler(euler: Euler): Vector3 {
         val quaternion = Quaternion()
-        return this.applyQuaternion( quaternion.setFromEuler( euler ) )
+        return this.applyQuaternion(quaternion.setFromEuler(euler))
     }
 
     fun applyAxisAngle(axis: Vector3, angle: Float): Vector3 {
         val quaternion = Quaternion()
-        return this.applyQuaternion( quaternion.setFromAxisAngle( axis, angle ) )
+        return this.applyQuaternion(quaternion.setFromAxisAngle(axis, angle))
     }
 
     fun applyMatrix3(m: Matrix3): Vector3 {
@@ -174,9 +174,9 @@ data class Vector3(
         val z = this.z
         val e = m.elements
 
-        this.x = e[ 0 ] * x + e[ 3 ] * y + e[ 6 ] * z
-        this.y = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ] * z
-        this.z = e[ 2 ] * x + e[ 5 ] * y + e[ 8 ] * z
+        this.x = e[0] * x + e[3] * y + e[6] * z
+        this.y = e[1] * x + e[4] * y + e[7] * z
+        this.z = e[2] * x + e[5] * y + e[8] * z
 
         return this
     }
@@ -187,11 +187,11 @@ data class Vector3(
         val z = this.z
         val e = m.elements
 
-        val w = 1f / ( e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ] )
+        val w = 1f / (e[3] * x + e[7] * y + e[11] * z + e[15])
 
-        this.x = ( e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ] ) * w
-        this.y = ( e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ] ) * w
-        this.z = ( e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] ) * w
+        this.x = (e[0] * x + e[4] * y + e[8] * z + e[12]) * w
+        this.y = (e[1] * x + e[5] * y + e[9] * z + e[13]) * w
+        this.z = (e[2] * x + e[6] * y + e[10] * z + e[14]) * w
 
         return this
     }
@@ -210,13 +210,13 @@ data class Vector3(
         val ix = qw * x + qy * z - qz * y
         val iy = qw * y + qz * x - qx * z
         val iz = qw * z + qx * y - qy * x
-        val iw = - qx * x - qy * y - qz * z
+        val iw = -qx * x - qy * y - qz * z
 
         // calculate result * inverse quat
 
-        this.x = ix * qw + iw * - qx + iy * - qz - iz * - qy
-        this.y = iy * qw + iw * - qy + iz * - qx - ix * - qz
-        this.z = iz * qw + iw * - qz + ix * - qy - iy * - qx
+        this.x = ix * qw + iw * -qx + iy * -qz - iz * -qy
+        this.y = iy * qw + iw * -qy + iz * -qx - ix * -qz
+        this.z = iz * qw + iw * -qz + ix * -qy - iy * -qx
 
         return this
     }
@@ -375,35 +375,35 @@ data class Vector3(
         return abs(this.x - v.x) + abs(this.y - v.y) + abs(this.z - v.z)
     }
 
-    fun setFromSpherical ( s: Spherical ): Vector3 {
+    fun setFromSpherical(s: Spherical): Vector3 {
 
-        return this.setFromSphericalCoords( s.radius, s.phi, s.theta )
+        return this.setFromSphericalCoords(s.radius, s.phi, s.theta)
 
     }
 
-    fun setFromSphericalCoords ( radius: Float, phi: Float, theta: Float ): Vector3 {
+    fun setFromSphericalCoords(radius: Float, phi: Float, theta: Float): Vector3 {
 
-        var sinPhiRadius = sin( phi ) * radius
+        var sinPhiRadius = sin(phi) * radius
 
-        this.x = sinPhiRadius * sin( theta )
-        this.y = cos( phi ) * radius
-        this.z = sinPhiRadius * cos( theta )
+        this.x = sinPhiRadius * sin(theta)
+        this.y = cos(phi) * radius
+        this.z = sinPhiRadius * cos(theta)
 
         return this
 
     }
 
-    fun setFromCylindrical ( c: Cylindrical ): Vector3 {
+    fun setFromCylindrical(c: Cylindrical): Vector3 {
 
-        return this.setFromCylindricalCoords( c.radius, c.theta, c.y )
+        return this.setFromCylindricalCoords(c.radius, c.theta, c.y)
 
     }
 
-    fun setFromCylindricalCoords ( radius: Float, theta: Float, y: Float ): Vector3 {
+    fun setFromCylindricalCoords(radius: Float, theta: Float, y: Float): Vector3 {
 
-        this.x = radius * sin( theta )
+        this.x = radius * sin(theta)
         this.y = y
-        this.z = radius * cos( theta )
+        this.z = radius * cos(theta)
 
         return this
 

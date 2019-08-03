@@ -3,7 +3,6 @@ package info.laht.threekt.core
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector3
 
-
 class Face3 private constructor(
     var a: Int,
     var b: Int,

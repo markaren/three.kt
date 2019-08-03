@@ -268,7 +268,7 @@ class OrbitControls(
         }
 
         // restrict theta to be between desired limits
-        spherical.theta = Math.max(this.minAzimuthAngle, Math.min(this.maxAzimuthAngle, spherical.theta))
+        spherical.theta = max(this.minAzimuthAngle, min(this.maxAzimuthAngle, spherical.theta))
 
         // restrict phi to be between desired limits
         spherical.phi = max(this.minPolarAngle, min(this.maxPolarAngle, spherical.phi))
@@ -279,7 +279,7 @@ class OrbitControls(
         spherical.radius *= scale
 
         // restrict radius to be between desired limits
-        spherical.radius = Math.max(this.minDistance, Math.min(this.maxDistance, spherical.radius))
+        spherical.radius = max(this.minDistance, min(this.maxDistance, spherical.radius))
 
         // move target to panned location
 
@@ -469,7 +469,7 @@ class OrbitControls(
             this.camera is PerspectiveCamera -> scale *= dollyScale
             this.camera is OrthographicCamera -> {
 
-                this.camera.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.camera.zoom / dollyScale))
+                this.camera.zoom = max(this.minZoom, min(this.maxZoom, this.camera.zoom / dollyScale))
                 this.camera.updateProjectionMatrix()
                 zoomChanged = true
 

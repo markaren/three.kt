@@ -15,7 +15,6 @@ class Matrix4(
 
     override val size = 16
 
-
     /**
      * Sets all fields of this matrix.
      */

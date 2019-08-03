@@ -13,7 +13,7 @@ data class Euler(
 ) : Cloneable {
 
     var x: Float
-        get() =  _x
+        get() = _x
         set(value) {
             _x = value
             onChangeCallback?.invoke()

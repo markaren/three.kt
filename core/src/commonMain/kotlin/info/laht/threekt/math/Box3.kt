@@ -6,7 +6,7 @@ import kotlin.jvm.JvmOverloads
 data class Box3 @JvmOverloads constructor(
     var min: Vector3 = Vector3(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
     var max: Vector3 = Vector3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY)
-): Cloneable {
+) : Cloneable {
 
     fun set(min: Vector3, max: Vector3): Box3 {
         this.min.copy(min)
@@ -57,10 +57,10 @@ data class Box3 @JvmOverloads constructor(
     }
 
     fun setFromCenterAndSize(center: Vector3, size: Vector3): Box3 {
-        val halfSize = Vector3().copy( size ).multiplyScalar( 0.5.toFloat() )
+        val halfSize = Vector3().copy(size).multiplyScalar(0.5.toFloat())
 
-        this.min.copy( center ).sub( halfSize )
-        this.max.copy( center ).add( halfSize )
+        this.min.copy(center).sub(halfSize)
+        this.max.copy(center).add(halfSize)
 
         return this
     }
@@ -82,7 +82,8 @@ data class Box3 @JvmOverloads constructor(
         return (this.max.x < this.min.x) || (this.max.y < this.min.y) || (this.max.z < this.min.z)
     }
 
-    fun getCenter(target: Vector3): Vector3 {
+    @JvmOverloads
+    fun getCenter(target: Vector3 = Vector3()): Vector3 {
         return if (this.isEmpty()) {
             target.set(0, 0, 0)
         } else {
@@ -90,7 +91,8 @@ data class Box3 @JvmOverloads constructor(
         }
     }
 
-    fun getSize(target: Vector3): Vector3 {
+    @JvmOverloads
+    fun getSize(target: Vector3 = Vector3()): Vector3 {
         return if (this.isEmpty()) {
             target.set(0, 0, 0)
         } else {
@@ -131,7 +133,8 @@ data class Box3 @JvmOverloads constructor(
                 this.min.z <= box.min.z && box.max.z <= this.max.z
     }
 
-    fun getParameter(point: Vector3, target: Vector3): Vector3 {
+    @JvmOverloads
+    fun getParameter(point: Vector3, target: Vector3 = Vector3()): Vector3 {
         return target.set(
             (point.x - this.min.x) / (this.max.x - this.min.x),
             (point.y - this.min.y) / (this.max.y - this.min.y),
@@ -149,10 +152,10 @@ data class Box3 @JvmOverloads constructor(
     fun intersectsSphere(sphere: Sphere): Boolean {
         val closestPoint = Vector3()
         // Find the point on the AABB closest to the sphere center.
-        this.clampPoint( sphere.center, closestPoint )
+        this.clampPoint(sphere.center, closestPoint)
 
         // If that point is inside the sphere, the AABB and sphere intersect.
-        return closestPoint.distanceToSquared( sphere.center ) <= ( sphere.radius * sphere.radius )
+        return closestPoint.distanceToSquared(sphere.center) <= (sphere.radius * sphere.radius)
     }
 
     fun intersectsPlane(plane: Plane): Boolean {
@@ -201,7 +204,8 @@ data class Box3 @JvmOverloads constructor(
         return -plane.constant in min..max
     }
 
-    fun clampPoint(point: Vector3, target: Vector3): Vector3 {
+    @JvmOverloads
+    fun clampPoint(point: Vector3, target: Vector3 = Vector3()): Vector3 {
         return target.copy(point).clamp(this.min, this.max)
     }
 
@@ -210,7 +214,8 @@ data class Box3 @JvmOverloads constructor(
         return clampedPoint.sub(point).length()
     }
 
-    fun getBoundingSphere(target: Sphere): Sphere {
+    @JvmOverloads
+    fun getBoundingSphere(target: Sphere = Sphere()): Sphere {
         this.getCenter(target.center)
 
         target.radius = this.getSize(Vector3()).length() * 0.5.toFloat()
@@ -219,11 +224,11 @@ data class Box3 @JvmOverloads constructor(
     }
 
     fun intersect(box: Box3): Box3 {
-        this.min.max( box.min )
-        this.max.min( box.max )
+        this.min.max(box.min)
+        this.max.min(box.max)
 
         // ensure that if there is no overlap, the result is fully empty, not slightly empty with non-inf/+inf values that will cause subsequence intersects to erroneously return valid values.
-        if ( this.isEmpty() ) {
+        if (this.isEmpty()) {
             this.makeEmpty()
         }
 
@@ -231,8 +236,8 @@ data class Box3 @JvmOverloads constructor(
     }
 
     fun union(box: Box3): Box3 {
-        this.min.min( box.min )
-        this.max.max( box.max )
+        this.min.min(box.min)
+        this.max.max(box.max)
 
         return this
     }
@@ -243,20 +248,18 @@ data class Box3 @JvmOverloads constructor(
         if (this.isEmpty()) {
             return this
         }
+
         // NOTE: I am using a binary pattern to specify all 2^3 combinations below
+        points[0].set(this.min.x, this.min.y, this.min.z).applyMatrix4(matrix) // 000
+        points[1].set(this.min.x, this.min.y, this.max.z).applyMatrix4(matrix) // 001
+        points[2].set(this.min.x, this.max.y, this.min.z).applyMatrix4(matrix) // 010
+        points[3].set(this.min.x, this.max.y, this.max.z).applyMatrix4(matrix) // 011
+        points[4].set(this.max.x, this.min.y, this.min.z).applyMatrix4(matrix) // 100
+        points[5].set(this.max.x, this.min.y, this.max.z).applyMatrix4(matrix) // 101
+        points[6].set(this.max.x, this.max.y, this.min.z).applyMatrix4(matrix) // 110
+        points[7].set(this.max.x, this.max.y, this.max.z).applyMatrix4(matrix) // 111
 
-        synchronized(points)  {
-            points[0].set(this.min.x, this.min.y, this.min.z).applyMatrix4(matrix) // 000
-            points[1].set(this.min.x, this.min.y, this.max.z).applyMatrix4(matrix) // 001
-            points[2].set(this.min.x, this.max.y, this.min.z).applyMatrix4(matrix) // 010
-            points[3].set(this.min.x, this.max.y, this.max.z).applyMatrix4(matrix) // 011
-            points[4].set(this.max.x, this.min.y, this.min.z).applyMatrix4(matrix) // 100
-            points[5].set(this.max.x, this.min.y, this.max.z).applyMatrix4(matrix) // 101
-            points[6].set(this.max.x, this.max.y, this.min.z).applyMatrix4(matrix) // 110
-            points[7].set(this.max.x, this.max.y, this.max.z).applyMatrix4(matrix) // 111
-
-            this.setFromPoints(points)
-        }
+        this.setFromPoints(points)
 
         return this
     }

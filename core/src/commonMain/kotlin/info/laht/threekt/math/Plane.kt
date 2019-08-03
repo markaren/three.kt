@@ -3,14 +3,10 @@ package info.laht.threekt.math
 import info.laht.threekt.core.Cloneable
 import kotlin.jvm.JvmOverloads
 
-
-class Plane @JvmOverloads constructor(
+data class Plane @JvmOverloads constructor(
     val normal: Vector3 = Vector3(0f, 0f, 1f),
-    constant: Float = 0f
+    var constant: Float = 0f
 ) : Cloneable {
-
-    var constant = constant
-        private set
 
     fun set(normal: Vector3, constant: Float): Plane {
         this.normal.copy(normal)
@@ -81,10 +77,12 @@ class Plane @JvmOverloads constructor(
         return this.distanceToPoint(sphere.center) - sphere.radius
     }
 
+    @JvmOverloads
     fun projectPoint(point: Vector3, target: Vector3 = Vector3()): Vector3 {
         return target.copy(this.normal).multiplyScalar(-this.distanceToPoint(point)).add(point)
     }
 
+    @JvmOverloads
     fun intersectLine(line: Line3, target: Vector3 = Vector3()): Vector3? {
         val v1 = Vector3()
 
@@ -135,10 +133,12 @@ class Plane @JvmOverloads constructor(
         return sphere.intersectsPlane(this)
     }
 
+    @JvmOverloads
     fun coplanarPoint(target: Vector3 = Vector3()): Vector3 {
         return target.copy( this.normal ).multiplyScalar( - this.constant )
     }
 
+    @JvmOverloads
     fun applyMatrix4(matrix: Matrix4, optionalNormalMatrix: Matrix3? = null): Plane {
 
         val v1 = Vector3()
@@ -159,10 +159,6 @@ class Plane @JvmOverloads constructor(
         this.constant -= offset.dot(this.normal)
 
         return this
-    }
-
-    fun equals(plane: Plane): Boolean {
-        return plane.normal == this.normal && (plane.constant == this.constant)
     }
 
 }

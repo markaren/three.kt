@@ -6,10 +6,10 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
 
-data class Sphere(
+data class Sphere @JvmOverloads constructor(
     val center: Vector3 = Vector3(),
     var radius: Float = 0f
-): Cloneable {
+) : Cloneable {
 
     fun set(center: Vector3, radius: Float): Sphere {
         this.center.copy(center)
@@ -25,60 +25,60 @@ data class Sphere(
         val center = this.center
 
         if (optionalCenter != null) {
-            center.copy( optionalCenter )
+            center.copy(optionalCenter)
         } else {
-            box.setFromPoints( points ).getCenter( center )
+            box.setFromPoints(points).getCenter(center)
         }
 
         var maxRadiusSq = 0f
 
         points.forEach { point ->
 
-            maxRadiusSq = max( maxRadiusSq, center.distanceToSquared( point ) )
+            maxRadiusSq = max(maxRadiusSq, center.distanceToSquared(point))
 
         }
 
-        this.radius = sqrt( maxRadiusSq )
+        this.radius = sqrt(maxRadiusSq)
 
         return this
 
     }
 
     fun empty(): Boolean {
-        return ( this.radius <= 0 )
+        return (this.radius <= 0)
     }
 
     fun containsPoint(point: Vector3): Boolean {
-        return ( point.distanceToSquared( this.center ) <= ( this.radius * this.radius ) )
+        return (point.distanceToSquared(this.center) <= (this.radius * this.radius))
     }
 
     fun distanceToPoint(point: Vector3): Float {
-        return ( point.distanceTo( this.center ) - this.radius )
+        return (point.distanceTo(this.center) - this.radius)
     }
 
     fun intersectsSphere(sphere: Sphere): Boolean {
         val radiusSum = this.radius + sphere.radius
 
-        return sphere.center.distanceToSquared( this.center ) <= ( radiusSum * radiusSum )
+        return sphere.center.distanceToSquared(this.center) <= (radiusSum * radiusSum)
     }
 
     fun intersectsBox(box: Box3): Boolean {
-        return box.intersectsSphere( this )
+        return box.intersectsSphere(this)
     }
 
     fun intersectsPlane(plane: Plane): Boolean {
-        return abs( plane.distanceToPoint( this.center ) ) <= this.radius
+        return abs(plane.distanceToPoint(this.center)) <= this.radius
     }
 
     fun clampPoint(point: Vector3, target: Vector3 = Vector3()): Vector3 {
-        val deltaLengthSq = this.center.distanceToSquared( point )
+        val deltaLengthSq = this.center.distanceToSquared(point)
 
-        target.copy( point )
+        target.copy(point)
 
-        if ( deltaLengthSq > ( this.radius * this.radius ) ) {
+        if (deltaLengthSq > (this.radius * this.radius)) {
 
-            target.sub( this.center ).normalize()
-            target.multiplyScalar( this.radius ).add( this.center )
+            target.sub(this.center).normalize()
+            target.multiplyScalar(this.radius).add(this.center)
 
         }
 
@@ -86,22 +86,23 @@ data class Sphere(
 
     }
 
+    @JvmOverloads
     fun getBoundingBox(target: Box3 = Box3()): Box3 {
-        target.set( this.center, this.center )
-        target.expandByScalar( this.radius )
+        target.set(this.center, this.center)
+        target.expandByScalar(this.radius)
 
         return target
     }
 
     fun applyMatrix4(matrix: Matrix4): Sphere {
-        this.center.applyMatrix4( matrix )
+        this.center.applyMatrix4(matrix)
         this.radius = this.radius * matrix.getMaxScaleOnAxis()
 
         return this
     }
 
     fun translate(offset: Vector3): Sphere {
-        this.center.add( offset )
+        this.center.add(offset)
 
         return this
     }

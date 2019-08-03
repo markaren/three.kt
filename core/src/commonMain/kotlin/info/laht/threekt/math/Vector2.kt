@@ -4,13 +4,13 @@ import info.laht.threekt.core.Cloneable
 import kotlin.math.*
 
 data class Vector2(
-        var x: Float,
-        var y: Float
+    var x: Float,
+    var y: Float
 ) : Cloneable, Flattable {
 
     override val size = 2
 
-    constructor() : this(0.toFloat(), 0.toFloat())
+    constructor() : this(0f, 0f)
 
     constructor(x: Int, y: Int) : this(x.toFloat(), y.toFloat())
 

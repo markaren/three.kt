@@ -9,10 +9,10 @@ data class Quaternion(
     private var _y: Float = 0f,
     private var _z: Float = 0f,
     private var _w: Float = 1f
-): Cloneable {
+) : Cloneable {
 
     var x: Float
-        get() =  _x
+        get() = _x
         set(value) {
             _x = value
             onChangeCallback?.invoke()

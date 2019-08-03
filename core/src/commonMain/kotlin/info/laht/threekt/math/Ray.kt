@@ -2,7 +2,7 @@ package info.laht.threekt.math
 
 import kotlin.jvm.JvmOverloads
 
-class Ray @JvmOverloads constructor(
+data class Ray @JvmOverloads constructor(
     var origin: Vector3 = Vector3(),
     val direction: Vector3 = Vector3()
 ) {

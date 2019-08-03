@@ -4,7 +4,6 @@ import info.laht.threekt.core.Cloneable
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-
 data class Vector4(
     var x: Float,
     var y: Float,
@@ -14,7 +13,7 @@ data class Vector4(
 
     override val size = 4
 
-    constructor() : this(0.toFloat(), 0.toFloat(), 0.toFloat(), 0.toFloat())
+    constructor() : this(0f, 0f, 0f, 0f)
 
     constructor(x: Int, y: Int, z: Int, w: Int) : this(x.toFloat(), y.toFloat(), z.toFloat(), w.toFloat())
 

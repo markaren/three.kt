@@ -54,10 +54,10 @@ fun smoothStep(x: Float, min: Float, max: Float): Float {
         return 1f
     }
 
-    @Suppress("NAME_SHADOWING")
-    val x = (x - min) / (max - min)
+    return (x - min) / (max - min).let {
+        it * it * (3 - 2 * it)
+    }
 
-    return x * x * (3 - 2 * x)
 }
 
 fun isPowerOfTwo(value: Int): Boolean {
