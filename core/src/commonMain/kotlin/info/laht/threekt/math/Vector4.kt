@@ -1,14 +1,11 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
-import info.laht.threekt.core.FloatBufferAttribute
-import org.lwjgl.BufferUtils
-import java.nio.FloatBuffer
 import kotlin.math.abs
 import kotlin.math.sqrt
 
 
-class Vector4(
+data class Vector4(
     var x: Float,
     var y: Float,
     var z: Float,
@@ -281,55 +278,10 @@ class Vector4(
         return array
     }
 
-
-    fun fromBufferAttribute(attribute: FloatBufferAttribute, index: Int): Vector4 {
-
-        this.x = attribute.getX(index)
-        this.y = attribute.getY(index)
-        this.z = attribute.getZ(index)
-        this.w = attribute.getW(index)
-
-        return this
-
-    }
-
-    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
-        val buf = buffer ?: BufferUtils.createFloatBuffer(2)
-        return buf.put(x).put(y).put(z).put(w)
-    }
-
-    override fun clone(): Vector4 {
-        return Vector4(x, y, z, w)
-    }
+    override fun clone() = copy()
 
     fun copy(v: Vector4): Vector4 {
         return set(v.x, v.y, v.z, v.w)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Vector4
-
-        if (x != other.x) return false
-        if (y != other.y) return false
-        if (z != other.z) return false
-        if (w != other.w) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = x.hashCode()
-        result = 31 * result + y.hashCode()
-        result = 31 * result + z.hashCode()
-        result = 31 * result + w.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Vector4(x=$x, y=$y, z=$z, w=$w)"
     }
 
 }

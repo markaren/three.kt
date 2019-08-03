@@ -21,8 +21,8 @@ open class LineSegments @JvmOverloads constructor(
             val lineDistances = FloatArray(positionAttribute.count * 2)
 
             for (i in 0 until positionAttribute.count step 2) {
-                start.fromBufferAttribute(positionAttribute, i)
-                end.fromBufferAttribute(positionAttribute, i + 1)
+                positionAttribute.toVector3(i, start)
+                positionAttribute.toVector3(i + 1, end)
 
                 lineDistances[i] = if (i == 0) 0f else lineDistances[i - 1]
                 lineDistances[i + 1] = lineDistances[i] + start.distanceTo(end)

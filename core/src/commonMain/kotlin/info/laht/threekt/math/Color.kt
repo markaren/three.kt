@@ -3,7 +3,7 @@ package info.laht.threekt.math
 import info.laht.threekt.core.Cloneable
 import kotlin.math.max
 
-class Color(
+data class Color(
     var r: Float,
     var g: Float,
     var b: Float
@@ -99,30 +99,6 @@ class Color(
 
         return array
 
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as Color
-
-        if (r != other.r) return false
-        if (g != other.g) return false
-        if (b != other.b) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = r.hashCode()
-        result = 31 * result + g.hashCode()
-        result = 31 * result + b.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Color(r=$r, g=$g, b=$b)"
     }
 
     companion object {

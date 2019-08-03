@@ -5,7 +5,7 @@ import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.atan2
 
-class Euler(
+data class Euler(
     private var _x: Float = 0f,
     private var _y: Float = 0f,
     private var _z: Float = 0f,
@@ -50,9 +50,7 @@ class Euler(
         return this
     }
 
-    override fun clone(): Euler {
-        return Euler().copy(this)
-    }
+    override fun clone() = copy()
 
     fun copy(euler: Euler): Euler {
         return set(euler._x, euler._y, euler._z, euler._order)
@@ -209,32 +207,6 @@ class Euler(
 
     fun toVector3(optionalResult: Vector3 = Vector3()): Vector3 {
         return optionalResult.set(_x, _y, _z)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Euler
-
-        if (_x != other._x) return false
-        if (_y != other._y) return false
-        if (_z != other._z) return false
-        if (_order != other._order) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = _x.hashCode()
-        result = 31 * result + _y.hashCode()
-        result = 31 * result + _z.hashCode()
-        result = 31 * result + _order.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Euler(x=$_x, y=$_y, z=$_z, order=$_order)"
     }
 
 }

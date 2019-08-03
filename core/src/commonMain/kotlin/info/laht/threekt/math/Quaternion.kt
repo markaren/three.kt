@@ -1,9 +1,10 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
+import kotlin.jvm.JvmOverloads
 import kotlin.math.*
 
-class Quaternion(
+data class Quaternion(
     private var _x: Float = 0f,
     private var _y: Float = 0f,
     private var _z: Float = 0f,
@@ -55,9 +56,7 @@ class Quaternion(
     /**
      * Clones this quaternion.
      */
-    override fun clone(): Quaternion {
-        return Quaternion(_x, _y, _z, _w)
-    }
+    override fun clone() = copy()
 
     /**
      * Copies values of q to this quaternion.
@@ -473,32 +472,6 @@ class Quaternion(
         array[offset + 2] = _z
         array[offset + 3] = _w
         return array
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Quaternion
-
-        if (_x != other._x) return false
-        if (_y != other._y) return false
-        if (_z != other._z) return false
-        if (_w != other._w) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = _x.hashCode()
-        result = 31 * result + _y.hashCode()
-        result = 31 * result + _z.hashCode()
-        result = 31 * result + _w.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Quaternion(_x=$_x, _y=$_y, _z=$_z, _w=$_w)"
     }
 
 }

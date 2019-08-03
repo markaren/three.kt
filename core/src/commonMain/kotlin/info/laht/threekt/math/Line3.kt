@@ -1,6 +1,8 @@
 package info.laht.threekt.math
 
-class Line3 @JvmOverloads constructor(
+import kotlin.jvm.JvmOverloads
+
+data class Line3 @JvmOverloads constructor(
     var start: Vector3 = Vector3(),
     var end: Vector3 = Vector3()
 ) {
@@ -78,28 +80,6 @@ class Line3 @JvmOverloads constructor(
         this.end.applyMatrix4(matrix)
 
         return this
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Line3
-
-        if (start != other.start) return false
-        if (end != other.end) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = start.hashCode()
-        result = 31 * result + end.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Line3(start=$start, end=$end)"
     }
 
 }

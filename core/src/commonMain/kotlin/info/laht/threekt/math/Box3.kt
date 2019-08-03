@@ -1,11 +1,9 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
-import info.laht.threekt.core.FloatBufferAttribute
-import info.laht.threekt.core.Object3D
-import info.laht.threekt.objects.Mesh
+import kotlin.jvm.JvmOverloads
 
-class Box3 @JvmOverloads constructor(
+data class Box3 @JvmOverloads constructor(
     var min: Vector3 = Vector3(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
     var max: Vector3 = Vector3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY)
 ): Cloneable {
@@ -48,40 +46,6 @@ class Box3 @JvmOverloads constructor(
         return this
     }
 
-    fun setFromBufferAttribute( attribute: FloatBufferAttribute ): Box3 {
-        var minX = Float.POSITIVE_INFINITY
-        var minY = Float.POSITIVE_INFINITY
-        var minZ = Float.POSITIVE_INFINITY
-
-        var maxX = Float.NEGATIVE_INFINITY
-        var maxY = Float.NEGATIVE_INFINITY
-        var maxZ = Float.NEGATIVE_INFINITY
-
-        var i = 0
-        val l = attribute.count
-        while (i < l) {
-
-            val x = attribute.getX(i)
-            val y = attribute.getY(i)
-            val z = attribute.getZ(i)
-
-            if (x < minX) minX = x
-            if (y < minY) minY = y
-            if (z < minZ) minZ = z
-
-            if (x > maxX) maxX = x
-            if (y > maxY) maxY = y
-            if (z > maxZ) maxZ = z
-            i++
-
-        }
-
-        this.min.set(minX, minY, minZ)
-        this.max.set(maxX, maxY, maxZ)
-
-        return this
-    }
-
     fun setFromPoints(points: List<Vector3>): Box3 {
         this.makeEmpty()
 
@@ -99,12 +63,6 @@ class Box3 @JvmOverloads constructor(
         this.max.copy( center ).add( halfSize )
 
         return this
-    }
-
-    fun setFromObject(`object`: Object3D): Box3 {
-        this.makeEmpty()
-
-        return this.expandByObject(`object`)
     }
 
     fun makeEmpty(): Box3 {
@@ -157,33 +115,6 @@ class Box3 @JvmOverloads constructor(
     fun expandByScalar(scalar: Float): Box3 {
         this.min.addScalar(-scalar)
         this.max.addScalar(scalar)
-
-        return this
-    }
-
-    fun expandByObject(`object`: Object3D): Box3 {
-
-        val v1 = Vector3()
-
-        `object`.updateMatrixWorld(true)
-        `object`.traverse { node ->
-
-            if (node is Mesh) {
-
-                val geometry = node.geometry
-
-                geometry.attributes.position?.also { attribute ->
-
-                    for (i in 0 until attribute.count) {
-                        v1.fromBufferAttribute(attribute, i).applyMatrix4(node.matrixWorld)
-                        expandByPoint(v1)
-                    }
-
-                }
-
-            }
-
-        }
 
         return this
     }
@@ -346,28 +277,6 @@ class Box3 @JvmOverloads constructor(
         this.max.copy(box.max)
 
         return this
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Box3
-
-        if (min != other.min) return false
-        if (max != other.max) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = min.hashCode()
-        result = 31 * result + max.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Box3(min=$min, max=$max)"
     }
 
     companion object {

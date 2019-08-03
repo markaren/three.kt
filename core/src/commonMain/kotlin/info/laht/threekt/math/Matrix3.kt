@@ -1,9 +1,7 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
-import info.laht.threekt.core.FloatBufferAttribute
-import org.lwjgl.BufferUtils
-import java.nio.FloatBuffer
+import kotlin.jvm.JvmOverloads
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -66,23 +64,6 @@ class Matrix3(
         )
 
         return this
-    }
-
-    fun applyToBufferAttribute(attribute: FloatBufferAttribute): FloatBufferAttribute {
-        val v1 = Vector3()
-
-        for (i in 0 until attribute.count) {
-            v1.x = attribute.getX(i)
-            v1.y = attribute.getY(i)
-            v1.z = attribute.getZ(i)
-
-            v1.applyMatrix3(this)
-
-            attribute.setXYZ(i, v1.x, v1.y, v1.z)
-        }
-
-        return attribute
-
     }
 
     /**
@@ -329,19 +310,9 @@ class Matrix3(
         return elements.copyInto(array ?: FloatArray(9), offset)
     }
 
-    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
-
-        val buf = buffer ?: BufferUtils.createFloatBuffer(size)
-        elements.forEachIndexed { i, v ->
-            buf.put(i + offset, v)
-        }
-
-        return buf
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other == null || this::class != other::class) return false
 
         other as Matrix3
 

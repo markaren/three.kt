@@ -26,8 +26,8 @@ open class Line @JvmOverloads constructor(
             val lineDistances = mutableListOf(0f)
 
             for (i in 1 until positionAttribute.count) {
-                start.fromBufferAttribute(positionAttribute, i - 1)
-                end.fromBufferAttribute(positionAttribute, i)
+                positionAttribute.toVector3(i - 1, start)
+                positionAttribute.toVector3(i, end)
 
                 lineDistances[i] = lineDistances[i - 1]
                 lineDistances[i] += start.distanceTo(end)

@@ -1,10 +1,7 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
-import info.laht.threekt.core.FloatBufferAttribute
-import org.lwjgl.BufferUtils
-import java.nio.FloatBuffer
-import java.util.*
+import kotlin.jvm.JvmOverloads
 import kotlin.math.*
 
 class Matrix4(
@@ -65,7 +62,7 @@ class Matrix4(
     }
 
     override fun clone(): Matrix4 {
-        return Matrix4(elements.clone())
+        return Matrix4(elements.copyOf())
     }
 
     fun copy(m: Matrix4): Matrix4 {
@@ -434,23 +431,6 @@ class Matrix4(
         return this
     }
 
-
-    fun applyToBufferAttribute(attribute: FloatBufferAttribute): FloatBufferAttribute {
-        val v1 = Vector3()
-        for (i in 0 until attribute.count) {
-
-            v1.x = attribute.getX(i)
-            v1.y = attribute.getY(i)
-            v1.z = attribute.getZ(i)
-
-            v1.applyMatrix4(this)
-
-            attribute.setXYZ(i, v1.x, v1.y, v1.z)
-
-        }
-
-        return attribute
-    }
 
     /**
      * Computes determinant of this matrix.
@@ -963,19 +943,9 @@ class Matrix4(
         return elements.copyInto(array ?: FloatArray(16), offset)
     }
 
-    fun toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
-
-        val buf = buffer ?: BufferUtils.createFloatBuffer(size)
-        elements.forEachIndexed { i, v ->
-            buf.put(i + offset, v)
-        }
-
-        return buf
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other == null || this::class != other::class) return false
 
         other as Matrix4
 
@@ -990,7 +960,7 @@ class Matrix4(
 
 
     override fun toString(): String {
-        return "Matrix4(elements=${Arrays.toString(elements)})"
+        return "Matrix4(elements=${elements.contentToString()})"
     }
 
 
