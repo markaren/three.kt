@@ -3,7 +3,6 @@ package info.laht.threekt.objects
 import info.laht.threekt.core.*
 import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.math.Vector3
-import info.laht.threekt.math.fromBufferAttribute
 
 open class Line @JvmOverloads constructor(
 
@@ -27,8 +26,8 @@ open class Line @JvmOverloads constructor(
             val lineDistances = mutableListOf(0f)
 
             for (i in 1 until positionAttribute.count) {
-                start.fromBufferAttribute(positionAttribute, i - 1)
-                end.fromBufferAttribute(positionAttribute, i)
+                positionAttribute.toVector3(i - 1, start)
+                positionAttribute.toVector3(i, end)
 
                 lineDistances[i] = lineDistances[i - 1]
                 lineDistances[i] += start.distanceTo(end)

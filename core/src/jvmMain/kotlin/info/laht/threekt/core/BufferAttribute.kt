@@ -1,9 +1,6 @@
 package info.laht.threekt.core
 
-import info.laht.threekt.math.Color
-import info.laht.threekt.math.Vector2
-import info.laht.threekt.math.Vector3
-import info.laht.threekt.math.Vector4
+import info.laht.threekt.math.*
 import org.lwjgl.BufferUtils
 import org.lwjgl.system.APIUtil
 import java.nio.ByteBuffer
@@ -355,6 +352,95 @@ class FloatBufferAttribute(
 
         for (i in 0 until itemSize) {
             buffer[index1 + i] = attribute.buffer[index2 + i]
+        }
+
+        return this
+    }
+
+    /**
+     * Sets this vector's x and y values from the attribute.
+     * @param output the target vector.
+     * @param index index in the attribute.
+     */
+    fun toVector2(index: Int, output: Vector2 = Vector2()): Vector2 {
+        output.x = getX(index)
+        output.y = getY(index)
+
+        return output
+    }
+
+    fun toVector3(index: Int, output: Vector3 = Vector3()): Vector3 {
+        output.x = getX(index)
+        output.y = getY(index)
+        output.z = getZ(index)
+
+        return output
+    }
+
+    fun toVector4(index: Int, output: Vector4 = Vector4()): Vector4 {
+        output.x = getX(index)
+        output.y = getY(index)
+        output.z = getZ(index)
+        output.w = getW(index)
+
+        return output
+    }
+
+    fun toBox3(output: Box3): Box3 {
+        var minX = Float.POSITIVE_INFINITY
+        var minY = Float.POSITIVE_INFINITY
+        var minZ = Float.POSITIVE_INFINITY
+
+        var maxX = Float.NEGATIVE_INFINITY
+        var maxY = Float.NEGATIVE_INFINITY
+        var maxZ = Float.NEGATIVE_INFINITY
+
+        for (i in 0 until count) {
+            val x = getX(i)
+            val y = getY(i)
+            val z = getZ(i)
+
+            if (x < minX) minX = x
+            if (y < minY) minY = y
+            if (z < minZ) minZ = z
+
+            if (x > maxX) maxX = x
+            if (y > maxY) maxY = y
+            if (z > maxZ) maxZ = z
+        }
+
+        output.min.set(minX, minY, minZ)
+        output.max.set(maxX, maxY, maxZ)
+
+        return output
+    }
+
+    fun applyMatrix3(matrix: Matrix3): FloatBufferAttribute {
+        val v1 = Vector3()
+
+        for (i in 0 until count) {
+            v1.x = getX(i)
+            v1.y = getY(i)
+            v1.z = getZ(i)
+
+            v1.applyMatrix3(matrix)
+
+            setXYZ(i, v1.x, v1.y, v1.z)
+        }
+
+        return this
+    }
+
+    fun applyMatrix4(matrix: Matrix4): FloatBufferAttribute {
+        val v1 = Vector3()
+        for (i in 0 until count) {
+            v1.x = getX(i)
+            v1.y = getY(i)
+            v1.z = getZ(i)
+
+            v1.applyMatrix4(matrix)
+
+            setXYZ(i, v1.x, v1.y, v1.z)
         }
 
         return this

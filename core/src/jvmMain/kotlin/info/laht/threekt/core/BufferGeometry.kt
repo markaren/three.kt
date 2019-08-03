@@ -186,14 +186,14 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
      */
     fun applyMatrix(matrix: Matrix4): BufferGeometry {
         this.attributes.position?.also { position ->
-            matrix.applyToBufferAttribute(position)
+            position.applyMatrix4(matrix)
             position.needsUpdate = true
         }
 
         this.attributes.normal?.also { normal ->
             val normalMatrix = Matrix3().getNormalMatrix(matrix)
 
-            normalMatrix.applyToBufferAttribute(normal)
+            normal.applyMatrix3(normalMatrix)
             normal.needsUpdate = true
         }
 
@@ -202,7 +202,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
             val normalMatrix = Matrix3().getNormalMatrix(matrix)
 
             // Tangent is vec4, but the '.w' component is a sign value (+1/-1).
-            normalMatrix.applyToBufferAttribute(tangent)
+            tangent.applyMatrix3(normalMatrix)
             tangent.needsUpdate = true
         }
 
@@ -231,7 +231,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
         val position = this.attributes.position
         if (position != null) {
-            bb.setFromBufferAttribute(position)
+            position.toBox3(bb)
 
         } else {
             bb.makeEmpty()
@@ -261,7 +261,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
             // first, find the center of the bounding sphere
             val center = sphere.center
 
-            box.setFromBufferAttribute(position)
+            position.toBox3(box)
             box.getCenter(center)
 
             // second, try to find a boundingSphere with a radius smaller than the
@@ -269,7 +269,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
             var maxRadiusSq = 0.toFloat()
             for (i in 0 until position.count) {
-                vector.fromBufferAttribute(position, i)
+                position.toVector3(i, vector)
                 maxRadiusSq = max(maxRadiusSq, center.distanceToSquared(vector))
             }
 
@@ -334,9 +334,9 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
                     vB = indices[i + 1] * 3
                     vC = indices[i + 2] * 3
 
-                    pA.fromBufferAttribute(positions, vA)
-                    pB.fromBufferAttribute(positions, vB)
-                    pC.fromBufferAttribute(positions, vC)
+                    positions.toVector3(vA, pA)
+                    positions.toVector3(vB, pB)
+                    positions.toVector3(vC, pC)
 
                     cb.subVectors(pC, pB)
                     ab.subVectors(pA, pB)
@@ -361,9 +361,9 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
                 // non-indexed elements (unconnected triangle soup)
                 for (i in 0 until positions.size step 9) {
 
-                    pA.fromBufferAttribute(positions, i)
-                    pB.fromBufferAttribute(positions, i + 3)
-                    pC.fromBufferAttribute(positions, i + 6)
+                    positions.toVector3(i, pA)
+                    positions.toVector3(i + 3, pB)
+                    positions.toVector3(i + 6, pC)
 
                     cb.subVectors(pC, pB)
                     ab.subVectors(pA, pB)
