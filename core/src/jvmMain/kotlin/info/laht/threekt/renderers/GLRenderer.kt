@@ -36,7 +36,7 @@ class GLRenderer(
     private val textures = GLTextures(state, properties, capabilities, info)
     private val attributes = GLAttributes()
     private val geometries = GLGeometries(attributes, info)
-    private val objects = GLObjects(geometries, info)
+    internal val objects = GLObjects(geometries, info)
     private val programCache = GLPrograms(this, capabilities)
     private val renderLists = GLRenderLists()
     private val renderStates = GLRenderStates()
@@ -114,7 +114,7 @@ class GLRenderer(
     private val projScreenMatrix = Matrix4()
     private val vector3 = Vector3()
 
-    val shadowMap = GLShadowMap(this, objects, capabilities.maxTextureSize)
+    val shadowMap = GLShadowMap(this, capabilities.maxTextureSize)
 
     init {
 

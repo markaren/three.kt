@@ -5,7 +5,7 @@ import info.laht.threekt.core.Event
 import info.laht.threekt.core.EventLister
 import info.laht.threekt.scenes.Scene
 
-internal class GLRenderStates internal constructor() {
+internal class GLRenderStates {
 
     private var renderStates = mutableMapOf<Int, MutableMap<Int, GLRenderState>>()
 
