@@ -1,5 +1,40 @@
 package info.laht.threekt.input
 
+interface MouseListener {
+
+    fun onMouseDown(event: MouseEvent)
+
+    fun onMouseUp(event: MouseEvent)
+
+    fun onMouseMove(event: MouseEvent)
+
+    fun onMouseWheel(event: MouseWheelEvent)
+}
+
+abstract class MouseAdapter : MouseListener {
+
+    override fun onMouseDown(event: MouseEvent) {}
+
+    override fun onMouseUp(event: MouseEvent) {}
+
+    override fun onMouseMove(event: MouseEvent) {}
+
+    override fun onMouseWheel(event: MouseWheelEvent) {}
+
+}
+
+
+class MouseWheelEvent(
+    val deltaX: Float,
+    val deltaY: Float
+) {
+
+    override fun toString(): String {
+        return "MouseWheelEvent(deltaX=$deltaX, deltaY=$deltaY)"
+    }
+
+}
+
 class MouseEvent {
 
     var clientX = 0
@@ -27,8 +62,3 @@ class MouseEvent {
     }
 
 }
-
-class MouseWheelEvent(
-    val deltaX: Float,
-    val deltaY: Float
-)

@@ -7,9 +7,7 @@ import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.EventDispatcher
 import info.laht.threekt.core.EventDispatcherImpl
-import info.laht.threekt.input.KeyEvent
-import info.laht.threekt.input.MouseEvent
-import info.laht.threekt.input.MouseWheelEvent
+import info.laht.threekt.input.*
 import info.laht.threekt.math.*
 import kotlin.math.*
 
@@ -100,90 +98,11 @@ class OrbitControls(
     private var state = State.NONE
 
     init {
+
         update()
 
-        canvas.onKeyPressed = { event: KeyEvent ->
-            if (enabled && enableKeys && enablePan) {
-                handleKeyDown(event)
-            }
-        }
-
-        canvas.onMouseWheel = { event ->
-            if (enabled && enableZoom && !(state != State.NONE && state != State.ROTATE)) {
-                handleMouseWheel(event)
-            }
-        }
-
-        canvas.onMouseDown = { event ->
-
-            if (enabled) {
-
-                when (event.button) {
-                    MouseButtons.LEFT -> {
-                        if (enableRotate) {
-                            handleMouseDownRotate(event)
-                            state = State.ROTATE
-                        }
-                    }
-                    MouseButtons.MIDDLE -> {
-                        if (enableZoom) {
-                            handleMouseDownDolly(event)
-                            state = State.DOLLY
-                        }
-                    }
-                    MouseButtons.RIGHT -> {
-                        if (enablePan) {
-                            handleMouseDownRotate(event)
-                            handleMouseDownPan(event)
-                            state = State.PAN
-                        }
-                    }
-                }
-
-                if (state != State.NONE) {
-
-                    canvas.onMouseMove = { event ->
-
-                        if (enabled) {
-
-                            when (state) {
-                                State.ROTATE -> {
-                                    if (enableRotate) {
-                                        handleMouseMoveRotate(event)
-                                    }
-                                }
-                                State.DOLLY -> {
-                                    if (enableZoom) {
-                                        handleMouseMoveDolly(event)
-                                    }
-                                }
-                                State.PAN -> {
-                                    if (enablePan)
-                                        handleMouseMovePan(event)
-                                }
-                                State.NONE -> TODO()
-                            }
-
-                        }
-                    }
-
-                    canvas.onMouseUp = { event ->
-
-                        if (enabled) {
-                            canvas.onMouseMove = null
-                            canvas.onMouseUp = null
-                            dispatchEvent("end", this)
-                            state = State.NONE
-                        }
-                    }
-
-                    dispatchEvent("start", this)
-
-                }
-
-            }
-
-        }
+        canvas.addKeyListener(MyKeyListener())
+        canvas.addMouseListener(MyMouseListener())
 
     }
 
@@ -585,6 +504,105 @@ class OrbitControls(
 
     }
 
+    private inner class MyKeyListener : KeyListener {
+
+        override fun onKeyPressed(event: KeyEvent) {
+            if (enabled && enableKeys && enablePan) {
+                handleKeyDown(event)
+            }
+        }
+    }
+
+    private inner class MyMouseListener : MouseAdapter() {
+
+        override fun onMouseDown(event: MouseEvent) {
+            if (enabled) {
+                when (event.button) {
+                    MouseButtons.LEFT -> {
+                        if (enableRotate) {
+                            handleMouseDownRotate(event)
+                            state = State.ROTATE
+                        }
+                    }
+                    MouseButtons.MIDDLE -> {
+                        if (enableZoom) {
+                            handleMouseDownDolly(event)
+                            state = State.DOLLY
+                        }
+                    }
+                    MouseButtons.RIGHT -> {
+                        if (enablePan) {
+                            handleMouseDownRotate(event)
+                            handleMouseDownPan(event)
+                            state = State.PAN
+                        }
+                    }
+                }
+
+                if (state != State.NONE) {
+
+                    val mouseMoveListener = MyMouseMoveListener()
+                    canvas.addMouseListener(mouseMoveListener)
+                    canvas.addMouseListener(MyMouseUpListener(mouseMoveListener))
+
+                    dispatchEvent("start", this)
+
+                }
+
+            }
+        }
+
+        override fun onMouseWheel(event: MouseWheelEvent) {
+            if (enabled && enableZoom && !(state != State.NONE && state != State.ROTATE)) {
+                handleMouseWheel(event)
+            }
+        }
+
+    }
+
+    private inner class MyMouseMoveListener : MouseAdapter() {
+
+        override fun onMouseMove(event: MouseEvent) {
+            if (enabled) {
+
+                when (state) {
+                    State.ROTATE -> {
+                        if (enableRotate) {
+                            handleMouseMoveRotate(event)
+                        }
+                    }
+                    State.DOLLY -> {
+                        if (enableZoom) {
+                            handleMouseMoveDolly(event)
+                        }
+                    }
+                    State.PAN -> {
+                        if (enablePan)
+                            handleMouseMovePan(event)
+                    }
+                    State.NONE -> TODO()
+                }
+
+            }
+        }
+    }
+
+    private inner class MyMouseUpListener(
+        private val moveListener: MyMouseMoveListener
+    ) : MouseAdapter() {
+
+        override fun onMouseUp(event: MouseEvent) {
+            if (enabled) {
+
+                canvas.removeMouseListener(moveListener)
+                canvas.removeMouseListener(this)
+
+                dispatchEvent("end", this)
+                state = State.NONE
+
+            }
+        }
+    }
 
 }
 

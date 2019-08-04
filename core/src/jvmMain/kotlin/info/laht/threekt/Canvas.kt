@@ -1,9 +1,6 @@
 package info.laht.threekt
 
-import info.laht.threekt.input.KeyAction
-import info.laht.threekt.input.KeyEvent
-import info.laht.threekt.input.MouseEvent
-import info.laht.threekt.input.MouseWheelEvent
+import info.laht.threekt.input.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.*
@@ -14,23 +11,19 @@ class Canvas @JvmOverloads constructor(
     options: Options = Options()
 ) : Closeable {
 
+    val ___pointer___: Long
+
     val width: Int = options.width
     val height: Int = options.height
-
-    val ___pointer___: Long
 
     val aspect: Float
         get() = width.toFloat() / height
 
-    var onKeyPressed: ((KeyEvent) -> Unit)? = null
-    var onMouseWheel: ((MouseWheelEvent) -> Unit)? = null
-    var onMouseDown: ((MouseEvent) -> Unit)? = null
-    var onMouseUp: ((MouseEvent) -> Unit)? = null
-    var onMouseMove: ((MouseEvent) -> Unit)? = null
-
     private val mouseEvent = MouseEvent()
-
     private var debugProc: Callback? = null
+
+    private var keyListeners: MutableList<KeyListener>? = null
+    private var mouseListeners: MutableList<MouseListener>? = null
 
     init {
         val errorCallback = GLFWErrorCallback.createPrint(System.err)
@@ -43,6 +36,26 @@ class Canvas @JvmOverloads constructor(
 
     fun enableDebugCallback() {
         debugProc = GLUtil.setupDebugMessageCallback()
+    }
+
+    fun addKeyListener(listener: KeyListener) {
+        keyListeners?.add(listener) ?: run {
+            keyListeners = mutableListOf(listener)
+        }
+    }
+
+    fun addMouseListener(listener: MouseListener) {
+        mouseListeners?.add(listener) ?: run {
+            mouseListeners = mutableListOf(listener)
+        }
+    }
+
+    fun removeKeyListener(listener: KeyListener): Boolean {
+        return keyListeners?.remove(listener) ?: false
+    }
+
+    fun removeMouseListener(listener: MouseListener): Boolean {
+        return mouseListeners?.remove(listener) ?: false
     }
 
     override fun close() {
@@ -65,25 +78,35 @@ class Canvas @JvmOverloads constructor(
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(window, true) // We will detect this in the rendering loop
             } else {
-                onKeyPressed?.invoke(KeyEvent(key, action.toKeyAction()))
+                keyListeners?.also { listeners ->
+                    val evt = KeyEvent(key, action.toKeyAction())
+                    listeners.forEach {
+                        it.onKeyPressed(evt)
+                    }
+                }
             }
         }
 
         glfwSetMouseButtonCallback(window) { _, button, action, _ ->
             mouseEvent.button = button
+            val listeners = mouseListeners?.toMutableList() // avoid concurrent modification exception
             when (action) {
-                0 -> onMouseUp?.invoke(mouseEvent)
-                1 -> onMouseDown?.invoke(mouseEvent)
+                0 -> listeners?.forEach { it.onMouseUp(mouseEvent) }
+                1 -> listeners?.forEach { it.onMouseDown(mouseEvent) }
             }
         }
 
         glfwSetCursorPosCallback(window) { _, xpos, ypos ->
             mouseEvent.updateCoordinates(xpos.toInt(), ypos.toInt())
-            onMouseMove?.invoke(mouseEvent)
+            mouseListeners?.forEach { it.onMouseMove(mouseEvent) }
+
         }
 
         glfwSetScrollCallback(window) { _, xoffset, yoffset ->
-            onMouseWheel?.invoke(MouseWheelEvent(xoffset.toFloat(), yoffset.toFloat()))
+            mouseListeners?.also { listeners ->
+                val evt = MouseWheelEvent(xoffset.toFloat(), yoffset.toFloat())
+                listeners.forEach { it.onMouseWheel(evt) }
+            }
         }
 
         // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
