@@ -6,6 +6,7 @@ import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.examples.textures.TextureExample
+import info.laht.threekt.extras.objects.Sky
 import info.laht.threekt.extras.objects.Water
 import info.laht.threekt.geometries.PlaneGeometry
 import info.laht.threekt.geometries.SphereBufferGeometry
@@ -28,6 +29,8 @@ object WaterExample {
 
         Canvas(Canvas.Options().apply {
             antialiasing = 4
+            width = 1280
+            height = 960
         }).use { canvas ->
 
             canvas.enableDebugCallback()
@@ -35,23 +38,31 @@ object WaterExample {
             val scene = Scene().apply {
                 setBackground(Color(Color.aliceblue).multiplyScalar(0.8f))
             }
-            val renderer = GLRenderer(canvas.width, canvas.height)
-
-            val camera = PerspectiveCamera(45, canvas.aspect, 1, 2000).apply {
-                position.set(0f, 7.5f, 16.0f)
+            val renderer = GLRenderer(canvas.width, canvas.height).apply {
+                checkShaderErrors = true
             }
-            val controls = OrbitControls(camera, canvas)
 
-            val planeGeometry = PlaneGeometry(1000f, 1000f)
-
-            val texture = TextureLoader.load(File(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file)).also {
-                it.wrapS = TextureWrapping.Repeat
-                it.wrapT = TextureWrapping.Repeat
+            val camera = PerspectiveCamera(45, canvas.aspect, 1, 200000).apply {
+                position.set(-250f, 500f, 2000f)
             }
+            OrbitControls(camera, canvas)
 
             val light = DirectionalLight(0xffffff, 0.8).also {
                 scene.add(it)
             }
+
+            val sky = Sky()
+            sky.scale.setScalar(45000)
+            scene.add(sky)
+
+            val planeGeometry = PlaneGeometry(10000f, 10000f)
+
+            val texture =
+                TextureLoader.load(File(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file))
+                    .also {
+                        it.wrapS = TextureWrapping.Repeat
+                        it.wrapT = TextureWrapping.Repeat
+                    }
 
             val water = Water(
                 planeGeometry, Water.Options(
@@ -69,7 +80,7 @@ object WaterExample {
                 scene.add(it)
             }
 
-            val box = Mesh(SphereBufferGeometry(1f), MeshPhongMaterial().apply {
+            val sphere = Mesh(SphereBufferGeometry(100f), MeshPhongMaterial().apply {
                 color.set(0x00ff00)
                 emissive.set(0x333333)
             }).also {
@@ -83,7 +94,7 @@ object WaterExample {
                 val wTime = water.uniforms["time"]!!.value as Float
                 water.uniforms["time"]!!.value = wTime + (0.6f*clock.getDelta())
 
-                box.position.y = 5 * sin(TWO_PI* 0.1f * clock.getElapsedTime())
+                sphere.position.y = 50 * sin(TWO_PI * 0.1f * clock.getElapsedTime())
 
                 renderer.render(scene, camera)
 
