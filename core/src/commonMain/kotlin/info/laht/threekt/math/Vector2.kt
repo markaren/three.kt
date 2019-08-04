@@ -12,7 +12,7 @@ data class Vector2(
 
     constructor() : this(0f, 0f)
 
-    constructor(x: Int, y: Int) : this(x.toFloat(), y.toFloat())
+    constructor(x: Number, y: Number) : this(x.toFloat(), y.toFloat())
 
     var width: Float
         get() {
