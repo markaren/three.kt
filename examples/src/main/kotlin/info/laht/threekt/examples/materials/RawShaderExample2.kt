@@ -1,9 +1,10 @@
 package info.laht.threekt.examples.materials
 
 import info.laht.threekt.Canvas
+import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.Uniform
-import info.laht.threekt.geometries.PlaneBufferGeometry
+import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.materials.RawShaderMaterial
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.objects.Mesh
@@ -20,19 +21,17 @@ object RawShaderExample2 {
         }).use { canvas ->
 
             val scene = Scene()
-            val camera = PerspectiveCamera(50, canvas.aspect, 1, 1000)
-            camera.position.z = 20f
-            val renderer = GLRenderer(canvas.width, canvas.height).apply {
-                checkShaderErrors = true
-            }
+            val camera = PerspectiveCamera(50, canvas.aspect, 1, 10000)
+            val renderer = GLRenderer(canvas.width, canvas.height)
 
-            val geometry = PlaneBufferGeometry(100f, 100f)
+            val geometry = BoxBufferGeometry(10000f)
 
             val material = RawShaderMaterial().also {
                 it.uniforms["iTime"] = Uniform(null)
                 it.uniforms["iResolution"] = Uniform(Vector2(canvas.width, canvas.height))
                 it.vertexShader = vertexShader
                 it.fragmentShader = fragmentShader
+                it.side = Side.Double
             }
 
             val mesh = Mesh(geometry, material)
