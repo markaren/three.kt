@@ -272,7 +272,7 @@ object ShaderLib {
         "equirect" to equirect,
         "distanceRGBA" to distanceRGBA,
         "shadow" to shadow,
-        "physial" to physical
+        "physical" to physical
 
     )
 
