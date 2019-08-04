@@ -10,12 +10,11 @@ Kotlin/JVM port of the popular [three.js](http://threejs.org) 3D library ([r106]
 
 Be warned, while the basics works, such as:
 * Primitives, Points and TubeGeometry (Only BufferGeometries are supported)
-* All materials
+* All materials and lights
 * OrbitControls
-* Ambient, Directional, Point and Spot lights
 * RenderTarget, 2D textures
 * OBJ and STL loaders
-* Other stuff like Reflector (mirror) and water
+* Other stuff like Reflector (mirror), sky and water
  
 a lot of features are still missing and the API can change rapidly.
 
