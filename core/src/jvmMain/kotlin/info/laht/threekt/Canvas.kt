@@ -10,24 +10,14 @@ import org.lwjgl.opengl.*
 import org.lwjgl.system.Callback
 import java.io.Closeable
 
-class CanvasOptions(
-    var width: Int = 800,
-    var height: Int = 600,
-
-    var antialiasing: Int = 0,
-    var vsync: Boolean = true,
-
-    var title: String = "Three.kt"
-)
-
 class Canvas @JvmOverloads constructor(
-    options: CanvasOptions = CanvasOptions()
+    options: Options = Options()
 ) : Closeable {
 
     val width: Int = options.width
     val height: Int = options.height
 
-    private val pointer: Long
+    val ___pointer___: Long
 
     val aspect: Float
         get() = width.toFloat() / height
@@ -48,15 +38,11 @@ class Canvas @JvmOverloads constructor(
         if (!glfwInit()) {
             throw IllegalStateException("Unable to initialize GLFW")
         }
-        pointer = createWindow(options)
+        ___pointer___ = createWindow(options)
     }
 
     fun enableDebugCallback() {
         debugProc = GLUtil.setupDebugMessageCallback()
-    }
-
-    fun shouldClose(): Boolean {
-        return glfwWindowShouldClose(pointer)
     }
 
     override fun close() {
@@ -64,7 +50,7 @@ class Canvas @JvmOverloads constructor(
         glfwTerminate()
     }
 
-    private fun createWindow(options: CanvasOptions): Long {
+    private fun createWindow(options: Options): Long {
 
         if (options.antialiasing > 0) {
             glfwWindowHint(GLFW_SAMPLES, options.antialiasing)
@@ -117,10 +103,29 @@ class Canvas @JvmOverloads constructor(
         return window
     }
 
-    internal fun tick() {
-        glfwSwapBuffers(pointer)
-        glfwPollEvents()
+    fun requestAnimationFrame(f: () -> Unit) {
+
+        if (!glfwWindowShouldClose(___pointer___)) {
+
+            glfwSwapBuffers(___pointer___)
+            glfwPollEvents()
+
+            f.invoke()
+
+        }
+
     }
+
+    class Options(
+        var width: Int = 800,
+        var height: Int = 600,
+
+        var antialiasing: Int = 0,
+        var vsync: Boolean = true,
+
+        var title: String = "Three.kt"
+    )
+
 
 }
 

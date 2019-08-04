@@ -18,7 +18,7 @@ object BasicExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
@@ -29,11 +29,9 @@ object BasicExample {
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000).also {
                 it.translateZ(10f)
             }
-            val renderer = GLRenderer(canvas).apply {
-                checkShaderErrors = true
-            }
+            val renderer = GLRenderer(canvas.width, canvas.height)
 
-            val controls = OrbitControls(camera, canvas)
+            OrbitControls(camera, canvas)
 
             val plane = Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
@@ -75,7 +73,7 @@ object BasicExample {
             }
 
             val clock = Clock()
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 renderer.render(scene, camera)
 
@@ -85,7 +83,11 @@ object BasicExample {
 
                 cylinder.rotation.z += 0.5f * dt
 
+                canvas.requestAnimationFrame { render() }
+
             }
+
+            render()
 
         }
 

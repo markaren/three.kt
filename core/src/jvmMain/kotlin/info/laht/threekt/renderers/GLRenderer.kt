@@ -29,7 +29,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 class GLRenderer(
-    private val canvas: Canvas
+    width: Int,
+    height: Int
 ) {
 
     var checkShaderErrors = false
@@ -101,8 +102,10 @@ class GLRenderer(
     private val currentScissor = Vector4()
     private var currentScissorTest: Boolean? = null
 
-    private val width = canvas.width
-    private val height = canvas.height
+    var width = width
+        private set
+    var height = height
+        private set
 
     private var pixelRatio = 1
 
@@ -443,7 +446,7 @@ class GLRenderer(
 
     }
 
-    fun render(scene: Scene, camera: Camera, swapBuffers: Boolean = true) {
+    fun render(scene: Scene, camera: Camera) {
 
         currentGeometryProgram.geometry = null
         currentGeometryProgram.program = null
@@ -537,10 +540,6 @@ class GLRenderer(
 
         this.currentRenderList = null
         this.currentRenderState = null
-
-        if (swapBuffers) {
-            canvas.tick()
-        }
 
     }
 

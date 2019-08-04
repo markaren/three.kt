@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.extra
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.TextureWrapping
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
@@ -27,7 +26,7 @@ object WaterExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
@@ -36,7 +35,7 @@ object WaterExample {
             val scene = Scene().apply {
                 setBackground(Color(Color.aliceblue).multiplyScalar(0.8f))
             }
-            val renderer = GLRenderer(canvas)
+            val renderer = GLRenderer(canvas.width, canvas.height)
 
             val camera = PerspectiveCamera(45, canvas.aspect, 1, 2000).apply {
                 position.set(0f, 7.5f, 16.0f)
@@ -79,8 +78,7 @@ object WaterExample {
             }
 
             val clock = Clock()
-            while (!canvas.shouldClose()) {
-
+            fun render() {
 
                 val wTime = water.uniforms["time"]!!.value as Float
                 water.uniforms["time"]!!.value = wTime + (0.6f*clock.getDelta())
@@ -89,7 +87,11 @@ object WaterExample {
 
                 renderer.render(scene, camera)
 
+                canvas.requestAnimationFrame { render() }
+
             }
+
+            render()
 
         }
 

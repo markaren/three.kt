@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.extra
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
@@ -20,12 +19,12 @@ object TubeGeometryExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
             val scene = Scene()
-            val renderer = GLRenderer(canvas)
+            val renderer = GLRenderer(canvas.width, canvas.height)
 
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 100).apply {
                 position.z = 25f
@@ -43,19 +42,22 @@ object TubeGeometryExample {
             }
 
             solidTube.clone().also {
-                it.material = (solidTube.material.clone() as MeshBasicMaterial).also {
-                    it.wireframe = true
-                    it.color.set(0xffffff)
+                it.material = (solidTube.material.clone() as MeshBasicMaterial).also { m ->
+                    m.wireframe = true
+                    m.color.set(0xffffff)
                 }
                 scene.add(it)
             }
 
 
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 renderer.render(scene, camera)
+                canvas.requestAnimationFrame { render() }
 
             }
+
+            render()
 
         }
 

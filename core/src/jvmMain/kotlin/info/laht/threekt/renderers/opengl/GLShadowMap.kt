@@ -181,7 +181,7 @@ class GLShadowMap internal constructor(
                     when (shadowCamera) {
                         is PerspectiveCamera -> shadowCamera.updateProjectionMatrix()
                         is OrthographicCamera -> shadowCamera.updateProjectionMatrix()
-                        else -> throw IllegalStateException()
+                        else -> throw IllegalStateException("Illegal camera type: $shadowCamera")
                     }
 
                 }

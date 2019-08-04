@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.helpers
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.helpers.AxesHelper
@@ -15,7 +14,7 @@ object GridHelperExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
@@ -24,7 +23,7 @@ object GridHelperExample {
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000).also {
                 it.translateZ(10f).translateY(5f)
             }
-            val renderer = GLRenderer(canvas)
+            val renderer = GLRenderer(canvas.width, canvas.height)
             OrbitControls(camera, canvas)
 
             GridHelper(
@@ -40,11 +39,14 @@ object GridHelperExample {
                 scene.add(it)
             }
 
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 renderer.render(scene, camera)
+                canvas.requestAnimationFrame { render() }
 
             }
+
+            render()
 
         }
 

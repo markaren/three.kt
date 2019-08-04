@@ -181,7 +181,7 @@ internal class GLLights {
                     pointLength++
                 }
                 is HemisphereLight -> {
-                    var uniforms = cache[light] as HemisphereLightUniforms
+                    val uniforms = cache[light] as HemisphereLightUniforms
 
                     uniforms.direction.setFromMatrixPosition( light.matrixWorld )
                     uniforms.direction.transformDirection( viewMatrix )

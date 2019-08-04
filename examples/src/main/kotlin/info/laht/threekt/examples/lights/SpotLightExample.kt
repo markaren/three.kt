@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.lights
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
@@ -23,7 +22,7 @@ object SpotLightExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
@@ -32,7 +31,7 @@ object SpotLightExample {
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000).apply {
                 position.z = 10f
             }
-            val renderer = GLRenderer(canvas).apply {
+            val renderer = GLRenderer(canvas.width, canvas.height).apply {
                 checkShaderErrors = true
             }
 
@@ -84,12 +83,14 @@ object SpotLightExample {
             }
 
             val clock = Clock()
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 renderer.render(scene, camera)
 
                 val dt = clock.getDelta()
                 box.rotation.x += 0.5f * dt
+
+                canvas.requestAnimationFrame { render() }
 
             }
 

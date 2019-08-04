@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.objects
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.BufferGeometry
@@ -47,13 +46,13 @@ object PointsExampleWaves {
     fun main(args: Array<String>) {
 
         Canvas(
-            CanvasOptions(
+            Canvas.Options(
                 vsync = true
             )
         ).use { canvas ->
 
             val scene = Scene()
-            val renderer = GLRenderer(canvas)
+            val renderer = GLRenderer(canvas.width, canvas.height)
 
             val camera = PerspectiveCamera(75, canvas.aspect, 1, 100000).apply {
                 position.z = 1000f
@@ -100,7 +99,7 @@ object PointsExampleWaves {
 
             var count = 0f
             val clock = Clock()
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 camera.lookAt(scene.position)
 
@@ -129,7 +128,11 @@ object PointsExampleWaves {
 
                 count +=  10f * clock.getDelta()
 
+                canvas.requestAnimationFrame { render() }
+
             }
+
+            render()
 
         }
 

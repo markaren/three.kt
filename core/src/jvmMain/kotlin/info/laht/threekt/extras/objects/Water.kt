@@ -191,7 +191,7 @@ class Water(
 
         renderer.setRenderTarget(renderTarget)
         renderer.clear()
-        renderer.render(scene, mirrorCamera, false)
+        renderer.render(scene, mirrorCamera)
 
         visible = true
 

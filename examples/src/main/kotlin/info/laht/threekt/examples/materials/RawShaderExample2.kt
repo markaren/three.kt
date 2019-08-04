@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.materials
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.geometries.PlaneBufferGeometry
@@ -13,7 +12,54 @@ import info.laht.threekt.scenes.Scene
 
 object RawShaderExample2 {
 
-    private val vertexShader = """
+    @JvmStatic
+    fun main(args: Array<String>) {
+
+        Canvas(Canvas.Options().apply {
+            antialiasing = 4
+        }).use { canvas ->
+
+            val scene = Scene()
+            val camera = PerspectiveCamera(50, canvas.aspect, 1, 1000)
+            camera.position.z = 20f
+            val renderer = GLRenderer(canvas.width, canvas.height).apply {
+                checkShaderErrors = true
+            }
+
+            val geometry = PlaneBufferGeometry(100f, 100f)
+
+            val material = RawShaderMaterial().also {
+                it.uniforms["iTime"] = Uniform(null)
+                it.uniforms["iResolution"] = Uniform(Vector2(canvas.width, canvas.height))
+                it.vertexShader = vertexShader
+                it.fragmentShader = fragmentShader
+            }
+
+            val mesh = Mesh(geometry, material)
+            scene.add(mesh)
+
+            var value = 0f
+            fun render() {
+
+                value += 0.005f
+                material.uniforms["iTime"]!!.value = value * 5f
+
+                renderer.render(scene, camera)
+
+                canvas.requestAnimationFrame { render() }
+
+            }
+
+            render()
+
+        }
+
+    }
+
+}
+
+
+private val vertexShader = """
 
         uniform mat4 modelViewMatrix; // optional
         uniform mat4 projectionMatrix; // optional
@@ -24,7 +70,7 @@ object RawShaderExample2 {
 
         """.trimIndent()
 
-    private val fragmentShader = """
+private val fragmentShader = """
 
     /*
      * "Seascape" by Alexander Alekseev aka TDM - 2014
@@ -215,45 +261,3 @@ object RawShaderExample2 {
     }
 
     """.trimIndent()
-
-    @JvmStatic
-    fun main(args: Array<String>) {
-
-        Canvas(CanvasOptions().apply {
-            antialiasing = 4
-        }).use { canvas ->
-
-            val scene = Scene()
-            val camera = PerspectiveCamera(50, canvas.aspect, 1, 1000)
-            camera.position.z = 20f
-            val renderer = GLRenderer(canvas).apply {
-                checkShaderErrors = true
-            }
-
-            val geometry = PlaneBufferGeometry(100f, 100f)
-
-            val material = RawShaderMaterial().also {
-                it.uniforms["iTime"] = Uniform(null)
-                it.uniforms["iResolution"] = Uniform(Vector2(canvas.width, canvas.height))
-                it.vertexShader = vertexShader
-                it.fragmentShader = fragmentShader
-            }
-
-            val mesh = Mesh(geometry, material)
-            scene.add(mesh)
-
-            var value = 0f
-            while (!canvas.shouldClose()) {
-
-                value += 0.005f
-                material.uniforms["iTime"]!!.value = value * 5f
-
-                renderer.render(scene, camera)
-
-            }
-
-        }
-
-    }
-
-}

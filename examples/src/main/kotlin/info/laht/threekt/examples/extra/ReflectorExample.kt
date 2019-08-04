@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.extra
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.extras.objects.Reflector
@@ -21,7 +20,7 @@ object ReflectorExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
@@ -30,7 +29,7 @@ object ReflectorExample {
             val scene = Scene().apply {
                 setBackground(Color.aliceblue)
             }
-            val renderer = GLRenderer(canvas).apply {
+            val renderer = GLRenderer(canvas.width, canvas.height).apply {
                 checkShaderErrors = true
             }
 
@@ -74,11 +73,14 @@ object ReflectorExample {
 
             }
 
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 renderer.render(scene, camera)
+                canvas.requestAnimationFrame { render() }
 
             }
+
+            render()
 
         }
 

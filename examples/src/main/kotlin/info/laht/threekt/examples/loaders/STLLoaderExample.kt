@@ -1,13 +1,11 @@
 package info.laht.threekt.examples.loaders
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.loaders.STLLoader
-import info.laht.threekt.materials.MeshLambertMaterial
 import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.objects.Mesh
@@ -20,12 +18,12 @@ object STLLoaderExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
             val scene = Scene()
-            val renderer = GLRenderer(canvas)
+            val renderer = GLRenderer(canvas.width, canvas.height)
 
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 100).apply {
                 position.z = 5f
@@ -35,8 +33,8 @@ object STLLoaderExample {
             STLLoader().load(STLLoaderExample::class.java.classLoader.getResource("models/stl/pr2_head_tilt.stl").file)
                 .also { stl ->
 
-                    stl.rotateX(-PI.toFloat()/2)
-                    stl.rotateY(PI.toFloat()/2)
+                    stl.rotateX(-PI.toFloat() / 2)
+                    stl.rotateY(PI.toFloat() / 2)
                     stl.scale(2f)
 
                     val mesh = Mesh(stl, MeshPhongMaterial().apply {
@@ -50,8 +48,8 @@ object STLLoaderExample {
             STLLoader().load(STLLoaderExample::class.java.classLoader.getResource("models/stl/pr2_head_pan.stl").file)
                 .also { stl ->
 
-                    stl.rotateX(-PI.toFloat()/2)
-                    stl.rotateY(PI.toFloat()/2)
+                    stl.rotateX(-PI.toFloat() / 2)
+                    stl.rotateY(PI.toFloat() / 2)
                     stl.scale(2f)
 
                     val mesh = Mesh(stl, MeshPhongMaterial().apply {
@@ -66,7 +64,7 @@ object STLLoaderExample {
                 color.set(Color.orange)
             })
             plane.translateY(-0.13f)
-            plane.rotateX(-PI.toFloat()/2)
+            plane.rotateX(-PI.toFloat() / 2)
             scene.add(plane)
 
             val light1 = PointLight(intensity = 0.6f)
@@ -77,11 +75,14 @@ object STLLoaderExample {
             light2.position.set(-2f, 2f, 1f)
             scene.add(light2)
 
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 renderer.render(scene, camera)
+                canvas.requestAnimationFrame { render() }
 
             }
+
+            render()
 
         }
 

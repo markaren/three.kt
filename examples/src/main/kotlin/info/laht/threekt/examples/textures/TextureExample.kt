@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.textures
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.geometries.BoxGeometry
@@ -20,7 +19,7 @@ object TextureExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
@@ -29,7 +28,9 @@ object TextureExample {
             }
 
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)
-            val renderer = GLRenderer(canvas).apply {
+            camera.position.z = 10f
+
+            val renderer = GLRenderer(canvas.width, canvas.height).apply {
                 checkShaderErrors = true
             }
 
@@ -50,13 +51,14 @@ object TextureExample {
                 scene.add(it)
             }
 
-            camera.position.z = 10f
+            OrbitControls(camera, canvas)
 
-            val controls = OrbitControls(camera, canvas)
-
-            while (!canvas.shouldClose()) {
+            fun render() {
                 renderer.render(scene, camera)
+                canvas.requestAnimationFrame { render() }
             }
+
+            render()
 
         }
 

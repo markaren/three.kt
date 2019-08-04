@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.objects
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.Colors
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.BufferGeometry
@@ -19,7 +18,7 @@ object PointsExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
@@ -27,7 +26,7 @@ object PointsExample {
                 setBackground(0x050505)
                 fog = Fog(0x050505, 2000, 3500)
             }
-            val renderer = GLRenderer(canvas)
+            val renderer = GLRenderer(canvas.width, canvas.height)
 
             val camera = PerspectiveCamera(27, canvas.aspect, 5, 3500).apply {
                 position.z = 2750f
@@ -68,7 +67,7 @@ object PointsExample {
             scene.add(points)
 
             val clock = Clock()
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 val time = clock.getElapsedTime()
 
@@ -77,7 +76,11 @@ object PointsExample {
 
                 renderer.render(scene, camera)
 
+                canvas.requestAnimationFrame { render() }
+
             }
+
+            render()
 
         }
 

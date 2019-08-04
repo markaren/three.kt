@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.materials
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.BufferGeometry
@@ -15,38 +14,10 @@ import kotlin.random.Random
 
 object RawShaderExample {
 
-    private val vertexShader = """
-
-			uniform mat4 modelViewMatrix; // optional
-			uniform mat4 projectionMatrix; // optional
-			attribute vec3 position;
-			attribute vec4 color;
-			varying vec3 vPosition;
-			varying vec4 vColor;
-			void main()	{
-				vPosition = position;
-				vColor = color;
-				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-			}
-
-        """.trimIndent()
-
-    private val fragmentShader = """
-
-			uniform float time;
-			varying vec3 vPosition;
-			varying vec4 vColor;
-			void main()	{
-				vec4 color = vec4( vColor );
-				color.r += sin( vPosition.x * 10.0 + time ) * 0.5;
-				gl_FragColor = color;
-			}
-    """.trimIndent()
-
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
@@ -55,7 +26,7 @@ object RawShaderExample {
             }
             val camera = PerspectiveCamera(50, canvas.aspect, 1, 10)
             camera.position.z = 2f
-            val renderer = GLRenderer(canvas).apply {
+            val renderer = GLRenderer(canvas.width, canvas.height).apply {
                 checkShaderErrors = true
             }
 
@@ -96,7 +67,7 @@ object RawShaderExample {
             scene.add(mesh)
 
             var value = 0f
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 value += 0.005f
                 mesh.rotation.y = value
@@ -104,10 +75,42 @@ object RawShaderExample {
 
                 renderer.render(scene, camera)
 
+                canvas.requestAnimationFrame { render() }
+
             }
+
+            render()
 
         }
 
     }
 
 }
+
+private val vertexShader = """
+
+			uniform mat4 modelViewMatrix; // optional
+			uniform mat4 projectionMatrix; // optional
+			attribute vec3 position;
+			attribute vec4 color;
+			varying vec3 vPosition;
+			varying vec4 vColor;
+			void main()	{
+				vPosition = position;
+				vColor = color;
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			}
+
+        """.trimIndent()
+
+private val fragmentShader = """
+
+			uniform float time;
+			varying vec3 vPosition;
+			varying vec4 vColor;
+			void main()	{
+				vec4 color = vec4( vColor );
+				color.r += sin( vPosition.x * 10.0 + time ) * 0.5;
+				gl_FragColor = color;
+			}
+    """.trimIndent()

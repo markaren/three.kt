@@ -1,35 +1,27 @@
 package info.laht.threekt.examples.loaders
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.CanvasOptions
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
-import info.laht.threekt.geometries.PlaneBufferGeometry
-import info.laht.threekt.lights.AmbientLight
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.loaders.OBJLoader
-import info.laht.threekt.loaders.STLLoader
-import info.laht.threekt.materials.MeshBasicMaterial
-import info.laht.threekt.materials.MeshLambertMaterial
 import info.laht.threekt.materials.MeshPhongMaterial
-import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector3
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
-import kotlin.math.PI
 
 object OBJLoaderExample {
 
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(CanvasOptions().apply {
+        Canvas(Canvas.Options().apply {
             antialiasing = 4
         }).use { canvas ->
 
             val scene = Scene()
-            val renderer = GLRenderer(canvas)
+            val renderer = GLRenderer(canvas.width, canvas.height)
 
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 100).apply {
                 position.set(0,10,75)
@@ -65,11 +57,14 @@ object OBJLoaderExample {
             light3.position.set(0, 25f, -30f)
             scene.add(light3)
 
-            while (!canvas.shouldClose()) {
+            fun render() {
 
                 renderer.render(scene, camera)
+                canvas.requestAnimationFrame { render() }
 
             }
+
+            render()
 
         }
 
