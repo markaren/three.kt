@@ -32,30 +32,33 @@ Canvas().use { canvas ->
         setBackground(Color.aliceblue)
     }
 
-    val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)
-    val renderer = GLRenderer(canvas).apply {
-        checkShaderErrors = true
+    val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000).apply {
+        position.z = 5f
     }
+
+    val renderer = GLRenderer(canvas.width, canvas.height)
 
     val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
         color.set(0x00ff00)
-    }).also {
-        scene.add(it)
-    }
-
-    camera.position.z = 5f
+    })
+    scene.add(box)
     
-    val controls = OrbitControls(camera, canvas)
-
     val clock = Clock()
-    while (!canvas.shouldClose()) {
+    val controls = OrbitControls(camera, canvas)
+    fun render() {
+
         renderer.render(scene, camera)
         
         val dt = clock.getDelta()
         box.rotation.x += 1f * dt
         box.rotation.y += 1f * dt
+
+        canvas.requestAnimationFrame{ render() }
+
     }
-    
+
+    render()
+
 }
 ```
 
