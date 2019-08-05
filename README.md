@@ -63,11 +63,11 @@ Canvas().use { canvas ->
 
 ## Screenshots
 
-![seascape](screenshots/seascape.png)
-![seascape](screenshots/points.png)
-![seascape](screenshots/ocean.png)
-![seascape](screenshots/pointlights.png)
-![seascape](screenshots/textures.png)
+![seascape](https://raw.githubusercontent.com/markaren/three.kt/screenshots/seascape.png)
+![points](https://raw.githubusercontent.com/markaren/three.kt/screenshots/points.png)
+![ocean](https://raw.githubusercontent.com/markaren/three.kt/screenshots/ocean.png)
+![pointlights](https://raw.githubusercontent.com/markaren/three.kt/screenshots/pointlights.png)
+![textures](https://raw.githubusercontent.com/markaren/three.kt/screenshots/textures.png)
 
 ## Looking for the Kotlin/JS wrapper project?
 It has been renamed and moved to [here](https://github.com/markaren/three-kt-wrapper).
