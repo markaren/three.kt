@@ -20,9 +20,14 @@ object RawShaderExample2 {
             antialiasing = 4
         }).use { canvas ->
 
+
             val scene = Scene()
             val camera = PerspectiveCamera(50, canvas.aspect, 1, 10000)
             val renderer = GLRenderer(canvas.width, canvas.height)
+
+            canvas.onWindowResize = { w, h ->
+                renderer.setSize(w,h)
+            }
 
             val geometry = BoxBufferGeometry(10000f)
 

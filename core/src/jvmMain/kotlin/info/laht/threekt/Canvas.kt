@@ -25,6 +25,8 @@ class Canvas @JvmOverloads constructor(
     private var keyListeners: MutableList<KeyListener>? = null
     private var mouseListeners: MutableList<MouseListener>? = null
 
+    var onWindowResize: ((Int, Int) -> Unit)? = null
+
     init {
         val errorCallback = GLFWErrorCallback.createPrint(System.err)
         glfwSetErrorCallback(errorCallback)
@@ -70,8 +72,14 @@ class Canvas @JvmOverloads constructor(
         }
 
         // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
+        glfwWindowHint(GLFW_RESIZABLE, if (options.resizeable) GLFW_TRUE else GLFW_FALSE )
         val window = glfwCreateWindow(width, height, options.title, 0, 0)
+
+        if (options.resizeable) {
+            glfwSetWindowSizeCallback(window) { _, width, height ->
+                onWindowResize?.invoke(width, height)
+            }
+        }
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window) { _, key, _, action, _ ->
@@ -144,7 +152,9 @@ class Canvas @JvmOverloads constructor(
         var height: Int = 600,
 
         var antialiasing: Int = 0,
+
         var vsync: Boolean = true,
+        var resizeable: Boolean = true,
 
         var title: String = "Three.kt"
     )
