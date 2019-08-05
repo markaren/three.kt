@@ -104,7 +104,7 @@ object PointsExampleWaves {
 
             var count = 0f
             val clock = Clock()
-            fun render() {
+            canvas.animate {
 
                 camera.lookAt(scene.position)
 
@@ -133,11 +133,7 @@ object PointsExampleWaves {
 
                 count += 10f * clock.getDelta()
 
-                canvas.requestAnimationFrame { render() }
-
             }
-
-            render()
 
         }
 

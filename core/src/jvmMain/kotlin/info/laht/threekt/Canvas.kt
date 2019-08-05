@@ -8,10 +8,10 @@ import org.lwjgl.system.Callback
 import java.io.Closeable
 
 class Canvas @JvmOverloads constructor(
-    options: Options = Options()
+        options: Options = Options()
 ) : Closeable {
 
-    val ___pointer___: Long
+    private val pointer: Long
 
     val width: Int = options.width
     val height: Int = options.height
@@ -33,7 +33,7 @@ class Canvas @JvmOverloads constructor(
         if (!glfwInit()) {
             throw IllegalStateException("Unable to initialize GLFW")
         }
-        ___pointer___ = createWindow(options)
+        pointer = createWindow(options)
     }
 
     fun enableDebugCallback() {
@@ -72,7 +72,7 @@ class Canvas @JvmOverloads constructor(
         }
 
         // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().
-        glfwWindowHint(GLFW_RESIZABLE, if (options.resizeable) GLFW_TRUE else GLFW_FALSE )
+        glfwWindowHint(GLFW_RESIZABLE, if (options.resizeable) GLFW_TRUE else GLFW_FALSE)
         val window = glfwCreateWindow(width, height, options.title, 0, 0)
 
         if (options.resizeable) {
@@ -134,29 +134,40 @@ class Canvas @JvmOverloads constructor(
         return window
     }
 
-    fun requestAnimationFrame(f: () -> Unit) {
+    fun windowShouldClose(): Boolean {
+        return glfwWindowShouldClose(pointer)
+    }
 
-        if (!glfwWindowShouldClose(___pointer___)) {
+    fun swapBuffers() {
+        glfwSwapBuffers(pointer)
+    }
 
-            glfwSwapBuffers(___pointer___)
-            glfwPollEvents()
+    fun pollEvents() {
+        glfwPollEvents()
+    }
+
+    fun animate ( f: () -> Unit) {
+
+        while (!windowShouldClose()) {
 
             f.invoke()
 
-        }
+            swapBuffers()
+            pollEvents()
 
+        }
     }
 
     class Options(
-        var width: Int = 800,
-        var height: Int = 600,
+            var width: Int = 800,
+            var height: Int = 600,
 
-        var antialiasing: Int = 0,
+            var antialiasing: Int = 0,
 
-        var vsync: Boolean = true,
-        var resizeable: Boolean = false,
+            var vsync: Boolean = true,
+            var resizeable: Boolean = false,
 
-        var title: String = "Three.kt"
+            var title: String = "Three.kt"
     )
 
 

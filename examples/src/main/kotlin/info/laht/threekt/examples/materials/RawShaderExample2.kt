@@ -3,6 +3,7 @@ package info.laht.threekt.examples.materials
 import info.laht.threekt.Canvas
 import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
+import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.geometries.BoxBufferGeometry
@@ -24,13 +25,11 @@ object RawShaderExample2 {
 
 
             val scene = Scene()
-            val camera = PerspectiveCamera(50, canvas.aspect, 1, 10000)
+            val camera = PerspectiveCamera(50, canvas.aspect, 1, 1000000)
+            camera.position.y = 100f
+
             val renderer = GLRenderer(canvas.width, canvas.height)
-
-            canvas.onWindowResize = { w, h ->
-                renderer.setSize(w,h)
-            }
-
+            OrbitControls(camera, canvas)
             val geometry = BoxBufferGeometry(10000f)
 
             val material = RawShaderMaterial().also {
@@ -45,24 +44,20 @@ object RawShaderExample2 {
             scene.add(mesh)
 
             canvas.onWindowResize = { w, h ->
-                renderer.setSize(w,h)
-                material.uniforms["iResolution"] = Uniform(Vector2(w, h))
+                renderer.setSize(w, h)
+                material.uniforms["iResolution"]!!.value<Vector2>()!!.set(w.toFloat(), h.toFloat())
             }
 
             var value = 0f
             val clock = Clock()
-            fun render() {
+            canvas.animate {
 
                 value += 1f * clock.getDelta()
                 material.uniforms["iTime"]!!.value = value
 
                 renderer.render(scene, camera)
 
-                canvas.requestAnimationFrame { render() }
-
             }
-
-            render()
 
         }
 

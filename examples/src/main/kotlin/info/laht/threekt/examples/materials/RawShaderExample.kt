@@ -67,7 +67,7 @@ object RawShaderExample {
             scene.add(mesh)
 
             var value = 0f
-            fun render() {
+            canvas.animate {
 
                 value += 0.005f
                 mesh.rotation.y = value
@@ -75,11 +75,7 @@ object RawShaderExample {
 
                 renderer.render(scene, camera)
 
-                canvas.requestAnimationFrame { render() }
-
             }
-
-            render()
 
         }
 

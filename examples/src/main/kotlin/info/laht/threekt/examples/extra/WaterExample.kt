@@ -89,7 +89,7 @@ object WaterExample {
             }
 
             val clock = Clock()
-            fun render() {
+            canvas.animate {
 
                 val wTime = water.uniforms["time"]!!.value as Float
                 water.uniforms["time"]!!.value = wTime + (0.6f*clock.getDelta())
@@ -98,11 +98,7 @@ object WaterExample {
 
                 renderer.render(scene, camera)
 
-                canvas.requestAnimationFrame { render() }
-
             }
-
-            render()
 
         }
 

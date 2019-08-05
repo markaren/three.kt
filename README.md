@@ -44,19 +44,15 @@ Canvas().use { canvas ->
     
     val clock = Clock()
     val controls = OrbitControls(camera, canvas)
-    fun render() {
-
-        renderer.render(scene, camera)
-        
+    canvas.animate {
+     
         val dt = clock.getDelta()
         box.rotation.x += 1f * dt
         box.rotation.y += 1f * dt
 
-        canvas.requestAnimationFrame{ render() }
+        renderer.render(scene, camera)
 
     }
-
-    render()
 
 }
 ```
