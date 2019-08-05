@@ -94,6 +94,8 @@ object SpotLightExample {
 
             }
 
+            render()
+
         }
 
     }
