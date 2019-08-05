@@ -154,7 +154,7 @@ class Canvas @JvmOverloads constructor(
         var antialiasing: Int = 0,
 
         var vsync: Boolean = true,
-        var resizeable: Boolean = true,
+        var resizeable: Boolean = false,
 
         var title: String = "Three.kt"
     )
