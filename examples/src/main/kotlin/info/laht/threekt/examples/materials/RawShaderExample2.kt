@@ -3,6 +3,7 @@ package info.laht.threekt.examples.materials
 import info.laht.threekt.Canvas
 import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
+import info.laht.threekt.core.Clock
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.materials.RawShaderMaterial
@@ -17,7 +18,8 @@ object RawShaderExample2 {
     fun main(args: Array<String>) {
 
         Canvas(Canvas.Options().apply {
-            antialiasing = 4
+            antialiasing = 8
+            resizeable = true
         }).use { canvas ->
 
 
@@ -42,11 +44,17 @@ object RawShaderExample2 {
             val mesh = Mesh(geometry, material)
             scene.add(mesh)
 
+            canvas.onWindowResize = { w, h ->
+                renderer.setSize(w,h)
+                material.uniforms["iResolution"] = Uniform(Vector2(w, h))
+            }
+
             var value = 0f
+            val clock = Clock()
             fun render() {
 
-                value += 0.005f
-                material.uniforms["iTime"]!!.value = value * 5f
+                value += 1f * clock.getDelta()
+                material.uniforms["iTime"]!!.value = value
 
                 renderer.render(scene, camera)
 
