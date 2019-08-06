@@ -7,7 +7,7 @@ import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxGeometry
 import info.laht.threekt.geometries.PlaneGeometry
-import info.laht.threekt.lights.AmbientLight
+import info.laht.threekt.helpers.SpotLightHelper
 import info.laht.threekt.lights.SpotLight
 import info.laht.threekt.materials.MeshLambertMaterial
 import info.laht.threekt.materials.MeshPhongMaterial
@@ -71,24 +71,27 @@ object SpotLightExample {
 
             OrbitControls(camera, canvas)
 
-            AmbientLight(0xffffff, 0.25f).also {
-                scene.add(it)
-            }
-
             SpotLight(Color.fromHex(Color.white)).also {
-                it.intensity = 0.3f
-                it.position.y = 3f
+                it.intensity = 2f
+                it.distance = 10f
+                it.penumbra = 0.3f
+                it.position.y = 5f
                 it.castShadow = true
                 scene.add(it)
+
+                SpotLightHelper(it).also { helper ->
+                    scene.add(helper)
+                }
+
             }
 
             val clock = Clock()
             canvas.animate {
 
-                renderer.render(scene, camera)
-
                 val dt = clock.getDelta()
                 box.rotation.x += 0.5f * dt
+
+                renderer.render(scene, camera)
 
             }
 
