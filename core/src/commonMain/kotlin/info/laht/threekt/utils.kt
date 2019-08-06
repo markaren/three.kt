@@ -160,3 +160,17 @@ internal inline fun <reified T> MutableList<T>.splice(start: Int, deleteCount: I
     }
 
 }
+
+object LoaderUtils {
+
+    fun extractUrlBase(url: String): String {
+
+        val index = url.lastIndexOf("/")
+
+        if (index == -1) return "./"
+
+        return url.substring(0, index + 1)
+
+    }
+
+}
