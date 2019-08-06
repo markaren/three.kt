@@ -571,14 +571,18 @@ class Matrix4(
         val det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14
 
         if (det == 0f) {
-            val msg = "can't invert matrix, determinant is 0"
+
+            val msg = "Matrix4.getInverse() can't invert matrix, determinant is 0!"
             if (throwOnDegenerate) {
                 throw IllegalStateException(msg)
             } else {
                 println(msg)
             }
+
             return this.identity()
+
         }
+
         val detInv = 1f / det
 
         te[0] = t11 * detInv

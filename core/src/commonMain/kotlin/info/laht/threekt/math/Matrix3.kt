@@ -169,16 +169,11 @@ class Matrix3(
 
         if (det == 0f) {
 
-            val msg = "getInverse() can't invert matrix, determinant is 0"
-
+            val msg = "Matrix3.getInverse() can't invert matrix, determinant is 0!"
             if (throwOnDegenerate) {
-
                 throw IllegalStateException(msg)
-
             } else {
-
                 println(msg)
-
             }
 
             return this.identity()
