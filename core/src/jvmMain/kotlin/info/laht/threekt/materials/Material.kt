@@ -235,6 +235,50 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
 
     var onBeforeCompile: ((Shader, GLRenderer) -> Unit)? = null
 
+    internal fun getMapForType(type: String): Texture? {
+
+        return when (type) {
+            "map" -> map
+            "matCap" -> matcap
+            "alphaMap" -> alphaMap
+            "lightMap" -> lightMap
+            "aoMap" -> aoMap
+            "bumpMap" -> bumpMap
+            "normalMap" -> normalMap
+            "displacementMap" -> displacementMap
+            "roughnessMap" -> roughnessMap
+            "metalnessMap" -> metalnessMap
+            "emissiveMap" -> emissiveMap
+            "specularMap" -> specularMap
+            "envMap" -> envMap
+            "gradientMap" -> gradientMap
+            else -> throw IllegalArgumentException("No such map type: $type")
+        }
+
+    }
+
+    internal fun setMapForType(type: String, value: Texture?) {
+
+        when (type) {
+            "map" -> map = value
+            "matCap" -> matcap = value
+            "alphaMap" -> alphaMap = value
+            "lightMap" -> lightMap = value
+            "aoMap" -> aoMap = value
+            "bumpMap" -> bumpMap = value
+            "normalMap" -> normalMap = value
+            "displacementMap" -> displacementMap = value
+            "roughnessMap" -> roughnessMap = value
+            "metalnessMap" -> metalnessMap = value
+            "emissiveMap" -> emissiveMap = value
+            "specularMap" -> specularMap = value
+            "envMap" -> envMap = value
+            "gradientMap" -> gradientMap = value
+            else -> throw IllegalArgumentException("No such map type: $type")
+        }
+
+    }
+
     /**
      * Return a new material with the same parameters as this material.
      */

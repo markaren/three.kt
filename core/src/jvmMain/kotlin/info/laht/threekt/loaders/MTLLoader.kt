@@ -1,22 +1,47 @@
 package info.laht.threekt.loaders
 
-import info.laht.threekt.Side
-import info.laht.threekt.TextureMapping
-import info.laht.threekt.TextureWrapping
+import info.laht.threekt.*
 import info.laht.threekt.materials.Material
+import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Vector2
-import info.laht.threekt.splice
 import info.laht.threekt.textures.Texture
+import java.io.File
 
 class MTLLoader {
 
-    var materialOptions: MaterialOptions? = null
+    private var path: String? = null
+    private var resourcePath: String? = null
 
-    fun parse(text: String): MaterialCreator {
+    private var materialOptions: MaterialOptions? = null
+
+    fun setPath(path: String): MTLLoader {
+        this.path = path
+        return this
+    }
+
+    fun setResourcePath(path: String): MTLLoader {
+        this.resourcePath = path
+        return this
+    }
+
+    fun setMaterialOptions(materialOptions: MaterialOptions): MTLLoader {
+        this.materialOptions = materialOptions
+        return this
+    }
+
+    fun load(url: String): MaterialCreator {
+
+        val path = this.path ?: LoaderUtils.extractUrlBase(url)
+
+        return parse(File(url).readText(), path)
+
+    }
+
+    fun parse(text: String, path: String): MaterialCreator {
 
         val lines = text.split("\n")
         var info: MutableMap<String, Any>? = null
-        val delimiter_pattern = "\\s+".toRegex()
+        val delimiterPattern = "\\s+".toRegex()
         val materialsInfo = mutableMapOf<String, MutableMap<String, Any>>()
 
         for (i in 0 until lines.size) {
@@ -50,8 +75,8 @@ class MTLLoader {
 
                 if (key == "ka" || key == "kd" || key == "ks" || key == "ke") {
 
-                    val ss = value.split(delimiter_pattern, 3)
-                    info!![key] = listOf(ss[0].toFloat(), ss[1].toFloat(), ss[2].toFloat())
+                    val ss = value.split(delimiterPattern, 3)
+                    info!![key] = floatArrayOf(ss[0].toFloat(), ss[1].toFloat(), ss[2].toFloat())
 
                 } else {
 
@@ -63,22 +88,25 @@ class MTLLoader {
 
         }
 
-        val materialCreator = MaterialCreator(materialOptions)
+        val materialCreator = MaterialCreator(this.resourcePath ?: path, materialOptions)
         materialCreator.setMaterials(materialsInfo)
         return materialCreator
     }
 
     class MaterialCreator internal constructor(
-            private val options: MaterialOptions? = null
+        baseUrl: String? = null,
+        private val options: MaterialOptions? = null
     ) {
 
-        val side = options?.side ?: Side.Front
-        val wrap = options?.wrap ?: TextureWrapping.Repeat
+        private val baseUrl = baseUrl ?: ""
 
-        val materials = mutableMapOf<String, Material>()
-        val materialsArray = mutableListOf<Material>()
-        lateinit var materialsInfo: Map<String, Map<String, Any>>
-        val nameLookup = mutableMapOf<String, Int>()
+        private val side = options?.side ?: Side.Front
+        private val wrap = options?.wrap ?: TextureWrapping.Repeat
+
+        private val materials = mutableMapOf<String, Material>()
+        private val materialsArray = mutableListOf<Material>()
+        private lateinit var materialsInfo: Map<String, Map<String, Any>>
+        private val nameLookup = mutableMapOf<String, Int>()
 
         fun setMaterials(materialsInfo: Map<String, Map<String, Any>>) {
             this.materialsInfo = convert(materialsInfo)
@@ -112,7 +140,9 @@ class MTLLoader {
 
                                 value as FloatArray
 
-                                value = listOf(value[0] / 255, value[1] / 255, value[2] / 255)
+                                value[0] /= 255f
+                                value[1] /= 255f
+                                value[2] /= 255f
 
                             }
 
@@ -179,27 +209,90 @@ class MTLLoader {
         private fun createMaterial(materialName: String) {
 
             val mat = materialsInfo.getValue(materialName)
-            val params = mutableMapOf<String, Any>(
-                    "name"  to materialName,
-                    "side"  to this.side
-            )
+            val params = MeshPhongMaterial().apply {
+                name = materialName
+                side = this@MaterialCreator.side
+            }
 
             fun setMapForType(mapType: String, value: String) {
 
-                if (params[mapType] != null) return
+                if (params.getMapForType(mapType) != null) return
 
                 val texParams = getTextureParams(value, params)
+                val map = loadTexture(baseUrl + texParams.url)
+
+                map.repeat.copy(texParams.scale)
+                map.offset.copy(texParams.offset)
+
+                map.wrapS = wrap
+                map.wrapT = wrap
+
+                params.setMapForType(mapType, map)
+
+            }
+
+            for (prop in mat.keys) {
+
+                val value = mat.getValue(prop)
+
+                if (value == "") continue
+
+                when (prop.toLowerCase()) {
+
+                    "kd" -> params.color.fromArray(value as FloatArray)
+                    "ks" -> params.specular.fromArray(value as FloatArray)
+                    "ke" -> params.emissive.fromArray(value as FloatArray)
+
+                    "map_kd" -> setMapForType("map", value as String)
+                    "map_ks" -> setMapForType("specularMap", value as String)
+                    "map_ke" -> setMapForType("emissiveMap", value as String)
+
+                    "normal" -> setMapForType("normalMap", value as String)
+                    "map_bump", "bump" -> setMapForType("bumpMap", value as String)
+                    "map_d" -> setMapForType("alphaMap", value as String).also {
+                        params.transparent = true
+                    }
+                    "ns" -> params.shininess = (value as String).toFloat()
+                    "d" -> {
+
+                        val n = (value as String).toFloat()
+
+                        if (n < 1) {
+                            params.opacity = n
+                            params.transparent = true
+                        }
+
+                    }
+                    "tr" -> {
+
+                        var n = (value as String).toFloat()
+
+                        if (this.options != null && this.options.invertTrProperty) {
+                            n = 1 - n
+                        }
+
+                        if (n > 0) {
+
+                            params.opacity = 1 - n
+                            params.transparent = true
+
+                        }
+
+                    }
+
+                }
+
+                materials[materialName] = params
 
             }
 
         }
 
-
-        fun getTextureParams(value: String, matParams: MutableMap<String, Any>): TexParams {
+        private fun getTextureParams(value: String, matParams: MeshPhongMaterial): TexParams {
 
             val texParams = TexParams(
-                    scale = Vector2(1, 1),
-                    offset = Vector2(0, 0)
+                scale = Vector2(1, 1),
+                offset = Vector2(0, 0)
             )
 
             val items = value.split("\\s+".toRegex()).toMutableList()
@@ -207,7 +300,7 @@ class MTLLoader {
 
             if (pos >= 0) {
 
-                matParams["bumpScale"] = items[pos + 1].toFloat()
+                matParams.bumpScale = items[pos + 1].toFloat()
                 items.splice(pos, 2)
 
             }
@@ -225,19 +318,25 @@ class MTLLoader {
 
         }
 
-    }
+        fun loadTexture(url: String, mapping: TextureMapping? = null): Texture {
 
-    fun loadTexture(url: String, mapping: TextureMapping? = null): Texture {
-        TODO()
+            val texture = TextureLoader.load(url)
+            mapping?.also {
+                texture.mapping = it
+            }
+            return texture
+
+        }
+
     }
 
     data class TexParams(
-            var scale: Vector2,
-            var offset: Vector2,
-            var url: String = ""
+        var scale: Vector2,
+        var offset: Vector2,
+        var url: String = ""
     )
 
-//    data class MaterialInfo(
+    //    data class MaterialInfo(
 //            var ks: FloatArray? = null,
 //            var kd: FloatArray? = null,
 //            var ke: FloatArray? = null,
@@ -292,12 +391,12 @@ class MTLLoader {
 //
 //
     data class MaterialOptions(
-            val name: String,
-            val side: Side = Side.Front,
-            val wrap: TextureWrapping = TextureWrapping.Repeat,
-            val normalizeRGB: Boolean = false,
-            val ignoreZeroRGBs: Boolean = false,
-            val invertTrProperty: Boolean = false
+        val name: String,
+        val side: Side = Side.Front,
+        val wrap: TextureWrapping = TextureWrapping.Repeat,
+        val normalizeRGB: Boolean = false,
+        val ignoreZeroRGBs: Boolean = false,
+        val invertTrProperty: Boolean = false
     ) {
 
 //        operator fun get(key: String): Any {
