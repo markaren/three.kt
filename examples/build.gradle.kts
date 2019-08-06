@@ -6,7 +6,6 @@ plugins {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("com.github.nifty-gui:nifty:1.4.3")
 
     compile(project(":core"))
 }
