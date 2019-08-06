@@ -148,3 +148,15 @@ internal fun FloatArray.copyInto(list: MutableList<Float>): MutableList<Float> {
     return list
 
 }
+
+internal inline fun <reified T> MutableList<T>.splice(start: Int, deleteCount: Int, vararg elements: T) {
+
+    if (deleteCount > 0) {
+        subList(start, start + deleteCount).clear()
+    }
+
+    elements.forEachIndexed { i, v ->
+        add(start + i, v)
+    }
+
+}
