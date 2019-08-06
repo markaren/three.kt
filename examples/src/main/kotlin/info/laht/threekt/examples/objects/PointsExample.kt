@@ -67,7 +67,7 @@ object PointsExample {
             scene.add(points)
 
             val clock = Clock()
-            fun render() {
+            canvas.animate {
 
                 val time = clock.getElapsedTime()
 
@@ -76,11 +76,7 @@ object PointsExample {
 
                 renderer.render(scene, camera)
 
-                canvas.requestAnimationFrame { render() }
-
             }
-
-            render()
 
         }
 

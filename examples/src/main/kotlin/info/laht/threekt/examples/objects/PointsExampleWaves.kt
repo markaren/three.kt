@@ -46,13 +46,18 @@ object PointsExampleWaves {
     fun main(args: Array<String>) {
 
         Canvas(
-            Canvas.Options(
-                vsync = true
-            )
+                Canvas.Options(
+                        vsync = true,
+                        resizeable = true
+                )
         ).use { canvas ->
 
             val scene = Scene()
             val renderer = GLRenderer(canvas.width, canvas.height)
+
+            canvas.onWindowResize = { w, h ->
+                renderer.setSize(w,h)
+            }
 
             val camera = PerspectiveCamera(75, canvas.aspect, 1, 100000).apply {
                 position.z = 1000f
@@ -99,7 +104,7 @@ object PointsExampleWaves {
 
             var count = 0f
             val clock = Clock()
-            fun render() {
+            canvas.animate {
 
                 camera.lookAt(scene.position)
 
@@ -126,13 +131,9 @@ object PointsExampleWaves {
 
                 renderer.render(scene, camera)
 
-                count +=  10f * clock.getDelta()
-
-                canvas.requestAnimationFrame { render() }
+                count += 10f * clock.getDelta()
 
             }
-
-            render()
 
         }
 

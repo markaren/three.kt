@@ -3,6 +3,8 @@ package info.laht.threekt.examples.materials
 import info.laht.threekt.Canvas
 import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
+import info.laht.threekt.controls.OrbitControls
+import info.laht.threekt.core.Clock
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.materials.RawShaderMaterial
@@ -17,13 +19,17 @@ object RawShaderExample2 {
     fun main(args: Array<String>) {
 
         Canvas(Canvas.Options().apply {
-            antialiasing = 4
+            antialiasing = 8
+            resizeable = true
         }).use { canvas ->
 
-            val scene = Scene()
-            val camera = PerspectiveCamera(50, canvas.aspect, 1, 10000)
-            val renderer = GLRenderer(canvas.width, canvas.height)
 
+            val scene = Scene()
+            val camera = PerspectiveCamera(50, canvas.aspect, 1, 1000000)
+            camera.position.y = 100f
+
+            val renderer = GLRenderer(canvas.width, canvas.height)
+            OrbitControls(camera, canvas)
             val geometry = BoxBufferGeometry(10000f)
 
             val material = RawShaderMaterial().also {
@@ -37,19 +43,21 @@ object RawShaderExample2 {
             val mesh = Mesh(geometry, material)
             scene.add(mesh)
 
-            var value = 0f
-            fun render() {
+            canvas.onWindowResize = { w, h ->
+                renderer.setSize(w, h)
+                material.uniforms["iResolution"]!!.value<Vector2>()!!.set(w.toFloat(), h.toFloat())
+            }
 
-                value += 0.005f
-                material.uniforms["iTime"]!!.value = value * 5f
+            var value = 0f
+            val clock = Clock()
+            canvas.animate {
+
+                value += 1f * clock.getDelta()
+                material.uniforms["iTime"]!!.value = value
 
                 renderer.render(scene, camera)
 
-                canvas.requestAnimationFrame { render() }
-
             }
-
-            render()
 
         }
 

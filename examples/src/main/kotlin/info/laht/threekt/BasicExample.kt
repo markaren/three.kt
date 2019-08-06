@@ -73,7 +73,7 @@ object BasicExample {
             }
 
             val clock = Clock()
-            fun render() {
+            canvas.animate {
 
                 renderer.render(scene, camera)
 
@@ -83,11 +83,7 @@ object BasicExample {
 
                 cylinder.rotation.z += 0.5f * dt
 
-                canvas.requestAnimationFrame { render() }
-
             }
-
-            render()
 
         }
 

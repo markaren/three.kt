@@ -75,14 +75,11 @@ object STLLoaderExample {
             light2.position.set(-2f, 2f, 1f)
             scene.add(light2)
 
-            fun render() {
+            canvas.animate {
 
                 renderer.render(scene, camera)
-                canvas.requestAnimationFrame { render() }
 
             }
-
-            render()
 
         }
 

@@ -44,22 +44,26 @@ Canvas().use { canvas ->
     
     val clock = Clock()
     val controls = OrbitControls(camera, canvas)
-    fun render() {
-
-        renderer.render(scene, camera)
-        
+    canvas.animate {
+     
         val dt = clock.getDelta()
         box.rotation.x += 1f * dt
         box.rotation.y += 1f * dt
 
-        canvas.requestAnimationFrame{ render() }
+        renderer.render(scene, camera)
 
     }
 
-    render()
-
 }
 ```
+
+## Screenshots
+
+![seascape](https://raw.githubusercontent.com/markaren/three.kt/master/screenshots/seascape.PNG)
+![points](https://raw.githubusercontent.com/markaren/three.kt/master/screenshots/points.PNG)
+![ocean](https://raw.githubusercontent.com/markaren/three.kt/master/screenshots/ocean.PNG)
+![pointlights](https://raw.githubusercontent.com/markaren/three.kt/master/screenshots/pointlights.PNG)
+![textures](https://raw.githubusercontent.com/markaren/three.kt/master/screenshots/textures.PNG)
 
 ## Looking for the Kotlin/JS wrapper project?
 It has been renamed and moved to [here](https://github.com/markaren/three-kt-wrapper).

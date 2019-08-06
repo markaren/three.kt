@@ -78,18 +78,14 @@ object DirectionalLightExample {
             scene.add(helper)
 
             val clock = Clock()
-            fun render() {
+            canvas.animate {
 
                 renderer.render(scene, camera)
 
                 val dt = clock.getDelta()
                 box.rotation.y += 0.5f * dt
 
-                canvas.requestAnimationFrame { render() }
-
             }
-
-            render()
 
         }
 

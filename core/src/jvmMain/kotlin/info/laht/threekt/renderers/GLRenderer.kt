@@ -1,6 +1,5 @@
 package info.laht.threekt.renderers
 
-import info.laht.threekt.Canvas
 import info.laht.threekt.DrawMode
 import info.laht.threekt.Side
 import info.laht.threekt.ToneMapping
@@ -29,8 +28,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 class GLRenderer(
-    width: Int,
-    height: Int
+        width: Int,
+        height: Int
 ) {
 
     var checkShaderErrors = false
@@ -130,6 +129,20 @@ class GLRenderer(
 
     }
 
+    fun setSize(width: Int, height: Int) {
+        this.width = width
+        this.height = height
+
+        setViewPort(0, 0, width, height)
+
+    }
+
+    fun setViewPort(x: Int, y: Int, width: Int, height: Int) {
+        viewport.set(x, y, width, height)
+        state.viewport(currentViewport.copy(viewport).multiplyScalar(pixelRatio).floor())
+    }
+
+
     private fun getTargetPixelRatio(): Int {
         return if (currentRenderTarget == null) pixelRatio else 1
     }
@@ -183,12 +196,12 @@ class GLRenderer(
     }
 
     internal fun renderBufferDirect(
-        camera: Camera,
-        fog: _Fog?,
-        geometry: BufferGeometry,
-        material: Material,
-        `object`: Object3D,
-        group: GeometryGroup?
+            camera: Camera,
+            fog: _Fog?,
+            geometry: BufferGeometry,
+            material: Material,
+            `object`: Object3D,
+            group: GeometryGroup?
     ) {
         val frontFaceCW = (`object` is Mesh && `object`.matrixWorld.determinant() < 0)
 
@@ -199,8 +212,8 @@ class GLRenderer(
         var updateBuffers = false
 
         if (currentGeometryProgram.geometry != geometry.id ||
-            currentGeometryProgram.program != program.id ||
-            currentGeometryProgram.wireframe != (material is MaterialWithWireframe && material.wireframe)
+                currentGeometryProgram.program != program.id ||
+                currentGeometryProgram.wireframe != (material is MaterialWithWireframe && material.wireframe)
         ) {
 
             currentGeometryProgram.geometry = geometry.id
@@ -322,10 +335,10 @@ class GLRenderer(
 
 
     private fun renderObjects(
-        renderList: List<GLRenderList.RenderItem>,
-        scene: Scene,
-        camera: Camera,
-        overrideMaterial: Material? = null
+            renderList: List<GLRenderList.RenderItem>,
+            scene: Scene,
+            camera: Camera,
+            overrideMaterial: Material? = null
     ) {
 
         renderList.forEach { renderItem ->
@@ -584,7 +597,7 @@ class GLRenderer(
                     if (sortObjects) {
 
                         vector3.setFromMatrixPosition(`object`.matrixWorld)
-                            .applyMatrix4(projScreenMatrix)
+                                .applyMatrix4(projScreenMatrix)
 
                     }
 
@@ -612,7 +625,7 @@ class GLRenderer(
                     if (sortObjects) {
 
                         vector3.setFromMatrixPosition(`object`.matrixWorld)
-                            .applyMatrix4(projScreenMatrix)
+                                .applyMatrix4(projScreenMatrix)
 
                     }
 
@@ -627,12 +640,12 @@ class GLRenderer(
                             if (groupMaterial != null && groupMaterial.visible) {
 
                                 currentRenderList.push(
-                                    `object`,
-                                    geometry,
-                                    groupMaterial,
-                                    groupOrder,
-                                    vector3.z,
-                                    group
+                                        `object`,
+                                        geometry,
+                                        groupMaterial,
+                                        groupOrder,
+                                        vector3.z,
+                                        group
                                 )
 
                             }
@@ -735,10 +748,10 @@ class GLRenderer(
 
             val textureProperties = properties[renderTarget!!.texture]
             GL30.glFramebufferTexture2D(
-                GL30.GL_FRAMEBUFFER,
-                GL30.GL_COLOR_ATTACHMENT0,
-                GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + (activeCubeFace ?: 0),
-                textureProperties["__webglTexture"] as Int, activeMipMapLevel ?: 0
+                    GL30.GL_FRAMEBUFFER,
+                    GL30.GL_COLOR_ATTACHMENT0,
+                    GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + (activeCubeFace ?: 0),
+                    textureProperties["__webglTexture"] as Int, activeMipMapLevel ?: 0
             )
 
         }
@@ -746,12 +759,12 @@ class GLRenderer(
     }
 
     private fun renderObject(
-        `object`: Object3D,
-        scene: Scene,
-        camera: Camera,
-        geometry: BufferGeometry,
-        material: Material,
-        group: GeometryGroup?
+            `object`: Object3D,
+            scene: Scene,
+            camera: Camera,
+            geometry: BufferGeometry,
+            material: Material,
+            group: GeometryGroup?
     ) {
 
         `object`.onBeforeRender?.invoke(this, scene, camera, geometry, material, group)
@@ -764,7 +777,7 @@ class GLRenderer(
 
             if (sortObjects) {
                 vector3.setFromMatrixPosition(`object`.matrixWorld)
-                    .applyMatrix4(projScreenMatrix)
+                        .applyMatrix4(projScreenMatrix)
             }
 
         }
@@ -786,7 +799,7 @@ class GLRenderer(
         val lightsStateVersion = lights.state.version
 
         val parameters = programCache.getParameters(
-            material, lights.state, shadowsArray, fog, clipping.numPlanes, clipping.numIntersection, `object`
+                material, lights.state, shadowsArray, fog, clipping.numPlanes, clipping.numIntersection, `object`
         )
 
         var code = programCache.getProgramCode(material, parameters)
@@ -813,19 +826,19 @@ class GLRenderer(
                 val shader = ShaderLib[parameters.shaderID]
 
                 materialProperties["shader"] = Shader(
-                    name = material.type,
-                    uniforms = cloneUniforms(shader.uniforms),
-                    vertexShader = shader.vertexShader,
-                    fragmentShader = shader.fragmentShader
+                        name = material.type,
+                        uniforms = cloneUniforms(shader.uniforms),
+                        vertexShader = shader.vertexShader,
+                        fragmentShader = shader.fragmentShader
                 )
 
             } else {
 
                 materialProperties["shader"] = Shader(
-                    name = material.type,
-                    uniforms = material.uniforms,
-                    vertexShader = material.vertexShader,
-                    fragmentShader = material.fragmentShader
+                        name = material.type,
+                        uniforms = material.uniforms,
+                        vertexShader = material.vertexShader,
+                        fragmentShader = material.fragmentShader
                 )
 
             }
@@ -849,8 +862,8 @@ class GLRenderer(
         val uniforms = materialProperties.getAs<Shader>("shader")!!.uniforms
 
         if (material !is ShaderMaterial &&
-            material !is RawShaderMaterial ||
-            (material is MaterialWithClipping && material.clipping)
+                material !is RawShaderMaterial ||
+                (material is MaterialWithClipping && material.clipping)
         ) {
 
             materialProperties["numClippingPlanes"] = clipping.numPlanes
@@ -905,15 +918,15 @@ class GLRenderer(
             if (localClippingEnabled || camera != currentCamera) {
 
                 val useCache =
-                    camera == currentCamera &&
-                            material.id == currentMaterialId
+                        camera == currentCamera &&
+                                material.id == currentMaterialId
 
                 // we might want to call this fun with some ClippingGroup
                 // object instead of the material, once it becomes feasible
                 // (#8465, #8379)
                 clipping.setState(
-                    material.clippingPlanes, material.clipIntersection, material.clipShadows,
-                    camera, materialProperties, useCache
+                        material.clippingPlanes, material.clipIntersection, material.clipShadows,
+                        camera, materialProperties, useCache
                 )
 
             }
@@ -935,8 +948,8 @@ class GLRenderer(
                 material.needsUpdate = true
 
             } else if (materialProperties["numClippingPlanes"] != null &&
-                (materialProperties["numClippingPlanes"] != clipping.numPlanes ||
-                        materialProperties["numIntersection"] != clipping.numIntersection)
+                    (materialProperties["numClippingPlanes"] != clipping.numPlanes ||
+                            materialProperties["numIntersection"] != clipping.numIntersection)
             ) {
 
                 material.needsUpdate = true
@@ -997,22 +1010,22 @@ class GLRenderer(
             // (shader material also gets them for the sake of genericity)
 
             if (material is ShaderMaterial ||
-                material is MeshPhongMaterial ||
-                material is MeshStandardMaterial ||
-                material.envMap != null
+                    material is MeshPhongMaterial ||
+                    material is MeshStandardMaterial ||
+                    material.envMap != null
             ) {
 
                 p_uniforms.map["cameraPosition"]?.setValue(
-                    vector3.setFromMatrixPosition(camera.matrixWorld)
+                        vector3.setFromMatrixPosition(camera.matrixWorld)
                 )
             }
 
             if (material is MeshPhongMaterial ||
-                material is MeshLambertMaterial ||
-                material is MeshBasicMaterial ||
-                material is MeshStandardMaterial ||
-                material is ShaderMaterial ||
-                (material is MaterialWithSkinning && material.skinning)
+                    material is MeshLambertMaterial ||
+                    material is MeshBasicMaterial ||
+                    material is MeshStandardMaterial ||
+                    material is ShaderMaterial ||
+                    (material is MaterialWithSkinning && material.skinning)
             ) {
 
                 p_uniforms.setValue("viewMatrix", camera.matrixWorldInverse)
@@ -1598,9 +1611,9 @@ class GLRenderer(
     }
 
     private inner class GeometryProgram(
-        var geometry: Int? = null,
-        var program: Int? = null,
-        var wireframe: Boolean = false
+            var geometry: Int? = null,
+            var program: Int? = null,
+            var wireframe: Boolean = false
     )
 
 }

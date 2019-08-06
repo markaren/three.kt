@@ -73,14 +73,11 @@ object ReflectorExample {
 
             }
 
-            fun render() {
+            canvas.animate {
 
                 renderer.render(scene, camera)
-                canvas.requestAnimationFrame { render() }
 
             }
-
-            render()
 
         }
 

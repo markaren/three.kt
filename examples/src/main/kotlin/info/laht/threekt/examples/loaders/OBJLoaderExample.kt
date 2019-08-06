@@ -57,14 +57,11 @@ object OBJLoaderExample {
             light3.position.set(0, 25f, -30f)
             scene.add(light3)
 
-            fun render() {
+            canvas.animate {
 
                 renderer.render(scene, camera)
-                canvas.requestAnimationFrame { render() }
 
             }
-
-            render()
 
         }
 

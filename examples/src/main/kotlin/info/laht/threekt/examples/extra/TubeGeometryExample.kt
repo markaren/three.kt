@@ -49,15 +49,11 @@ object TubeGeometryExample {
                 scene.add(it)
             }
 
-
-            fun render() {
+            canvas.animate {
 
                 renderer.render(scene, camera)
-                canvas.requestAnimationFrame { render() }
 
             }
-
-            render()
 
         }
 
