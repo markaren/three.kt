@@ -11,7 +11,7 @@ class Canvas @JvmOverloads constructor(
         options: Options = Options()
 ) : Closeable {
 
-    private val pointer: Long
+    val hwnd: Long
 
     val width: Int = options.width
     val height: Int = options.height
@@ -33,7 +33,7 @@ class Canvas @JvmOverloads constructor(
         if (!glfwInit()) {
             throw IllegalStateException("Unable to initialize GLFW")
         }
-        pointer = createWindow(options)
+        hwnd = createWindow(options)
     }
 
     fun enableDebugCallback() {
@@ -135,11 +135,11 @@ class Canvas @JvmOverloads constructor(
     }
 
     fun windowShouldClose(): Boolean {
-        return glfwWindowShouldClose(pointer)
+        return glfwWindowShouldClose(hwnd)
     }
 
     fun swapBuffers() {
-        glfwSwapBuffers(pointer)
+        glfwSwapBuffers(hwnd)
     }
 
     fun pollEvents() {
