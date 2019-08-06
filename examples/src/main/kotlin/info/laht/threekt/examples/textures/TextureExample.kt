@@ -12,7 +12,6 @@ import info.laht.threekt.math.DEG2RAD
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
-import java.io.File
 
 object TextureExample {
 
@@ -36,7 +35,8 @@ object TextureExample {
 
             Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
-                map = TextureLoader.load(File(TextureExample::class.java.classLoader.getResource("textures/brick_bump.jpg").file))
+                map =
+                    TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/brick_bump.jpg").file)
             }).also {
                 it.rotation.x = DEG2RAD * -90
                 it.translateZ(-1f)
@@ -45,7 +45,7 @@ object TextureExample {
 
             Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
-                map = TextureLoader.load(File(TextureExample::class.java.classLoader.getResource("textures/crate.gif").file))
+                map = TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/crate.gif").file)
             }).also {
                 it.translateY(2f)
                 scene.add(it)
