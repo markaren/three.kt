@@ -68,17 +68,8 @@ class MTLLoader {
         return materialCreator
     }
 
-    data class MaterialOptions(
-        val name: String,
-        val side: Side = Side.Front,
-        val wrap: TextureWrapping = TextureWrapping.Repeat,
-        val normalizeRGB: Boolean = false,
-        val ignoreZeroRGBs: Boolean = false,
-        val invertTrProperty: Boolean = false
-    )
-
     class MaterialCreator internal constructor(
-        private val options: MaterialOptions? = null
+            private val options: MaterialOptions? = null
     ) {
 
         val side = options?.side ?: Side.Front
@@ -187,20 +178,28 @@ class MTLLoader {
 
         private fun createMaterial(materialName: String) {
 
-            val mat = materialsInfo[materialName]!!
-            val params = MaterialOptions(
-                name = materialName,
-                side = this.side
+            val mat = materialsInfo.getValue(materialName)
+            val params = mutableMapOf<String, Any>(
+                    "name"  to materialName,
+                    "side"  to this.side
             )
 
+            fun setMapForType(mapType: String, value: String) {
+
+                if (params[mapType] != null) return
+
+                val texParams = getTextureParams(value, params)
+
+            }
 
         }
+
 
         fun getTextureParams(value: String, matParams: MutableMap<String, Any>): TexParams {
 
             val texParams = TexParams(
-                scale = Vector2(1, 1),
-                offset = Vector2(0, 0)
+                    scale = Vector2(1, 1),
+                    offset = Vector2(0, 0)
             )
 
             val items = value.split("\\s+".toRegex()).toMutableList()
@@ -233,24 +232,87 @@ class MTLLoader {
     }
 
     data class TexParams(
-        var scale: Vector2,
-        var offset: Vector2,
-        var url: String = ""
+            var scale: Vector2,
+            var offset: Vector2,
+            var url: String = ""
     )
 
-    class MaterialInfo(
-        val ks: FloatArray? = null,
-        val kd: FloatArray? = null,
-        val ke: FloatArray? = null,
-        val map_kd: String? = null,
-        val map_ks: String? = null,
-        val map_ke: String? = null,
-        val norm: String? = null,
-        val bump: String? = null,
-        val map_d: String? = null,
-        val ns: Float? = null,
-        val d: Float? = null,
-        val tr: Float? = null
-    )
+//    data class MaterialInfo(
+//            var ks: FloatArray? = null,
+//            var kd: FloatArray? = null,
+//            var ke: FloatArray? = null,
+//            var map_kd: String? = null,
+//            var map_ks: String? = null,
+//            var map_ke: String? = null,
+//            var norm: String? = null,
+//            var bump: String? = null,
+//            var map_d: String? = null,
+//            var ns: Float? = null,
+//            var d: Float? = null,
+//            var tr: Float? = null
+//    ) {
+//
+//        operator fun get(key: String): Any? {
+//            return when (key) {
+//                "ks" -> ks
+//                "kd" -> kd
+//                "ke" -> ke
+//                "map_kd" -> map_kd
+//                "map_ks" -> map_ks
+//                "map_ke" -> map_ke
+//                "norm" -> norm
+//                "bump" -> bump
+//                "map_d" -> map_d
+//                "ns" -> ns
+//                "d" -> d
+//                "tr" -> tr
+//                else -> throw IllegalArgumentException("Illegal key: $key")
+//            }
+//        }
+//
+//        operator fun set(key: String, value: Any?) {
+//            when (key) {
+//                "ks" -> ks = value as FloatArray?
+//                "kd" -> kd = value as FloatArray?
+//                "ke" -> ke = value as FloatArray?
+//                "map_kd" -> map_kd = value as String?
+//                "map_ks" -> map_ks = value as String?
+//                "map_ke" -> map_ke = value as String?
+//                "norm" -> norm = value as String?
+//                "bump" -> bump = value as String?
+//                "map_d" -> map_d = value as String?
+//                "ns" -> ns = value as Float?
+//                "d" -> d = value as Float?
+//                "tr" -> tr = value as Float?
+//                else -> throw IllegalArgumentException("Illegal key: $key")
+//            }
+//        }
+//
+//    }
+//
+//
+    data class MaterialOptions(
+            val name: String,
+            val side: Side = Side.Front,
+            val wrap: TextureWrapping = TextureWrapping.Repeat,
+            val normalizeRGB: Boolean = false,
+            val ignoreZeroRGBs: Boolean = false,
+            val invertTrProperty: Boolean = false
+    ) {
+
+//        operator fun get(key: String): Any {
+//            return when (key) {
+//                "name" -> name
+//                "side" -> side
+//                "wrap" -> wrap
+//                "normalizeRGB" -> normalizeRGB
+//                "ignoreZeroRGBs" -> ignoreZeroRGBs
+//                "invertTrProperty" -> invertTrProperty
+//                else -> throw IllegalArgumentException("Illegal key: $key")
+//            }
+//        }
+
+    }
+
 
 }
