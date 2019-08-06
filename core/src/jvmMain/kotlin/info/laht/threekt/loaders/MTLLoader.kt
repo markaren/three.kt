@@ -1,9 +1,12 @@
 package info.laht.threekt.loaders
 
 import info.laht.threekt.Side
+import info.laht.threekt.TextureMapping
 import info.laht.threekt.TextureWrapping
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector2
+import info.laht.threekt.splice
+import info.laht.threekt.textures.Texture
 
 class MTLLoader {
 
@@ -165,11 +168,9 @@ class MTLLoader {
 
         fun getAsArray() {
 
-            var index = 0
-
-            for (mn in materialsInfo.keys) {
+            for ((index, mn) in materialsInfo.keys.withIndex()) {
                 materialsArray.add(create(mn))
-                nameLookup[mn] = index++
+                nameLookup[mn] = index
             }
 
         }
@@ -195,18 +196,46 @@ class MTLLoader {
 
         }
 
-        fun getTextureParams(value: String): TexParams {
+        fun getTextureParams(value: String, matParams: MutableMap<String, Any>): TexParams {
 
-            TODO()
+            val texParams = TexParams(
+                scale = Vector2(1, 1),
+                offset = Vector2(0, 0)
+            )
+
+            val items = value.split("\\s+".toRegex()).toMutableList()
+            var pos = items.indexOf("-bm")
+
+            if (pos >= 0) {
+
+                matParams["bumpScale"] = items[pos + 1].toFloat()
+                items.splice(pos, 2)
+
+            }
+
+            pos = items.indexOf("-o")
+
+            if (pos >= 0) {
+                texParams.offset.set(items[pos + 1].toFloat(), items[pos + 2].toFloat())
+                items.splice(pos, 4)
+            }
+
+            texParams.url = items.joinToString(" ").trim()
+
+            return texParams
 
         }
 
     }
 
-    class TexParams(
-        val scale: Vector2,
-        val offset: Vector2,
-        val url: String
+    fun loadTexture(url: String, mapping: TextureMapping? = null): Texture {
+        TODO()
+    }
+
+    data class TexParams(
+        var scale: Vector2,
+        var offset: Vector2,
+        var url: String = ""
     )
 
     class MaterialInfo(
