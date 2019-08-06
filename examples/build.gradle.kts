@@ -4,8 +4,17 @@ plugins {
     kotlin("jvm")
 }
 
+repositories {
+
+    maven(url="http://maven.cuchazinteractive.com")
+
+}
+
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+
+    implementation("cuchaz:jfxgl:0.4")
+    implementation("cuchaz:jfxgl-jfxrt:0.4")
 
     compile(project(":core"))
 }
