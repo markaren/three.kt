@@ -67,7 +67,7 @@ interface MaterialWithReflectivity {
 
 interface MaterialWithSpecular {
 
-    var specular: Color
+    val specular: Color
     var shininess: Float
 
 }
