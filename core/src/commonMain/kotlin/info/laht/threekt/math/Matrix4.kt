@@ -538,7 +538,7 @@ class Matrix4(
      * Based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm.
      */
     @JvmOverloads
-    fun getInverse(m: Matrix4, throwOnDegeneratee: Boolean = false): Matrix4 {
+    fun getInverse(m: Matrix4, throwOnDegenerate: Boolean = false): Matrix4 {
         val te = this.elements
         val me = m.elements
 
@@ -572,7 +572,7 @@ class Matrix4(
 
         if (det == 0f) {
             val msg = "can't invert matrix, determinant is 0"
-            if (throwOnDegeneratee) {
+            if (throwOnDegenerate) {
                 throw IllegalStateException(msg)
             } else {
                 println(msg)
