@@ -8,8 +8,12 @@ import java.io.File
 object TextureLoader {
 
     @JvmOverloads
-    fun load(file: File, flipY: Boolean = true): Texture {
+    fun load(path: String, flipY: Boolean = true): Texture {
 
+        val file = File(path)
+        if (!file.exists()) {
+            throw NoSuchFileException(file)
+        }
         val isJpg = file.name.endsWith(".jpg", true) || file.name.endsWith(".jpeg", true)
 
         val texture = Texture(

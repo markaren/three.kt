@@ -18,7 +18,6 @@ import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
-import java.io.File
 import kotlin.math.PI
 import kotlin.math.sin
 
@@ -58,7 +57,7 @@ object WaterExample {
             val planeGeometry = PlaneGeometry(10000f, 10000f)
 
             val texture =
-                TextureLoader.load(File(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file))
+                TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file)
                     .also {
                         it.wrapS = TextureWrapping.Repeat
                         it.wrapT = TextureWrapping.Repeat

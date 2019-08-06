@@ -10,8 +10,8 @@ open class MeshPhongMaterial : Material(), MaterialWithWireframe, MaterialWithCo
     MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithSkinning, MaterialWithReflectivity,
     MaterialWithSpecular {
 
-    override var color = Color(0xffffff) // diffuse
-    override var specular = Color(0x111111)
+    override val color = Color(0xffffff) // diffuse
+    override val specular = Color(0x111111)
     override var shininess = 30f
 
     public override var map: Texture? = null
