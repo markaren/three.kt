@@ -161,6 +161,13 @@ internal inline fun <reified T> MutableList<T>.splice(start: Int, deleteCount: I
 
 }
 
+
+internal inline fun <reified T> MutableList<T>.push(value: T, vararg values: T): Int {
+    add(value)
+    values.forEach { add(it) }
+    return size
+}
+
 object LoaderUtils {
 
     fun extractUrlBase(url: String): String {

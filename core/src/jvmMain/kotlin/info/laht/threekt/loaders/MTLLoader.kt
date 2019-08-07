@@ -183,23 +183,25 @@ class MTLLoader {
         fun getAsArray() {
 
             for ((index, mn) in materialsInfo.keys.withIndex()) {
-                materialsArray.add(create(mn))
+                materialsArray.add(create(mn)!!)
                 nameLookup[mn] = index
             }
 
         }
 
-        fun create(materialName: String): Material {
+        fun create(materialName: String): Material? {
 
             if (materialName !in materials) {
                 createMaterial(materialName)
             }
 
-            return materials[materialName]!!
+            return materials[materialName]
 
         }
 
         private fun createMaterial(materialName: String) {
+
+            if (materialName.isEmpty()) throw IllegalArgumentException("materialName is empty!")
 
             val mat = materialsInfo.getValue(materialName)
             val params = MeshPhongMaterial().apply {
