@@ -12,7 +12,7 @@ class MTLLoader {
     private var path: String? = null
     private var resourcePath: String? = null
 
-    private var materialOptions: MaterialOptions? = null
+    var materialOptions: MaterialOptions? = null
 
     fun setPath(path: String): MTLLoader {
         this.path = path
@@ -24,17 +24,9 @@ class MTLLoader {
         return this
     }
 
-    fun setMaterialOptions(materialOptions: MaterialOptions): MTLLoader {
-        this.materialOptions = materialOptions
-        return this
-    }
-
     fun load(url: String): MaterialCreator {
-
         val path = this.path ?: LoaderUtils.extractUrlBase(url)
-
         return parse(File(url).readText(), path)
-
     }
 
     fun parse(text: String, path: String): MaterialCreator {
@@ -94,8 +86,8 @@ class MTLLoader {
     }
 
     class MaterialCreator internal constructor(
-        baseUrl: String? = null,
-        private val options: MaterialOptions? = null
+            baseUrl: String? = null,
+            private val options: MaterialOptions? = null
     ) {
 
         private val baseUrl = baseUrl ?: ""
@@ -112,9 +104,11 @@ class MTLLoader {
             this.materialsInfo = convert(materialsInfo)
         }
 
-        fun convert(materialsInfo: Map<String, Map<String, Any>>): Map<String, Map<String, Any>> {
+        private fun convert(materialsInfo: Map<String, Map<String, Any>>): Map<String, Map<String, Any>> {
 
-            if (options == null) return materialsInfo
+            if (options == null) {
+                return materialsInfo
+            }
 
             val converted = mutableMapOf<String, Map<String, Any>>()
 
@@ -129,7 +123,7 @@ class MTLLoader {
                 loop@ for (prop in mat.keys) {
 
                     var save = true
-                    var value = mat.getValue(prop)
+                    val value = mat.getValue(prop)
                     val lprop = prop.toLowerCase()
 
                     when (lprop) {
@@ -153,7 +147,6 @@ class MTLLoader {
                                 if (value[0] == 0f && value[1] == 0f && value[2] == 0f) {
 
                                     // ignore
-
                                     save = false
 
                                 }
@@ -291,8 +284,8 @@ class MTLLoader {
         private fun getTextureParams(value: String, matParams: MeshPhongMaterial): TexParams {
 
             val texParams = TexParams(
-                scale = Vector2(1, 1),
-                offset = Vector2(0, 0)
+                    scale = Vector2(1, 1),
+                    offset = Vector2(0, 0)
             )
 
             val items = value.split("\\s+".toRegex()).toMutableList()
@@ -330,88 +323,19 @@ class MTLLoader {
 
     }
 
-    data class TexParams(
-        var scale: Vector2,
-        var offset: Vector2,
-        var url: String = ""
+    private data class TexParams(
+            var scale: Vector2,
+            var offset: Vector2,
+            var url: String = ""
     )
 
-    //    data class MaterialInfo(
-//            var ks: FloatArray? = null,
-//            var kd: FloatArray? = null,
-//            var ke: FloatArray? = null,
-//            var map_kd: String? = null,
-//            var map_ks: String? = null,
-//            var map_ke: String? = null,
-//            var norm: String? = null,
-//            var bump: String? = null,
-//            var map_d: String? = null,
-//            var ns: Float? = null,
-//            var d: Float? = null,
-//            var tr: Float? = null
-//    ) {
-//
-//        operator fun get(key: String): Any? {
-//            return when (key) {
-//                "ks" -> ks
-//                "kd" -> kd
-//                "ke" -> ke
-//                "map_kd" -> map_kd
-//                "map_ks" -> map_ks
-//                "map_ke" -> map_ke
-//                "norm" -> norm
-//                "bump" -> bump
-//                "map_d" -> map_d
-//                "ns" -> ns
-//                "d" -> d
-//                "tr" -> tr
-//                else -> throw IllegalArgumentException("Illegal key: $key")
-//            }
-//        }
-//
-//        operator fun set(key: String, value: Any?) {
-//            when (key) {
-//                "ks" -> ks = value as FloatArray?
-//                "kd" -> kd = value as FloatArray?
-//                "ke" -> ke = value as FloatArray?
-//                "map_kd" -> map_kd = value as String?
-//                "map_ks" -> map_ks = value as String?
-//                "map_ke" -> map_ke = value as String?
-//                "norm" -> norm = value as String?
-//                "bump" -> bump = value as String?
-//                "map_d" -> map_d = value as String?
-//                "ns" -> ns = value as Float?
-//                "d" -> d = value as Float?
-//                "tr" -> tr = value as Float?
-//                else -> throw IllegalArgumentException("Illegal key: $key")
-//            }
-//        }
-//
-//    }
-//
-//
     data class MaterialOptions(
-        val name: String,
-        val side: Side = Side.Front,
-        val wrap: TextureWrapping = TextureWrapping.Repeat,
-        val normalizeRGB: Boolean = false,
-        val ignoreZeroRGBs: Boolean = false,
-        val invertTrProperty: Boolean = false
-    ) {
-
-//        operator fun get(key: String): Any {
-//            return when (key) {
-//                "name" -> name
-//                "side" -> side
-//                "wrap" -> wrap
-//                "normalizeRGB" -> normalizeRGB
-//                "ignoreZeroRGBs" -> ignoreZeroRGBs
-//                "invertTrProperty" -> invertTrProperty
-//                else -> throw IllegalArgumentException("Illegal key: $key")
-//            }
-//        }
-
-    }
-
+            val name: String,
+            val side: Side = Side.Front,
+            val wrap: TextureWrapping = TextureWrapping.Repeat,
+            val normalizeRGB: Boolean = false,
+            val ignoreZeroRGBs: Boolean = false,
+            val invertTrProperty: Boolean = false
+    )
 
 }
