@@ -172,6 +172,9 @@ object LoaderUtils {
 
     fun extractUrlBase(url: String): String {
 
+        @Suppress("NAME_SHADOWING")
+        val url = url.replace("\\", "/")
+
         val index = url.lastIndexOf("/")
 
         if (index == -1) return "./"
