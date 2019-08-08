@@ -108,7 +108,7 @@ fun Frustum.intersectsSprite(sprite: Sprite): Boolean {
 
     val sphere = Sphere()
 
-    sphere.center.set(0, 0, 0)
+    sphere.center.set(0f, 0f, 0f)
     sphere.radius = 0.7071067811865476f
     sphere.applyMatrix4(sprite.matrixWorld)
 

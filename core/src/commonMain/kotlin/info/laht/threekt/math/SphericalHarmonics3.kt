@@ -13,7 +13,7 @@ class SphericalHarmonics3 {
 
     fun zero(): SphericalHarmonics3 {
         coefficients.forEach {
-            it.set(0, 0, 0)
+            it.set(0f, 0f, 0f)
         }
         return this
     }

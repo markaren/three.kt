@@ -34,7 +34,7 @@ class Water(
     private var mirrorWorldPosition = Vector3()
     private var cameraWorldPosition = Vector3()
     private var rotationMatrix = Matrix4()
-    private var lookAtPosition = Vector3(0, 0, -1)
+    private var lookAtPosition = Vector3(0f, 0f, -1f)
     private var clipPlane = Vector4()
 
     private var view = Vector3()
@@ -106,7 +106,7 @@ class Water(
 
         rotationMatrix.extractRotation(matrixWorld)
 
-        normal.set(0, 0, 1)
+        normal.set(0f, 0f, 1f)
         normal.applyMatrix4(rotationMatrix)
 
         view.subVectors(mirrorWorldPosition, cameraWorldPosition)
@@ -120,7 +120,7 @@ class Water(
 
         rotationMatrix.extractRotation(camera.matrixWorld)
 
-        lookAtPosition.set(0, 0, -1)
+        lookAtPosition.set(0f, 0f, -1f)
         lookAtPosition.applyMatrix4(rotationMatrix)
         lookAtPosition.add(cameraWorldPosition)
 
@@ -129,7 +129,7 @@ class Water(
         target.add(mirrorWorldPosition)
 
         mirrorCamera.position.copy(view)
-        mirrorCamera.up.set(0, 1, 0)
+        mirrorCamera.up.set(0f, 1f, 0f)
         mirrorCamera.up.applyMatrix4(rotationMatrix)
         mirrorCamera.up.reflect(normal)
         mirrorCamera.lookAt(target)

@@ -13,7 +13,7 @@ data class Vector3(
 
     constructor() : this(0f, 0f, 0f)
 
-    constructor(x: Int, y: Int, z: Int) : this(x.toFloat(), y.toFloat(), z.toFloat())
+    constructor(x: Number, y: Number, z: Number) : this(x.toFloat(), y.toFloat(), z.toFloat())
 
     /**
      * Sets value of Vector3 vector.

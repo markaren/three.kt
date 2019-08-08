@@ -57,7 +57,7 @@ data class Box3 @JvmOverloads constructor(
     }
 
     fun setFromCenterAndSize(center: Vector3, size: Vector3): Box3 {
-        val halfSize = Vector3().copy(size).multiplyScalar(0.5.toFloat())
+        val halfSize = Vector3().copy(size).multiplyScalar(0.5f)
 
         this.min.copy(center).sub(halfSize)
         this.max.copy(center).add(halfSize)
@@ -85,16 +85,16 @@ data class Box3 @JvmOverloads constructor(
     @JvmOverloads
     fun getCenter(target: Vector3 = Vector3()): Vector3 {
         return if (this.isEmpty()) {
-            target.set(0, 0, 0)
+            target.set(0f, 0f, 0f)
         } else {
-            target.addVectors(this.min, this.max).multiplyScalar(0.5.toFloat())
+            target.addVectors(this.min, this.max).multiplyScalar(0.5f)
         }
     }
 
     @JvmOverloads
     fun getSize(target: Vector3 = Vector3()): Vector3 {
         return if (this.isEmpty()) {
-            target.set(0, 0, 0)
+            target.set(0f, 0f, 0f)
         } else {
             target.subVectors(this.max, this.min)
         }
@@ -218,7 +218,7 @@ data class Box3 @JvmOverloads constructor(
     fun getBoundingSphere(target: Sphere = Sphere()): Sphere {
         this.getCenter(target.center)
 
-        target.radius = this.getSize(Vector3()).length() * 0.5.toFloat()
+        target.radius = this.getSize(Vector3()).length() * 0.5f
 
         return target
     }

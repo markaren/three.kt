@@ -7,11 +7,14 @@ import info.laht.threekt.core.IntBufferAttribute
 typealias PlaneGeometry = PlaneBufferGeometry
 
 class PlaneBufferGeometry(
-    val width: Float = 1f,
-    val height: Float = 1f,
-    val widthSegments: Int = 1,
-    val heightSegments: Int = 1
+        width: Number = 1f,
+        height: Number = 1f,
+        val widthSegments: Int = 1,
+        val heightSegments: Int = 1
 ) : BufferGeometry() {
+
+    val width = width.toFloat()
+    val height = height.toFloat()
 
     init {
 
@@ -33,8 +36,8 @@ class PlaneBufferGeometry(
 
         init {
 
-            val width_half = width / 2
-            val height_half = height / 2
+            val widthHalf = width / 2
+            val heightHalf = height / 2
 
             val gridX = widthSegments
             val gridY = heightSegments
@@ -42,8 +45,8 @@ class PlaneBufferGeometry(
             val gridX1 = gridX + 1
             val gridY1 = gridY + 1
 
-            val segment_width = width / gridX
-            val segment_height = height / gridY
+            val segmentWidth = width / gridX
+            val segmentHeight = height / gridY
 
             vertices = FloatArray(gridX1 * gridY1 * 3)
             normals = FloatArray(gridX1 * gridY1 * 3)
@@ -54,11 +57,11 @@ class PlaneBufferGeometry(
 
             for (iy in 0 until gridY1) {
 
-                val y = iy * segment_height - height_half
+                val y = iy * segmentHeight - heightHalf
 
                 for (ix in 0 until gridX1) {
 
-                    val x = ix * segment_width - width_half
+                    val x = ix * segmentWidth - widthHalf
 
                     vertices[offset + 0] = x
                     vertices[offset + 1] = -y

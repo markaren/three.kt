@@ -54,7 +54,7 @@ object WaterExample {
             sky.scale.setScalar(45000)
             scene.add(sky)
 
-            val planeGeometry = PlaneGeometry(10000f, 10000f)
+            val planeGeometry = PlaneGeometry(10000, 10000)
 
             val texture =
                 TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file)

@@ -15,7 +15,7 @@ data class Vector4(
 
     constructor() : this(0f, 0f, 0f, 0f)
 
-    constructor(x: Int, y: Int, z: Int, w: Int) : this(x.toFloat(), y.toFloat(), z.toFloat(), w.toFloat())
+    constructor(x: Number, y: Number, z: Number, w: Number) : this(x.toFloat(), y.toFloat(), z.toFloat(), w.toFloat())
 
     fun set(x: Number, y: Number, z: Number, w: Number): Vector4 {
         this.x = x.toFloat()
