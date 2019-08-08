@@ -15,11 +15,23 @@ import info.laht.threekt.splice
 import java.io.File
 
 class OBJLoader(
-        var materials: MTLLoader.MaterialCreator? = null
+        val tryLoadMtl: Boolean = false
 ) {
 
+    var materials: MTLLoader.MaterialCreator? = null
+
     fun load(path: String): Group {
-        return parse(File(path).readText())
+
+        val file = File(path)
+
+        if (tryLoadMtl) {
+            val mtlFile = File(file.parent, "${file.nameWithoutExtension}.mtl")
+            if (mtlFile.exists()) {
+                materials = MTLLoader().load(mtlFile.absolutePath).preload()
+            }
+        }
+
+        return parse(file.readText())
     }
 
     fun parse(text: String): Group {

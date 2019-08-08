@@ -4,7 +4,6 @@ import info.laht.threekt.Canvas
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.Clock
 import info.laht.threekt.lights.PointLight
-import info.laht.threekt.loaders.MTLLoader
 import info.laht.threekt.loaders.OBJLoader
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
@@ -25,11 +24,7 @@ object OBJLoaderExample {
                 position.set(0, 100, 175)
             }
 
-            val materials = MTLLoader().load(OBJLoaderExample::class.java.classLoader.getResource("models/obj/female02/female02.mtl").file).apply {
-                preload()
-            }
-
-            val obj = OBJLoader(materials).load(OBJLoaderExample::class.java.classLoader.getResource("models/obj/female02/female02.obj").file)
+            val obj = OBJLoader(true).load(OBJLoaderExample::class.java.classLoader.getResource("models/obj/female02/female02.obj").file)
             scene.add(obj)
 
             val light1 = PointLight(intensity = 1f)
