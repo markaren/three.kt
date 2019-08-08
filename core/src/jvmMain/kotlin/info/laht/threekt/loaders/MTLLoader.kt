@@ -170,10 +170,11 @@ class MTLLoader {
 
         }
 
-        fun preload() {
+        fun preload(): MaterialCreator {
             for (mn in materialsInfo.keys) {
                 create(mn)
             }
+            return this
         }
 
         fun getIndex(materialName: String): Int? {
