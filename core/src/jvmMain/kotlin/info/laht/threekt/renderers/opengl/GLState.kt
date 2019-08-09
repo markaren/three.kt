@@ -4,8 +4,8 @@ import info.laht.threekt.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector4
 import kotlinx.io.core.IoBuffer
-import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.*
+import java.nio.ByteBuffer
 import kotlin.math.roundToInt
 
 internal class GLState {
@@ -478,17 +478,16 @@ internal class GLState {
         type: Int,
         data: IoBuffer?
     ) {
-        val buffer = data?.let {
-            if (!it.canRead()) {
-                null // TODO investigate why data can be empty?
-            } else {
-                BufferUtils.createByteBuffer(data.capacity).apply {
-                    it.readFully(this)
-                    flip()
-                }
+
+        if (data == null || !data.canRead()) {
+            //TODO should we even call this function here
+            GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, null as ByteBuffer)
+        } else {
+            data.readDirect { buffer ->
+                GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, buffer)
             }
         }
-        GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, buffer)
+
     }
 
     fun scissor(scissor: Vector4) {
