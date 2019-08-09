@@ -1,6 +1,9 @@
 package info.laht.threekt.loaders
 
 import com.google.gson.Gson
+import info.laht.threekt.cameras.Camera
+import info.laht.threekt.cameras.OrthographicCamera
+import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.math.Matrix4
 import info.laht.threekt.math.Quaternion
 import info.laht.threekt.math.Vector3
@@ -32,7 +35,7 @@ class GLTFLoader {
 
     fun parse(data: String) {
 
-        println(Gson().fromJson(data, GLTF::class.java).cameras[0].type)
+        println(Gson().fromJson(data, GLTF::class.java).cameras[0].getCamera())
 
     }
 
@@ -40,27 +43,27 @@ class GLTFLoader {
 
 private class GLTF {
 
-    lateinit var asset: Asset
+    lateinit var asset: GLFTAsset
     val scene: Int? = null
 
-    val scenes: List<Scene> = emptyList()
-    val nodes: List<Node> = emptyList()
-    val cameras: List<Camera> = emptyList()
+    val scenes: List<GLFTScene> = emptyList()
+    val nodes: List<GLFTNode> = emptyList()
+    val cameras: List<GLFTCamera> = emptyList()
 
-    data class Asset(
+    data class GLFTAsset(
             val version: String,
             val generator: String,
             val copyright: String? = null
     )
 
-    class Scene {
+    class GLFTScene {
 
         var name: String? = null
         lateinit var nodes: IntArray
 
     }
 
-    class Node {
+    class GLFTNode {
 
         var name: String? = null
         var camera: Int? = null
@@ -89,18 +92,47 @@ private class GLTF {
 
     }
 
-    class Camera {
+    class GLFTCamera {
 
+        val name: String? = null
         lateinit var type: String
+
+        val perspective: Perspective? = null
+        val orthographic: Orthographic? = null
+
+        data class Perspective(
+                val yfov: Float,
+                val aspectRatio: Float,
+                val znear: Float,
+                val zfar: Float? = null
+        )
+
+        data class Orthographic(
+                val xmag: Float,
+                val ymag: Float,
+                val znear: Float,
+                val zfar: Float
+        )
+
+        fun getCamera(): Camera {
+
+            return when {
+                perspective != null -> PerspectiveCamera(perspective.yfov, perspective.aspectRatio, perspective.znear, perspective.zfar
+                        ?: PerspectiveCamera.DEFAULT_FAR)
+                orthographic != null -> OrthographicCamera()
+                else -> throw IllegalStateException("Neither perspective or orthographic..")
+            }
+
+        }
 
     }
 
-    data class Buffer(
+    data class GLFTBuffer(
             val byteLength: Int,
             val uri: String
     )
 
-    data class BufferView(
+    data class GLFTBufferView(
             val buffer: Int,
             val byteLength: Int,
             val byteOffset: Int
