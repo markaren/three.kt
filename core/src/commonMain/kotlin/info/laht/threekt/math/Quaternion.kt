@@ -41,6 +41,8 @@ data class Quaternion(
 
     internal var onChangeCallback: (() -> Unit)? = null
 
+    constructor(x: Number, y: Number, z: Number, w: Number) : this(x.toFloat(), y.toFloat(), z.toFloat(), w.toFloat())
+
     /**
      * Sets values of this quaternion.
      */
