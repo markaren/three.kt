@@ -41,6 +41,8 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
 
+                implementation("com.google.code.gson:gson:2.8.5")
+
                 val lwjglVersion = "3.2.2"
                 implementation("org.lwjgl:lwjgl:$lwjglVersion")
                 implementation("org.lwjgl:lwjgl-glfw:$lwjglVersion")
