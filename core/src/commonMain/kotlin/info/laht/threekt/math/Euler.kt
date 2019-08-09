@@ -41,6 +41,8 @@ data class Euler(
 
     internal var onChangeCallback: (() -> Unit)? = null
 
+    constructor(x: Number, y: Number, z: Number, w: Number) : this(x.toFloat(), y.toFloat(), z.toFloat())
+
     fun set(x: Number, y: Number, z: Number, order: EulerOrder?): Euler {
         this._x = x.toFloat()
         this._y = y.toFloat()
