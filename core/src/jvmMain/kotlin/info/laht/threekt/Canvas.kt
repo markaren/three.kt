@@ -7,6 +7,7 @@ import org.lwjgl.opengl.*
 import org.lwjgl.system.Callback
 import java.io.Closeable
 
+
 class Canvas @JvmOverloads constructor(
         options: Options = Options()
 ) : Closeable {
@@ -138,13 +139,26 @@ class Canvas @JvmOverloads constructor(
 
         fun createWindow(options: Options): Long {
 
+            val width = options.width
+            val height = options.height
+
             if (options.antialiasing > 0) {
                 glfwWindowHint(GLFW_SAMPLES, options.antialiasing)
             }
 
             // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().
             glfwWindowHint(GLFW_RESIZABLE, if (options.resizeable) GLFW_TRUE else GLFW_FALSE)
-            val hwnd = glfwCreateWindow(options.width, options.height, options.title, 0, 0)
+            val hwnd = glfwCreateWindow(width, height, options.title, 0, 0)
+
+            // Get the resolution of the primary monitor
+            val vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor())!!
+
+            // Center the window
+            glfwSetWindowPos(
+                    hwnd,
+                    (vidMode.width() - width) / 2,
+                    (vidMode.height() - height) / 2
+            )
 
             // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
             glfwMakeContextCurrent(hwnd)
