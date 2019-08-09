@@ -42,7 +42,7 @@ public class JavaExample {
 
             OrbitControls orbitControls = new OrbitControls(camera, canvas);
 
-            while (!canvas.windowShouldClose()) {
+            while (!canvas.shouldClose()) {
 
                 renderer.render(scene, camera);
 

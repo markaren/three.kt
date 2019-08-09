@@ -28,12 +28,56 @@ class Canvas @JvmOverloads constructor(
     var onWindowResize: ((Int, Int) -> Unit)? = null
 
     init {
+
         val errorCallback = GLFWErrorCallback.createPrint(System.err)
         glfwSetErrorCallback(errorCallback)
         if (!glfwInit()) {
             throw IllegalStateException("Unable to initialize GLFW")
         }
         hwnd = createWindow(options)
+
+        if (options.resizeable) {
+            glfwSetWindowSizeCallback(hwnd) { _, width, height ->
+                onWindowResize?.invoke(width, height)
+            }
+        }
+
+        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
+        glfwSetKeyCallback(hwnd) { _, key, _, action, _ ->
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+                glfwSetWindowShouldClose(hwnd, true) // We will detect this in the rendering loop
+            } else {
+                keyListeners?.also { listeners ->
+                    val evt = KeyEvent(key, action.toKeyAction())
+                    listeners.forEach {
+                        it.onKeyPressed(evt)
+                    }
+                }
+            }
+        }
+
+        glfwSetMouseButtonCallback(hwnd) { _, button, action, _ ->
+            mouseEvent.button = button
+            val listeners = mouseListeners?.toMutableList() // avoid concurrent modification exception
+            when (action) {
+                0 -> listeners?.forEach { it.onMouseUp(mouseEvent) }
+                1 -> listeners?.forEach { it.onMouseDown(mouseEvent) }
+            }
+        }
+
+        glfwSetCursorPosCallback(hwnd) { _, xpos, ypos ->
+            mouseEvent.updateCoordinates(xpos.toInt(), ypos.toInt())
+            mouseListeners?.forEach { it.onMouseMove(mouseEvent) }
+
+        }
+
+        glfwSetScrollCallback(hwnd) { _, xoffset, yoffset ->
+            mouseListeners?.also { listeners ->
+                val evt = MouseWheelEvent(xoffset.toFloat(), yoffset.toFloat())
+                listeners.forEach { it.onMouseWheel(evt) }
+            }
+        }
+
     }
 
     fun enableDebugCallback() {
@@ -65,76 +109,7 @@ class Canvas @JvmOverloads constructor(
         glfwTerminate()
     }
 
-    private fun createWindow(options: Options): Long {
-
-        if (options.antialiasing > 0) {
-            glfwWindowHint(GLFW_SAMPLES, options.antialiasing)
-        }
-
-        // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().
-        glfwWindowHint(GLFW_RESIZABLE, if (options.resizeable) GLFW_TRUE else GLFW_FALSE)
-        val window = glfwCreateWindow(width, height, options.title, 0, 0)
-
-        if (options.resizeable) {
-            glfwSetWindowSizeCallback(window) { _, width, height ->
-                onWindowResize?.invoke(width, height)
-            }
-        }
-
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window) { _, key, _, action, _ ->
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-                glfwSetWindowShouldClose(window, true) // We will detect this in the rendering loop
-            } else {
-                keyListeners?.also { listeners ->
-                    val evt = KeyEvent(key, action.toKeyAction())
-                    listeners.forEach {
-                        it.onKeyPressed(evt)
-                    }
-                }
-            }
-        }
-
-        glfwSetMouseButtonCallback(window) { _, button, action, _ ->
-            mouseEvent.button = button
-            val listeners = mouseListeners?.toMutableList() // avoid concurrent modification exception
-            when (action) {
-                0 -> listeners?.forEach { it.onMouseUp(mouseEvent) }
-                1 -> listeners?.forEach { it.onMouseDown(mouseEvent) }
-            }
-        }
-
-        glfwSetCursorPosCallback(window) { _, xpos, ypos ->
-            mouseEvent.updateCoordinates(xpos.toInt(), ypos.toInt())
-            mouseListeners?.forEach { it.onMouseMove(mouseEvent) }
-
-        }
-
-        glfwSetScrollCallback(window) { _, xoffset, yoffset ->
-            mouseListeners?.also { listeners ->
-                val evt = MouseWheelEvent(xoffset.toFloat(), yoffset.toFloat())
-                listeners.forEach { it.onMouseWheel(evt) }
-            }
-        }
-
-        // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
-        glfwMakeContextCurrent(window)
-
-        if (options.vsync) glfwSwapInterval(1) else glfwSwapInterval(0)
-
-        // Tell LWJGL 3 that an OpenGL context is current in this thread. This will result in LWJGL 3 querying function
-        // pointers for various OpenGL functions.
-        GL.createCapabilities()
-
-        // required for various point stuff to work
-        GL11.glEnable(GL32.GL_PROGRAM_POINT_SIZE)
-        GL11.glEnable(GL20.GL_POINT_SPRITE)
-
-        // Return the handle to the created pointer.
-        return window
-    }
-
-    fun windowShouldClose(): Boolean {
+    fun shouldClose(): Boolean {
         return glfwWindowShouldClose(hwnd)
     }
 
@@ -148,13 +123,44 @@ class Canvas @JvmOverloads constructor(
 
     inline fun animate(f: () -> Unit) {
 
-        while (!windowShouldClose()) {
+        while (!shouldClose()) {
 
             f.invoke()
 
             swapBuffers()
             pollEvents()
 
+        }
+
+    }
+
+    private companion object {
+
+        fun createWindow(options: Options): Long {
+
+            if (options.antialiasing > 0) {
+                glfwWindowHint(GLFW_SAMPLES, options.antialiasing)
+            }
+
+            // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().
+            glfwWindowHint(GLFW_RESIZABLE, if (options.resizeable) GLFW_TRUE else GLFW_FALSE)
+            val hwnd = glfwCreateWindow(options.width, options.height, options.title, 0, 0)
+
+            // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
+            glfwMakeContextCurrent(hwnd)
+
+            if (options.vsync) glfwSwapInterval(1) else glfwSwapInterval(0)
+
+            // Tell LWJGL 3 that an OpenGL context is current in this thread. This will result in LWJGL 3 querying function
+            // pointers for various OpenGL functions.
+            GL.createCapabilities()
+
+            // required for various point stuff to work
+            GL11.glEnable(GL32.GL_PROGRAM_POINT_SIZE)
+            GL11.glEnable(GL20.GL_POINT_SPRITE)
+
+            // Return the handle to the created pointer.
+            return hwnd
         }
 
     }
