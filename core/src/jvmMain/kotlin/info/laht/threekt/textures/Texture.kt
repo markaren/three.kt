@@ -191,4 +191,8 @@ class Image(
     var height = height
         internal set
 
+    override fun toString(): String {
+        return "Image(width=$width, height=$height)"
+    }
+
 }

@@ -12,8 +12,12 @@ object ImageLoader {
     private val cache = mutableMapOf<String, Image>()
 
     @JvmOverloads
-    fun load(file: File, flipY: Boolean = true): Image {
+    fun load(path: String, flipY: Boolean = true): Image {
 
+        val file = File(path)
+        if (!file.exists()) {
+            throw NoSuchFileException(file)
+        }
         val isJpg = file.name.endsWith(".jpg", true) || file.name.endsWith(".jpeg", true)
 
         return cache.computeIfAbsent(file.absolutePath) {
@@ -43,7 +47,6 @@ object ImageLoader {
 
             buffer.flip()
             Image(img.width, img.height, buffer)
-
 
         }
     }
