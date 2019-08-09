@@ -50,11 +50,11 @@ data class Vector2(
     /**
      * Sets a component of this vector.
      */
-    fun setComponent(index: Int, value: Float): Vector2 {
+    operator fun set(index: Int, value: Float): Vector2 {
         when (index) {
             0 -> x = value
             1 -> y = value
-            else -> throw IndexOutOfBoundsException("")
+            else -> throw IndexOutOfBoundsException()
         }
 
         return this
@@ -63,11 +63,11 @@ data class Vector2(
     /**
      * Gets a component of this vector.
      */
-    fun getComponent(index: Int): Float {
+    operator fun get(index: Int): Float {
         return when (index) {
             0 -> x
             1 -> y
-            else -> throw IndexOutOfBoundsException("")
+            else -> throw IndexOutOfBoundsException()
         }
     }
 
@@ -485,5 +485,20 @@ data class Vector2(
         }
     }
 
+}
 
+operator fun Vector2.plus(v: Vector2): Vector2 {
+    return clone().add(v)
+}
+
+operator fun Vector2.plusAssign(v: Vector2) {
+    add(v)
+}
+
+operator fun Vector2.minus(v: Vector2): Vector2 {
+    return clone().sub(v)
+}
+
+operator fun Vector2.minusAssign(v: Vector2) {
+    sub(v)
 }

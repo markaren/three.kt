@@ -32,7 +32,7 @@ data class Vector3(
         return set(s, s, s)
     }
 
-    fun setComponent(index: Int, value: Float): Vector3 {
+    operator fun set(index: Int, value: Float): Vector3 {
         when (index) {
             0 -> x = value
             1 -> y = value
@@ -42,7 +42,7 @@ data class Vector3(
         return this
     }
 
-    fun getComponent(index: Int): Float {
+    operator fun get(index: Int): Float {
         return when (index) {
             0 -> x
             1 -> y
@@ -563,4 +563,20 @@ data class Vector3(
 
     }
 
+}
+
+operator fun Vector3.plus(v: Vector3): Vector3 {
+    return clone().add(v)
+}
+
+operator fun Vector3.plusAssign(v: Vector3) {
+    add(v)
+}
+
+operator fun Vector3.minus(v: Vector3): Vector3 {
+    return clone().sub(v)
+}
+
+operator fun Vector3.minusAssign(v: Vector3) {
+    sub(v)
 }

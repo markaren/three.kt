@@ -17,6 +17,27 @@ data class Vector4(
 
     constructor(x: Number, y: Number, z: Number, w: Number) : this(x.toFloat(), y.toFloat(), z.toFloat(), w.toFloat())
 
+    operator fun set(index: Int, value: Float): Vector4 {
+        when (index) {
+            0 -> x = value
+            1 -> y = value
+            2 -> z = value
+            3 -> w = value
+            else -> throw IndexOutOfBoundsException()
+        }
+        return this
+    }
+
+    operator fun get(index: Int): Float {
+        return when (index) {
+            0 -> x
+            1 -> y
+            2 -> z
+            3 -> w
+            else -> throw IndexOutOfBoundsException()
+        }
+    }
+
     fun set(x: Number, y: Number, z: Number, w: Number): Vector4 {
         this.x = x.toFloat()
         this.y = y.toFloat()
@@ -283,4 +304,20 @@ data class Vector4(
         return set(v.x, v.y, v.z, v.w)
     }
 
+}
+
+operator fun Vector4.plus(v: Vector4): Vector4 {
+    return clone().add(v)
+}
+
+operator fun Vector4.plusAssign(v: Vector4) {
+    add(v)
+}
+
+operator fun Vector4.minus(v: Vector4): Vector4 {
+    return clone().sub(v)
+}
+
+operator fun Vector4.minusAssign(v: Vector4) {
+    sub(v)
 }
