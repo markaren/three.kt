@@ -10,7 +10,7 @@ object UniformsLib {
 
     val common = mapOf(
 
-        "diffuse" to Uniform(Color.fromHex(0xeeeeee)),
+            "diffuse" to Uniform(Color(0xeeeeee)),
         "opacity" to Uniform(1f),
 
         "map" to Uniform(null),
