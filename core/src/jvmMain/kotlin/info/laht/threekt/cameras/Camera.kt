@@ -6,6 +6,7 @@ import info.laht.threekt.math.Matrix4
 import info.laht.threekt.math.Vector3
 
 interface Camera : Object3D {
+
     val matrixWorldInverse: Matrix4
 
     val projectionMatrix: Matrix4

@@ -8,10 +8,10 @@ import kotlin.math.min
 import kotlin.math.tan
 
 class PerspectiveCamera(
-    fov: Number = 50,
-    aspect: Number = 1,
-    near: Number = 0.1,
-    far: Number = 2000
+        fov: Number = DEFAULT_FOV,
+        aspect: Number = DEFAULT_ASPECT,
+        near: Number = DEFAULT_NEAR,
+        far: Number = DEFAULT_FAR
 ) : AbstractCamera(), CameraWithZoom, CameraWithNearAndFar, CameraCanUpdateProjectionMatrix {
 
     var fov: Float = fov.toFloat()
@@ -20,7 +20,7 @@ class PerspectiveCamera(
     override var far: Float = far.toFloat()
 
     override var zoom = 1f
-    var focus = 10
+
     var filmGauge = 35 // width of the film (default in millimeters)
     var filmOffset = 0 // horizontal film offset (same unit as gauge)
 
@@ -196,7 +196,6 @@ class PerspectiveCamera(
 
         this.near = source.near
         this.far = source.far
-        this.focus = source.focus
 
         this.aspect = source.aspect
         this.view = source.view?.copy()
@@ -210,4 +209,19 @@ class PerspectiveCamera(
     override fun clone(): PerspectiveCamera {
         return PerspectiveCamera().copy(this, true)
     }
+
+    override fun toString(): String {
+        return "PerspectiveCamera(fov=$fov, aspect=$aspect, near=$near, far=$far, zoom=$zoom, filmGauge=$filmGauge, filmOffset=$filmOffset)"
+    }
+
+
+    internal companion object {
+
+        internal val DEFAULT_FOV = 50f
+        internal val DEFAULT_ASPECT = 1f
+        internal val DEFAULT_NEAR = 0.1f
+        internal val DEFAULT_FAR = 2000f
+
+    }
+
 }
