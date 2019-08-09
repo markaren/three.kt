@@ -24,16 +24,10 @@ abstract class MouseAdapter : MouseListener {
 }
 
 
-class MouseWheelEvent(
-    val deltaX: Float,
-    val deltaY: Float
-) {
-
-    override fun toString(): String {
-        return "MouseWheelEvent(deltaX=$deltaX, deltaY=$deltaY)"
-    }
-
-}
+data class MouseWheelEvent(
+        val deltaX: Float,
+        val deltaY: Float
+)
 
 class MouseEvent {
 

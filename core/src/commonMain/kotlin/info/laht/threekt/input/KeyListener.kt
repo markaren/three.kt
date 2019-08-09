@@ -6,16 +6,10 @@ interface KeyListener {
 
 }
 
-class KeyEvent(
-    val keyCode: Int,
-    val action: KeyAction
-) {
-
-    override fun toString(): String {
-        return "KeyEvent(keyCode=$keyCode, action=$action)"
-    }
-
-}
+data class KeyEvent(
+        val keyCode: Int,
+        val action: KeyAction
+)
 
 enum class KeyAction {
     RELEASE,
