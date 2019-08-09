@@ -3,8 +3,9 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector4
+import kotlinx.io.core.IoBuffer
+import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.*
-import java.nio.ByteBuffer
 import kotlin.math.roundToInt
 
 internal class GLState {
@@ -475,9 +476,15 @@ internal class GLState {
         height: Int,
         format: Int,
         type: Int,
-        data: ByteBuffer?
+        data: IoBuffer?
     ) {
-        GL11.glTexImage2D(target, level, internalformat, width, height, 0, format, type, data)
+        val buffer = data?.let {
+            BufferUtils.createByteBuffer(data.capacity).apply {
+                it.readFully(this)
+                flip()
+            }
+        }
+        GL11.glTexImage2D(target, level, internalformat, width, height, 0, format, type, buffer)
     }
 
     fun scissor(scissor: Vector4) {

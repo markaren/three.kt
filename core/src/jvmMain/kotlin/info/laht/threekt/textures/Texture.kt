@@ -6,7 +6,6 @@ import info.laht.threekt.core.EventDispatcherImpl
 import info.laht.threekt.math.Matrix3
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.generateUUID
-import java.nio.ByteBuffer
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -175,24 +174,6 @@ open class Texture(
 
         var textureId = 0
 
-    }
-
-}
-
-class Image(
-    width: Int,
-    height: Int,
-    val data: ByteBuffer? = null
-) {
-
-    var width = width
-        internal set
-
-    var height = height
-        internal set
-
-    override fun toString(): String {
-        return "Image(width=$width, height=$height)"
     }
 
 }
