@@ -146,7 +146,7 @@ class Canvas @JvmOverloads constructor(
         glfwPollEvents()
     }
 
-    fun animate ( f: () -> Unit) {
+    inline fun animate(f: () -> Unit) {
 
         while (!windowShouldClose()) {
 
@@ -156,6 +156,7 @@ class Canvas @JvmOverloads constructor(
             pollEvents()
 
         }
+
     }
 
     class Options(
@@ -169,7 +170,6 @@ class Canvas @JvmOverloads constructor(
 
             var title: String = "Three.kt"
     )
-
 
 }
 
