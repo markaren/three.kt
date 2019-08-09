@@ -8,10 +8,10 @@ import kotlin.math.min
 import kotlin.math.tan
 
 class PerspectiveCamera(
-    fov: Number = 50,
-    aspect: Number = 1,
-    near: Number = 0.1,
-    far: Number = 2000
+        fov: Number = DEFAULT_FOV,
+        aspect: Number = DEFAULT_ASPECT,
+        near: Number = DEFAULT_NEAR,
+        far: Number = DEFAULT_FAR
 ) : AbstractCamera(), CameraWithZoom, CameraWithNearAndFar, CameraCanUpdateProjectionMatrix {
 
     var fov: Float = fov.toFloat()
@@ -210,4 +210,14 @@ class PerspectiveCamera(
     override fun clone(): PerspectiveCamera {
         return PerspectiveCamera().copy(this, true)
     }
+
+    internal companion object {
+
+        internal val DEFAULT_FOV = 50f
+        internal val DEFAULT_ASPECT = 1f
+        internal val DEFAULT_NEAR = 0.1f
+        internal val DEFAULT_FAR = 2000f
+
+    }
+
 }
