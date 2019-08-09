@@ -479,13 +479,14 @@ internal class GLState {
         data: IoBuffer?
     ) {
 
-        if (data == null || !data.canRead()) {
+        if (data == null) {
             //TODO should we even call this function here
             GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, null as ByteBuffer)
         } else {
             data.readDirect { buffer ->
                 GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, buffer)
             }
+//            data.resetForRead() // TODO do we need to call this?
         }
 
     }
