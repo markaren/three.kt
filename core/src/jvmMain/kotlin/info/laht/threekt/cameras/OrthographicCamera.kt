@@ -17,29 +17,6 @@ class OrthographicCamera(
         updateProjectionMatrix()
     }
 
-    override fun clone(): OrthographicCamera {
-        return OrthographicCamera().copy(this)
-    }
-
-    fun copy(source: OrthographicCamera): OrthographicCamera {
-
-        super<AbstractCamera>.copy(source, true)
-
-        this.left = source.left
-        this.right = source.right
-        this.top = source.top
-        this.bottom = source.bottom
-        this.near = source.near
-        this.far = source.far
-
-        this.zoom = source.zoom
-
-        source.view?.also { this.view = it.copy() }
-
-        return this
-
-    }
-
     fun setViewOffset(fullWidth: Int, fullHeight: Int, x: Int, y: Int, width: Int, height: Int) {
         if (this.view === null) {
 
@@ -110,4 +87,33 @@ class OrthographicCamera(
 
         this.projectionMatrixInverse.getInverse(this.projectionMatrix)
     }
+
+
+    override fun clone(): OrthographicCamera {
+        return OrthographicCamera().copy(this)
+    }
+
+    fun copy(source: OrthographicCamera): OrthographicCamera {
+
+        super<AbstractCamera>.copy(source, true)
+
+        this.left = source.left
+        this.right = source.right
+        this.top = source.top
+        this.bottom = source.bottom
+        this.near = source.near
+        this.far = source.far
+
+        this.zoom = source.zoom
+
+        source.view?.also { this.view = it.copy() }
+
+        return this
+
+    }
+
+    override fun toString(): String {
+        return "OrthographicCamera(left=$left, right=$right, top=$top, bottom=$bottom, near=$near, far=$far, zoom=$zoom)"
+    }
+
 }

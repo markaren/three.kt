@@ -20,7 +20,7 @@ class PerspectiveCamera(
     override var far: Float = far.toFloat()
 
     override var zoom = 1f
-    var focus = 10
+    var focus = 10f
     var filmGauge = 35 // width of the film (default in millimeters)
     var filmOffset = 0 // horizontal film offset (same unit as gauge)
 
@@ -210,6 +210,11 @@ class PerspectiveCamera(
     override fun clone(): PerspectiveCamera {
         return PerspectiveCamera().copy(this, true)
     }
+
+    override fun toString(): String {
+        return "PerspectiveCamera(fov=$fov, aspect=$aspect, near=$near, far=$far, zoom=$zoom, focus=$focus, filmGauge=$filmGauge, filmOffset=$filmOffset)"
+    }
+
 
     internal companion object {
 
