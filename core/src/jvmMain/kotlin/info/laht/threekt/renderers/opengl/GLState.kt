@@ -479,9 +479,13 @@ internal class GLState {
         data: IoBuffer?
     ) {
         val buffer = data?.let {
-            BufferUtils.createByteBuffer(data.capacity).apply {
-                it.readFully(this)
-                flip()
+            if (!it.canRead()) {
+                null // TODO investigate why data can be empty?
+            } else {
+                BufferUtils.createByteBuffer(data.capacity).apply {
+                    it.readFully(this)
+                    flip()
+                }
             }
         }
         GL11.glTexImage2D(target, level, internalformat, width, height, 0, format, type, buffer)
