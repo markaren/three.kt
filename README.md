@@ -9,12 +9,12 @@
 Kotlin/JVM port of the popular [three.js](http://threejs.org) 3D library ([r106](https://github.com/mrdoob/three.js/tree/r106)).
 
 Be warned, while the basics works, such as:
-* Primitives, Points and TubeGeometry (Only BufferGeometries are supported)
+* Primitives, Points and TubeGeometry
 * All materials and lights
 * OrbitControls
-* RenderTarget, 2D textures
-* OBJ and STL loaders
-* Other stuff like Reflector (mirror), sky and water
+* 2D textures
+* OBJ, MTL and STL loaders
+* Other stuff like mirror, sky and water shaders
  
 a lot of features are still missing and the API can change rapidly.
 
@@ -22,6 +22,8 @@ Right now, this is mostly interesting for developers that want to contribute.
 
 
 #### API (subject to changes)
+
+##### Kotlin
 
 ```kotlin
 
@@ -55,6 +57,56 @@ Canvas().use { canvas ->
     }
 
 }
+```
+
+##### java
+
+```java
+public class JavaExample {
+
+    public static void main(String[] args) {
+
+        try (Canvas canvas = new Canvas()) {
+
+            Scene scene = new Scene();
+            PerspectiveCamera camera = new PerspectiveCamera();
+            camera.getPosition().z = 5;
+            GLRenderer renderer = new GLRenderer(canvas.getWidth(), canvas.getHeight());
+
+            BoxBufferGeometry boxBufferGeometry = new BoxBufferGeometry();
+            MeshPhongMaterial boxMaterial = new MeshPhongMaterial();
+            boxMaterial.getColor().set(Color.getRoyalblue());
+
+            Mesh box = new Mesh(boxBufferGeometry, boxMaterial);
+            scene.add(box);
+
+
+            MeshBasicMaterial wireframeMaterial = new MeshBasicMaterial();
+            wireframeMaterial.getColor().set(0x000000);
+            wireframeMaterial.setWireframe(true);
+            Mesh wireframe = new Mesh(box.getGeometry().clone(), wireframeMaterial);
+            scene.add(wireframe);
+
+            AmbientLight light = new AmbientLight();
+            scene.add(light);
+
+            OrbitControls orbitControls = new OrbitControls(camera, canvas);
+
+            while (!canvas.windowShouldClose()) {
+
+                renderer.render(scene, camera);
+
+                canvas.pollEvents();
+                canvas.swapBuffers();
+
+            }
+
+        }
+
+    }
+
+}
+
 ```
 
 ## Screenshots
