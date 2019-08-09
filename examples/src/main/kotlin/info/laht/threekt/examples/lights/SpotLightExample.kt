@@ -71,7 +71,7 @@ object SpotLightExample {
 
             OrbitControls(camera, canvas)
 
-            SpotLight(Color.fromHex(Color.white)).also {
+            SpotLight(Color(Color.white)).also {
                 it.intensity = 2f
                 it.distance = 10f
                 it.penumbra = 0.3f

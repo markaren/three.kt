@@ -69,7 +69,7 @@ object PointLightExample {
             }
 
 
-            val pointLight1 = PointLight(Color.fromHex(Color.white)).also {
+            val pointLight1 = PointLight(Color(Color.white)).also {
                 it.intensity = 0.5f
                 it.position.y = 3f
                 it.position.z = 3f

@@ -7,7 +7,7 @@ import info.laht.threekt.textures.Texture
 class MeshBasicMaterial : Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithColor,
     MaterialWithWireframe, MaterialWithReflectivity {
 
-    override val color = Color.fromHex(0xffffff)
+    override val color = Color(0xffffff)
 
     public override var map: Texture? = null
 

@@ -99,9 +99,9 @@ class BoxBufferGeometry(
                     val x = ix * segmentWidth - widthHalf
 
                     // set values to correct vector component
-                    vector.setComponent(u, x * udir)
-                    vector.setComponent(v, y * vdir)
-                    vector.setComponent(w, depthHalf)
+                    vector[u] = x * udir
+                    vector[v] = y * vdir
+                    vector[w] = depthHalf
 
                     // now apply vector to vertex buffer
                     vertices[vertexBufferOffset] = vector.x
@@ -109,9 +109,9 @@ class BoxBufferGeometry(
                     vertices[vertexBufferOffset + 2] = vector.z
 
                     // set values to correct vector component
-                    vector.setComponent(u, 0f)
-                    vector.setComponent(v, 0f)
-                    vector.setComponent(w, if (depth > 0) 1f else -1f)
+                    vector[u] = 0f
+                    vector[v] = 0f
+                    vector[w] = if (depth > 0) 1f else -1f
 
                     // now apply vector to normal buffer
                     normals[vertexBufferOffset] = vector.x

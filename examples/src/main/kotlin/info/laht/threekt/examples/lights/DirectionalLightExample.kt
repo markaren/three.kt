@@ -67,7 +67,7 @@ object DirectionalLightExample {
                 box.add(it)
             }
 
-            val light = DirectionalLight(Color.fromHex(Color.white)).also {
+            val light = DirectionalLight(Color(Color.white)).also {
                 it.intensity = 0.5f
                 it.castShadow = true
                 it.position.set(-10,10,-10)
