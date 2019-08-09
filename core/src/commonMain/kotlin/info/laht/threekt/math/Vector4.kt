@@ -1,14 +1,19 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
+import kotlin.jvm.JvmField
 import kotlin.math.abs
 import kotlin.math.sqrt
 
 data class Vector4(
-    var x: Float,
-    var y: Float,
-    var z: Float,
-    var w: Float
+        @JvmField
+        var x: Float,
+        @JvmField
+        var y: Float,
+        @JvmField
+        var z: Float,
+        @JvmField
+        var w: Float
 ) : Cloneable, Flattable {
 
     override val size = 4
