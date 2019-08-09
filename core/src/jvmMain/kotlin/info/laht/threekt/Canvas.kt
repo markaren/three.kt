@@ -9,22 +9,19 @@ import java.io.Closeable
 
 
 class Canvas @JvmOverloads constructor(
-        options: Options = Options()
-) : Closeable {
+    options: Options = Options()
+) : AbstractPeripheralsEventSource(), Closeable {
 
     val hwnd: Long
 
-    val width: Int = options.width
-    val height: Int = options.height
+    override val width: Int = options.width
+    override val height: Int = options.height
 
     val aspect: Float
         get() = width.toFloat() / height
 
     private val mouseEvent = MouseEvent()
     private var debugProc: Callback? = null
-
-    private var keyListeners: MutableList<KeyListener>? = null
-    private var mouseListeners: MutableList<MouseListener>? = null
 
     var onWindowResize: ((Int, Int) -> Unit)? = null
 
@@ -85,26 +82,6 @@ class Canvas @JvmOverloads constructor(
         debugProc = GLUtil.setupDebugMessageCallback()
     }
 
-    fun addKeyListener(listener: KeyListener) {
-        keyListeners?.add(listener) ?: run {
-            keyListeners = mutableListOf(listener)
-        }
-    }
-
-    fun addMouseListener(listener: MouseListener) {
-        mouseListeners?.add(listener) ?: run {
-            mouseListeners = mutableListOf(listener)
-        }
-    }
-
-    fun removeKeyListener(listener: KeyListener): Boolean {
-        return keyListeners?.remove(listener) ?: false
-    }
-
-    fun removeMouseListener(listener: MouseListener): Boolean {
-        return mouseListeners?.remove(listener) ?: false
-    }
-
     override fun close() {
         debugProc?.free()
         glfwTerminate()
@@ -155,9 +132,9 @@ class Canvas @JvmOverloads constructor(
 
             // Center the window
             glfwSetWindowPos(
-                    hwnd,
-                    (vidMode.width() - width) / 2,
-                    (vidMode.height() - height) / 2
+                hwnd,
+                (vidMode.width() - width) / 2,
+                (vidMode.height() - height) / 2
             )
 
             // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
@@ -180,15 +157,15 @@ class Canvas @JvmOverloads constructor(
     }
 
     class Options(
-            var width: Int = 800,
-            var height: Int = 600,
+        var width: Int = 800,
+        var height: Int = 600,
 
-            var antialiasing: Int = 0,
+        var antialiasing: Int = 0,
 
-            var vsync: Boolean = true,
-            var resizeable: Boolean = false,
+        var vsync: Boolean = true,
+        var resizeable: Boolean = false,
 
-            var title: String = "Three.kt"
+        var title: String = "Three.kt"
     )
 
 }
