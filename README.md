@@ -80,7 +80,6 @@ public class JavaExample {
             Mesh box = new Mesh(boxBufferGeometry, boxMaterial);
             scene.add(box);
 
-
             MeshBasicMaterial wireframeMaterial = new MeshBasicMaterial();
             wireframeMaterial.getColor().set(0x000000);
             wireframeMaterial.setWireframe(true);
@@ -92,7 +91,7 @@ public class JavaExample {
 
             OrbitControls orbitControls = new OrbitControls(camera, canvas);
 
-            while (!canvas.windowShouldClose()) {
+            while (!canvas.shouldClose()) {
 
                 renderer.render(scene, camera);
 
