@@ -5,6 +5,9 @@ import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.objects.Sprite
+import kotlinx.io.core.ByteOrder
+import kotlinx.io.core.IoBuffer
+import kotlinx.io.core.writeFloat
 import org.lwjgl.BufferUtils
 import java.nio.FloatBuffer
 
@@ -12,6 +15,12 @@ import java.nio.FloatBuffer
 fun Vector2.toBuffer(buffer: FloatBuffer?, offset: Int): FloatBuffer {
     val buf = buffer ?: BufferUtils.createFloatBuffer(3)
     return buf.put(x).put(y)
+}
+
+fun Vector2.toBuffer(buffer: IoBuffer, offset: Int): IoBuffer {
+    buffer.writeFloat(x, ByteOrder.nativeOrder())
+    buffer.writeFloat(y, ByteOrder.nativeOrder())
+    return buffer
 }
 
 fun Vector3.project(camera: Camera): Vector3 {
