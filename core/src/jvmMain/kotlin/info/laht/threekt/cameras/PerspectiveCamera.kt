@@ -20,7 +20,7 @@ class PerspectiveCamera(
     override var far: Float = far.toFloat()
 
     override var zoom = 1f
-    var focus = 10f
+
     var filmGauge = 35 // width of the film (default in millimeters)
     var filmOffset = 0 // horizontal film offset (same unit as gauge)
 
@@ -196,7 +196,6 @@ class PerspectiveCamera(
 
         this.near = source.near
         this.far = source.far
-        this.focus = source.focus
 
         this.aspect = source.aspect
         this.view = source.view?.copy()
@@ -212,7 +211,7 @@ class PerspectiveCamera(
     }
 
     override fun toString(): String {
-        return "PerspectiveCamera(fov=$fov, aspect=$aspect, near=$near, far=$far, zoom=$zoom, focus=$focus, filmGauge=$filmGauge, filmOffset=$filmOffset)"
+        return "PerspectiveCamera(fov=$fov, aspect=$aspect, near=$near, far=$far, zoom=$zoom, filmGauge=$filmGauge, filmOffset=$filmOffset)"
     }
 
 
