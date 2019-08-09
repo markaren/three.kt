@@ -471,7 +471,7 @@ internal class GLState {
     fun texImage2D(
         target: Int,
         level: Int,
-        internalformat: Int,
+        internalFormat: Int,
         width: Int,
         height: Int,
         format: Int,
@@ -488,7 +488,7 @@ internal class GLState {
                 }
             }
         }
-        GL11.glTexImage2D(target, level, internalformat, width, height, 0, format, type, buffer)
+        GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, buffer)
     }
 
     fun scissor(scissor: Vector4) {
