@@ -1,6 +1,5 @@
 package info.laht.threekt.controls
 
-import info.laht.threekt.Canvas
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.CameraWithZoom
 import info.laht.threekt.cameras.OrthographicCamera
@@ -15,7 +14,7 @@ private const val EPS = 0.000001f
 
 class OrbitControls(
     private val camera: Camera,
-    private val canvas: Canvas
+    private val eventSource: PeripheralsEventSource
 ) : EventDispatcher by EventDispatcherImpl() {
 
     // Set to false to disable this control
@@ -101,8 +100,8 @@ class OrbitControls(
 
         update()
 
-        canvas.addKeyListener(MyKeyListener())
-        canvas.addMouseListener(MyMouseListener())
+        eventSource.addKeyListener(MyKeyListener())
+        eventSource.addMouseListener(MyMouseListener())
 
     }
 
@@ -315,7 +314,6 @@ class OrbitControls(
 
         panOffset.add(v)
 
-
     }
 
     // deltaX and deltaY are in pixels; right and down are positive
@@ -335,18 +333,18 @@ class OrbitControls(
                 targetDistance *= tan((this.camera.fov / 2) * PI.toFloat() / 180f)
 
                 // we use only clientHeight here so aspect ratio does not distort speed
-                panLeft(2 * deltaX * targetDistance / canvas.height, this.camera.matrix)
-                panUp(2 * deltaY * targetDistance / canvas.height, this.camera.matrix)
+                panLeft(2 * deltaX * targetDistance / eventSource.height, this.camera.matrix)
+                panUp(2 * deltaY * targetDistance / eventSource.height, this.camera.matrix)
 
             }
             this.camera is OrthographicCamera -> {
                 // orthographic
                 panLeft(
-                    deltaX * (this.camera.right - this.camera.left) / this.camera.zoom / canvas.width,
+                    deltaX * (this.camera.right - this.camera.left) / this.camera.zoom / eventSource.width,
                     this.camera.matrix
                 )
                 panUp(
-                    deltaY * (this.camera.top - this.camera.bottom) / this.camera.zoom / canvas.height,
+                    deltaY * (this.camera.top - this.camera.bottom) / this.camera.zoom / eventSource.height,
                     this.camera.matrix
                 )
             }
@@ -447,9 +445,9 @@ class OrbitControls(
 
         rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(rotateSpeed)
 
-        rotateLeft(2 * PI.toFloat() * rotateDelta.x / canvas.width) // yes, height
+        rotateLeft(2 * PI.toFloat() * rotateDelta.x / eventSource.width) // yes, height
 
-        rotateUp(2 * PI.toFloat() * rotateDelta.y / canvas.height)
+        rotateUp(2 * PI.toFloat() * rotateDelta.y / eventSource.height)
 
         rotateStart.copy(rotateEnd)
 
@@ -542,8 +540,8 @@ class OrbitControls(
                 if (state != State.NONE) {
 
                     val mouseMoveListener = MyMouseMoveListener()
-                    canvas.addMouseListener(mouseMoveListener)
-                    canvas.addMouseListener(MyMouseUpListener(mouseMoveListener))
+                    eventSource.addMouseListener(mouseMoveListener)
+                    eventSource.addMouseListener(MyMouseUpListener(mouseMoveListener))
 
                     dispatchEvent("start", this)
 
@@ -594,8 +592,8 @@ class OrbitControls(
         override fun onMouseUp(event: MouseEvent) {
             if (enabled) {
 
-                canvas.removeMouseListener(moveListener)
-                canvas.removeMouseListener(this)
+                eventSource.removeMouseListener(moveListener)
+                eventSource.removeMouseListener(this)
 
                 dispatchEvent("end", this)
                 state = State.NONE

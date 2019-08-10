@@ -1,6 +1,7 @@
 package info.laht.threekt.loaders
 
 import info.laht.threekt.textures.Image
+import kotlinx.io.core.IoBuffer
 import org.lwjgl.BufferUtils
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
@@ -20,7 +21,10 @@ object ImageLoader {
         }
         val isJpg = file.name.endsWith(".jpg", true) || file.name.endsWith(".jpeg", true)
 
-        return cache.computeIfAbsent(file.absolutePath) {
+        if (file.absolutePath in cache) {
+            return cache.getValue(file.absolutePath)
+        } else {
+
             var img = ImageIO.read(file)
             if (flipY) {
                 img = createFlipped(img)
@@ -30,24 +34,25 @@ object ImageLoader {
             val pixels = IntArray(res)
             img.getRGB(0, 0, img.width, img.height, pixels, 0, img.width)
 
-            val buffer = BufferUtils.createByteBuffer(res * if (isJpg) 3 else 4)
+            val buffer = IoBuffer(BufferUtils.createByteBuffer(pixels.size * (if (isJpg) 3 else 4)))
             for (y in 0 until img.height) {
                 for (x in 0 until img.width) {
                     val pixel = pixels[y * img.width + x]
-                    buffer.put((pixel shr 16 and 0xFF).toByte()) // Red component
-                    buffer.put((pixel shr 8 and 0xFF).toByte()) // Green component
-                    buffer.put((pixel and 0xFF).toByte()) // Blue component
+                    buffer.writeByte((pixel shr 16 and 0xFF).toByte()) // Red component
+                    buffer.writeByte((pixel shr 8 and 0xFF).toByte()) // Green component
+                    buffer.writeByte((pixel and 0xFF).toByte()) // Blue component
 
                     if (!isJpg) {
-                        buffer.put((pixel shr 24 and 0xFF).toByte()) // Alpha component. Only for RGBA
+                        buffer.writeByte((pixel shr 24 and 0xFF).toByte()) // Alpha component. Only for RGBA
                     }
 
                 }
             }
 
-            buffer.flip()
-            Image(img.width, img.height, buffer)
 
+            return Image(img.width, img.height, buffer).also {
+                cache[file.absolutePath] = it
+            }
         }
     }
 
