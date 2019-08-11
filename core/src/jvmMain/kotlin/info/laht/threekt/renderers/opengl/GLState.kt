@@ -481,7 +481,7 @@ internal class GLState {
 
         if (data == null) {
             //TODO should we even call this function here
-            GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, null as ByteBuffer)
+            GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, null as ByteBuffer?)
         } else {
             data.readDirect { buffer ->
                 GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, buffer)
