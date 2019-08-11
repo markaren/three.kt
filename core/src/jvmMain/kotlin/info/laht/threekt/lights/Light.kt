@@ -166,6 +166,8 @@ class SpotLight(
             this.intensity = value / PI.toFloat()
         }
 
+    constructor(color: Int, intensity: Number?) : this(Color(color), intensity)
+
     init {
 
         position.copy(Object3D.defaultUp)
