@@ -1,6 +1,5 @@
 package info.laht.threekt.lights
 
-import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.math.Color
@@ -98,7 +97,7 @@ class PointLight(
     var distance = distance?.toFloat() ?: 0f
     var decay = decay?.toFloat() ?: 1f
 
-    override val shadow = LightShadow(PerspectiveCamera(90, 1f, 0.5f, 500f))
+    override val shadow = PointLightShadow()
 
     constructor(color: Int, intensity: Number? = null, distance: Number? = null, decay: Number? = null) : this(
         Color(color), intensity, distance, decay

@@ -30,7 +30,7 @@ object ShadowExample {
             renderer.shadowMap.enabled = true
             renderer.shadowMap.type = ShadowType.PCFSoft
 
-            val light = PointLight(0xffffff, 1, 100)
+            val light = PointLight(0xffffff, 0.5f, 100)
             light.position.set(0f, 10f, 0f)
             light.castShadow = true
             scene.add(light)
