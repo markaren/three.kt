@@ -8,12 +8,12 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-object ImageLoader {
+actual object ImageLoader {
 
     private val cache = mutableMapOf<String, Image>()
 
     @JvmOverloads
-    fun load(path: String, flipY: Boolean = true): Image {
+    actual fun load(path: String, flipY: Boolean): Image {
 
         val file = File(path)
         if (!file.exists()) {
@@ -56,7 +56,7 @@ object ImageLoader {
         }
     }
 
-    fun clearCache() {
+    actual fun clearCache() {
         cache.clear()
     }
 
