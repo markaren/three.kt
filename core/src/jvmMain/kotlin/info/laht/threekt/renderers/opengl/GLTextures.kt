@@ -554,7 +554,6 @@ internal class GLTextures(
 
     private fun setupDepthTexture(framebuffer: Int, renderTarget: GLRenderTarget) {
 
-
         val depthTexture = renderTarget.depthTexture ?: throw IllegalArgumentException("Depth Texture is null")
         val image = depthTexture.image ?: throw IllegalArgumentException("Depth Texture Image is null")
 
@@ -578,16 +577,27 @@ internal class GLTextures(
 
         setTexture2D(depthTexture, 0)
 
+        val webglDepthTexture = properties[depthTexture]["__webglTexture"] as Int
+
+        when {
+            depthTexture.format == TextureFormat.Depth -> GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, webglDepthTexture, 0)
+            depthTexture.format == TextureFormat.DepthStencil -> GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT, GL11.GL_TEXTURE_2D, webglDepthTexture, 0)
+            else -> throw IllegalStateException("Unknow depthTexture format: ${depthTexture.format}")
+        }
+
     }
 
-    fun setupDepthRenderbuffer(renderTarget: GLRenderTarget) {
-        val renderTargetProperties = properties.get(renderTarget)
+    private fun setupDepthRenderbuffer(renderTarget: GLRenderTarget) {
+
+        val renderTargetProperties = properties[renderTarget]
 
         val isCube = (renderTarget is GLRenderTargetCube)
 
         if (renderTarget.depthTexture != null) {
 
-            if (isCube) throw Error("target.depthTexture not supported in Cube render targets")
+            if (isCube) {
+                throw Error("target.depthTexture not supported in Cube render targets")
+            }
 
             setupDepthTexture(renderTargetProperties["__webglFramebuffer"] as Int, renderTarget)
 
@@ -603,7 +613,7 @@ internal class GLTextures(
                         GL30.GL_FRAMEBUFFER,
                         renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i]
                     )
-                    renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i] = GL45.glCreateRenderbuffers()
+                    renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i] = GL30.glGenRenderbuffers()
                     setupRenderBufferStorage(
                         renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i],
                         renderTarget
@@ -614,7 +624,7 @@ internal class GLTextures(
             } else {
 
                 GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, renderTargetProperties["__webglFramebuffer"] as Int)
-                renderTargetProperties["__webglDepthbuffer"] = GL45.glCreateRenderbuffers()
+                renderTargetProperties["__webglDepthbuffer"] = GL30.glGenRenderbuffers()
                 setupRenderBufferStorage(renderTargetProperties["__webglDepthbuffer"] as Int, renderTarget)
 
             }
@@ -622,6 +632,7 @@ internal class GLTextures(
         }
 
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0)
+
     }
 
     fun setupRenderTarget(renderTarget: GLRenderTarget) {
@@ -642,12 +653,12 @@ internal class GLTextures(
         if (isCube) {
 
             renderTargetProperties["__webglFramebuffer"] = IntArray(6).also {
-                GL45.glCreateFramebuffers(it)
+                GL30.glGenFramebuffers(it)
             }
 
         } else {
 
-            renderTargetProperties["__webglFramebuffer"] = GL45.glCreateFramebuffers()
+            renderTargetProperties["__webglFramebuffer"] = GL30.glGenFramebuffers()
 
             if (isMultisample) {
 
