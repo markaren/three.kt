@@ -10,7 +10,7 @@ import info.laht.threekt.math.generateUUID
 import info.laht.threekt.renderers.Program
 import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.textures.Texture
-import info.laht.threekt.core.Cloneable as Cloneable1
+import info.laht.threekt.core.Cloneable as Cloneable1 // needed to avoid intelliJ from "optmizing" this import
 
 open class Material : Cloneable1, EventDispatcher by EventDispatcherImpl() {
 
