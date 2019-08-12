@@ -3,6 +3,7 @@ package info.laht.threekt.loaders
 import info.laht.threekt.TextureFormat
 import info.laht.threekt.TextureType
 import info.laht.threekt.textures.Texture
+import kotlin.jvm.JvmOverloads
 
 object TextureLoader {
 
