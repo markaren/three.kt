@@ -1,14 +1,18 @@
 package info.laht.threekt.materials
 
 import info.laht.threekt.*
-import info.laht.threekt.core.*
+import info.laht.threekt.core.EventDispatcher
+import info.laht.threekt.core.EventDispatcherImpl
+import info.laht.threekt.core.Shader
+import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.Plane
 import info.laht.threekt.math.generateUUID
 import info.laht.threekt.renderers.Program
 import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.textures.Texture
+import info.laht.threekt.core.Cloneable as Cloneable1
 
-open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
+open class Material : Cloneable1, EventDispatcher by EventDispatcherImpl() {
 
     /**
      * Material name. Default is an empty string.
