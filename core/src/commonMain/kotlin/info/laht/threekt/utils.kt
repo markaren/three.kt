@@ -1,5 +1,8 @@
 package info.laht.threekt
 
+import kotlinx.io.charsets.Charset
+import kotlinx.io.charsets.Charsets
+
 internal val List<*>.length: Int
     get() = this.size
 
@@ -168,6 +171,10 @@ internal inline fun <reified T> MutableList<T>.push(value: T, vararg values: T):
     return size
 }
 
+internal expect fun String.readText(charset: Charset = Charsets.UTF_8): String
+
+internal expect fun String.readBytes(): ByteArray
+
 object LoaderUtils {
 
     fun extractUrlBase(url: String): String {
@@ -184,3 +191,4 @@ object LoaderUtils {
     }
 
 }
+
