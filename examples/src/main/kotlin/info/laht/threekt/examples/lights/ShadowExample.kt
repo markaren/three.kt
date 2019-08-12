@@ -24,7 +24,7 @@ object ShadowExample {
             val scene = Scene()
 
             val camera = PerspectiveCamera()
-            camera.position.z = 20f
+            camera.position.set(0f, 5f, 20f)
 
             val renderer = GLRenderer(canvas.width, canvas.height)
             renderer.shadowMap.enabled = true
