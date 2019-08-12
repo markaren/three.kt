@@ -2,11 +2,10 @@ package info.laht.threekt.materials
 
 import info.laht.threekt.*
 import info.laht.threekt.core.*
-import info.laht.threekt.core.Cloneable
 import info.laht.threekt.math.Plane
 import info.laht.threekt.math.generateUUID
-import info.laht.threekt.renderers.GLRenderer
-import info.laht.threekt.renderers.opengl.GLProgram
+import info.laht.threekt.renderers.Program
+import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.textures.Texture
 
 open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
@@ -222,9 +221,9 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
 
     internal open var combine = TextureCombineOperation.Multiply
 
-    internal var program: GLProgram? = null
+    internal var program: Program? = null
 
-    internal var type = javaClass.simpleName
+    internal var type = this::class.simpleName!!
 
     internal var index0AttributeName: String? = null
 
@@ -233,7 +232,7 @@ open class Material : Cloneable, EventDispatcher by EventDispatcherImpl() {
     internal open var vertexShader: String = ""
     internal open var fragmentShader: String = ""
 
-    var onBeforeCompile: ((Shader, GLRenderer) -> Unit)? = null
+    var onBeforeCompile: ((Shader, Renderer) -> Unit)? = null
 
     internal fun getMapForType(type: String): Texture? {
 

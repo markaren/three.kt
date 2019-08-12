@@ -6,7 +6,8 @@ import info.laht.threekt.renderers.shaders.ShaderChunk
 open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals,
     MaterialWithClipping, MaterialWithWireframe, MaterialWithLineWidth, MaterialWithDefaultAttributeValues {
 
-    public override val uniforms: MutableMap<String, Uniform> = mutableMapOf()
+    public override val uniforms: MutableMap<String, Uniform>
+        get() = super.uniforms
 
     public override var vertexShader = ShaderChunk.default_vertex
     public override var fragmentShader = ShaderChunk.default_fragment

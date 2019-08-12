@@ -6,7 +6,7 @@ import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.MeshDepthMaterial
 import info.laht.threekt.materials.MeshDistanceMaterial
 import info.laht.threekt.math.*
-import info.laht.threekt.renderers.GLRenderer
+import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.scenes.Scene
 
 interface Object3D : Cloneable, EventDispatcher {
@@ -46,8 +46,8 @@ interface Object3D : Cloneable, EventDispatcher {
     var customDepthMaterial: MeshDepthMaterial?
     var customDistanceMaterial: MeshDistanceMaterial?
 
-    var onBeforeRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)?
-    var onAfterRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)?
+    var onBeforeRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)?
+    var onAfterRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)?
 
     val userData: MutableMap<String, Any>
 
@@ -552,8 +552,8 @@ open class Object3DImpl : Object3D, EventDispatcher by EventDispatcherImpl() {
     override var customDepthMaterial: MeshDepthMaterial? = null
     override var customDistanceMaterial: MeshDistanceMaterial? = null
 
-    override var onBeforeRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null
-    override var onAfterRender: ((GLRenderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null
+    override var onBeforeRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null
+    override var onAfterRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null
 
     override val userData by lazy { mutableMapOf<String, Any>() }
 
