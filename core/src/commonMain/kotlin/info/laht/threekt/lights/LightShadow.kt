@@ -5,7 +5,7 @@ import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.Cloneable
 import info.laht.threekt.math.*
-import info.laht.threekt.renderers.GLRenderTarget
+import info.laht.threekt.renderers.RenderTarget
 
 open class LightShadow<E : CameraWithNearAndFar>(
         val camera: E
@@ -16,7 +16,7 @@ open class LightShadow<E : CameraWithNearAndFar>(
 
     var mapSize = Vector2(512, 512)
 
-    var map: GLRenderTarget? = null
+    var map: RenderTarget? = null
     var matrix = Matrix4()
 
     val frustum = Frustum()

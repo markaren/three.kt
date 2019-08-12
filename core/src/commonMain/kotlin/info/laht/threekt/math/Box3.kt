@@ -1,6 +1,8 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
+import info.laht.threekt.core.Object3D
+import info.laht.threekt.objects.Mesh
 import kotlin.jvm.JvmOverloads
 
 data class Box3 @JvmOverloads constructor(
@@ -270,6 +272,41 @@ data class Box3 @JvmOverloads constructor(
 
         return this
     }
+
+
+    fun setFromObject(`object`: Object3D): Box3 {
+        this.makeEmpty()
+
+        return this.expandByObject(`object`)
+    }
+
+    fun expandByObject(`object`: Object3D): Box3 {
+
+        val v1 = Vector3()
+
+        `object`.updateMatrixWorld(true)
+        `object`.traverse { node ->
+
+            if (node is Mesh) {
+
+                val geometry = node.geometry
+
+                geometry.attributes.position?.also { attribute ->
+
+                    for (i in 0 until attribute.count) {
+                        attribute.toVector3(i, v1).applyMatrix4(node.matrixWorld)
+                        expandByPoint(v1)
+                    }
+
+                }
+
+            }
+
+        }
+
+        return this
+    }
+
 
     override fun clone(): Box3 {
         return Box3().copy(this)

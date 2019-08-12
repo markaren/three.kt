@@ -4,6 +4,7 @@ import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.math.Vector3
+import kotlin.jvm.JvmOverloads
 
 open class LineSegments @JvmOverloads constructor(
     geometry: BufferGeometry? = null,

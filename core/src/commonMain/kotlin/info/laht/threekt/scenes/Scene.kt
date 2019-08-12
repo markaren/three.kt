@@ -4,9 +4,9 @@ import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Object3DImpl
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Color
-import info.laht.threekt.renderers.GLRenderTarget
-import info.laht.threekt.renderers.GLRenderTargetCube
-import info.laht.threekt.renderers.GLRenderer
+import info.laht.threekt.renderers.RenderTarget
+import info.laht.threekt.renderers.RenderTargetCube
+import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.textures.CubeTexture
 
 class Scene : Object3DImpl() {
@@ -17,7 +17,7 @@ class Scene : Object3DImpl() {
 
     var autoUpdate = true
 
-    var onBeforeRenderScene: ((GLRenderer, Scene, Camera, GLRenderTarget?) -> Unit)? = null
+    var onBeforeRenderScene: ((Renderer, Scene, Camera, RenderTarget?) -> Unit)? = null
 
     internal var background: Background? = null
 
@@ -33,7 +33,7 @@ class Scene : Object3DImpl() {
         background = TextureBackground(texture)
     }
 
-    fun setBackground(renderTarget: GLRenderTargetCube) {
+    fun setBackground(renderTarget: RenderTargetCube) {
         background = RenderTargetBackGround(renderTarget)
     }
 
@@ -68,5 +68,5 @@ internal class TextureBackground(
 ) : Background()
 
 internal class RenderTargetBackGround(
-    val renderTarget: GLRenderTargetCube
+        val renderTarget: RenderTargetCube
 ) : Background()

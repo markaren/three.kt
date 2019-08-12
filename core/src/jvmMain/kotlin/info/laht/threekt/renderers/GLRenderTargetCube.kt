@@ -16,7 +16,7 @@ class GLRenderTargetCube(
     width: Int,
     height: Int,
     options: Options? = null
-) : GLRenderTarget(width, height, options) {
+) : GLRenderTarget(width, height, options), RenderTargetCube {
 
     fun fromEquirectangularTexture(renderer: GLRenderer, texture: Texture): GLRenderTargetCube {
 

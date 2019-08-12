@@ -1,6 +1,7 @@
 package info.laht.threekt.core
 
 import info.laht.threekt.math.*
+import kotlin.jvm.JvmOverloads
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt

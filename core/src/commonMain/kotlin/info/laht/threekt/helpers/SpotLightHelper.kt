@@ -8,6 +8,7 @@ import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Vector3
 import info.laht.threekt.objects.LineSegments
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
@@ -42,8 +43,8 @@ class SpotLightHelper(
         var j = 1
         for (i in 0 until l) {
 
-            val p1 = ((i.toFloat() / l) * Math.PI * 2).toFloat()
-            val p2 = ((j.toFloat() / l) * Math.PI * 2).toFloat()
+            val p1 = ((i.toFloat() / l) * PI * 2).toFloat()
+            val p2 = ((j.toFloat() / l) * PI * 2).toFloat()
 
             positions.addAll(
                 listOf(

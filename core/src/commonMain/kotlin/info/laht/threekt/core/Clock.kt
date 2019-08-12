@@ -1,5 +1,7 @@
 package info.laht.threekt.core
 
+import info.laht.threekt.currentTimeMillis
+
 class Clock(
     private var autoStart: Boolean = true
 ) {
@@ -12,7 +14,7 @@ class Clock(
         private set
 
     fun start() {
-        startTime = System.currentTimeMillis()
+        startTime = currentTimeMillis()
         oldTime = startTime
         elapsedTime = 0f
         running = true
@@ -39,7 +41,7 @@ class Clock(
 
         if (this.running) {
 
-            val newTime = System.currentTimeMillis()
+            val newTime = currentTimeMillis()
             diff = (newTime - this.oldTime).toFloat() / 1000f
             this.oldTime = newTime
 

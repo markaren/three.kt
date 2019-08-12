@@ -11,7 +11,10 @@ import info.laht.threekt.lights.LightShadow
 import info.laht.threekt.lights.LightWithShadow
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.materials.*
-import info.laht.threekt.math.*
+import info.laht.threekt.math.Frustum
+import info.laht.threekt.math.Vector2
+import info.laht.threekt.math.Vector3
+import info.laht.threekt.math.Vector4
 import info.laht.threekt.objects.Line
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.objects.Points
@@ -159,7 +162,7 @@ class GLShadowMap internal constructor(
 
                 }
 
-                renderer.setRenderTarget(shadow.map!!)
+                renderer.setRenderTarget(shadow.map as GLRenderTarget)
                 renderer.clear()
 
                 shadow.viewports.forEachIndexed { vp, viewport ->

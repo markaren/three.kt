@@ -1,5 +1,6 @@
 package info.laht.threekt.math
 
+import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Cloneable
 import kotlin.jvm.JvmField
 import kotlin.math.*
@@ -411,6 +412,14 @@ data class Vector3(
 
         return this
 
+    }
+
+    fun project(camera: Camera): Vector3 {
+        return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(camera.projectionMatrix)
+    }
+
+    fun unproject(camera: Camera): Vector3 {
+        return this.applyMatrix4(camera.projectionMatrixInverse).applyMatrix4(camera.matrixWorld)
     }
 
     /**

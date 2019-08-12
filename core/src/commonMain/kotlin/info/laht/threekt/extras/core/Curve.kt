@@ -10,7 +10,7 @@ abstract class Curve3 {
 
     var needsUpdate = false
 
-    internal val type = javaClass.simpleName
+    internal val type = this::class.simpleName
 
     private val arcLengthDivisions = 200
     private var cacheArcLengths: FloatArray? = null

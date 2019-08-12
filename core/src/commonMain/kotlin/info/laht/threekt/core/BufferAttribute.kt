@@ -1,18 +1,11 @@
 package info.laht.threekt.core
 
 import info.laht.threekt.math.*
-import org.lwjgl.BufferUtils
-import org.lwjgl.system.APIUtil
-import java.nio.ByteBuffer
-import java.nio.FloatBuffer
-import java.nio.IntBuffer
 import kotlin.properties.Delegates
 
 sealed class BufferAttribute(
-    capacity: Int,
-    elementShift: Int,
-    itemSize: Int,
-    normalized: Boolean? = null
+        itemSize: Int,
+        normalized: Boolean? = null
 ) : Cloneable {
 
     internal var name = ""
@@ -23,10 +16,6 @@ sealed class BufferAttribute(
 
     var normalized = normalized ?: false
         private set
-
-    internal var backingBuffer = BufferUtils.createByteBuffer(
-        getAllocationSize(capacity, elementShift)
-    )
 
     abstract val size: Int
 
@@ -50,8 +39,6 @@ sealed class BufferAttribute(
 
         this.dynamic = source.dynamic
 
-        this.backingBuffer = source.backingBuffer.clone()
-
         return this
 
     }
@@ -61,24 +48,19 @@ sealed class BufferAttribute(
 }
 
 class IntBufferAttribute(
-    capacity: Int,
-    itemSize: Int,
-    normalized: Boolean? = null
-) : BufferAttribute(capacity, 2, itemSize, normalized) {
-
-    private val buffer
-        get() = backingBuffer.asIntBuffer()
-
-    override val size: Int
-        get() = buffer.capacity()
-
-    constructor(
-        array: IntArray,
+        internal val buffer: IntArray,
         itemSize: Int,
         normalized: Boolean? = null
-    ) : this(array.size, itemSize, normalized) {
-        this.buffer.put(array).flip()
-    }
+) : BufferAttribute(itemSize, normalized) {
+
+    override val size: Int
+        get() = buffer.size
+
+    constructor(
+            capacity: Int,
+            itemSize: Int,
+            normalized: Boolean? = null
+    ) : this(IntArray(capacity), itemSize, normalized)
 
     operator fun get(index: Int): Int {
         return buffer[index]
@@ -88,10 +70,10 @@ class IntBufferAttribute(
         buffer[index] = value
     }
 
-    fun add(value: Int): IntBufferAttribute {
-        buffer.put(value)
-        return this
-    }
+//    fun add(value: Int): IntBufferAttribute {
+//        buffer.put(value)
+//        return this
+//    }
 
     fun getX(index: Int): Int {
         return buffer[index * itemSize]
@@ -164,6 +146,7 @@ class IntBufferAttribute(
 
     fun copy(source: IntBufferAttribute): IntBufferAttribute {
         super.copy(source)
+        source.buffer.copyInto(buffer)
         return this
     }
 
@@ -182,30 +165,25 @@ class IntBufferAttribute(
 
 
     override fun clone(): IntBufferAttribute {
-        return IntBufferAttribute(0, 0).copy(this)
+        return IntBufferAttribute(buffer.size, 0).copy(this)
     }
 
 }
 
 class FloatBufferAttribute(
-    capacity: Int,
-    itemSize: Int,
-    normalized: Boolean? = null
-) : BufferAttribute(capacity, 2, itemSize, normalized) {
-
-    private val buffer
-        get() = backingBuffer.asFloatBuffer()
-
-    override val size: Int
-        get() = buffer.capacity()
-
-    constructor(
-        array: FloatArray,
+        internal val buffer: FloatArray,
         itemSize: Int,
         normalized: Boolean? = null
-    ) : this(array.size, itemSize, normalized) {
-        this.buffer.put(array).flip()
-    }
+) : BufferAttribute(itemSize, normalized) {
+
+    override val size: Int
+        get() = buffer.size
+
+    constructor(
+            capacity: Int,
+            itemSize: Int,
+            normalized: Boolean? = null
+    ) : this(FloatArray(capacity), itemSize, normalized)
 
     operator fun get(index: Int): Float {
         return buffer[index]
@@ -215,10 +193,10 @@ class FloatBufferAttribute(
         buffer[index] = value
     }
 
-    fun add(value: Float): FloatBufferAttribute {
-        buffer.put(value)
-        return this
-    }
+//    fun add(value: Float): FloatBufferAttribute {
+//        buffer.put(value)
+//        return this
+//    }
 
     fun getX(index: Int): Float {
         return buffer[index * itemSize]
@@ -341,6 +319,7 @@ class FloatBufferAttribute(
 
     fun copy(source: FloatBufferAttribute): FloatBufferAttribute {
         super.copy(source)
+        source.buffer.copyInto(buffer)
         return this
     }
 
@@ -447,46 +426,47 @@ class FloatBufferAttribute(
     }
 
     override fun clone(): FloatBufferAttribute {
-        return FloatBufferAttribute(0, 0).copy(this)
+        return FloatBufferAttribute(buffer.size, 0).copy(this)
     }
 
 }
 
-class BufferAttributes : HashMap<String, BufferAttribute>() {
+class BufferAttributes : MutableMap<String, BufferAttribute> by mutableMapOf<String, BufferAttribute>() {
 
     val index get() = get("index") as IntBufferAttribute?
     val position get() = get("position") as FloatBufferAttribute?
     val normal get() = get("normal") as FloatBufferAttribute?
-    val uv get() = get("uv") as IntBufferAttribute?
+    val uv get() = get("uv") as FloatBufferAttribute?
     val color get() = get("color") as FloatBufferAttribute?
     val tangent get() = get("tangent") as FloatBufferAttribute?
 
+
 }
 
-private operator fun IntBuffer.set(index: Int, value: Int) {
-    this.put(index, value)
-}
-
-private operator fun FloatBuffer.set(index: Int, value: Float) {
-    this.put(index, value)
-}
-
-private fun ByteBuffer.clone(): ByteBuffer {
-
-    // Create clone with same capacity as original.
-    val clone = BufferUtils.createByteBuffer(capacity())
-    // Create a read-only copy of the original.
-    // This allows reading from the original without modifying it.
-    val readOnlyCopy = asReadOnlyBuffer()
-
-    readOnlyCopy.rewind()
-    clone.put(readOnlyCopy)
-    clone.flip()
-
-    return clone
-}
-
-private fun getAllocationSize(elements: Int, elementShift: Int): Int {
-    APIUtil.apiCheckAllocation(elements, APIUtil.apiGetBytes(elements, elementShift), 0x7FFF_FFFFL)
-    return elements shl elementShift
-}
+//private operator fun IntBuffer.set(index: Int, value: Int) {
+//    this.put(index, value)
+//}
+//
+//private operator fun FloatBuffer.set(index: Int, value: Float) {
+//    this.put(index, value)
+//}
+//
+//private fun ByteBuffer.clone(): ByteBuffer {
+//
+//    // Create clone with same capacity as original.
+//    val clone = BufferUtils.createByteBuffer(capacity())
+//    // Create a read-only copy of the original.
+//    // This allows reading from the original without modifying it.
+//    val readOnlyCopy = asReadOnlyBuffer()
+//
+//    readOnlyCopy.rewind()
+//    clone.put(readOnlyCopy)
+//    clone.flip()
+//
+//    return clone
+//}
+//
+//private fun getAllocationSize(elements: Int, elementShift: Int): Int {
+//    APIUtil.apiCheckAllocation(elements, APIUtil.apiGetBytes(elements, elementShift), 0x7FFF_FFFFL)
+//    return elements shl elementShift
+//}

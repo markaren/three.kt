@@ -6,19 +6,20 @@ import info.laht.threekt.core.IntBufferAttribute
 import info.laht.threekt.math.Sphere
 import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector3
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
 typealias SphereGeometry = SphereBufferGeometry
 
 class SphereBufferGeometry(
-    val radius: Float = 1f,
-    val widthSegments: Int = 16,
-    val heightSegments: Int = 16,
-    val phiStart: Float = 0f,
-    val phiLength: Float = TWO_PI,
-    val thetaStart: Float = 0f,
-    val thetaLength: Float = Math.PI.toFloat()
+        val radius: Float = 1f,
+        val widthSegments: Int = 16,
+        val heightSegments: Int = 16,
+        val phiStart: Float = 0f,
+        val phiLength: Float = TWO_PI,
+        val thetaStart: Float = 0f,
+        val thetaLength: Float = PI.toFloat()
 ) : BufferGeometry() {
 
     init {
@@ -102,7 +103,7 @@ class SphereBufferGeometry(
                         indices.add(v2)
                         indices.add(v4)
                     }
-                    if (y != heightSegments - 1 || thetaEnd < Math.PI) {
+                    if (y != heightSegments - 1 || thetaEnd < PI) {
                         indices.add(v2)
                         indices.add(v3)
                         indices.add(v4)

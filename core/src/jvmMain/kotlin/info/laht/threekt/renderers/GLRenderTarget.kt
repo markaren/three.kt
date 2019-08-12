@@ -12,7 +12,7 @@ open class GLRenderTarget(
     width: Int,
     height: Int,
     options: Options? = null
-) : EventDispatcher by EventDispatcherImpl() {
+) : RenderTarget, EventDispatcher by EventDispatcherImpl() {
 
     var width = width
         private set
@@ -29,7 +29,7 @@ open class GLRenderTarget(
     var stencilBuffer: Boolean
     var depthTexture: DepthTexture?
 
-    var texture: Texture
+    override lateinit var texture: Texture
 
     init {
 

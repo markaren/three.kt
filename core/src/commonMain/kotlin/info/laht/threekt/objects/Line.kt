@@ -3,6 +3,7 @@ package info.laht.threekt.objects
 import info.laht.threekt.core.*
 import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.math.Vector3
+import kotlin.jvm.JvmOverloads
 
 open class Line @JvmOverloads constructor(
 
