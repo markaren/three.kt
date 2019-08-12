@@ -46,6 +46,10 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
 
+                val slf4jVersion = "1.7.27"
+                implementation("org.slf4j:slf4j-api:$slf4jVersion")
+                runtimeOnly("org.slf4j:slf4j-log4j12:$slf4jVersion")
+
                 val lwjglVersion = "3.2.2"
                 implementation("org.lwjgl:lwjgl:$lwjglVersion")
                 implementation("org.lwjgl:lwjgl-glfw:$lwjglVersion")

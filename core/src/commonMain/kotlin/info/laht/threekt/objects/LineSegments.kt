@@ -1,7 +1,9 @@
 package info.laht.threekt.objects
 
+import info.laht.threekt.Logger
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
+import info.laht.threekt.getLogger
 import info.laht.threekt.materials.LineBasicMaterial
 import info.laht.threekt.math.Vector3
 import kotlin.jvm.JvmOverloads
@@ -33,11 +35,17 @@ open class LineSegments @JvmOverloads constructor(
 
         } else {
 
-            println("LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.")
+            LOG.warn("computeLineDistances(): Computation only possible with non-indexed BufferGeometry.")
 
         }
 
         return this
+    }
+
+    private companion object {
+
+        val LOG: Logger = getLogger(LineSegments::class)
+
     }
 
 }

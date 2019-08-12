@@ -1,9 +1,6 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.TextureCombineOperation
-import info.laht.threekt.TextureEncoding
-import info.laht.threekt.TextureMapping
-import info.laht.threekt.ToneMapping
+import info.laht.threekt.*
 import info.laht.threekt.core.Shader
 import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.RawShaderMaterial
@@ -392,7 +389,7 @@ internal class GLProgram(
                 val vertexErrors = getShaderErrors(glVertexShader, "vertex")
                 val fragmentErrors = getShaderErrors(glFragmentShader, "fragment")
 
-                println(
+                LOG.warn(
                     "GLProgram: shader error: ${GL11.glGetError()} ${GL20.GL_VALIDATE_STATUS} ${GL20.glGetProgrami(
                         program,
                         GL20.GL_VALIDATE_STATUS
@@ -401,7 +398,7 @@ internal class GLProgram(
 
             } else if (programLog != "") {
 
-                println("GLProgram: gl.getProgramInfoLog() $programLog")
+                LOG.info("GLProgram: gl.getProgramInfoLog() $programLog")
 
             }
         }
@@ -442,6 +439,8 @@ internal class GLProgram(
     private companion object {
 
         var programIdCount = 0
+
+        val LOG: Logger = getLogger(GLProgram::class)
 
         fun getEncodingComponents(encoding: TextureEncoding): Pair<String, String> {
 

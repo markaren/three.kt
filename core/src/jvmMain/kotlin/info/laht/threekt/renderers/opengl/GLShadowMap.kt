@@ -120,7 +120,7 @@ class GLShadowMap internal constructor(
 
                 if (shadowMapSize.x > maxTextureSize || shadowMapSize.y > maxTextureSize) {
 
-                    println("GLShadowMap:' $light, 'has shadow exceeding max texture size, reducing")
+                    LOG.info("GLShadowMap:' $light, 'has shadow exceeding max texture size, reducing")
 
                     if (shadowMapSize.y > maxTextureSize) {
 
@@ -200,7 +200,7 @@ class GLShadowMap internal constructor(
 //            }
 //
 //            if (`object` is SkinnedMesh && !(material is SkinningMaterial && material.skinning)) {
-//                println("GLShadowMap: SkinnedMesh with material.skinning set to false:  $`object`")
+//                LOG.warn("GLShadowMap: SkinnedMesh with material.skinning set to false:  $`object`")
 //            }
 
             val useSkinning = false // `object` is SkinnedMesh && (material is SkinningMaterial && material.skinning)
@@ -336,6 +336,12 @@ class GLShadowMap internal constructor(
 
         }
 
+
+    }
+
+    private companion object {
+
+        val LOG: Logger = getLogger(GLShadowMap::class)
 
     }
 

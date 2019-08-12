@@ -1,11 +1,13 @@
 package info.laht.threekt.controls
 
+import info.laht.threekt.Logger
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.CameraWithZoom
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.EventDispatcher
 import info.laht.threekt.core.EventDispatcherImpl
+import info.laht.threekt.getLogger
 import info.laht.threekt.input.*
 import info.laht.threekt.math.*
 import kotlin.math.*
@@ -351,7 +353,7 @@ class OrbitControls(
             else -> {
 
                 // camera neither orthographic nor perspective
-                println("WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.")
+                LOG.warn("encountered an unknown camera type - pan disabled.")
                 this.enablePan = false
 
             }
@@ -372,7 +374,7 @@ class OrbitControls(
             }
             else -> {
 
-                println("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.")
+                LOG.warn("encountered an unknown camera type - dolly/zoom disabled.")
                 this.enableZoom = false
 
             }
@@ -393,7 +395,7 @@ class OrbitControls(
             }
             else -> {
 
-                println("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.")
+                LOG.warn("encountered an unknown camera type - dolly/zoom disabled.")
                 this.enableZoom = false
 
             }
@@ -600,6 +602,12 @@ class OrbitControls(
 
             }
         }
+    }
+
+    private companion object {
+
+        val LOG: Logger = getLogger(OrbitControls::class)
+
     }
 
 }

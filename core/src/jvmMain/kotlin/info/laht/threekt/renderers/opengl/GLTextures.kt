@@ -1,9 +1,6 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.TextureFilter
-import info.laht.threekt.TextureFormat
-import info.laht.threekt.TextureType
-import info.laht.threekt.TextureWrapping
+import info.laht.threekt.*
 import info.laht.threekt.core.Event
 import info.laht.threekt.core.EventLister
 import info.laht.threekt.renderers.GLMultisampleRenderTarget
@@ -77,7 +74,7 @@ internal class GLTextures(
 
         } else if (internalFormat == GL30.GL_RGB16F || internalFormat == GL30.GL_RGB32F) {
 
-            println("GLRenderer: Floating point textures with RGB format not supported. Please use RGBA instead.")
+            LOG.warn("Floating point textures with RGB format not supported. Please use RGBA instead.")
 
         }
 
@@ -159,7 +156,7 @@ internal class GLTextures(
 
         if (textureUnit >= capabilities.maxTextures) {
 
-            println("GLTextures: Trying to use " + textureUnit + " renderTargetCube units while this GPU supports only " + capabilities.maxTextures)
+            LOG.warn("Trying to use $textureUnit renderTargetCube units while this GPU supports only ${capabilities.maxTextures}")
 
         }
 
@@ -177,7 +174,7 @@ internal class GLTextures(
             val image = texture.image
 
             if (image == null) {
-                println("GLRenderer: Texture marked for update but image is null")
+                LOG.warn("Texture marked for update but image is null")
             } else {
                 uploadTexture(textureProperties, texture, slot)
                 return
@@ -226,7 +223,7 @@ internal class GLTextures(
 
             if (texture.wrapS != TextureWrapping.ClampToEdge || texture.wrapT != TextureWrapping.ClampToEdge) {
 
-                println("GLRenderer: Texture is not power of two. Texture.wrapS and Texture.wrapT should be set to THREE.ClampToEdgeWrapping.")
+                LOG.warn("Texture is not power of two. Texture.wrapS and Texture.wrapT should be set to THREE.ClampToEdgeWrapping.")
 
             }
 
@@ -235,7 +232,7 @@ internal class GLTextures(
 
             if (texture.minFilter != TextureFilter.Nearest && texture.minFilter != TextureFilter.Linear) {
 
-                println("GLRenderer: Texture is not power of two. Texture.minFilter should be set to THREE.NearestFilter or THREE.LinearFilter.")
+                LOG.warn("Texture is not power of two. Texture.minFilter should be set to THREE.NearestFilter or THREE.LinearFilter.")
 
             }
 
@@ -311,7 +308,7 @@ internal class GLTextures(
                 // (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
                 if (texture.type != TextureType.UnsignedShort && texture.type != TextureType.UnsignedInt) {
 
-                    println("THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.")
+                    LOG.warn("Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.")
 
                     texture.type = TextureType.UnsignedShort
                     glType = GLUtils.convert(texture.type.value)
@@ -331,7 +328,7 @@ internal class GLTextures(
                 // (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
                 if (texture.type != TextureType.UnsignedInt248) {
 
-                    println("THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.")
+                    LOG.warn("Use UnsignedInt248Type for DepthStencilFormat DepthTexture.")
 
                     texture.type = TextureType.UnsignedInt248
                     glType = GLUtils.convert(texture.type.value)
@@ -820,6 +817,12 @@ internal class GLTextures(
 
             info.memory.textures--
         }
+    }
+
+    private companion object {
+
+        val LOG: Logger = getLogger(GLTextures::class)
+
     }
 
 }

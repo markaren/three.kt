@@ -1,5 +1,7 @@
 package info.laht.threekt.core
 
+import info.laht.threekt.Logger
+import info.laht.threekt.getLogger
 import info.laht.threekt.math.*
 import kotlin.jvm.JvmOverloads
 import kotlin.math.max
@@ -238,7 +240,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
         }
 
         if (bb.min.x.isNaN() || bb.min.y.isNaN() || bb.min.z.isNaN()) {
-            println("BufferGeometry.computeBoundingBox: Computed min/max have NaN values. The 'position' attribute is likely to have NaN values.")
+            LOG.warn("computeBoundingBox: Computed min/max have NaN values. The 'position' attribute is likely to have NaN values.")
         }
 
     }
@@ -276,7 +278,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
             sphere.radius = sqrt(maxRadiusSq).toFloat()
 
             if (sphere.radius.isNaN()) {
-                println("THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The 'position' attribute is likely to have NaN values.")
+                LOG.warn("BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The 'position' attribute is likely to have NaN values.")
             }
 
         }
@@ -544,7 +546,11 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
     }
 
     private companion object {
-        var geometryIdCount = 0 // BufferGeometry uses odd numbers as Id
+
+        var geometryIdCount = 0
+
+        val LOG: Logger = getLogger(BufferGeometry::class)
+
     }
 
 }

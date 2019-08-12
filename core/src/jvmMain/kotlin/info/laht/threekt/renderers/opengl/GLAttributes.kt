@@ -1,5 +1,6 @@
 package info.laht.threekt.renderers.opengl
 
+import info.laht.threekt.Logger
 import info.laht.threekt.core.BufferAttribute
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.core.IntBufferAttribute
@@ -38,7 +39,7 @@ internal class GLAttributes {
         val updateRange = attribute.updateRange
 
         if (updateRange.count == 0) {
-            println("GLObjects.updateBuffer: dynamic BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
+            LOG.warn("GLObjects.updateBuffer: dynamic BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
             return
         }
 
@@ -46,23 +47,29 @@ internal class GLAttributes {
 
         when (attribute) {
             is IntBufferAttribute -> {
-                if (!attribute.dynamic) GL15.glBufferData(bufferType, attribute.buffer, GL15.GL_STATIC_DRAW)
-                else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.buffer)
-                else if (updateRange.count == 0) println("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
-                else {
-                    val sub = attribute.buffer.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
-                    GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
-                    updateRange.count = -1
+                when {
+                    !attribute.dynamic -> GL15.glBufferData(bufferType, attribute.buffer, GL15.GL_STATIC_DRAW)
+                    updateRange.count == -1 -> GL15.glBufferSubData(bufferType, 0, attribute.buffer)
+                    updateRange.count == 0 -> LOG.warn("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
+                    else -> {
+                        val sub =
+                            attribute.buffer.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
+                        GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
+                        updateRange.count = -1
+                    }
                 }
             }
             is FloatBufferAttribute -> {
-                if (!attribute.dynamic) GL15.glBufferData(bufferType, attribute.buffer, GL15.GL_STATIC_DRAW)
-                else if (updateRange.count == -1) GL15.glBufferSubData(bufferType, 0, attribute.buffer)
-                else if (updateRange.count == 0) println("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
-                else {
-                    val sub = attribute.buffer.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
-                    GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
-                    updateRange.count = -1
+                when {
+                    !attribute.dynamic -> GL15.glBufferData(bufferType, attribute.buffer, GL15.GL_STATIC_DRAW)
+                    updateRange.count == -1 -> GL15.glBufferSubData(bufferType, 0, attribute.buffer)
+                    updateRange.count == 0 -> LOG.warn("GLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.")
+                    else -> {
+                        val sub =
+                            attribute.buffer.copyOfRange(updateRange.offset, updateRange.offset + updateRange.count)
+                        GL15.glBufferSubData(bufferType, (updateRange.offset + bytesPerElement).toLong(), sub)
+                        updateRange.count = -1
+                    }
                 }
             }
         }
@@ -98,5 +105,9 @@ internal class GLAttributes {
         val bytesPerElement: Int,
         var version: Int
     )
+
+    companion object {
+        val LOG: Logger = Logger(GLAttributes::class.java)
+    }
 
 }

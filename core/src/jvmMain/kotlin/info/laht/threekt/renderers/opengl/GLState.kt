@@ -232,7 +232,7 @@ internal class GLState {
                             GL11.GL_ZERO,
                             GL11.GL_SRC_ALPHA
                         )
-                        else -> println("GLState: Invalid blending: $blending")
+                        else -> LOG.warn("GLState: Invalid blending: $blending")
                     }
 
                 } else {
@@ -247,7 +247,7 @@ internal class GLState {
                         Blending.Additive -> GL14.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE)
                         Blending.Subtractive -> GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR)
                         Blending.Multiply -> GL14.glBlendFunc(GL11.GL_ZERO, GL11.GL_SRC_COLOR)
-                        else -> System.err.println("GLState: Invalid blending: $blending")
+                        else -> LOG.error("GLState: Invalid blending: $blending")
                     }
 
                 }
@@ -742,5 +742,11 @@ internal class GLState {
         var type: Int?,
         var texture: Int?
     )
+
+    private companion object {
+
+        val LOG: Logger = getLogger(GLState::class)
+
+    }
 
 }
