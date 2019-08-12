@@ -30,6 +30,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib"))
+                implementation(kotlin("reflect"))
 
                 implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinIOVersion")
             }
