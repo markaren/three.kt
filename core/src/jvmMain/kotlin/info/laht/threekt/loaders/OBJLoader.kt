@@ -15,7 +15,7 @@ import info.laht.threekt.splice
 import java.io.File
 
 class OBJLoader(
-        val tryLoadMtl: Boolean = false
+        val tryLoadMtl: Boolean = true
 ) {
 
     var materials: MTLLoader.MaterialCreator? = null

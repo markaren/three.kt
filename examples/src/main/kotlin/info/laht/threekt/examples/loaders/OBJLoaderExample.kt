@@ -24,7 +24,7 @@ object OBJLoaderExample {
                 position.set(0, 100, 175)
             }
 
-            val obj = OBJLoader(true).load(OBJLoaderExample::class.java.classLoader.getResource("models/obj/female02/female02.obj").file)
+            val obj = OBJLoader().load(OBJLoaderExample::class.java.classLoader.getResource("models/obj/female02/female02.obj").file)
             scene.add(obj)
 
             val light1 = PointLight(intensity = 1f)
