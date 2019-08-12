@@ -216,7 +216,7 @@ object ShaderLib {
                             mutableMapOf(
                                     "referencePosition" to Uniform(Vector3()),
                                     "nearDistance" to Uniform(1f),
-                                    "nearDistance" to Uniform(1000f)
+                                    "farDistance" to Uniform(1000f)
                             )
                     )
             ),
