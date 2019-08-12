@@ -32,13 +32,13 @@ internal class GLPrograms(
     }
 
     internal fun getParameters(
-        material: Material,
-        lights: GLLights.GLLightsState,
-        shadows: List<Object3D>,
-        fog: _Fog?,
-        nClipPlanes: Int,
-        nClipIntersection: Int,
-        `object`: Object3D
+            material: Material,
+            lights: GLLights.GLLightsState,
+            shadows: List<Object3D>,
+            fog: _Fog?,
+            nClipPlanes: Int,
+            nClipIntersection: Int,
+            `object`: Object3D
     ): Parameters {
         return Parameters(
             material,
@@ -89,10 +89,10 @@ internal class GLPrograms(
     }
 
     internal fun acquireProgram(
-        material: Material,
-        shader: Shader,
-        parameters: Parameters,
-        code: String
+            material: Material,
+            shader: Shader,
+            parameters: Parameters,
+            code: String
     ): GLProgram {
 
         var program: GLProgram? = null
@@ -167,13 +167,13 @@ internal class GLPrograms(
     }
 
     internal inner class Parameters(
-        material: Material,
-        lights: GLLights.GLLightsState,
-        shadows: List<Object3D>,
-        fog: _Fog?,
-        nClipPlanes: Int,
-        nClipIntersection: Int,
-        `object`: Object3D
+            material: Material,
+            lights: GLLights.GLLightsState,
+            shadows: List<Object3D>,
+            fog: _Fog?,
+            nClipPlanes: Int,
+            nClipIntersection: Int,
+            `object`: Object3D
     ) {
 
         val shaderID = ShaderIds[material::class.java.simpleName]

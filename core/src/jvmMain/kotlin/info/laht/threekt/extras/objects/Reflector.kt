@@ -69,7 +69,7 @@ class Reflector(
 
         onBeforeRender = { renderer, scene, camera, _, _, _ ->
 
-            onBeforeRender(renderer, scene, camera)
+            onBeforeRender(renderer as GLRenderer, scene, camera)
 
         }
 

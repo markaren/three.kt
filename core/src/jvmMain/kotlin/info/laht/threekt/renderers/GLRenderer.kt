@@ -30,7 +30,7 @@ import kotlin.math.min
 class GLRenderer(
         width: Int,
         height: Int
-) {
+) : Renderer {
 
     var checkShaderErrors = false
     private val capabilities = GLCapabilities()

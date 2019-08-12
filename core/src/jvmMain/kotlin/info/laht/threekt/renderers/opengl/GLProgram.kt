@@ -9,14 +9,13 @@ import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.RawShaderMaterial
 import info.laht.threekt.materials.ShaderMaterial
 import info.laht.threekt.renderers.GLRenderer
+import info.laht.threekt.renderers.Program
 import info.laht.threekt.renderers.shaders.ShaderChunk
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20
 
-internal sealed class _GLProgram {
-    abstract val id: Int
-}
+internal sealed class _GLProgram : Program
 
 internal object GLProgramDefault : _GLProgram() {
     override val id = -1
@@ -24,11 +23,11 @@ internal object GLProgramDefault : _GLProgram() {
 }
 
 internal class GLProgram(
-    renderer: GLRenderer,
-    val code: String,
-    material: Material,
-    shader: Shader,
-    parameters: GLPrograms.Parameters
+        renderer: GLRenderer,
+        val code: String,
+        material: Material,
+        shader: Shader,
+        parameters: GLPrograms.Parameters
 ) : _GLProgram() {
 
     override val id = programIdCount++
@@ -385,8 +384,8 @@ internal class GLProgram(
         if (renderer.checkShaderErrors) {
 
             val programLog = GL20.glGetProgramInfoLog(program).trim()
-            val vertexLog = GL20.glGetShaderInfoLog(glVertexShader).trim();
-            val fragmentLog = GL20.glGetShaderInfoLog(glFragmentShader).trim();
+            val vertexLog = GL20.glGetShaderInfoLog(glVertexShader).trim()
+            val fragmentLog = GL20.glGetShaderInfoLog(glFragmentShader).trim()
 
             if (GL20.glGetProgrami(program, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
 
