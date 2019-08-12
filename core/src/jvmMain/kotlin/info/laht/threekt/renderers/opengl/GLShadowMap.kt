@@ -13,7 +13,6 @@ import info.laht.threekt.lights.PointLight
 import info.laht.threekt.materials.*
 import info.laht.threekt.math.Frustum
 import info.laht.threekt.math.Vector2
-import info.laht.threekt.math.Vector3
 import info.laht.threekt.math.Vector4
 import info.laht.threekt.objects.Line
 import info.laht.threekt.objects.Mesh
@@ -34,7 +33,6 @@ class GLShadowMap internal constructor(
 
     private val frustum = Frustum()
 
-
     private val shadowMapSize = Vector2()
     private val viewportSize = Vector2()
 
@@ -46,21 +44,6 @@ class GLShadowMap internal constructor(
     private val materialCache = mutableMapOf<String, MutableMap<String, Material>>()
 
     private val shadowSide = mapOf(0 to Side.Back, 1 to Side.Front, 2 to Side.Double)
-
-    private var cubeDirections = listOf(
-        Vector3(1f, 0f, 0f), Vector3(-1f, 0f, 0f), Vector3(0f, 0f, 1f),
-        Vector3(0f, 0f, -1f), Vector3(0f, 1f, 0f), Vector3(0f, -1f, 0f)
-    )
-
-    private var cubeUps = listOf(
-        Vector3(0f, 1f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 1f, 0f),
-        Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f), Vector3(0f, 0f, -1f)
-    )
-
-    private var cube2DViewPorts = listOf(
-        Vector4(), Vector4(), Vector4(),
-        Vector4(), Vector4(), Vector4()
-    )
 
     var enabled = false
 
@@ -74,6 +57,7 @@ class GLShadowMap internal constructor(
         val numberOfMaterialVariants = (morphingFlag or skinningFlag) + 1
 
         for (i in 0 until numberOfMaterialVariants) {
+
             val useMorphing = (i and morphingFlag) != 0
             val useSkinning = (i and skinningFlag) != 0
 
@@ -167,14 +151,14 @@ class GLShadowMap internal constructor(
 
                 shadow.viewports.forEachIndexed { vp, viewport ->
 
-                    viewport.set(
+                    this.viewport.set(
                             viewportSize.x * viewport.x,
                             viewportSize.y * viewport.y,
                             viewportSize.x * viewport.z,
                             viewportSize.y * viewport.w
                     )
 
-                    state.viewport(viewport)
+                    state.viewport(this.viewport)
 
                     shadow.updateMatrices(light, camera as CameraWithNearAndFar, vp)
 
