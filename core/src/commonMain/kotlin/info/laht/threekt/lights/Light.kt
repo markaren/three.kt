@@ -194,6 +194,8 @@ class SpotLight(
 
     fun copy(source: SpotLight): SpotLight {
 
+        super.copy(source)
+
         this.distance = source.distance
         this.angle = source.angle
         this.penumbra = source.penumbra
