@@ -4,7 +4,6 @@ import info.laht.threekt.core.Uniform
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.Matrix3
 import info.laht.threekt.math.Vector2
-import info.laht.threekt.math.Vector3
 
 object UniformsLib {
 
@@ -110,76 +109,24 @@ object UniformsLib {
 
             "lightProbe" to Uniform(null),
 
-            "directionalLights" to Uniform(
-                    null, mutableMapOf(
-                    "direction" to null,
-                    "color" to null,
-
-                    "shadow" to null,
-                    "shadowBias" to null,
-                    "shadowRadius" to null,
-                    "shadowMapSize" to null
-            )
-            ),
+            "directionalLights" to Uniform(null),
 
             "directionalShadowMap" to Uniform(null),
             "directionalShadowMatrix" to Uniform(null),
 
-            "spotLights" to Uniform(
-                    null, mutableMapOf(
-                    "color" to null,
-                    "position" to null,
-                    "direction" to null,
-                    "distance" to null,
-                    "coneCos" to null,
-                    "penumbraCos" to null,
-                    "decay" to null,
-
-                    "shadow" to null,
-                    "shadowBias" to null,
-                    "shadowRadius" to null,
-                    "shadowMapSize" to null
-            )
-            ),
+            "spotLights" to Uniform(null),
 
             "spotShadowMap" to Uniform(null),
             "spotShadowMatrix" to Uniform(null),
 
-            "pointLights" to Uniform(
-                    null, mutableMapOf(
-                    "color" to null,
-                    "position" to null,
-                    "decay" to null,
-                    "distance" to null,
-
-                    "shadow" to null,
-                    "shadowBias" to null,
-                    "shadowRadius" to null,
-                    "shadowMapSize" to null,
-                    "shadowCameraNear" to null,
-                    "shadowCameraFar" to null
-            )
-            ),
+            "pointLights" to Uniform(null),
 
             "pointShadowMap" to Uniform(null),
             "pointShadowMatrix" to Uniform(null),
 
-            "hemisphereLights" to Uniform(
-                    null, mutableMapOf(
-                    "direction" to Vector3(),
-                    "skyColor" to Color(),
-                    "groundColor" to Color()
-            )
-            ),
+            "hemisphereLights" to Uniform(null),
 
-            "rectAreaLights" to Uniform(
-                    null, mutableMapOf(
-                    "color" to Color(),
-                    "position" to Vector3(),
-                    "width" to null,
-                    "height" to null
-            )
-            )
+            "rectAreaLights" to Uniform(null)
 
     )
 
@@ -191,7 +138,6 @@ object UniformsLib {
             "scale" to Uniform(1f),
             "map" to Uniform(null),
             "uvTransform" to Uniform(Matrix3())
-
 
     )
 
