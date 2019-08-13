@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.lights
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
@@ -32,13 +31,12 @@ object SpotLightExample {
                 position.z = 10f
             }
             val renderer = GLRenderer(canvas.width, canvas.height).apply {
-                checkShaderErrors = true
+                shadowMap.enabled = true
             }
 
 
             Mesh(PlaneGeometry(25f, 25f), MeshPhongMaterial().apply {
                 color.set(Color.yellowgreen)
-                side = Side.Double
             }).also {
                 it.rotation.x = DEG2RAD * -90
                 it.translateZ(-1f)
@@ -71,7 +69,7 @@ object SpotLightExample {
 
             OrbitControls(camera, canvas)
 
-            SpotLight(Color(Color.white)).also {
+            SpotLight(Color.white).also {
                 it.intensity = 2f
                 it.distance = 10f
                 it.penumbra = 0.3f
