@@ -385,7 +385,7 @@ class GLRenderer(
                     GL20.glVertexAttribPointer(programAttribute, size, type, normalized, 0, 0)
 
 
-                } else if (material is MaterialWithDefaultAttributeValues && material.defaultAttributeValues != null) {
+                } else if (material is MaterialWithDefaultAttributeValues) {
 
                     val value = material.defaultAttributeValues[name] as FloatArray?
 
