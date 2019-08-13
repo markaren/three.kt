@@ -28,57 +28,53 @@ internal interface Container {
 }
 
 private fun flatten(array: Array<Flattable>, nBlocks: Int, blockSize: Int): FloatArray {
-    val firstElem = array[0]
 
     val n = nBlocks * blockSize
-
     while (n >= arrayCacheF32.size) {
         arrayCacheF32.add(FloatArray(arrayCacheF32.size + 1))
     }
-    val r = arrayCacheF32[n]
 
-    if (nBlocks != 0) {
+    return arrayCacheF32[n].also { r ->
 
-        firstElem.toArray(r, 0)
+        if (nBlocks != 0) {
 
-        var offset = 0
-        for (i in 1 until nBlocks) {
+            var offset = 0
+            for (i in 1 until nBlocks) {
 
-            offset += blockSize
-            array[i].toArray(r, offset)
+                array[i].toArray(r, offset)
+                offset += blockSize
+
+            }
 
         }
 
     }
 
-    return r
 }
 
 private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): FloatArray {
-    val firstElem = array[0]
 
     val n = nBlocks * blockSize
-
     while (n >= arrayCacheF32.size) {
         arrayCacheF32.add(FloatArray(arrayCacheF32.size + 1))
     }
-    val r = arrayCacheF32[n]
 
-    if (nBlocks != 0) {
+    return arrayCacheF32[n].also { r ->
 
-        firstElem.toArray(r, 0)
+        if (nBlocks != 0) {
 
-        var offset = 0
-        for (i in 1 until nBlocks) {
+            var offset = 0
+            for (i in 0 until nBlocks) {
 
-            offset += blockSize
-            array[i].toArray(r, offset)
+                array[i].toArray(r, offset)
+                offset += blockSize
+
+            }
 
         }
 
     }
 
-    return r
 }
 
 private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
@@ -86,12 +82,12 @@ private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
     while (n >= arrayCacheI32.size) {
         arrayCacheI32.add(IntArray(arrayCacheI32.size + 1))
     }
-    val r = arrayCacheI32[n]
 
-    for (i in 0 until n)
-        r[i] = textures.allocateTextureUnit()
-
-    return r
+    return arrayCacheI32[n].also { r ->
+        for (i in 0 until n) {
+            r[i] = textures.allocateTextureUnit()
+        }
+    }
 
 }
 
