@@ -543,8 +543,8 @@ open class Object3DImpl : Object3D, EventDispatcher by EventDispatcherImpl() {
     override val layers = Layers()
     override var visible = true
 
-    override var castShadow = true
-    override var receiveShadow = true
+    override var castShadow = false
+    override var receiveShadow = false
 
     override var frustumCulled = true
     override var renderOrder = 0
