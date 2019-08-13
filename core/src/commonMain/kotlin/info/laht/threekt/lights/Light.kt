@@ -183,7 +183,7 @@ class SpotLight(
             this.intensity = value / PI.toFloat()
         }
 
-    constructor(color: Int, intensity: Number?) : this(Color(color), intensity)
+    constructor(color: Int, intensity: Number? = null) : this(Color(color), intensity)
 
     init {
 
