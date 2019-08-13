@@ -3,6 +3,7 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Vector4
+import kotlinx.io.core.IoBuffer
 import org.lwjgl.opengl.*
 import java.nio.ByteBuffer
 import kotlin.math.roundToInt
@@ -231,7 +232,7 @@ internal class GLState {
                             GL11.GL_ZERO,
                             GL11.GL_SRC_ALPHA
                         )
-                        else -> println("GLState: Invalid blending: $blending")
+                        else -> LOG.warn("GLState: Invalid blending: $blending")
                     }
 
                 } else {
@@ -246,7 +247,7 @@ internal class GLState {
                         Blending.Additive -> GL14.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE)
                         Blending.Subtractive -> GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR)
                         Blending.Multiply -> GL14.glBlendFunc(GL11.GL_ZERO, GL11.GL_SRC_COLOR)
-                        else -> System.err.println("GLState: Invalid blending: $blending")
+                        else -> LOG.error("GLState: Invalid blending: $blending")
                     }
 
                 }
@@ -470,14 +471,24 @@ internal class GLState {
     fun texImage2D(
         target: Int,
         level: Int,
-        internalformat: Int,
+        internalFormat: Int,
         width: Int,
         height: Int,
         format: Int,
         type: Int,
-        data: ByteBuffer?
+        data: IoBuffer?
     ) {
-        GL11.glTexImage2D(target, level, internalformat, width, height, 0, format, type, data)
+
+        if (data == null) {
+            //TODO should we even call this function here
+            GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, null as ByteBuffer?)
+        } else {
+            data.readDirect { buffer ->
+                GL11.glTexImage2D(target, level, internalFormat, width, height, 0, format, type, buffer)
+            }
+//            data.resetForRead() // TODO do we need to call this?
+        }
+
     }
 
     fun scissor(scissor: Vector4) {
@@ -731,5 +742,11 @@ internal class GLState {
         var type: Int?,
         var texture: Int?
     )
+
+    private companion object {
+
+        val LOG: Logger = getLogger(GLState::class)
+
+    }
 
 }

@@ -3,35 +3,39 @@ package info.laht.threekt.renderers.opengl
 import info.laht.threekt.*
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.CameraWithNearAndFar
-import info.laht.threekt.cameras.OrthographicCamera
-import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.MaterialsObject
 import info.laht.threekt.core.Object3D
-import info.laht.threekt.lights.*
+import info.laht.threekt.lights.Light
+import info.laht.threekt.lights.LightWithShadow
+import info.laht.threekt.lights.PointLight
 import info.laht.threekt.materials.*
-import info.laht.threekt.math.*
+import info.laht.threekt.math.Frustum
+import info.laht.threekt.math.Vector2
+import info.laht.threekt.math.Vector4
 import info.laht.threekt.objects.Line
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.objects.Points
 import info.laht.threekt.renderers.GLRenderTarget
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
+import kotlin.math.floor
 import kotlin.math.roundToInt
 
+private const val morphingFlag = 1
+private const val skinningFlag = 2
+
 class GLShadowMap internal constructor(
-    private val renderer: GLRenderer,
-    maxTextureSize: Int
+        private val renderer: GLRenderer,
+        private val maxTextureSize: Int
 ) {
 
     private val frustum = Frustum()
-    private val projScreenMatrix = Matrix4()
 
     private val shadowMapSize = Vector2()
-    private val maxShadowMapSize = Vector2(maxTextureSize, maxTextureSize)
+    private val viewportSize = Vector2()
 
-    private val lookTarget = Vector3()
-    private val lightPositionWorld = Vector3()
+    private val viewport = Vector4()
 
     private val depthMaterials = mutableListOf<MeshDepthMaterial>()
     private val distanceMaterials = mutableListOf<MeshDistanceMaterial>()
@@ -39,24 +43,6 @@ class GLShadowMap internal constructor(
     private val materialCache = mutableMapOf<String, MutableMap<String, Material>>()
 
     private val shadowSide = mapOf(0 to Side.Back, 1 to Side.Front, 2 to Side.Double)
-
-    private var cubeDirections = listOf(
-        Vector3(1f, 0f, 0f), Vector3(-1f, 0f, 0f), Vector3(0f, 0f, 1f),
-        Vector3(0f, 0f, -1f), Vector3(0f, 1f, 0f), Vector3(0f, -1f, 0f)
-    )
-
-    private var cubeUps = listOf(
-        Vector3(0f, 1f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 1f, 0f),
-        Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f), Vector3(0f, 0f, -1f)
-    )
-
-    private var cube2DViewPorts = listOf(
-        Vector4(), Vector4(), Vector4(),
-        Vector4(), Vector4(), Vector4()
-    )
-
-    private val MorphingFlag = 1
-    private val SkinningFlag = 2
 
     var enabled = false
 
@@ -67,11 +53,12 @@ class GLShadowMap internal constructor(
 
     init {
 
-        val NumberOfMaterialVariants = (MorphingFlag or SkinningFlag) + 1
+        val numberOfMaterialVariants = (morphingFlag or skinningFlag) + 1
 
-        for (i in 0 until NumberOfMaterialVariants) {
-            val useMorphing = (i and MorphingFlag) != 0
-            val useSkinning = (i and SkinningFlag) != 0
+        for (i in 0 until numberOfMaterialVariants) {
+
+            val useMorphing = (i and morphingFlag) != 0
+            val useSkinning = (i and skinningFlag) != 0
 
             val depthMaterial = MeshDepthMaterial().apply {
 
@@ -83,7 +70,6 @@ class GLShadowMap internal constructor(
             }
 
             depthMaterials.add(depthMaterial)
-
 
             val distanceMaterial = MeshDistanceMaterial().apply {
 
@@ -97,7 +83,7 @@ class GLShadowMap internal constructor(
 
     }
 
-    fun render(lights: List<Object3D>, scene: Scene, camera: Camera) {
+    fun render(lights: List<Light>, scene: Scene, camera: Camera) {
 
         if (!enabled) return
         if (!(autoUpdate || needsUpdate)) return
@@ -118,148 +104,66 @@ class GLShadowMap internal constructor(
 
         // render depth map
 
-        var faceCount: Int
-
         lights.forEach { light ->
 
             if (light is LightWithShadow) {
-                val shadow = light.shadow
-                val isPointLight = light is PointLight
 
-                val shadowCamera = shadow.camera
+                val shadow = light.shadow
 
                 shadowMapSize.copy(shadow.mapSize)
-                shadowMapSize.min(maxShadowMapSize)
 
-                if (isPointLight) {
+                val shadowFrameExtents = shadow.frameExtents
+                shadowMapSize.multiply(shadowFrameExtents)
 
-                    val vpWidth = shadowMapSize.x
-                    val vpHeight = shadowMapSize.y
+                viewportSize.copy(shadow.mapSize)
 
-                    // These viewports map a cube-map onto a 2D renderTargetCube with the
-                    // following orientation:
-                    //
-                    //  xzXZ
-                    //   y Y
-                    //
-                    // X - Positive x direction
-                    // x - Negative x direction
-                    // Y - Positive y direction
-                    // y - Negative y direction
-                    // Z - Positive z direction
-                    // z - Negative z direction
+                if (shadowMapSize.x > maxTextureSize || shadowMapSize.y > maxTextureSize) {
 
-                    // positive X
-                    cube2DViewPorts[0].set(vpWidth * 2, vpHeight, vpWidth, vpHeight)
-                    // negative X
-                    cube2DViewPorts[1].set(0f, vpHeight, vpWidth, vpHeight)
-                    // positive Z
-                    cube2DViewPorts[2].set(vpWidth * 3, vpHeight, vpWidth, vpHeight)
-                    // negative Z
-                    cube2DViewPorts[3].set(vpWidth, vpHeight, vpWidth, vpHeight)
-                    // positive Y
-                    cube2DViewPorts[4].set(vpWidth * 3, 0f, vpWidth, vpHeight)
-                    // negative Y
-                    cube2DViewPorts[5].set(vpWidth, 0f, vpWidth, vpHeight)
+                    LOG.info("GLShadowMap:' $light, 'has shadow exceeding max texture size, reducing")
 
-                    shadowMapSize.x *= 4
-                    shadowMapSize.y *= 2
+                    if (shadowMapSize.y > maxTextureSize) {
+
+                        viewportSize.y = floor(maxTextureSize / shadowFrameExtents.y)
+                        shadowMapSize.y = viewportSize.y * shadowFrameExtents.y
+                        shadow.mapSize.y = viewportSize.y
+
+                    }
 
                 }
 
                 if (shadow.map == null) {
 
                     shadow.map = GLRenderTarget(
-                        shadowMapSize.x.roundToInt(), shadowMapSize.y.roundToInt(), GLRenderTarget.Options(
+                            shadowMapSize.x.roundToInt(), shadowMapSize.y.roundToInt(), GLRenderTarget.Options(
                             minFilter = TextureFilter.Nearest,
                             magFilter = TextureFilter.Nearest,
                             format = TextureFormat.RGBA
-                        )
                     )
-                    shadow.map?.texture?.name = light.name + ".shadowMap"
-
-                    when (shadowCamera) {
-                        is PerspectiveCamera -> shadowCamera.updateProjectionMatrix()
-                        is OrthographicCamera -> shadowCamera.updateProjectionMatrix()
-                        else -> throw IllegalStateException("Illegal camera type: $shadowCamera")
+                    ).apply {
+                        texture.name = light.name + ".shadowMap"
                     }
 
                 }
 
-                if (shadow is SpotLightShadow) {
-
-                    shadow.update(light as SpotLight)
-
-                }
-
-                val shadowMap = shadow.map
-                val shadowMatrix = shadow.matrix
-
-                lightPositionWorld.setFromMatrixPosition(light.matrixWorld)
-                shadowCamera.position.copy(lightPositionWorld)
-
-                if (isPointLight) {
-
-                    faceCount = 6
-
-                    // for point lights we set the shadow matrix to be a translation-only matrix
-                    // equal to inverse of the light's position
-
-                    shadowMatrix.makeTranslation(-lightPositionWorld.x, -lightPositionWorld.y, -lightPositionWorld.z)
-
-                } else {
-
-                    light as LightWithTarget
-
-                    faceCount = 1
-
-                    lookTarget.setFromMatrixPosition(light.target.matrixWorld)
-                    shadowCamera.lookAt(lookTarget)
-                    shadowCamera.updateMatrixWorld()
-
-                    // compute shadow matrix
-
-                    shadowMatrix.set(
-                        0.5f, 0f, 0f, 0.5f,
-                        0f, 0.5f, 0f, 0.5f,
-                        0f, 0f, 0.5f, 0.5f,
-                        0f, 0f, 0f, 1f
-                    )
-
-                    shadowMatrix.multiply(shadowCamera.projectionMatrix)
-                    shadowMatrix.multiply(shadowCamera.matrixWorldInverse)
-
-                }
-
-                renderer.setRenderTarget(shadowMap)
+                renderer.setRenderTarget(shadow.map as GLRenderTarget)
                 renderer.clear()
 
-                // render shadow map for each cube face (if omni-directional) or
-                // run a single pass if not
+                shadow.viewports.forEachIndexed { vp, viewport ->
 
-                for (face in 0 until faceCount) {
+                    this.viewport.set(
+                            viewportSize.x * viewport.x,
+                            viewportSize.y * viewport.y,
+                            viewportSize.x * viewport.z,
+                            viewportSize.y * viewport.w
+                    )
 
-                    if (isPointLight) {
+                    state.viewport(this.viewport)
 
-                        lookTarget.copy(shadowCamera.position)
-                        lookTarget.add(cubeDirections[face])
-                        shadowCamera.up.copy(cubeUps[face])
-                        shadowCamera.lookAt(lookTarget)
-                        shadowCamera.updateMatrixWorld()
+                    shadow.updateMatrices(light, camera as CameraWithNearAndFar, vp)
 
-                        val vpDimensions = cube2DViewPorts[face]
-                        state.viewport(vpDimensions)
+                    frustum.copy(shadow.frustum)
 
-                    }
-
-                    // update camera matrices and frustum
-
-                    projScreenMatrix.multiplyMatrices(shadowCamera.projectionMatrix, shadowCamera.matrixWorldInverse)
-                    frustum.setFromMatrix(projScreenMatrix)
-
-                    // set object matrices & frustum culling
-
-                    renderObject(scene, camera, shadowCamera, isPointLight)
+                    renderObject(scene, camera, shadow.camera, light)
 
                 }
             }
@@ -272,18 +176,17 @@ class GLShadowMap internal constructor(
     }
 
     private fun getDepthMaterial(
-        `object`: Object3D,
-        material: Material,
-        isPointLight: Boolean,
-        lightPositionWorld: Vector3,
-        shadowCameraNear: Float,
-        shadowCameraFar: Float
+            `object`: Object3D,
+            material: Material,
+            light: Light,
+            shadowCameraNear: Float,
+            shadowCameraFar: Float
     ): Material {
 
         var materialVariants: MutableList<out Material> = depthMaterials
         var customMaterial: Material? = `object`.customDepthMaterial
 
-        if (isPointLight) {
+        if (light is PointLight) {
             materialVariants = distanceMaterials
             customMaterial = `object`.customDistanceMaterial
         }
@@ -296,7 +199,7 @@ class GLShadowMap internal constructor(
 //            }
 //
 //            if (`object` is SkinnedMesh && !(material is SkinningMaterial && material.skinning)) {
-//                println("GLShadowMap: SkinnedMesh with material.skinning set to false:  $`object`")
+//                LOG.warn("GLShadowMap: SkinnedMesh with material.skinning set to false:  $`object`")
 //            }
 
             val useSkinning = false // `object` is SkinnedMesh && (material is SkinningMaterial && material.skinning)
@@ -304,10 +207,10 @@ class GLShadowMap internal constructor(
             var variantIndex = 0
 
             if (useMorphing) {
-                variantIndex = variantIndex or MorphingFlag
+                variantIndex = variantIndex or morphingFlag
             }
             if (useSkinning) {
-                variantIndex = variantIndex or SkinningFlag
+                variantIndex = variantIndex or skinningFlag
             }
 
             materialVariants[variantIndex]
@@ -353,9 +256,9 @@ class GLShadowMap internal constructor(
             result.linewidth = material.linewidth
         }
 
-        if (isPointLight && result is MeshDistanceMaterial) {
+        if (light is PointLight && result is MeshDistanceMaterial) {
 
-            result.referencePosition.copy(lightPositionWorld)
+            result.referencePosition.setFromMatrixPosition(light.matrixWorld)
             result.nearDistance = shadowCameraNear
             result.farDistance = shadowCameraFar
 
@@ -365,10 +268,10 @@ class GLShadowMap internal constructor(
     }
 
     private fun renderObject(
-        `object`: Object3D,
-        camera: Camera,
-        shadowCamera: CameraWithNearAndFar,
-        isPointLight: Boolean
+            `object`: Object3D,
+            camera: Camera,
+            shadowCamera: CameraWithNearAndFar,
+            light: Light
     ) {
         if (!`object`.visible) return
 
@@ -399,8 +302,7 @@ class GLShadowMap internal constructor(
                             val depthMaterial = getDepthMaterial(
                                 `object`,
                                 groupMaterial,
-                                isPointLight,
-                                lightPositionWorld,
+                                    light,
                                 shadowCamera.near,
                                 shadowCamera.far
                             )
@@ -415,8 +317,7 @@ class GLShadowMap internal constructor(
                     val depthMaterial = getDepthMaterial(
                         `object`,
                         `object`.material,
-                        isPointLight,
-                        lightPositionWorld,
+                            light,
                         shadowCamera.near,
                         shadowCamera.far
                     )
@@ -430,10 +331,16 @@ class GLShadowMap internal constructor(
 
         `object`.children.forEach { child ->
 
-            renderObject(child, camera, shadowCamera, isPointLight)
+            renderObject(child, camera, shadowCamera, light)
 
         }
 
+
+    }
+
+    private companion object {
+
+        val LOG: Logger = getLogger(GLShadowMap::class)
 
     }
 

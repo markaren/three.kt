@@ -1,22 +1,18 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.TextureCombineOperation
-import info.laht.threekt.TextureEncoding
-import info.laht.threekt.TextureMapping
-import info.laht.threekt.ToneMapping
+import info.laht.threekt.*
 import info.laht.threekt.core.Shader
 import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.RawShaderMaterial
 import info.laht.threekt.materials.ShaderMaterial
 import info.laht.threekt.renderers.GLRenderer
+import info.laht.threekt.renderers.Program
 import info.laht.threekt.renderers.shaders.ShaderChunk
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20
 
-internal sealed class _GLProgram {
-    abstract val id: Int
-}
+internal sealed class _GLProgram : Program
 
 internal object GLProgramDefault : _GLProgram() {
     override val id = -1
@@ -24,11 +20,11 @@ internal object GLProgramDefault : _GLProgram() {
 }
 
 internal class GLProgram(
-    renderer: GLRenderer,
-    val code: String,
-    material: Material,
-    shader: Shader,
-    parameters: GLPrograms.Parameters
+        renderer: GLRenderer,
+        val code: String,
+        material: Material,
+        shader: Shader,
+        parameters: GLPrograms.Parameters
 ) : _GLProgram() {
 
     override val id = programIdCount++
@@ -385,15 +381,15 @@ internal class GLProgram(
         if (renderer.checkShaderErrors) {
 
             val programLog = GL20.glGetProgramInfoLog(program).trim()
-            val vertexLog = GL20.glGetShaderInfoLog(glVertexShader).trim();
-            val fragmentLog = GL20.glGetShaderInfoLog(glFragmentShader).trim();
+            val vertexLog = GL20.glGetShaderInfoLog(glVertexShader).trim()
+            val fragmentLog = GL20.glGetShaderInfoLog(glFragmentShader).trim()
 
             if (GL20.glGetProgrami(program, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
 
                 val vertexErrors = getShaderErrors(glVertexShader, "vertex")
                 val fragmentErrors = getShaderErrors(glFragmentShader, "fragment")
 
-                println(
+                LOG.warn(
                     "GLProgram: shader error: ${GL11.glGetError()} ${GL20.GL_VALIDATE_STATUS} ${GL20.glGetProgrami(
                         program,
                         GL20.GL_VALIDATE_STATUS
@@ -402,7 +398,7 @@ internal class GLProgram(
 
             } else if (programLog != "") {
 
-                println("GLProgram: gl.getProgramInfoLog() $programLog")
+                LOG.info("GLProgram: gl.getProgramInfoLog() $programLog")
 
             }
         }
@@ -443,6 +439,8 @@ internal class GLProgram(
     private companion object {
 
         var programIdCount = 0
+
+        val LOG: Logger = getLogger(GLProgram::class)
 
         fun getEncodingComponents(encoding: TextureEncoding): Pair<String, String> {
 

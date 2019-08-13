@@ -21,12 +21,12 @@ internal class GLRenderList {
     }
 
     private fun getNextRenderItem(
-        `object`: Object3D,
-        geometry: BufferGeometry,
-        material: Material,
-        groupOrder: Int,
-        z: Float,
-        group: GeometryGroup?
+            `object`: Object3D,
+            geometry: BufferGeometry,
+            material: Material,
+            groupOrder: Int,
+            z: Float,
+            group: GeometryGroup?
     ): RenderItem {
         var renderItem = renderItems.getOrNull(renderItemsIndex)
         if (renderItem == null) {
@@ -35,7 +35,7 @@ internal class GLRenderList {
                 `object`,
                 geometry,
                 material,
-                material.program ?: GLProgramDefault,
+                    material.program as _GLProgram? ?: GLProgramDefault,
                 groupOrder,
                 `object`.renderOrder,
                 z,
@@ -49,7 +49,7 @@ internal class GLRenderList {
             renderItem.`object` = `object`
             renderItem.geometry = geometry
             renderItem.material = material
-            renderItem.program = material.program ?: GLProgramDefault
+            renderItem.program = material.program as _GLProgram? ?: GLProgramDefault
             renderItem.groupOrder = groupOrder
             renderItem.renderOrder = `object`.renderOrder
             renderItem.z = z
@@ -66,12 +66,12 @@ internal class GLRenderList {
     }
 
     fun push(
-        `object`: Object3D,
-        geometry: BufferGeometry,
-        material: Material,
-        groupOrder: Int,
-        z: Float,
-        group: GeometryGroup?
+            `object`: Object3D,
+            geometry: BufferGeometry,
+            material: Material,
+            groupOrder: Int,
+            z: Float,
+            group: GeometryGroup?
     ) {
 
         val renderItem = getNextRenderItem(`object`, geometry, material, groupOrder, z, group)
@@ -85,12 +85,12 @@ internal class GLRenderList {
     }
 
     fun unshift(
-        `object`: Object3D,
-        geometry: BufferGeometry,
-        material: Material,
-        groupOrder: Int,
-        z: Float,
-        group: GeometryGroup?
+            `object`: Object3D,
+            geometry: BufferGeometry,
+            material: Material,
+            groupOrder: Int,
+            z: Float,
+            group: GeometryGroup?
     ) {
 
         val renderItem = getNextRenderItem(`object`, geometry, material, groupOrder, z, group)
@@ -129,15 +129,15 @@ internal class GLRenderList {
     }
 
     internal class RenderItem(
-        var id: Int,
-        var `object`: Object3D,
-        var geometry: BufferGeometry,
-        var material: Material,
-        var program: _GLProgram,
-        var groupOrder: Int,
-        var renderOrder: Int,
-        var z: Float,
-        var group: GeometryGroup?
+            var id: Int,
+            var `object`: Object3D,
+            var geometry: BufferGeometry,
+            var material: Material,
+            var program: _GLProgram,
+            var groupOrder: Int,
+            var renderOrder: Int,
+            var z: Float,
+            var group: GeometryGroup?
     )
 
 }

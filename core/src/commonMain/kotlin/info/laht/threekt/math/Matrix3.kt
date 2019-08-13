@@ -1,6 +1,8 @@
 package info.laht.threekt.math
 
+import info.laht.threekt.Logger
 import info.laht.threekt.core.Cloneable
+import info.laht.threekt.getLogger
 import kotlin.jvm.JvmOverloads
 import kotlin.math.cos
 import kotlin.math.sin
@@ -169,11 +171,11 @@ class Matrix3(
 
         if (det == 0f) {
 
-            val msg = "Matrix3.getInverse() can't invert matrix, determinant is 0!"
+            val msg = "getInverse() can't invert matrix, determinant is 0!"
             if (throwOnDegenerate) {
                 throw IllegalStateException(msg)
             } else {
-                println(msg)
+                LOG.warn(msg)
             }
 
             return this.identity()
@@ -318,6 +320,16 @@ class Matrix3(
 
     override fun hashCode(): Int {
         return elements.contentHashCode()
+    }
+
+    override fun toString(): String {
+        return "Matrix3(elements=${elements.contentToString()})"
+    }
+
+    private companion object {
+
+        val LOG: Logger = getLogger(Matrix3::class)
+
     }
 
 }

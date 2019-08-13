@@ -1,5 +1,8 @@
 package info.laht.threekt
 
+import kotlinx.io.charsets.Charset
+import kotlinx.io.charsets.Charsets
+
 internal val List<*>.length: Int
     get() = this.size
 
@@ -19,9 +22,11 @@ internal inline fun <reified T> MutableList<T?>.length(length: Int) {
 
 internal inline fun <reified T> MutableList<T>.shrinkToFit(length: Int) {
 
-    if (length > size) {
+    if (length == 0) {
+        clear()
+    } else if (isNotEmpty()) {
         while (length > size) {
-            removeAt(length - 1)
+            removeAt(lastIndex)
         }
     }
 
@@ -168,19 +173,8 @@ internal inline fun <reified T> MutableList<T>.push(value: T, vararg values: T):
     return size
 }
 
-object LoaderUtils {
+expect fun currentTimeMillis(): Long
 
-    fun extractUrlBase(url: String): String {
+expect fun String.readText(charset: Charset = Charsets.UTF_8): String
 
-        @Suppress("NAME_SHADOWING")
-        val url = url.replace("\\", "/")
-
-        val index = url.lastIndexOf("/")
-
-        if (index == -1) return "./"
-
-        return url.substring(0, index + 1)
-
-    }
-
-}
+expect fun String.readBytes(): ByteArray

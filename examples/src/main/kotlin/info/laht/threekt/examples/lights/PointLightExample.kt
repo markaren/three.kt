@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.lights
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
@@ -32,11 +31,12 @@ object PointLightExample {
 
             OrbitControls(camera, canvas)
 
-            val renderer = GLRenderer(canvas.width, canvas.height)
+            val renderer = GLRenderer(canvas.width, canvas.height).apply {
+                shadowMap.enabled = true
+            }
 
             Mesh(PlaneGeometry(10f, 10f), MeshPhongMaterial().apply {
                 color.set(Color.gray)
-                side = Side.Double
             }).also {
                 it.rotation.x = DEG2RAD * -90
                 it.translateZ(-1f)
@@ -69,7 +69,7 @@ object PointLightExample {
             }
 
 
-            val pointLight1 = PointLight(Color(Color.white)).also {
+            val pointLight1 = PointLight(Color.white).also {
                 it.intensity = 0.5f
                 it.position.y = 3f
                 it.position.z = 3f

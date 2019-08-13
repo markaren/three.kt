@@ -17,6 +17,8 @@ val lwjglNatives = when {
     else -> TODO("OS $os not supported")
 }
 
+val kotlinIOVersion = "0.1.13"
+
 kotlin {
     jvm {
         compilations.all {
@@ -28,6 +30,9 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib"))
+                implementation(kotlin("reflect"))
+
+                implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinIOVersion")
             }
         }
         commonTest {
@@ -43,6 +48,10 @@ kotlin {
 
                 implementation("com.google.code.gson:gson:2.8.5")
 
+                val slf4jVersion = "1.7.27"
+                implementation("org.slf4j:slf4j-api:$slf4jVersion")
+                runtimeOnly("org.slf4j:slf4j-log4j12:$slf4jVersion")
+
                 val lwjglVersion = "3.2.2"
                 implementation("org.lwjgl:lwjgl:$lwjglVersion")
                 implementation("org.lwjgl:lwjgl-glfw:$lwjglVersion")
@@ -50,6 +59,8 @@ kotlin {
                 runtimeOnly("org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives")
                 runtimeOnly("org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives")
                 runtimeOnly("org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinIOVersion")
             }
         }
 
