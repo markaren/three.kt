@@ -8,8 +8,8 @@ import info.laht.threekt.core.Cloneable
 import info.laht.threekt.math.*
 import info.laht.threekt.renderers.RenderTarget
 
-open class LightShadow<E : CameraWithNearAndFar>(
-        val camera: E
+open class LightShadow(
+        val camera: CameraWithNearAndFar
 ) : Cloneable {
 
     var bias = 0f
@@ -50,7 +50,7 @@ open class LightShadow<E : CameraWithNearAndFar>(
         shadowMatrix.multiply(shadowCamera.matrixWorldInverse)
     }
 
-    fun copy(source: LightShadow<E>): LightShadow<E> {
+    fun copy(source: LightShadow): LightShadow {
 
         this.camera.copy(source.camera, true)
 
@@ -62,13 +62,13 @@ open class LightShadow<E : CameraWithNearAndFar>(
         return this
     }
 
-    override fun clone(): LightShadow<E> {
+    override fun clone(): LightShadow {
         return LightShadow(camera).copy(this)
     }
 
 }
 
-class PointLightShadow : LightShadow<PerspectiveCamera>(PerspectiveCamera(90, 1, 0.5, 500)) {
+class PointLightShadow : LightShadow(PerspectiveCamera(90, 1, 0.5, 500)) {
 
     private val cubeDirections = listOf(
             Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1),
@@ -139,15 +139,16 @@ class PointLightShadow : LightShadow<PerspectiveCamera>(PerspectiveCamera(90, 1,
 
 }
 
-class SpotLightShadow : LightShadow<PerspectiveCamera>(PerspectiveCamera(50, 1f, 0.5f, 500f)) {
+class SpotLightShadow : LightShadow(PerspectiveCamera(50, 1f, 0.5f, 500f)) {
 
     override fun updateMatrices(light: Light, viewCamera: Camera, viewportIndex: Int) {
 
         light as SpotLight
+        camera as PerspectiveCamera
 
         val fov = RAD2DEG * 2 * light.angle
         val aspect = this.mapSize.width / this.mapSize.height
-        val far = light.distance
+        val far = if (light.distance > 0) light.distance else camera.far
 
         if (fov != camera.fov || aspect != camera.aspect || far != camera.far) {
 
@@ -175,7 +176,7 @@ class SpotLightShadow : LightShadow<PerspectiveCamera>(PerspectiveCamera(50, 1f,
 
 }
 
-class DirectionalLightShadow : LightShadow<OrthographicCamera>(OrthographicCamera(-5f, 5f, 5f, -5f, 0.5f, 500f)) {
+class DirectionalLightShadow : LightShadow(OrthographicCamera(-5f, 5f, 5f, -5f, 0.5f, 500f)) {
 
     override fun updateMatrices(light: Light, viewCamera: Camera, viewportIndex: Int) {
 

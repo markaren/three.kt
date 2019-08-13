@@ -9,7 +9,7 @@ import kotlin.math.PI
 private const val DEFAULT_INTENSITY = 1f
 
 interface LightWithShadow {
-    val shadow: LightShadow<*>
+    val shadow: LightShadow
 }
 
 interface LightWithTarget {

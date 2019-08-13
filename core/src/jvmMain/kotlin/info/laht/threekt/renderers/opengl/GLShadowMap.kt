@@ -7,7 +7,6 @@ import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.MaterialsObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.Light
-import info.laht.threekt.lights.LightShadow
 import info.laht.threekt.lights.LightWithShadow
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.materials.*
@@ -109,7 +108,7 @@ class GLShadowMap internal constructor(
 
             if (light is LightWithShadow) {
 
-                val shadow = light.shadow as LightShadow<CameraWithNearAndFar>
+                val shadow = light.shadow
 
                 shadowMapSize.copy(shadow.mapSize)
 
