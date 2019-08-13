@@ -17,8 +17,8 @@ interface LightWithTarget {
 }
 
 sealed class Light(
-    color: Color? = null,
-    intensity: Number? = null
+        color: Color? = null,
+        intensity: Number? = null
 ) : Object3DImpl() {
 
     val color = color ?: Color(0xffffff)
@@ -40,8 +40,8 @@ sealed class Light(
 }
 
 class AmbientLight(
-    color: Color? = null,
-    intensity: Number? = null
+        color: Color? = null,
+        intensity: Number? = null
 ) : Light(color, intensity) {
 
     constructor(color: Int, intensity: Number? = null) : this(Color(color), intensity)
@@ -53,8 +53,8 @@ class AmbientLight(
 }
 
 internal class LightProbe(
-    var sh: SphericalHarmonics3 = SphericalHarmonics3(),
-    intensity: Number? = null
+        var sh: SphericalHarmonics3 = SphericalHarmonics3(),
+        intensity: Number? = null
 ) : Light(Color(), intensity) {
 
     fun copy(source: LightProbe): LightProbe {
@@ -68,8 +68,8 @@ internal class LightProbe(
 
 
 class DirectionalLight(
-    color: Color? = null,
-    intensity: Number? = null
+        color: Color? = null,
+        intensity: Number? = null
 ) : Light(color, intensity), LightWithShadow, LightWithTarget {
 
     constructor(color: Int, intensity: Number?) : this(Color(color), intensity)
@@ -88,10 +88,10 @@ class DirectionalLight(
 }
 
 class PointLight(
-    color: Color? = null,
-    intensity: Number? = null,
-    distance: Number? = null,
-    decay: Number? = null
+        color: Color? = null,
+        intensity: Number? = null,
+        distance: Number? = null,
+        decay: Number? = null
 ) : Light(color, intensity), LightWithShadow {
 
     var distance = distance?.toFloat() ?: 0f
@@ -99,9 +99,11 @@ class PointLight(
 
     override val shadow = PointLightShadow()
 
-    constructor(color: Int, intensity: Number? = null, distance: Number? = null, decay: Number? = null) : this(
-        Color(color), intensity, distance, decay
-    )
+    constructor(
+            color: Int, intensity: Number? = null,
+            distance: Number? = null,
+            decay: Number? = null
+    ) : this(Color(color), intensity, distance, decay)
 
     fun copy(source: PointLight): PointLight {
 
@@ -119,14 +121,21 @@ class PointLight(
 }
 
 class RectAreaLight(
-    color: Color? = null,
-    intensity: Number? = null,
-    width: Number? = null,
-    height: Number? = null
+        color: Color? = null,
+        intensity: Number? = null,
+        width: Number? = null,
+        height: Number? = null
 ) : Light(color, intensity) {
 
     var width = width?.toFloat() ?: 10f
     var height = height?.toFloat() ?: 10f
+
+    constructor(
+            color: Int,
+            intensity: Number? = null,
+            width: Number? = null,
+            height: Number? = null
+    ) : this(Color(color), intensity, width, height)
 
     fun copy(source: RectAreaLight): RectAreaLight {
 
@@ -142,12 +151,12 @@ class RectAreaLight(
 }
 
 class SpotLight(
-    color: Color? = null,
-    intensity: Number? = null,
-    distance: Number? = null,
-    angle: Number? = null,
-    penumbra: Number? = null,
-    decay: Number? = null
+        color: Color? = null,
+        intensity: Number? = null,
+        distance: Number? = null,
+        angle: Number? = null,
+        penumbra: Number? = null,
+        decay: Number? = null
 ) : Light(color, intensity), LightWithShadow, LightWithTarget {
 
     var distance = distance?.toFloat() ?: 0f
@@ -157,6 +166,13 @@ class SpotLight(
 
     override var target = Object3DImpl()
     override var shadow = SpotLightShadow()
+
+    constructor(color: Int, intensity: Number? = null,
+                distance: Number? = null,
+                angle: Number? = null,
+                penumbra: Number? = null,
+                decay: Number? = null
+    ) : this(Color(color), intensity, distance, angle, penumbra, decay)
 
     var power: Float
         get() {
@@ -193,10 +209,15 @@ class SpotLight(
 }
 
 class HemisphereLight(
-    val skyColor: Color,
-    val groundColor: Color,
-    intensity: Number? = null
+        val skyColor: Color,
+        val groundColor: Color,
+        intensity: Number? = null
 ) : Light(skyColor, intensity) {
+
+    constructor(skyColor: Int,
+                groundColor: Int,
+                intensity: Number? = null
+    ) : this(Color(skyColor), Color(groundColor), intensity)
 
     fun copy(source: HemisphereLight): HemisphereLight {
 
