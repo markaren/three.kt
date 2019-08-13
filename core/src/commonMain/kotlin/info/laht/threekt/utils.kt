@@ -22,9 +22,11 @@ internal inline fun <reified T> MutableList<T?>.length(length: Int) {
 
 internal inline fun <reified T> MutableList<T>.shrinkToFit(length: Int) {
 
-    if (length > size) {
+    if (length == 0) {
+        clear()
+    } else if (isNotEmpty()) {
         while (length > size) {
-            removeAt(length - 1)
+            removeAt(lastIndex)
         }
     }
 
