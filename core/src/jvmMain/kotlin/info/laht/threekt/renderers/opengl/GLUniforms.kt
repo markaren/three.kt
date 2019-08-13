@@ -449,7 +449,7 @@ private class PureArrayUniform(
                 )
             } // _MAT3
             0x8b5c -> { v, _ ->
-                GL20.glUniformMatrix3fv(
+                GL20.glUniformMatrix4fv(
                         addr,
                         false,
                         flatten(v as List<Flattable>, size, 16)
