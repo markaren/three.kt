@@ -31,7 +31,7 @@ private fun flatten(array: Array<Flattable>, nBlocks: Int, blockSize: Int): Floa
 
     val n = nBlocks * blockSize
     while (n >= arrayCacheF32.size) {
-        arrayCacheF32.add(FloatArray(arrayCacheF32.size + 1))
+        arrayCacheF32.add(FloatArray(arrayCacheF32.size))
     }
 
     return arrayCacheF32[n].also { r ->
@@ -56,7 +56,7 @@ private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): Float
 
     val n = nBlocks * blockSize
     while (n >= arrayCacheF32.size) {
-        arrayCacheF32.add(FloatArray(arrayCacheF32.size + 1))
+        arrayCacheF32.add(FloatArray(arrayCacheF32.size))
     }
 
     return arrayCacheF32[n].also { r ->
@@ -80,7 +80,7 @@ private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): Float
 private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
 
     while (n >= arrayCacheI32.size) {
-        arrayCacheI32.add(IntArray(arrayCacheI32.size + 1))
+        arrayCacheI32.add(IntArray(arrayCacheI32.size))
     }
 
     return arrayCacheI32[n].also { r ->
