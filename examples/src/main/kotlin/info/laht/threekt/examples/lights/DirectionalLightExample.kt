@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.lights
 
 import info.laht.threekt.Canvas
-import info.laht.threekt.Side
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
@@ -27,16 +26,17 @@ object DirectionalLightExample {
         }).use { canvas ->
 
             val scene = Scene()
-            val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000)
+            val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 100)
             camera.position.set(5f, 5f, 5f)
 
             OrbitControls(camera, canvas)
 
-            val renderer = GLRenderer(canvas.width, canvas.height)
+            val renderer = GLRenderer(canvas.width, canvas.height).apply {
+                shadowMap.enabled = true
+            }
 
             Mesh(PlaneGeometry(10f, 10f), MeshPhongMaterial().apply {
                 color.set(Color.gray)
-                side = Side.Double
             }).also {
                 it.rotation.x = DEG2RAD * -90
                 it.translateZ(-1f)

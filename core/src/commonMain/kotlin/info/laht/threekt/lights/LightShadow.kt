@@ -1,5 +1,6 @@
 package info.laht.threekt.lights
 
+import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.CameraWithNearAndFar
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
@@ -31,7 +32,7 @@ open class LightShadow<E : CameraWithNearAndFar>(
     internal val lightPositionWorld = Vector3()
     internal val lookTarget = Vector3()
 
-    open fun updateMatrices(light: Light, viewCamera: E, viewportIndex: Int) {
+    open fun updateMatrices(light: Light, viewCamera: Camera, viewportIndex: Int) {
         val shadowCamera = this.camera
         val shadowMatrix = this.matrix
 
@@ -118,7 +119,7 @@ class PointLightShadow : LightShadow<PerspectiveCamera>(PerspectiveCamera(90, 1,
 
     }
 
-    override fun updateMatrices(light: Light, viewCamera: PerspectiveCamera, viewportIndex: Int) {
+    override fun updateMatrices(light: Light, viewCamera: Camera, viewportIndex: Int) {
 
         lightPositionWorld.setFromMatrixPosition(light.matrixWorld)
         camera.position.copy(lightPositionWorld)
@@ -140,7 +141,7 @@ class PointLightShadow : LightShadow<PerspectiveCamera>(PerspectiveCamera(90, 1,
 
 class SpotLightShadow : LightShadow<PerspectiveCamera>(PerspectiveCamera(50, 1f, 0.5f, 500f)) {
 
-    override fun updateMatrices(light: Light, viewCamera: PerspectiveCamera, viewportIndex: Int) {
+    override fun updateMatrices(light: Light, viewCamera: Camera, viewportIndex: Int) {
 
         light as SpotLight
 
@@ -176,7 +177,7 @@ class SpotLightShadow : LightShadow<PerspectiveCamera>(PerspectiveCamera(50, 1f,
 
 class DirectionalLightShadow : LightShadow<OrthographicCamera>(OrthographicCamera(-5f, 5f, 5f, -5f, 0.5f, 500f)) {
 
-    override fun updateMatrices(light: Light, viewCamera: OrthographicCamera, viewportIndex: Int) {
+    override fun updateMatrices(light: Light, viewCamera: Camera, viewportIndex: Int) {
 
         light as DirectionalLight
 
