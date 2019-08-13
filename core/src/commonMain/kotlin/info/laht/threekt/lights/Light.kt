@@ -72,7 +72,7 @@ class DirectionalLight(
         intensity: Number? = null
 ) : Light(color, intensity), LightWithShadow, LightWithTarget {
 
-    constructor(color: Int, intensity: Number?) : this(Color(color), intensity)
+    constructor(color: Int, intensity: Number? = null) : this(Color(color), intensity)
 
     override var target = Object3DImpl()
 
@@ -100,7 +100,8 @@ class PointLight(
     override val shadow = PointLightShadow()
 
     constructor(
-            color: Int, intensity: Number? = null,
+            color: Int,
+            intensity: Number? = null,
             distance: Number? = null,
             decay: Number? = null
     ) : this(Color(color), intensity, distance, decay)
