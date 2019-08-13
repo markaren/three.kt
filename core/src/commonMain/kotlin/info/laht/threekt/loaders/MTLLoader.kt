@@ -5,7 +5,6 @@ import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
-import java.io.File
 
 class MTLLoader {
 
@@ -26,7 +25,7 @@ class MTLLoader {
 
     fun load(url: String): MaterialCreator {
         val path = this.path ?: LoaderUtils.extractUrlBase(url)
-        return parse(File(url).readText(), path)
+        return parse(url.readText(), path)
     }
 
     fun parse(text: String, path: String): MaterialCreator {
