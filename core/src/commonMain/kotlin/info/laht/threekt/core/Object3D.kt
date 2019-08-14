@@ -3,8 +3,6 @@ package info.laht.threekt.core
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.lights.Light
 import info.laht.threekt.materials.Material
-import info.laht.threekt.materials.MeshDepthMaterial
-import info.laht.threekt.materials.MeshDistanceMaterial
 import info.laht.threekt.math.*
 import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.scenes.Scene
@@ -42,9 +40,6 @@ interface Object3D : Cloneable, EventDispatcher {
 
     var frustumCulled: Boolean
     var renderOrder: Int
-
-    var customDepthMaterial: MeshDepthMaterial?
-    var customDistanceMaterial: MeshDistanceMaterial?
 
     var onBeforeRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)?
     var onAfterRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)?
@@ -563,9 +558,6 @@ open class Object3DImpl : Object3D, EventDispatcher by EventDispatcherImpl() {
 
     override var frustumCulled = true
     override var renderOrder = 0
-
-    override var customDepthMaterial: MeshDepthMaterial? = null
-    override var customDistanceMaterial: MeshDistanceMaterial? = null
 
     override var onBeforeRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null
     override var onAfterRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null
