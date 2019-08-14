@@ -8,8 +8,8 @@ import info.laht.threekt.core.MaterialsObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.lights.Light
 import info.laht.threekt.lights.LightWithShadow
-import info.laht.threekt.lights.PointLight
-import info.laht.threekt.materials.*
+import info.laht.threekt.materials.Material
+import info.laht.threekt.materials.MeshDistanceMaterial
 import info.laht.threekt.math.Frustum
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector4
@@ -37,10 +37,9 @@ class GLShadowMap internal constructor(
 
     private val viewport = Vector4()
 
-    private val depthMaterials = mutableListOf<MeshDepthMaterial>()
     private val distanceMaterials = mutableListOf<MeshDistanceMaterial>()
 
-    private val materialCache = mutableMapOf<String, MutableMap<String, Material>>()
+    private val materialCache = mutableMapOf<String, MutableMap<String, MeshDistanceMaterial>>()
 
     private val shadowSide = mapOf(0 to Side.Back, 1 to Side.Front, 2 to Side.Double)
 
@@ -59,17 +58,6 @@ class GLShadowMap internal constructor(
 
             val useMorphing = (i and morphingFlag) != 0
             val useSkinning = (i and skinningFlag) != 0
-
-            val depthMaterial = MeshDepthMaterial().apply {
-
-                depthPacking = TextureEncoding.RGBADepthPacking
-
-                morphTargets = useMorphing
-                skinning = useSkinning
-
-            }
-
-            depthMaterials.add(depthMaterial)
 
             val distanceMaterial = MeshDistanceMaterial().apply {
 
@@ -183,17 +171,11 @@ class GLShadowMap internal constructor(
             shadowCameraFar: Float
     ): Material {
 
-        var materialVariants: MutableList<out Material> = depthMaterials
-        var customMaterial: Material? = `object`.customDepthMaterial
+        val materialVariants = distanceMaterials
 
-        if (light is PointLight) {
-            materialVariants = distanceMaterials
-            customMaterial = `object`.customDistanceMaterial
-        }
-
-        var result = customMaterial ?: run {
 
             val useMorphing = false
+
 //            if (material is MorphTargetMaterial && material.morphTargets) {
 //                useMorphing = geometry.morphAttributes && geometry.morphAttributes.position && geometry.morphAttributes.position.length > 0
 //            }
@@ -203,7 +185,7 @@ class GLShadowMap internal constructor(
 //            }
 
             val useSkinning = false // `object` is SkinnedMesh && (material is SkinningMaterial && material.skinning)
-//
+
             var variantIndex = 0
 
             if (useMorphing) {
@@ -213,9 +195,9 @@ class GLShadowMap internal constructor(
                 variantIndex = variantIndex or skinningFlag
             }
 
-            materialVariants[variantIndex]
+        var result = materialVariants[variantIndex]
 
-        }
+
 
         if (renderer.localClippingEnabled &&
             material.clipShadows &&
@@ -228,23 +210,15 @@ class GLShadowMap internal constructor(
             val keyA = result.uuid
             val keyB = material.uuid
 
-            val materialsForVariant = materialCache[keyA] ?: mutableMapOf<String, Material>().also {
-                materialCache[keyA] = it
-            }
+            val materialsForVariant = materialCache.getOrPut(keyA) { mutableMapOf() }
 
-            val cachedMaterial = materialsForVariant[keyB] ?: result.clone().also {
-                materialsForVariant[keyB] = it
-            }
+            val cachedMaterial = materialsForVariant.getOrPut(keyB) { result.clone() }
 
             result = cachedMaterial
 
         }
 
         result.visible = material.visible
-        if (result is MaterialWithWireframe && material is MaterialWithWireframe) {
-            result.wireframe = material.wireframe
-            result.wireframeLinewidth = material.wireframeLinewidth
-        }
 
         result.side = material.shadowSide ?: shadowSide.getValue(material.side.value)
 
@@ -252,17 +226,9 @@ class GLShadowMap internal constructor(
         result.clippingPlanes = material.clippingPlanes
         result.clipIntersection = material.clipIntersection
 
-        if (result is MaterialWithLineWidth && material is MaterialWithLineWidth) {
-            result.linewidth = material.linewidth
-        }
-
-        if (light is PointLight && result is MeshDistanceMaterial) {
-
-            result.referencePosition.setFromMatrixPosition(light.matrixWorld)
-            result.nearDistance = shadowCameraNear
-            result.farDistance = shadowCameraFar
-
-        }
+        result.referencePosition.setFromMatrixPosition(light.matrixWorld)
+        result.nearDistance = shadowCameraNear
+        result.farDistance = shadowCameraFar
 
         return result
     }
