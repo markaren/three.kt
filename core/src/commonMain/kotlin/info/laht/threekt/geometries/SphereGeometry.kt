@@ -14,8 +14,8 @@ typealias SphereGeometry = SphereBufferGeometry
 
 class SphereBufferGeometry(
         val radius: Float = 1f,
-        val widthSegments: Int = 16,
-        val heightSegments: Int = 16,
+        val widthSegments: Int = 32,
+        val heightSegments: Int = 32,
         val phiStart: Float = 0f,
         val phiLength: Float = TWO_PI,
         val thetaStart: Float = 0f,
