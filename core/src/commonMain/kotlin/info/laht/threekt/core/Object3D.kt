@@ -252,14 +252,34 @@ interface Object3D : Cloneable, EventDispatcher {
     /**
      * Adds object as child of Object3D object.
      */
+    fun add(`object`: Object3D): Object3D {
+
+        `object`.parent?.remove(`object`)
+        `object`.parent = this
+        children.add(`object`)
+        `object`.dispatchEvent("added", this)
+
+        return this
+    }
+
+    /**
+     * Adds object as child of Object3D object.
+     */
     fun add(vararg objects: Object3D): Object3D {
 
-        objects.forEach {
+        objects.forEach { add(it) }
 
-            it.parent?.remove(it)
-            it.parent = this
-            children.add(it)
-            it.dispatchEvent("added", this)
+        return this
+    }
+
+    /**
+     * Removes object as child of Object3D object.
+     */
+    fun remove(`object`: Object3D): Object3D {
+
+        if (children.remove(`object`)) {
+            `object`.parent = null
+            `object`.dispatchEvent("removed", this)
         }
 
         return this
@@ -270,12 +290,7 @@ interface Object3D : Cloneable, EventDispatcher {
      */
     fun remove(vararg objects: Object3D): Object3D {
 
-        objects.forEach {
-            if (children.remove(it)) {
-                it.parent = null
-                it.dispatchEvent("removed", this)
-            }
-        }
+        objects.forEach { remove(it) }
 
         return this
     }
