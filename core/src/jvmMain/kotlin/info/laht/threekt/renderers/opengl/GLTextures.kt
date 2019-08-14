@@ -12,10 +12,10 @@ import org.lwjgl.opengl.*
 import kotlin.math.*
 
 internal class GLTextures(
-    private val state: GLState,
-    private val properties: GLProperties,
-    private val capabilities: GLCapabilities,
-    private val info: GLInfo
+        private val state: GLState,
+        private val properties: GLProperties,
+        private val capabilities: GLCapabilities,
+        private val info: GLInfo
 ) {
 
     private val onTextureDispose = OnTextureDispose()
@@ -69,7 +69,7 @@ internal class GLTextures(
         }
 
         if (internalFormat == GL30.GL_R16F || internalFormat == GL30.GL_R32F ||
-            internalFormat == GL30.GL_RGBA16F || internalFormat == GL30.GL_RGBA32F
+                internalFormat == GL30.GL_RGBA16F || internalFormat == GL30.GL_RGBA32F
         ) {
 
         } else if (internalFormat == GL30.GL_RGB16F || internalFormat == GL30.GL_RGB32F) {
@@ -86,8 +86,8 @@ internal class GLTextures(
     private fun filterFallback(f: Int): Int {
 
         if (f == TextureFilter.Nearest.value
-            || f == TextureFilter.NearestMipMapNearest.value
-            || f == TextureFilter.NearestMipMapLinear.value
+                || f == TextureFilter.NearestMipMapNearest.value
+                || f == TextureFilter.NearestMipMapLinear.value
         ) {
             return GL11.GL_NEAREST
         }
@@ -123,13 +123,9 @@ internal class GLTextures(
 
         if (renderTarget is GLRenderTargetCube) {
 
-            for (i in 0 until 6) {
-
-                GL30.glDeleteFramebuffers((renderTargetProperties["__webglFramebuffer"] as IntArray)[i])
-                if (renderTargetProperties["__webglDepthbuffer"] != null) {
-                    GL30.glDeleteRenderbuffers((renderTargetProperties["__webglDepthbuffer"] as IntArray)[i])
-                }
-
+            GL30.glDeleteFramebuffers(renderTargetProperties["__webglFramebuffer"] as IntArray)
+            if (renderTargetProperties["__webglDepthbuffer"] != null) {
+                GL30.glDeleteRenderbuffers(renderTargetProperties["__webglDepthbuffer"] as IntArray)
             }
 
         } else {
@@ -183,7 +179,7 @@ internal class GLTextures(
         }
 
         state.activeTexture(GL13.GL_TEXTURE0 + slot)
-        state.bindTexture(GL11.GL_TEXTURE_2D, textureProperties["__webglTexture"] as Int)
+        state.bindTexture(GL11.GL_TEXTURE_2D, textureProperties["__webglTexture"] as Int?)
 
     }
 
@@ -241,9 +237,9 @@ internal class GLTextures(
         if (texture.anisotropy > 1 || properties[texture]["__currentAnisotropy"] != null) {
 
             GL11.glTexParameteri(
-                textureType,
-                GL46.GL_MAX_TEXTURE_MAX_ANISOTROPY,
-                min(texture.anisotropy, capabilities.maxAnisotropy)
+                    textureType,
+                    GL46.GL_MAX_TEXTURE_MAX_ANISOTROPY,
+                    min(texture.anisotropy, capabilities.maxAnisotropy)
             )
             properties[texture]["__currentAnisotropy"] = texture.anisotropy
 
@@ -338,14 +334,14 @@ internal class GLTextures(
             }
 
             state.texImage2D(
-                GL11.GL_TEXTURE_2D,
-                0,
-                glInternalFormat,
-                image.width,
-                image.height,
-                glFormat,
-                glType,
-                null
+                    GL11.GL_TEXTURE_2D,
+                    0,
+                    glInternalFormat,
+                    image.width,
+                    image.height,
+                    glFormat,
+                    glType,
+                    null
             )
 
         } else {
@@ -361,14 +357,14 @@ internal class GLTextures(
                 mipmaps.forEachIndexed { i, mipmap ->
 
                     state.texImage2D(
-                        GL11.GL_TEXTURE_2D,
-                        i,
-                        glInternalFormat,
-                        glFormat,
-                        glType,
-                        mipmap.width,
-                        mipmap.height,
-                        mipmap.data
+                            GL11.GL_TEXTURE_2D,
+                            i,
+                            glInternalFormat,
+                            glFormat,
+                            glType,
+                            mipmap.width,
+                            mipmap.height,
+                            mipmap.data
                     )
 
                 }
@@ -379,15 +375,15 @@ internal class GLTextures(
             } else {
 
                 state.texImage2D(
-                    GL11.GL_TEXTURE_2D,
-                    0,
-                    glInternalFormat,
-                    image.width,
-                    image.height,
-                    glFormat,
-                    glType,
+                        GL11.GL_TEXTURE_2D,
+                        0,
+                        glInternalFormat,
+                        image.width,
+                        image.height,
+                        glFormat,
+                        glType,
 
-                    image.data
+                        image.data
                 )
                 textureProperties["__maxMipLevel"] = 0
 
@@ -410,41 +406,41 @@ internal class GLTextures(
     }
 
     private fun setupFrameBufferTexture(
-        framebuffer: Int,
-        renderTarget: GLRenderTarget,
-        attachment: Int,
-        textureTarget: Int
+            framebuffer: Int,
+            renderTarget: GLRenderTarget,
+            attachment: Int,
+            textureTarget: Int
     ) {
 
         val glFormat = GLUtils.convert(renderTarget.texture.format.value)
         val glType = GLUtils.convert(renderTarget.texture.type.value)
         val glInternalFormat = getInternalFormat(glFormat, glType)
         state.texImage2D(
-            textureTarget,
-            0,
-            glInternalFormat,
-            renderTarget.width,
-            renderTarget.height,
-            glFormat,
-            glType,
-            null
+                textureTarget,
+                0,
+                glInternalFormat,
+                renderTarget.width,
+                renderTarget.height,
+                glFormat,
+                glType,
+                null
         )
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, framebuffer)
         GL30.glFramebufferTexture2D(
-            GL30.GL_FRAMEBUFFER,
-            attachment,
-            textureTarget,
-            properties[renderTarget.texture]["__webglTexture"] as Int,
-            0
+                GL30.GL_FRAMEBUFFER,
+                attachment,
+                textureTarget,
+                properties[renderTarget.texture]["__webglTexture"] as Int,
+                0
         )
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0)
 
     }
 
     private fun setupRenderBufferStorage(
-        renderbuffer: Int,
-        renderTarget: GLRenderTarget,
-        isMultisample: Boolean = false
+            renderbuffer: Int,
+            renderTarget: GLRenderTarget,
+            isMultisample: Boolean = false
     ) {
 
         GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderbuffer)
@@ -456,29 +452,29 @@ internal class GLTextures(
                 val samples = getRenderTargetSamples(renderTarget)
 
                 GL30.glRenderbufferStorageMultisample(
-                    GL30.GL_RENDERBUFFER,
-                    samples,
-                    GL14.GL_DEPTH_COMPONENT16,
-                    renderTarget.width,
-                    renderTarget.height
+                        GL30.GL_RENDERBUFFER,
+                        samples,
+                        GL14.GL_DEPTH_COMPONENT16,
+                        renderTarget.width,
+                        renderTarget.height
                 )
 
             } else {
 
                 GL30.glRenderbufferStorage(
-                    GL30.GL_RENDERBUFFER,
-                    GL14.GL_DEPTH_COMPONENT16,
-                    renderTarget.width,
-                    renderTarget.height
+                        GL30.GL_RENDERBUFFER,
+                        GL14.GL_DEPTH_COMPONENT16,
+                        renderTarget.width,
+                        renderTarget.height
                 )
 
             }
 
             GL30.glFramebufferRenderbuffer(
-                GL30.GL_FRAMEBUFFER,
-                GL30.GL_DEPTH_ATTACHMENT,
-                GL30.GL_RENDERBUFFER,
-                renderbuffer
+                    GL30.GL_FRAMEBUFFER,
+                    GL30.GL_DEPTH_ATTACHMENT,
+                    GL30.GL_RENDERBUFFER,
+                    renderbuffer
             )
 
         } else if (renderTarget.depthBuffer && renderTarget.stencilBuffer) {
@@ -488,30 +484,30 @@ internal class GLTextures(
                 val samples = getRenderTargetSamples(renderTarget)
 
                 GL30.glRenderbufferStorageMultisample(
-                    GL30.GL_RENDERBUFFER,
-                    samples,
-                    GL30.GL_DEPTH24_STENCIL8,
-                    renderTarget.width,
-                    renderTarget.height
+                        GL30.GL_RENDERBUFFER,
+                        samples,
+                        GL30.GL_DEPTH24_STENCIL8,
+                        renderTarget.width,
+                        renderTarget.height
                 )
 
             } else {
 
                 GL30.glRenderbufferStorage(
-                    GL30.GL_RENDERBUFFER,
-                    GL30C.GL_DEPTH_STENCIL,
-                    renderTarget.width,
-                    renderTarget.height
+                        GL30.GL_RENDERBUFFER,
+                        GL30C.GL_DEPTH_STENCIL,
+                        renderTarget.width,
+                        renderTarget.height
                 )
 
             }
 
 
             GL30.glFramebufferRenderbuffer(
-                GL30.GL_FRAMEBUFFER,
-                GL30.GL_DEPTH_STENCIL_ATTACHMENT,
-                GL30.GL_RENDERBUFFER,
-                renderbuffer
+                    GL30.GL_FRAMEBUFFER,
+                    GL30.GL_DEPTH_STENCIL_ATTACHMENT,
+                    GL30.GL_RENDERBUFFER,
+                    renderbuffer
             )
 
         } else {
@@ -525,20 +521,20 @@ internal class GLTextures(
                 val samples = getRenderTargetSamples(renderTarget)
 
                 GL30.glRenderbufferStorageMultisample(
-                    GL30.GL_RENDERBUFFER,
-                    samples,
-                    glInternalFormat,
-                    renderTarget.width,
-                    renderTarget.height
+                        GL30.GL_RENDERBUFFER,
+                        samples,
+                        glInternalFormat,
+                        renderTarget.width,
+                        renderTarget.height
                 )
 
             } else {
 
                 GL30.glRenderbufferStorage(
-                    GL30.GL_RENDERBUFFER,
-                    glInternalFormat,
-                    renderTarget.width,
-                    renderTarget.height
+                        GL30.GL_RENDERBUFFER,
+                        glInternalFormat,
+                        renderTarget.width,
+                        renderTarget.height
                 )
 
             }
@@ -562,8 +558,8 @@ internal class GLTextures(
 
         // upload an empty depth renderTargetCube with framebuffer size
         if (properties[depthTexture]["__webglTexture"] != null ||
-            image.width != renderTarget.width ||
-            image.height != renderTarget.height
+                image.width != renderTarget.width ||
+                image.height != renderTarget.height
         ) {
 
             image.width = renderTarget.width
@@ -607,13 +603,13 @@ internal class GLTextures(
                 for (i in 0 until 6) {
 
                     GL30.glBindFramebuffer(
-                        GL30.GL_FRAMEBUFFER,
-                        renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i]
+                            GL30.GL_FRAMEBUFFER,
+                            renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i]
                     )
                     renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i] = GL30.glGenRenderbuffers()
                     setupRenderBufferStorage(
-                        renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i],
-                        renderTarget
+                            renderTargetProperties.getAs<IntArray>("__webglDepthbuffer")!![i],
+                            renderTarget
                     )
 
                 }
@@ -698,10 +694,10 @@ internal class GLTextures(
             for (i in 0 until 6) {
 
                 setupFrameBufferTexture(
-                    renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i],
-                    renderTarget,
-                    GL30.GL_COLOR_ATTACHMENT0,
-                    GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i
+                        renderTargetProperties.getAs<IntArray>("__webglFramebuffer")!![i],
+                        renderTarget,
+                        GL30.GL_COLOR_ATTACHMENT0,
+                        GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i
                 )
 
             }
@@ -719,10 +715,10 @@ internal class GLTextures(
             state.bindTexture(GL11.GL_TEXTURE_2D, textureProperties["__webglTexture"] as Int)
             setTextureParameters(GL11.GL_TEXTURE_2D, renderTarget.texture, supportsMips)
             setupFrameBufferTexture(
-                renderTargetProperties["__webglFramebuffer"] as Int,
-                renderTarget,
-                GL30.GL_COLOR_ATTACHMENT0,
-                GL11.GL_TEXTURE_2D
+                    renderTargetProperties["__webglFramebuffer"] as Int,
+                    renderTarget,
+                    GL30.GL_COLOR_ATTACHMENT0,
+                    GL11.GL_TEXTURE_2D
             )
 
             if (textureNeedsGenerateMipmaps(renderTarget.texture, supportsMips)) {
@@ -769,8 +765,8 @@ internal class GLTextures(
             val renderTargetProperties = properties[renderTarget]
 
             GL30.glBindFramebuffer(
-                GL30.GL_READ_FRAMEBUFFER,
-                renderTargetProperties["__webglMultisampledFramebuffer"] as Int
+                    GL30.GL_READ_FRAMEBUFFER,
+                    renderTargetProperties["__webglMultisampledFramebuffer"] as Int
             )
             GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, renderTargetProperties["__webglFramebuffer"] as Int)
 

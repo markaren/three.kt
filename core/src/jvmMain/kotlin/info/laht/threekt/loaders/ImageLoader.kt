@@ -6,11 +6,12 @@ import org.lwjgl.BufferUtils
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import java.io.File
+import java.util.*
 import javax.imageio.ImageIO
 
 actual object ImageLoader {
 
-    private val cache = mutableMapOf<String, Image>()
+    private val cache = WeakHashMap<String, Image>()
 
     @JvmOverloads
     actual fun load(path: String, flipY: Boolean): Image {
@@ -21,9 +22,7 @@ actual object ImageLoader {
         }
         val isJpg = file.name.endsWith(".jpg", true) || file.name.endsWith(".jpeg", true)
 
-        if (file.absolutePath in cache) {
-            return cache.getValue(file.absolutePath)
-        } else {
+        return cache.getOrPut(file.absolutePath) {
 
             var img = ImageIO.read(file)
             if (flipY) {
@@ -49,10 +48,7 @@ actual object ImageLoader {
                 }
             }
 
-
-            return Image(img.width, img.height, buffer).also {
-                cache[file.absolutePath] = it
-            }
+            Image(img.width, img.height, buffer)
         }
     }
 
@@ -68,11 +64,11 @@ actual object ImageLoader {
     }
 
     private fun createTransformed(
-        image: BufferedImage, at: AffineTransform
+            image: BufferedImage, at: AffineTransform
     ): BufferedImage {
         val newImage = BufferedImage(
-            image.width, image.height,
-            BufferedImage.TYPE_INT_ARGB
+                image.width, image.height,
+                BufferedImage.TYPE_INT_ARGB
         )
         val g = newImage.createGraphics()
         g.transform(at)

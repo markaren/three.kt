@@ -15,7 +15,7 @@ open class LightShadow(
     var bias = 0f
     var radius = 1f
 
-    var mapSize = Vector2(512, 512)
+    var mapSize = Vector2(1024, 1024)
 
     var map: RenderTarget? = null
     var matrix = Matrix4()

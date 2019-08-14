@@ -3,8 +3,6 @@ package info.laht.threekt.core
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.lights.Light
 import info.laht.threekt.materials.Material
-import info.laht.threekt.materials.MeshDepthMaterial
-import info.laht.threekt.materials.MeshDistanceMaterial
 import info.laht.threekt.math.*
 import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.scenes.Scene
@@ -42,9 +40,6 @@ interface Object3D : Cloneable, EventDispatcher {
 
     var frustumCulled: Boolean
     var renderOrder: Int
-
-    var customDepthMaterial: MeshDepthMaterial?
-    var customDistanceMaterial: MeshDistanceMaterial?
 
     var onBeforeRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)?
     var onAfterRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)?
@@ -252,14 +247,34 @@ interface Object3D : Cloneable, EventDispatcher {
     /**
      * Adds object as child of Object3D object.
      */
+    fun add(`object`: Object3D): Object3D {
+
+        `object`.parent?.remove(`object`)
+        `object`.parent = this
+        children.add(`object`)
+        `object`.dispatchEvent("added", this)
+
+        return this
+    }
+
+    /**
+     * Adds object as child of Object3D object.
+     */
     fun add(vararg objects: Object3D): Object3D {
 
-        objects.forEach {
+        objects.forEach { add(it) }
 
-            it.parent?.remove(it)
-            it.parent = this
-            children.add(it)
-            it.dispatchEvent("added", this)
+        return this
+    }
+
+    /**
+     * Removes object as child of Object3D object.
+     */
+    fun remove(`object`: Object3D): Object3D {
+
+        if (children.remove(`object`)) {
+            `object`.parent = null
+            `object`.dispatchEvent("removed", this)
         }
 
         return this
@@ -270,12 +285,7 @@ interface Object3D : Cloneable, EventDispatcher {
      */
     fun remove(vararg objects: Object3D): Object3D {
 
-        objects.forEach {
-            if (children.remove(it)) {
-                it.parent = null
-                it.dispatchEvent("removed", this)
-            }
-        }
+        objects.forEach { remove(it) }
 
         return this
     }
@@ -548,9 +558,6 @@ open class Object3DImpl : Object3D, EventDispatcher by EventDispatcherImpl() {
 
     override var frustumCulled = true
     override var renderOrder = 0
-
-    override var customDepthMaterial: MeshDepthMaterial? = null
-    override var customDistanceMaterial: MeshDistanceMaterial? = null
 
     override var onBeforeRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null
     override var onAfterRender: ((Renderer, Scene, Camera, BufferGeometry, Material, GeometryGroup?) -> Unit)? = null

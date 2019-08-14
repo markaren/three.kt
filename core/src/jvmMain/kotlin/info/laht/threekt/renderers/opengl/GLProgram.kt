@@ -16,7 +16,6 @@ internal sealed class _GLProgram : Program
 
 internal object GLProgramDefault : _GLProgram() {
     override val id = -1
-
 }
 
 internal class GLProgram(
@@ -61,16 +60,16 @@ internal class GLProgram(
 
                 TextureMapping.CubeReflection, TextureMapping.CubeRefraction -> envMapTypeDefine = "ENVMAP_TYPE_CUBE"
                 TextureMapping.CubeUVReflection, TextureMapping.CubeUVRefraction -> envMapTypeDefine =
-                    "ENVMAP_TYPE_CUBE_UV"
+                        "ENVMAP_TYPE_CUBE_UV"
                 TextureMapping.EquirectangularReflection, TextureMapping.EquirectangularRefraction -> envMapTypeDefine =
-                    "ENVMAP_TYPE_EQUIREC"
+                        "ENVMAP_TYPE_EQUIREC"
                 TextureMapping.SphericalReflection -> envMapTypeDefine = "ENVMAP_TYPE_SPHERE"
 
             }
 
             when (material.envMap?.mapping) {
                 TextureMapping.CubeRefraction, TextureMapping.EquirectangularRefraction -> envMapModeDefine =
-                    "ENVMAP_MODE_REFRACTION"
+                        "ENVMAP_MODE_REFRACTION"
             }
 
             when (material.combine) {
@@ -89,7 +88,7 @@ internal class GLProgram(
         if (material is RawShaderMaterial) {
 
             prefixVertex = mutableListOf(
-                customDefines
+                    customDefines
             ).filter { it.isNotEmpty() }.joinToString("\n")
 
             if (prefixVertex.isNotEmpty()) {
@@ -97,7 +96,7 @@ internal class GLProgram(
             }
 
             prefixFragment = mutableListOf(
-                customDefines
+                    customDefines
             ).filter { it.isNotEmpty() }.joinToString("\n")
 
             if (prefixFragment.isNotEmpty()) {
@@ -108,205 +107,205 @@ internal class GLProgram(
 
             prefixVertex = listOf(
 
-                "precision ${parameters.precision} float;",
-                "precision ${parameters.precision} int;",
+                    "precision ${parameters.precision} float;",
+                    "precision ${parameters.precision} int;",
 
-                "#define SHADER_NAME ${shader.name}",
+                    "#define SHADER_NAME ${shader.name}",
 
-                customDefines,
+                    customDefines,
 
-                if (parameters.supportsVertexTextures) "#define VERTEX_TEXTURES" else "",
+                    if (parameters.supportsVertexTextures) "#define VERTEX_TEXTURES" else "",
 
-                "#define GAMMA_FACTOR $gammaFactorDefine",
+                    "#define GAMMA_FACTOR $gammaFactorDefine",
 
-                "#define MAX_BONES ${parameters.maxBones}",
-                if (parameters.useFog && parameters.fog) "#define USE_FOG" else "",
-                if (parameters.useFog && parameters.fogExp) "#define FOG_EXP2" else "",
+                    "#define MAX_BONES ${parameters.maxBones}",
+                    if (parameters.useFog && parameters.fog) "#define USE_FOG" else "",
+                    if (parameters.useFog && parameters.fogExp) "#define FOG_EXP2" else "",
 
-                if (parameters.map) "#define USE_MAP" else "",
-                if (parameters.envMap) "#define USE_ENVMAP" else "",
-                if (parameters.envMap) "#define $envMapModeDefine" else "",
-                if (parameters.lightMap) "#define USE_LIGHTMAP" else "",
-                if (parameters.aoMap) "#define USE_AOMAP" else "",
-                if (parameters.emissiveMap) "#define USE_EMISSIVEMAP" else "",
-                if (parameters.bumpMap) "#define USE_BUMPMAP" else "",
-                if (parameters.normalMap) "#define USE_NORMALMAP" else "",
-                if (parameters.normalMap && parameters.objectSpaceNormalMap) "#define OBJECTSPACE_NORMALMAP" else "",
-                if (parameters.displacementMap && parameters.supportsVertexTextures) "#define USE_DISPLACEMENTMAP" else "",
-                if (parameters.specularMap) "#define USE_SPECULARMAP" else "",
-                if (parameters.roughnessMap) "#define USE_ROUGHNESSMAP" else "",
-                if (parameters.metalnessMap) "#define USE_METALNESSMAP" else "",
-                if (parameters.alphaMap) "#define USE_ALPHAMAP" else "",
+                    if (parameters.map) "#define USE_MAP" else "",
+                    if (parameters.envMap) "#define USE_ENVMAP" else "",
+                    if (parameters.envMap) "#define $envMapModeDefine" else "",
+                    if (parameters.lightMap) "#define USE_LIGHTMAP" else "",
+                    if (parameters.aoMap) "#define USE_AOMAP" else "",
+                    if (parameters.emissiveMap) "#define USE_EMISSIVEMAP" else "",
+                    if (parameters.bumpMap) "#define USE_BUMPMAP" else "",
+                    if (parameters.normalMap) "#define USE_NORMALMAP" else "",
+                    if (parameters.normalMap && parameters.objectSpaceNormalMap) "#define OBJECTSPACE_NORMALMAP" else "",
+                    if (parameters.displacementMap && parameters.supportsVertexTextures) "#define USE_DISPLACEMENTMAP" else "",
+                    if (parameters.specularMap) "#define USE_SPECULARMAP" else "",
+                    if (parameters.roughnessMap) "#define USE_ROUGHNESSMAP" else "",
+                    if (parameters.metalnessMap) "#define USE_METALNESSMAP" else "",
+                    if (parameters.alphaMap) "#define USE_ALPHAMAP" else "",
 
-                if (parameters.vertexTangents) "#define USE_TANGENT" else "",
-                if (parameters.vertexColors.value > 0) "#define USE_COLOR" else "",
+                    if (parameters.vertexTangents) "#define USE_TANGENT" else "",
+                    if (parameters.vertexColors.value > 0) "#define USE_COLOR" else "",
 
-                if (parameters.flatShading) "#define FLAT_SHADED" else "",
+                    if (parameters.flatShading) "#define FLAT_SHADED" else "",
 
-                if (parameters.skinning) "#define USE_SKINNING" else "",
-                if (parameters.useVertexTexture) "#define BONE_TEXTURE" else "",
+                    if (parameters.skinning) "#define USE_SKINNING" else "",
+                    if (parameters.useVertexTexture) "#define BONE_TEXTURE" else "",
 
-                if (parameters.morphTargets) "#define USE_MORPHTARGETS" else "",
-                if (parameters.morphNormals && !parameters.flatShading) "#define USE_MORPHNORMALS" else "",
-                if (parameters.doubleSided) "#define DOUBLE_SIDED" else "",
-                if (parameters.flipSided) "#define FLIP_SIDED" else "",
+                    if (parameters.morphTargets) "#define USE_MORPHTARGETS" else "",
+                    if (parameters.morphNormals && !parameters.flatShading) "#define USE_MORPHNORMALS" else "",
+                    if (parameters.doubleSided) "#define DOUBLE_SIDED" else "",
+                    if (parameters.flipSided) "#define FLIP_SIDED" else "",
 
-                if (parameters.shadowMapEnabled) "#define USE_SHADOWMAP" else "",
-                if (parameters.shadowMapEnabled) "#define $shadowMapTypeDefine" else "",
+                    if (parameters.shadowMapEnabled) "#define USE_SHADOWMAP" else "",
+                    if (parameters.shadowMapEnabled) "#define $shadowMapTypeDefine" else "",
 
-                if (parameters.sizeAttenuation) "#define USE_SIZEATTENUATION" else "",
+                    if (parameters.sizeAttenuation) "#define USE_SIZEATTENUATION" else "",
 
-                "uniform mat4 modelMatrix;",
-                "uniform mat4 modelViewMatrix;",
-                "uniform mat4 projectionMatrix;",
-                "uniform mat4 viewMatrix;",
-                "uniform mat3 normalMatrix;",
-                "uniform vec3 cameraPosition;",
+                    "uniform mat4 modelMatrix;",
+                    "uniform mat4 modelViewMatrix;",
+                    "uniform mat4 projectionMatrix;",
+                    "uniform mat4 viewMatrix;",
+                    "uniform mat3 normalMatrix;",
+                    "uniform vec3 cameraPosition;",
 
-                "attribute vec3 position;",
-                "attribute vec3 normal;",
-                "attribute vec2 uv;",
+                    "attribute vec3 position;",
+                    "attribute vec3 normal;",
+                    "attribute vec2 uv;",
 
-                "#ifdef USE_TANGENT",
+                    "#ifdef USE_TANGENT",
 
-                "	attribute vec4 tangent;",
+                    "	attribute vec4 tangent;",
 
-                "#endif",
+                    "#endif",
 
-                "#ifdef USE_COLOR",
+                    "#ifdef USE_COLOR",
 
-                "	attribute vec3 color;",
+                    "	attribute vec3 color;",
 
-                "#endif",
+                    "#endif",
 
-                "#ifdef USE_MORPHTARGETS",
+                    "#ifdef USE_MORPHTARGETS",
 
-                "	attribute vec3 morphTarget0;",
-                "	attribute vec3 morphTarget1;",
-                "	attribute vec3 morphTarget2;",
-                "	attribute vec3 morphTarget3;",
+                    "	attribute vec3 morphTarget0;",
+                    "	attribute vec3 morphTarget1;",
+                    "	attribute vec3 morphTarget2;",
+                    "	attribute vec3 morphTarget3;",
 
-                "	#ifdef USE_MORPHNORMALS",
+                    "	#ifdef USE_MORPHNORMALS",
 
-                "		attribute vec3 morphNormal0;",
-                "		attribute vec3 morphNormal1;",
-                "		attribute vec3 morphNormal2;",
-                "		attribute vec3 morphNormal3;",
+                    "		attribute vec3 morphNormal0;",
+                    "		attribute vec3 morphNormal1;",
+                    "		attribute vec3 morphNormal2;",
+                    "		attribute vec3 morphNormal3;",
 
-                "	#else",
+                    "	#else",
 
-                "		attribute vec3 morphTarget4;",
-                "		attribute vec3 morphTarget5;",
-                "		attribute vec3 morphTarget6;",
-                "		attribute vec3 morphTarget7;",
+                    "		attribute vec3 morphTarget4;",
+                    "		attribute vec3 morphTarget5;",
+                    "		attribute vec3 morphTarget6;",
+                    "		attribute vec3 morphTarget7;",
 
-                "	#endif",
+                    "	#endif",
 
-                "#endif",
+                    "#endif",
 
-                "#ifdef USE_SKINNING",
+                    "#ifdef USE_SKINNING",
 
-                "	attribute vec4 skinIndex;",
-                "	attribute vec4 skinWeight;",
+                    "	attribute vec4 skinIndex;",
+                    "	attribute vec4 skinWeight;",
 
-                "#endif",
+                    "#endif",
 
-                "\n"
+                    "\n"
 
             ).filter { it.isNotEmpty() }.joinToString("\n")
 
             prefixFragment = listOf(
 
-                "precision ${parameters.precision} float;",
-                "precision ${parameters.precision} int;",
+                    "precision ${parameters.precision} float;",
+                    "precision ${parameters.precision} int;",
 
-                "#define SHADER_NAME ${shader.name}",
+                    "#define SHADER_NAME ${shader.name}",
 
-                customDefines,
+                    customDefines,
 
-                if (parameters.alphaTest != 0f) "#define ALPHATEST " + parameters.alphaTest + (if (!(parameters.alphaTest % 1f).isNaN()) "" else ".0") else "", // add ".0" if integer
+                    if (parameters.alphaTest != 0f) "#define ALPHATEST " + parameters.alphaTest + (if (!(parameters.alphaTest % 1f).isNaN()) "" else ".0") else "", // add ".0" if integer
 
-                "#define GAMMA_FACTOR $gammaFactorDefine",
+                    "#define GAMMA_FACTOR $gammaFactorDefine",
 
-                if ((parameters.useFog && parameters.fog)) "#define USE_FOG" else "",
-                if ((parameters.useFog && parameters.fogExp)) "#define FOG_EXP2" else "",
+                    if ((parameters.useFog && parameters.fog)) "#define USE_FOG" else "",
+                    if ((parameters.useFog && parameters.fogExp)) "#define FOG_EXP2" else "",
 
-                if (parameters.map) "#define USE_MAP" else "",
-                if (parameters.matcap) "#define USE_MATCAP" else "",
-                if (parameters.envMap) "#define USE_ENVMAP" else "",
-                if (parameters.envMap) "#define $envMapTypeDefine" else "",
-                if (parameters.envMap) "#define $envMapModeDefine" else "",
-                if (parameters.envMap) "#define $envMapBlendingDefine" else "",
-                if (parameters.lightMap) "#define USE_LIGHTMAP" else "",
-                if (parameters.aoMap) "#define USE_AOMAP" else "",
-                if (parameters.emissiveMap) "#define USE_EMISSIVEMAP" else "",
-                if (parameters.bumpMap) "#define USE_BUMPMAP" else "",
-                if (parameters.normalMap) "#define USE_NORMALMAP" else "",
-                if ((parameters.normalMap && parameters.objectSpaceNormalMap)) "#define OBJECTSPACE_NORMALMAP" else "",
-                if (parameters.specularMap) "#define USE_SPECULARMAP" else "",
-                if (parameters.roughnessMap) "#define USE_ROUGHNESSMAP" else "",
-                if (parameters.metalnessMap) "#define USE_METALNESSMAP" else "",
-                if (parameters.alphaMap) "#define USE_ALPHAMAP" else "",
+                    if (parameters.map) "#define USE_MAP" else "",
+                    if (parameters.matcap) "#define USE_MATCAP" else "",
+                    if (parameters.envMap) "#define USE_ENVMAP" else "",
+                    if (parameters.envMap) "#define $envMapTypeDefine" else "",
+                    if (parameters.envMap) "#define $envMapModeDefine" else "",
+                    if (parameters.envMap) "#define $envMapBlendingDefine" else "",
+                    if (parameters.lightMap) "#define USE_LIGHTMAP" else "",
+                    if (parameters.aoMap) "#define USE_AOMAP" else "",
+                    if (parameters.emissiveMap) "#define USE_EMISSIVEMAP" else "",
+                    if (parameters.bumpMap) "#define USE_BUMPMAP" else "",
+                    if (parameters.normalMap) "#define USE_NORMALMAP" else "",
+                    if ((parameters.normalMap && parameters.objectSpaceNormalMap)) "#define OBJECTSPACE_NORMALMAP" else "",
+                    if (parameters.specularMap) "#define USE_SPECULARMAP" else "",
+                    if (parameters.roughnessMap) "#define USE_ROUGHNESSMAP" else "",
+                    if (parameters.metalnessMap) "#define USE_METALNESSMAP" else "",
+                    if (parameters.alphaMap) "#define USE_ALPHAMAP" else "",
 
-                if (parameters.vertexTangents) "#define USE_TANGENT" else "",
-                if (parameters.vertexColors.value > 0) "#define USE_COLOR" else "",
+                    if (parameters.vertexTangents) "#define USE_TANGENT" else "",
+                    if (parameters.vertexColors.value > 0) "#define USE_COLOR" else "",
 
-                if (parameters.gradientMap) "#define USE_GRADIENTMAP" else "",
+                    if (parameters.gradientMap) "#define USE_GRADIENTMAP" else "",
 
-                if (parameters.flatShading) "#define FLAT_SHADED" else "",
+                    if (parameters.flatShading) "#define FLAT_SHADED" else "",
 
-                if (parameters.doubleSided) "#define DOUBLE_SIDED" else "",
-                if (parameters.flipSided) "#define FLIP_SIDED" else "",
+                    if (parameters.doubleSided) "#define DOUBLE_SIDED" else "",
+                    if (parameters.flipSided) "#define FLIP_SIDED" else "",
 
-                if (parameters.shadowMapEnabled) "#define USE_SHADOWMAP" else "",
-                if (parameters.shadowMapEnabled) "#define $shadowMapTypeDefine" else "",
+                    if (parameters.shadowMapEnabled) "#define USE_SHADOWMAP" else "",
+                    if (parameters.shadowMapEnabled) "#define $shadowMapTypeDefine" else "",
 
-                if (parameters.premultipliedAlpha) "#define PREMULTIPLIED_ALPHA" else "",
+                    if (parameters.premultipliedAlpha) "#define PREMULTIPLIED_ALPHA" else "",
 
-                if (parameters.physicallyCorrectLights) "#define PHYSICALLY_CORRECT_LIGHTS" else "",
+                    if (parameters.physicallyCorrectLights) "#define PHYSICALLY_CORRECT_LIGHTS" else "",
 
-                if (parameters.logarithmicDepthBuffer) "#define USE_LOGDEPTHBUF" else "",
-                if (parameters.logarithmicDepthBuffer) "#define USE_LOGDEPTHBUF_EXT" else "",
+                    if (parameters.logarithmicDepthBuffer) "#define USE_LOGDEPTHBUF" else "",
+                    if (parameters.logarithmicDepthBuffer) "#define USE_LOGDEPTHBUF_EXT" else "",
 
-                if (parameters.envMap) "#define TEXTURE_LOD_EXT" else "",
+                    if (parameters.envMap) "#define TEXTURE_LOD_EXT" else "",
 
-                "uniform mat4 viewMatrix;",
-                "uniform vec3 cameraPosition;",
+                    "uniform mat4 viewMatrix;",
+                    "uniform vec3 cameraPosition;",
 
-                if ((parameters.toneMapping != ToneMapping.None)) "#define TONE_MAPPING" else "",
-                if ((parameters.toneMapping != ToneMapping.None)) ShaderChunk["tonemapping_pars_fragment"] else "", // this code is required here because it is used by the toneMapping() function defined below
-                if ((parameters.toneMapping != ToneMapping.None)) getToneMappingFunction(
-                    "toneMapping",
-                    parameters.toneMapping
-                ) else "",
+                    if ((parameters.toneMapping != ToneMapping.None)) "#define TONE_MAPPING" else "",
+                    if ((parameters.toneMapping != ToneMapping.None)) ShaderChunk["tonemapping_pars_fragment"] else "", // this code is required here because it is used by the toneMapping() function defined below
+                    if ((parameters.toneMapping != ToneMapping.None)) getToneMappingFunction(
+                            "toneMapping",
+                            parameters.toneMapping
+                    ) else "",
 
-                if (parameters.dithering) "#define DITHERING" else "",
+                    if (parameters.dithering) "#define DITHERING" else "",
 
-                ShaderChunk["encodings_pars_fragment"], // this code is required here because it is used by the various encoding/decoding function defined below
-                getTexelDecodingFunction(
-                    "mapTexelToLinear",
-                    parameters.mapEncoding
-                ),
-                getTexelDecodingFunction(
-                    "matcapTexelToLinear",
-                    parameters.matcapEncoding
-                ),
-                getTexelDecodingFunction(
-                    "envMapTexelToLinear",
-                    parameters.envMapEncoding
-                ),
-                getTexelDecodingFunction(
-                    "emissiveMapTexelToLinear",
-                    parameters.emissiveMapEncoding
-                ),
-                getTexelEncodingFunction(
-                    "linearToOutputTexel",
-                    parameters.outputEncoding
-                ),
+                    ShaderChunk["encodings_pars_fragment"], // this code is required here because it is used by the various encoding/decoding function defined below
+                    getTexelDecodingFunction(
+                            "mapTexelToLinear",
+                            parameters.mapEncoding
+                    ),
+                    getTexelDecodingFunction(
+                            "matcapTexelToLinear",
+                            parameters.matcapEncoding
+                    ),
+                    getTexelDecodingFunction(
+                            "envMapTexelToLinear",
+                            parameters.envMapEncoding
+                    ),
+                    getTexelDecodingFunction(
+                            "emissiveMapTexelToLinear",
+                            parameters.emissiveMapEncoding
+                    ),
+                    getTexelEncodingFunction(
+                            "linearToOutputTexel",
+                            parameters.outputEncoding
+                    ),
 
-                if (parameters.depthPacking != false) "#define DEPTH_PACKING " + parameters.depthPacking else "",
+                    if (parameters.depthPacking != false) "#define DEPTH_PACKING " + parameters.depthPacking else "",
 
-                "\n"
+                    "\n"
 
             ).filter { it.isNotEmpty() }.joinToString("\n")
 
@@ -320,6 +319,9 @@ internal class GLProgram(
         fragmentShader = replaceLightNums(fragmentShader, parameters)
         fragmentShader = replaceClippingPlaneNums(fragmentShader, parameters)
 
+        vertexShader = unrollLoops(vertexShader)
+        fragmentShader = unrollLoops(fragmentShader)
+
         if (material !is RawShaderMaterial) {
 
             var isGLSL3ShaderMaterial = false
@@ -327,8 +329,8 @@ internal class GLProgram(
             val versionRegex = "^\\s*#version\\s+300\\s+es\\s*\n".toRegex()
 
             if (material is ShaderMaterial &&
-                versionRegex.containsMatchIn(vertexShader) &&
-                versionRegex.containsMatchIn(fragmentShader)
+                    versionRegex.containsMatchIn(vertexShader) &&
+                    versionRegex.containsMatchIn(fragmentShader)
             ) {
 
                 isGLSL3ShaderMaterial = true
@@ -339,27 +341,27 @@ internal class GLProgram(
             }
 
             prefixVertex = listOf(
-                "#version 330 core\n",
-                "#define attribute in",
-                "#define varying out",
-                "#define texture2D texture"
+                    "#version 330 core\n",
+                    "#define attribute in",
+                    "#define varying out",
+                    "#define texture2D texture"
             ).joinToString("\n") + "\n" + prefixVertex
 
             prefixFragment = listOf(
-                "#version 330 core\n",
-                "#define varying in",
-                if (isGLSL3ShaderMaterial) "" else "out highp vec4 pc_fragColor;",
-                if (isGLSL3ShaderMaterial) "" else "#define gl_FragColor pc_fragColor",
-                "#define gl_FragDepthEXT gl_FragDepth",
-                "#define texture2D texture",
-                "#define textureCube texture",
-                "#define texture2DProj textureProj",
-                "#define texture2DLodEXT textureLod",
-                "#define texture2DProjLodEXT textureProjLod",
-                "#define textureCubeLodEXT textureLod",
-                "#define texture2DGradEXT textureGrad",
-                "#define texture2DProjGradEXT textureProjGrad",
-                "#define textureCubeGradEXT textureGrad"
+                    "#version 330 core\n",
+                    "#define varying in",
+                    if (isGLSL3ShaderMaterial) "" else "out highp vec4 pc_fragColor;",
+                    if (isGLSL3ShaderMaterial) "" else "#define gl_FragColor pc_fragColor",
+                    "#define gl_FragDepthEXT gl_FragDepth",
+                    "#define texture2D texture",
+                    "#define textureCube texture",
+                    "#define texture2DProj textureProj",
+                    "#define texture2DLodEXT textureLod",
+                    "#define texture2DProjLodEXT textureProjLod",
+                    "#define textureCubeLodEXT textureLod",
+                    "#define texture2DGradEXT textureGrad",
+                    "#define texture2DProjGradEXT textureProjGrad",
+                    "#define textureCubeGradEXT textureGrad"
             ).joinToString("\n") + "\n" + prefixFragment
         }
 
@@ -390,10 +392,10 @@ internal class GLProgram(
                 val fragmentErrors = getShaderErrors(glFragmentShader, "fragment")
 
                 LOG.warn(
-                    "GLProgram: shader error: ${GL11.glGetError()} ${GL20.GL_VALIDATE_STATUS} ${GL20.glGetProgrami(
-                        program,
-                        GL20.GL_VALIDATE_STATUS
-                    )} glGetProgramInfoLog  $programLog $vertexErrors $fragmentErrors"
+                        "GLProgram: shader error: ${GL11.glGetError()} ${GL20.GL_VALIDATE_STATUS} ${GL20.glGetProgrami(
+                                program,
+                                GL20.GL_VALIDATE_STATUS
+                        )} glGetProgramInfoLog  $programLog $vertexErrors $fragmentErrors"
                 )
 
             } else if (programLog != "") {
@@ -477,7 +479,7 @@ internal class GLProgram(
             val source = GL20.glGetShaderSource(shader)
 
             return "gl.getShaderInfoLog() $type \n $log ${addLineNumbers(
-                source
+                    source
             )}"
 
         }
@@ -534,18 +536,18 @@ internal class GLProgram(
 
         private fun replaceLightNums(string: String, parameters: GLPrograms.Parameters): String {
             return string
-                .replace("NUM_DIR_LIGHTS".toRegex(), "${parameters.numDirLights}")
-                .replace("NUM_SPOT_LIGHTS".toRegex(), "${parameters.numSpotLights}")
-                .replace("NUM_RECT_AREA_LIGHTS".toRegex(), "${parameters.numRectAreaLights}")
-                .replace("NUM_POINT_LIGHTS".toRegex(), "${parameters.numPointLights}")
-                .replace("NUM_HEMI_LIGHTS".toRegex(), "${parameters.numHemiLights}")
+                    .replace("NUM_DIR_LIGHTS".toRegex(), "${parameters.numDirLights}")
+                    .replace("NUM_SPOT_LIGHTS".toRegex(), "${parameters.numSpotLights}")
+                    .replace("NUM_RECT_AREA_LIGHTS".toRegex(), "${parameters.numRectAreaLights}")
+                    .replace("NUM_POINT_LIGHTS".toRegex(), "${parameters.numPointLights}")
+                    .replace("NUM_HEMI_LIGHTS".toRegex(), "${parameters.numHemiLights}")
         }
 
         private fun replaceClippingPlaneNums(string: String, parameters: GLPrograms.Parameters): String {
 
             return string
-                .replace("NUM_CLIPPING_PLANES", "${parameters.numClippingPlanes}")
-                .replace("UNION_CLIPPING_PLANES", "${(parameters.numClippingPlanes - parameters.numClipIntersection)}")
+                    .replace("NUM_CLIPPING_PLANES", "${parameters.numClippingPlanes}")
+                    .replace("UNION_CLIPPING_PLANES", "${(parameters.numClippingPlanes - parameters.numClipIntersection)}")
 
         }
 
@@ -562,9 +564,30 @@ internal class GLProgram(
 
         }
 
+        private fun unrollLoops(string: String): String {
+
+            val pattern = "#pragma unroll_loop[\\s]+?for \\( int i \\= (\\d+)\\; i < (\\d+)\\; i \\+\\+ \\) \\{([\\s\\S]+?)(?=\\})\\}".toRegex()
+
+            return string.replace(pattern) { match ->
+
+                var unroll = ""
+
+                val start = match.groups[1]!!.value.toInt()
+                val end = match.groups[2]!!.value.toInt()
+
+                for (i in start until end) {
+                    unroll += match.groups[3]?.value?.replace("\\[ i \\]".toRegex(), "[ $i ]")
+                }
+
+                unroll
+
+            }
+
+        }
+
         private fun createShader(
-            type: Int,
-            source: String
+                type: Int,
+                source: String
         ): Int {
 
             val shader = GL20.glCreateShader(type)
