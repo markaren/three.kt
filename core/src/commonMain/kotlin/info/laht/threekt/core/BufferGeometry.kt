@@ -26,6 +26,8 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     val attributes = BufferAttributes()
 
+    internal val morphAttributes: MutableMap<String, FloatArray>? = null
+
     internal val groups = mutableListOf<GeometryGroup>()
 
     internal var drawRange = DrawRange(0, Int.MAX_VALUE / 2)
