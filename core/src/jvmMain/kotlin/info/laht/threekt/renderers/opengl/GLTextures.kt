@@ -179,7 +179,7 @@ internal class GLTextures(
         }
 
         state.activeTexture(GL13.GL_TEXTURE0 + slot)
-        state.bindTexture(GL11.GL_TEXTURE_2D, textureProperties["__webglTexture"] as Int)
+        state.bindTexture(GL11.GL_TEXTURE_2D, textureProperties["__webglTexture"] as Int?)
 
     }
 
