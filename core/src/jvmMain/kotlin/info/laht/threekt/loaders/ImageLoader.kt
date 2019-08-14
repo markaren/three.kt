@@ -1,6 +1,5 @@
 package info.laht.threekt.loaders
 
-import info.laht.threekt.getLogger
 import info.laht.threekt.textures.Image
 import kotlinx.io.core.IoBuffer
 import org.lwjgl.BufferUtils
@@ -24,8 +23,6 @@ actual object ImageLoader {
         val isJpg = file.name.endsWith(".jpg", true) || file.name.endsWith(".jpeg", true)
 
         return cache.getOrPut(file.absolutePath) {
-
-            getLogger(ImageLoader::class).debug("loading new ${file.name}")
 
             var img = ImageIO.read(file)
             if (flipY) {
