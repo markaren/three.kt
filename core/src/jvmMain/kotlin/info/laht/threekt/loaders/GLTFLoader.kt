@@ -1,7 +1,6 @@
 package info.laht.threekt.loaders
 
 import com.google.gson.Gson
-import info.laht.threekt.LoaderUtils
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
