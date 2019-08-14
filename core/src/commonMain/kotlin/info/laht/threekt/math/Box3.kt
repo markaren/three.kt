@@ -4,11 +4,16 @@ import info.laht.threekt.core.Cloneable
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.objects.Mesh
 import kotlin.jvm.JvmOverloads
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 data class Box3 @JvmOverloads constructor(
     var min: Vector3 = Vector3(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
     var max: Vector3 = Vector3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY)
 ) : Cloneable {
+
+    private val intersectsTriangleHelper by lazy { IntersectsTriangleHelper() }
 
     fun set(min: Vector3, max: Vector3): Box3 {
         this.min.copy(min)
@@ -206,6 +211,88 @@ data class Box3 @JvmOverloads constructor(
         return -plane.constant in min..max
     }
 
+    fun intersectsTriangle(triangle: Triangle): Boolean {
+
+        with(intersectsTriangleHelper) {
+
+            fun satForAxes(axes: FloatArray): Boolean {
+
+                for (i in 0 until axes.size - 3 step 3) {
+
+                    testAxis.fromArray(axes, i)
+                    // project the aabb onto the seperating axis
+                    val r = extents.x * abs(testAxis.x) + extents.y * abs(testAxis.y) + extents.z * abs(testAxis.z)
+                    // project all 3 vertices of the triangle onto the seperating axis
+                    val p0 = v0.dot(testAxis)
+                    val p1 = v1.dot(testAxis)
+                    val p2 = v2.dot(testAxis)
+                    // actual test, basically see if either of the most extreme of the triangle points intersects r
+                    if (max(-max(p0, max(p1, p2)), min(p0, min(p1, p2))) > r) {
+
+                        // points of the projected triangle are outside the projected half-length of the aabb
+                        // the axis is seperating and we can exit
+                        return false
+
+                    }
+
+                }
+
+                return true
+
+            }
+
+            if (isEmpty()) {
+
+                return false
+
+            }
+
+            // compute box center and extents
+            getCenter(center)
+            extents.subVectors(max, center)
+
+            // translate triangle to aabb origin
+            v0.subVectors(triangle.a, center)
+            v1.subVectors(triangle.b, center)
+            v2.subVectors(triangle.c, center)
+
+            // compute edge vectors for triangle
+            f0.subVectors(v1, v0)
+            f1.subVectors(v2, v1)
+            f2.subVectors(v0, v2)
+
+            // test against axes that are given by cross product combinations of the edges of the triangle and the edges of the aabb
+            // make an axis testing of each of the 3 sides of the aabb against each of the 3 sides of the triangle = 9 axis of separation
+            // axis_ij = u_i x f_j (u0, u1, u2 = face normals of aabb = x,y,z axes vectors since aabb is axis aligned)
+            var axes = floatArrayOf(
+                0f, -f0.z, f0.y, 0f, -f1.z, f1.y, 0f, -f2.z, f2.y,
+                f0.z, 0f, -f0.x, f1.z, 0f, -f1.x, f2.z, 0f, -f2.x,
+                -f0.y, f0.x, 0f, -f1.y, f1.x, 0f, -f2.y, f2.x, 0f
+            )
+            if (!satForAxes(axes)) {
+
+                return false
+
+            }
+
+            // test 3 face normals from the aabb
+            axes = floatArrayOf(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f)
+            if (!satForAxes(axes)) {
+
+                return false
+
+            }
+
+            // finally testing the face normal of the triangle
+            // use already existing triangle edge vectors here
+            triangleNormal.crossVectors(f0, f1)
+            axes = floatArrayOf(triangleNormal.x, triangleNormal.y, triangleNormal.z)
+            return satForAxes(axes)
+
+        }
+
+    }
+
     @JvmOverloads
     fun clampPoint(point: Vector3, target: Vector3 = Vector3()): Vector3 {
         return target.copy(point).clamp(this.min, this.max)
@@ -324,6 +411,27 @@ data class Box3 @JvmOverloads constructor(
         private val points by lazy {
             List(8) { Vector3() }
         }
+
+    }
+
+    private inner class IntersectsTriangleHelper {
+
+        // triangle centered vertices
+        var v0 = Vector3()
+        var v1 = Vector3()
+        var v2 = Vector3()
+
+        // triangle edge vectors
+        var f0 = Vector3()
+        var f1 = Vector3()
+        var f2 = Vector3()
+
+        var testAxis = Vector3()
+
+        var center = Vector3()
+        var extents = Vector3()
+
+        var triangleNormal = Vector3()
 
     }
 
