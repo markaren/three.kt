@@ -1,31 +1,22 @@
 package info.laht.threekt.core
 
 import info.laht.threekt.cameras.Camera
+import info.laht.threekt.cameras.OrthographicCamera
+import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.math.Ray
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3
+import kotlin.jvm.JvmOverloads
 
-class Intersection(
-    val distance: Float,
-    val distanceToRay: Float?,
-    val point: Vector3,
-    val index: Int?,
-    val face: Face3?,
-    val faceIndex: Int?,
-    val `object`: Object3D,
-    val uv: Vector2?
-)
-
-
-class Raycaster(
+class Raycaster @JvmOverloads constructor(
     origin: Vector3,
     direction: Vector3,
     val near: Float = 0f,
     val far: Float = Float.POSITIVE_INFINITY
-
 ) {
 
-    private val ray = Ray(origin, direction)
+    val ray = Ray(origin, direction)
+    private var camera: Camera? = null
 
     /**
      * Updates the ray with a new origin and direction.
@@ -33,7 +24,7 @@ class Raycaster(
      * @param direction The normalized direction vector that gives direction to the ray.
      */
     fun set(origin: Vector3, direction: Vector3) {
-        TODO()
+        this.ray.set(origin, direction)
     }
 
     /**
@@ -42,7 +33,24 @@ class Raycaster(
      * @param camera camera from which the ray should originate
      */
     fun setFromCamera(coords: Vector2, camera: Camera) {
-        TODO()
+        when (camera) {
+            is PerspectiveCamera -> {
+
+                this.ray.origin.setFromMatrixPosition(camera.matrixWorld)
+                this.ray.direction.set(coords.x, coords.y, 0.5).unproject(camera).sub(this.ray.origin).normalize()
+                this.camera = camera
+
+            }
+            is OrthographicCamera -> {
+
+                this.ray.origin.set(coords.x, coords.y, (camera.near + camera.far) / (camera.near - camera.far))
+                    .unproject(camera) // set origin in plane of camera
+                this.ray.direction.set(0, 0, -1).transformDirection(camera.matrixWorld)
+                this.camera = camera
+
+            }
+            else -> throw IllegalArgumentException("Unsupported camera type: $camera")
+        }
     }
 
     /**
@@ -75,3 +83,14 @@ class Raycaster(
     }
 
 }
+
+data class Intersection internal constructor(
+    val distance: Float,
+    val distanceToRay: Float? = null,
+    val point: Vector3,
+    val index: Int? = null,
+    val face: Face3? = null,
+    val faceIndex: Int? = null,
+    val `object`: Object3D,
+    val uv: Vector2? = null
+)
