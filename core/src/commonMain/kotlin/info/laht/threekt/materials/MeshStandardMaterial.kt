@@ -6,7 +6,7 @@ import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
 open class MeshStandardMaterial : Material(), MaterialWithColor, MaterialWithEmissive, MaterialWithWireframe,
-    MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals {
+        MaterialWithSkinning, MaterialWithMorphTargets, MaterialWithMorphNormals {
 
     override val color = Color(0xffffff) // diffuse
     var roughness = 0.5f

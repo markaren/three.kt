@@ -224,7 +224,7 @@ internal class GLPrograms(
         val skinning = (material is MaterialWithSkinning && material.skinning && maxBones > 0)
         val useVertexTexture = capabilities.floatVertexTextures
 
-        val morphTargets = if (material is MaterialWithMorphTarget) material.morphTargets else false
+        val morphTargets = if (material is MaterialWithMorphTargets) material.morphTargets else false
         val morphNormals = if (material is MaterialWithMorphNormals) material.morphNormals else false
         val maxMorphTargets = renderer.maxMorphTargets
         val maxMorphNormals = renderer.maxMorphNormals

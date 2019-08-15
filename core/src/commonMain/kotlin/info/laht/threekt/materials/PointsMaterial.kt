@@ -3,7 +3,7 @@ package info.laht.threekt.materials
 import info.laht.threekt.math.Color
 import info.laht.threekt.textures.Texture
 
-class PointsMaterial : Material(), MaterialWithMorphTarget, MaterialWithSizeAttenuation, MaterialWithColor {
+class PointsMaterial : Material(), MaterialWithMorphTargets, MaterialWithSizeAttenuation, MaterialWithColor {
 
     override val color = Color(0xffffff)
 

@@ -3,7 +3,7 @@ package info.laht.threekt.materials
 import info.laht.threekt.TextureEncoding
 import info.laht.threekt.textures.Texture
 
-class MeshDepthMaterial : Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithWireframe {
+class MeshDepthMaterial : Material(), MaterialWithMorphTargets, MaterialWithSkinning, MaterialWithWireframe {
 
     var depthPacking = TextureEncoding.BasicDepthPacking
 

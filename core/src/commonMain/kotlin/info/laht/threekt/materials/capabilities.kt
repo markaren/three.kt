@@ -8,7 +8,7 @@ interface MaterialWithColor {
 
 }
 
-interface MaterialWithMorphTarget {
+interface MaterialWithMorphTargets {
 
     val morphTargets: Boolean
 

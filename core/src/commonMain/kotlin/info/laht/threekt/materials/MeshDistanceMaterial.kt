@@ -3,7 +3,7 @@ package info.laht.threekt.materials
 import info.laht.threekt.math.Vector3
 import info.laht.threekt.textures.Texture
 
-class MeshDistanceMaterial : Material(), MaterialWithMorphTarget, MaterialWithSkinning {
+class MeshDistanceMaterial : Material(), MaterialWithMorphTargets, MaterialWithSkinning {
 
     val referencePosition = Vector3()
     var nearDistance = 1f

@@ -4,7 +4,7 @@ import info.laht.threekt.NormalMapType
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
-class MeshNormalMaterial : Material(), MaterialWithWireframe, MaterialWithMorphNormals, MaterialWithMorphTarget,
+class MeshNormalMaterial : Material(), MaterialWithWireframe, MaterialWithMorphNormals, MaterialWithMorphTargets,
     MaterialWithSkinning {
 
     public override var bumpMap: Texture? = null

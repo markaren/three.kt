@@ -7,7 +7,7 @@ import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
 open class MeshPhongMaterial : Material(), MaterialWithWireframe, MaterialWithColor, MaterialWithEmissive,
-    MaterialWithMorphTarget, MaterialWithMorphNormals, MaterialWithSkinning, MaterialWithReflectivity,
+        MaterialWithMorphTargets, MaterialWithMorphNormals, MaterialWithSkinning, MaterialWithReflectivity,
     MaterialWithSpecular {
 
     override val color = Color(0xffffff) // diffuse
