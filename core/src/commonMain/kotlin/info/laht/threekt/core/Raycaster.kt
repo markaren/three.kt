@@ -9,10 +9,10 @@ import info.laht.threekt.math.Vector3
 import kotlin.jvm.JvmOverloads
 
 class Raycaster @JvmOverloads constructor(
-    origin: Vector3,
-    direction: Vector3,
-    val near: Float = 0f,
-    val far: Float = Float.POSITIVE_INFINITY
+        origin: Vector3,
+        direction: Vector3,
+        val near: Float = 0f,
+        val far: Float = Float.POSITIVE_INFINITY
 ) {
 
     val ray = Ray(origin, direction)
@@ -44,12 +44,29 @@ class Raycaster @JvmOverloads constructor(
             is OrthographicCamera -> {
 
                 this.ray.origin.set(coords.x, coords.y, (camera.near + camera.far) / (camera.near - camera.far))
-                    .unproject(camera) // set origin in plane of camera
+                        .unproject(camera) // set origin in plane of camera
                 this.ray.direction.set(0, 0, -1).transformDirection(camera.matrixWorld)
                 this.camera = camera
 
             }
             else -> throw IllegalArgumentException("Unsupported camera type: $camera")
+        }
+    }
+
+    private fun intersectObject(`object`: Object3D, raycaster: Raycaster, intersects: List<Intersection>, recursive: Boolean) {
+
+        if (!`object`.visible) return
+
+        `object`.raycast(raycaster, intersects)
+
+        if (recursive) {
+
+            `object`.children.forEach {
+
+                intersectObject(it, raycaster, intersects, true)
+
+            }
+
         }
     }
 
@@ -60,11 +77,18 @@ class Raycaster @JvmOverloads constructor(
      * @param optionalTarget (optional) target to set the result. Otherwise a new Array is instantiated. If set, you must clear this array prior to each call (i.e., array.length = 0)
      */
     fun intersectObject(
-        `object`: Object3D,
-        recursive: Boolean = false,
-        optionalTarget: List<Intersection>?
+            `object`: Object3D,
+            recursive: Boolean = false,
+            optionalTarget: MutableList<Intersection>?
     ): List<Intersection> {
-        TODO()
+
+        val intersects = optionalTarget ?: mutableListOf()
+
+        intersectObject(`object`, this, intersects, recursive)
+
+        intersects.sort()
+
+        return intersects
     }
 
 
@@ -75,22 +99,45 @@ class Raycaster @JvmOverloads constructor(
      * @param optionalTarget (optional) target to set the result. Otherwise a new Array is instantiated. If set, you must clear this array prior to each call (i.e., array.length = 0)
      */
     fun intersectObjects(
-        objects: List<Object3D>,
-        recursive: Boolean = false,
-        optionalTarget: List<Intersection>?
+            objects: List<Object3D>,
+            recursive: Boolean = false,
+            optionalTarget: MutableList<Intersection>?
     ): List<Intersection> {
-        TODO()
+
+        val intersects = optionalTarget ?: mutableListOf()
+
+        objects.forEach {
+            intersectObject(it, this, intersects, recursive)
+        }
+
+        intersects.sort()
+
+        return intersects
+
     }
 
 }
 
 data class Intersection internal constructor(
-    val distance: Float,
-    val distanceToRay: Float? = null,
-    val point: Vector3,
-    val index: Int? = null,
-    val face: Face3? = null,
-    val faceIndex: Int? = null,
-    val `object`: Object3D,
-    val uv: Vector2? = null
-)
+        var distance: Float,
+        var distanceToRay: Float? = null,
+        var point: Vector3,
+        var index: Int? = null,
+        var face: Face3? = null,
+        var faceIndex: Int? = null,
+        var `object`: Object3D,
+        var uv: Vector2? = null,
+        var uv2: Vector2? = null
+) : Comparable<Intersection> {
+
+    override fun compareTo(other: Intersection): Int {
+
+        val diff = distance - other.distance
+        return when {
+            diff == 0f -> 0
+            diff > 0 -> -1
+            else -> 1
+        }
+    }
+
+}

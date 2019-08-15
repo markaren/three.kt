@@ -1,8 +1,10 @@
 package info.laht.threekt.objects
 
 import info.laht.threekt.DrawMode
+import info.laht.threekt.Side
 import info.laht.threekt.core.*
 import info.laht.threekt.materials.Material
+import info.laht.threekt.materials.MaterialWithMorphTargets
 import info.laht.threekt.math.*
 
 open class Mesh(
@@ -57,132 +59,128 @@ open class Mesh(
 
     }
 
-
     override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
 
-        TODO()
+        with(raycastHelper) {
 
-//        with(raycastHelper) {
-//
-//            fun checkIntersection(
-//                `object`: Object3D,
-//                material: Material,
-//                pA: Vector3,
-//                pB: Vector3,
-//                pC: Vector3,
-//                point: Vector3
-//            ): Intersection? {
-//
-//                val intersect = if (material.side == Side.Back) {
-//
-//                    ray.intersectTriangle(pC, pB, pA, true, point);
-//
-//                } else {
-//
-//                    ray.intersectTriangle(pA, pB, pC, material.side != Side.Double, point);
-//
-//                }
-//
-//                if (intersect == null) return null
-//
-//                intersectionPointWorld.copy(point);
-//                intersectionPointWorld.applyMatrix4(`object`.matrixWorld);
-//
-//                val distance = raycaster.ray.origin.distanceTo(intersectionPointWorld);
-//
-//                if (distance < raycaster.near || distance > raycaster.far) return null;
-//
-//                return Intersection(
-//                    distance = distance,
-//                    point = intersectionPointWorld.clone(),
-//                    `object` = `object`
-//                )
-//
-//            }
-//
-//            fun checkBufferGeometryIntersection(
-//                `object`: Object3D,
-//                material: Material,
-//                position: Vector3,
-//                morphPosition: Vector3,
-//                uv: Vector2,
-//                uv2: Vector2,
-//                a: Int,
-//                b: Int,
-//                c: Int
-//            ): Intersection {
-//
-//                vA.fromBufferAttribute( position, a );
-//                vB.fromBufferAttribute( position, b );
-//                vC.fromBufferAttribute( position, c );
-//
-//                var morphInfluences = object.morphTargetInfluences;
-//
-//                if ( material.morphTargets && morphPosition && morphInfluences ) {
-//
-//                    morphA.set( 0, 0, 0 );
-//                    morphB.set( 0, 0, 0 );
-//                    morphC.set( 0, 0, 0 );
-//
-//                    for ( var i = 0, il = morphPosition.length; i < il; i ++ ) {
-//
-//                        var influence = morphInfluences[ i ];
-//                        var morphAttribute = morphPosition[ i ];
-//
-//                        if ( influence === 0 ) continue;
-//
-//                        tempA.fromBufferAttribute( morphAttribute, a );
-//                        tempB.fromBufferAttribute( morphAttribute, b );
-//                        tempC.fromBufferAttribute( morphAttribute, c );
-//
-//                        morphA.addScaledVector( tempA.sub( vA ), influence );
-//                        morphB.addScaledVector( tempB.sub( vB ), influence );
-//                        morphC.addScaledVector( tempC.sub( vC ), influence );
-//
-//                    }
-//
-//                    vA.add( morphA );
-//                    vB.add( morphB );
-//                    vC.add( morphC );
-//
-//                }
-//
-//                val intersection = checkIntersection( `object`, material, vA, vB, vC, intersectionPoint );
-//
-//                if ( intersection != null ) {
-//
-//                    if ( uv ) {
-//
-//                        uvA.fromBufferAttribute( uv, a );
-//                        uvB.fromBufferAttribute( uv, b );
-//                        uvC.fromBufferAttribute( uv, c );
-//
-//                        intersection.uv = Triangle.getUV( intersectionPoint, vA, vB, vC, uvA, uvB, uvC, new Vector2() );
-//
-//                    }
-//
-//                    if ( uv2 ) {
-//
-//                        uvA.fromBufferAttribute( uv2, a );
-//                        uvB.fromBufferAttribute( uv2, b );
-//                        uvC.fromBufferAttribute( uv2, c );
-//
-//                        intersection.uv2 = Triangle.getUV( intersectionPoint, vA, vB, vC, uvA, uvB, uvC, new Vector2() );
-//
-//                    }
-//
-//                    var face = new Face3( a, b, c );
-//                    Triangle.getNormal( vA, vB, vC, face.normal );
-//
-//                    intersection.face = face;
-//
-//                }
-//
-//                return intersection;
-//
-//            }
-//
-//        }
+            fun checkIntersection(
+                    `object`: Object3D,
+                    material: Material,
+                    pA: Vector3,
+                    pB: Vector3,
+                    pC: Vector3,
+                    point: Vector3
+            ): Intersection? {
+
+                if (material.side == Side.Back) {
+
+                    ray.intersectTriangle(pC, pB, pA, true, point)
+
+                } else {
+
+                    ray.intersectTriangle(pA, pB, pC, material.side != Side.Double, point)
+
+                } ?: return null // when intersect == null
+
+                intersectionPointWorld.copy(point)
+                intersectionPointWorld.applyMatrix4(`object`.matrixWorld)
+
+                val distance = raycaster.ray.origin.distanceTo(intersectionPointWorld)
+
+                if (distance < raycaster.near || distance > raycaster.far) return null
+
+                return Intersection(
+                        distance = distance,
+                        point = intersectionPointWorld.clone(),
+                        `object` = `object`
+                )
+
+            }
+
+            fun checkBufferGeometryIntersection(
+                    `object`: Object3D,
+                    material: Material,
+                    position: FloatBufferAttribute,
+                    morphPosition: List<FloatBufferAttribute>?,
+                    uv: FloatBufferAttribute?,
+                    uv2: FloatBufferAttribute?,
+                    a: Int,
+                    b: Int,
+                    c: Int
+            ): Intersection? {
+
+                position.toVector3(a, vA)
+                position.toVector3(b, vB)
+                position.toVector3(c, vC)
+
+                val morphInfluences = if (`object` is MorphTargetInfluencesObject) `object`.morphTargetInfluences else null
+
+                if (material is MaterialWithMorphTargets && morphPosition != null && morphInfluences != null) {
+
+                    morphA.set(0, 0, 0)
+                    morphB.set(0, 0, 0)
+                    morphC.set(0, 0, 0)
+
+                    for (i in 0 until morphPosition.size) {
+
+
+                        val influence = morphInfluences[i]
+                        val morphAttribute = morphPosition[i]
+
+                        if (influence == 0f) continue
+
+                        morphAttribute.toVector3(a, tempA)
+                        morphAttribute.toVector3(b, tempB)
+                        morphAttribute.toVector3(c, tempC)
+
+                        morphA.addScaledVector(tempA.sub(vA), influence)
+                        morphB.addScaledVector(tempB.sub(vB), influence)
+                        morphC.addScaledVector(tempC.sub(vC), influence)
+
+                    }
+
+                    vA.add(morphA)
+                    vB.add(morphB)
+                    vC.add(morphC)
+
+                }
+
+                val intersection = checkIntersection(`object`, material, vA, vB, vC, intersectionPoint)
+
+                if (intersection != null) {
+
+                    if (uv != null) {
+
+                        uv.toVector2(a, uvA)
+                        uv.toVector2(b, uvB)
+                        uv.toVector2(c, uvC)
+
+                        intersection.uv = Triangle.getUV(intersectionPoint, vA, vB, vC, uvA, uvB, uvC)
+
+                    }
+
+                    if (uv2 != null) {
+
+                        uv2.toVector2(a, uvA)
+                        uv2.toVector2(b, uvB)
+                        uv2.toVector2(c, uvC)
+
+                        intersection.uv2 = Triangle.getUV(intersectionPoint, vA, vB, vC, uvA, uvB, uvC)
+
+                    }
+
+                    val face = Face3(a, b, c)
+                    Triangle.getNormal(vA, vB, vC, face.normal)
+
+                    intersection.face = face
+
+                }
+
+                return intersection
+
+            }
+
+        }
 
     }
 
