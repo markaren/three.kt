@@ -3,12 +3,13 @@ package info.laht.threekt.core
 import info.laht.threekt.currentTimeMillis
 
 class Clock(
-    private var autoStart: Boolean = true
+        private var autoStart: Boolean = true
 ) {
 
     private var startTime = 0L
     private var oldTime = 0L
-    private var elapsedTime = 0f
+    var elapsedTime_ = 0f
+        private set
 
     var running = false
         private set
@@ -16,7 +17,7 @@ class Clock(
     fun start() {
         startTime = currentTimeMillis()
         oldTime = startTime
-        elapsedTime = 0f
+        elapsedTime_ = 0f
         running = true
     }
 
@@ -28,7 +29,7 @@ class Clock(
 
     fun getElapsedTime(): Float {
         getDelta()
-        return elapsedTime
+        return elapsedTime_
     }
 
     fun getDelta(): Float {
@@ -45,7 +46,7 @@ class Clock(
             diff = (newTime - this.oldTime).toFloat() / 1000f
             this.oldTime = newTime
 
-            elapsedTime += diff
+            elapsedTime_ += diff
 
         }
 
