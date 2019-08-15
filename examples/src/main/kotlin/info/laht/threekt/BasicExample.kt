@@ -18,9 +18,7 @@ object BasicExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(Canvas.Options().apply {
-            antialiasing = 4
-        }).use { canvas ->
+        Canvas(antialias = 4).use { canvas ->
 
             val scene = Scene().apply {
                 setBackground(Color.aliceblue)
@@ -33,7 +31,7 @@ object BasicExample {
 
             OrbitControls(camera, canvas)
 
-            val plane = Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
+            Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
                 side = Side.Double
             }).also {

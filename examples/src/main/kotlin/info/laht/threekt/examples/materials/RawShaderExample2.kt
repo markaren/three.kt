@@ -18,10 +18,10 @@ object RawShaderExample2 {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(Canvas.Options().apply {
-            antialiasing = 8
+        Canvas(
+                antialias = 8,
             resizeable = true
-        }).use { canvas ->
+        ).use { canvas ->
 
 
             val scene = Scene()

@@ -20,9 +20,7 @@ object ReflectorExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(Canvas.Options().apply {
-            antialiasing = 4
-        }).use { canvas ->
+        Canvas(antialias = 4).use { canvas ->
 
             canvas.enableDebugCallback()
 
@@ -41,13 +39,13 @@ object ReflectorExample {
             val planeGeometry = PlaneGeometry(10f, 10f)
 
             Reflector(
-                planeGeometry, Reflector.Options(
+                    planeGeometry, Reflector.Options(
                     clipBias = 0.003f,
                     color = Color(0x777777),
                     textureWidth = 512,
                     textureHeight = 512,
                     recursion = 1
-                )
+            )
             ).also {
                 it.rotateX(-PI.toFloat() / 2)
                 scene.add(it)

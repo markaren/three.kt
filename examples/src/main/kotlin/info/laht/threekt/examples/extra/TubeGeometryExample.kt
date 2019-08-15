@@ -19,9 +19,7 @@ object TubeGeometryExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(Canvas.Options().apply {
-            antialiasing = 4
-        }).use { canvas ->
+        Canvas(antialias = 4).use { canvas ->
 
             val scene = Scene()
             val renderer = GLRenderer(canvas.width, canvas.height)
@@ -61,11 +59,11 @@ object TubeGeometryExample {
 
     class CustomSineCurve(
             private val scale: Float
-    ): Curve3() {
+    ) : Curve3() {
 
         override fun getPoint(t: Float, optionalTarget: Vector3): Vector3 {
             val tx = t * 3f - 1.5f
-            val ty = sin( TWO_PI * t )
+            val ty = sin(TWO_PI * t)
             val tz = 0f
             return optionalTarget.set(tx, ty, tz).multiplyScalar(scale)
         }

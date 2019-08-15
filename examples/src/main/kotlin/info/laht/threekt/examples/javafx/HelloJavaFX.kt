@@ -24,7 +24,6 @@ import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
 import java.io.IOException
 
-
 fun main(args: Array<String>) {
     JFXGLLauncher.launchMain(HelloJavaFX.javaClass, args)
 }
@@ -36,9 +35,7 @@ object HelloJavaFX : Application() {
     @JvmStatic
     fun jfxglmain(args: Array<String>) {
 
-        Canvas(Canvas.Options().apply {
-            antialiasing = 4
-        }).use { canvas ->
+        Canvas(antialias = 4).use { canvas ->
 
             val scene = Scene().apply {
                 setBackground(Color.aliceblue)

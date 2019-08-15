@@ -45,18 +45,13 @@ object PointsExampleWaves {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(
-                Canvas.Options(
-                        vsync = true,
-                        resizeable = true
-                )
-        ).use { canvas ->
+        Canvas(resizeable = true).use { canvas ->
 
             val scene = Scene()
             val renderer = GLRenderer(canvas.width, canvas.height)
 
             canvas.onWindowResize = { w, h ->
-                renderer.setSize(w,h)
+                renderer.setSize(w, h)
             }
 
             val camera = PerspectiveCamera(75, canvas.aspect, 1, 100000).apply {

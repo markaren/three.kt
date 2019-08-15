@@ -27,7 +27,7 @@ Right now, this is mostly interesting for developers that want to contribute.
 
 ```kotlin
 
-Canvas().use { canvas ->
+Canvas(antialias = 4).use { canvas ->
 
     val scene = Scene().apply {
         setBackground(Color.aliceblue)

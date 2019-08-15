@@ -19,7 +19,7 @@ object ShadowExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas().use { canvas ->
+        Canvas(antialias = 4).use { canvas ->
 
             val scene = Scene()
 
