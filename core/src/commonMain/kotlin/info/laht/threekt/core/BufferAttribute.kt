@@ -437,6 +437,7 @@ class BufferAttributes : MutableMap<String, BufferAttribute> by mutableMapOf<Str
     val position get() = get("position") as FloatBufferAttribute?
     val normal get() = get("normal") as FloatBufferAttribute?
     val uv get() = get("uv") as FloatBufferAttribute?
+    val uv2 get() = get("uv2") as FloatBufferAttribute?
     val color get() = get("color") as FloatBufferAttribute?
     val tangent get() = get("tangent") as FloatBufferAttribute?
 
