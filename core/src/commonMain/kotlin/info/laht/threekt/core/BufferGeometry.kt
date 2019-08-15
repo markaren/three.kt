@@ -26,7 +26,7 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     val attributes = BufferAttributes()
 
-    internal val morphAttributes: MutableMap<String, FloatArray>? = null
+    internal val morphAttributes: MutableMap<String, List<BufferAttribute>>? = null
 
     internal val groups = mutableListOf<GeometryGroup>()
 

@@ -382,8 +382,8 @@ interface Object3D : Cloneable, EventDispatcher {
         return target.set(e[8], e[9], e[10]).normalize()
     }
 
-    fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
-        // empty
+    fun raycast(raycaster: Raycaster, intersects: MutableList<Intersection>) {
+        TODO("Should be overriden by subclass")
     }
 
     fun traverse(callback: (Object3D) -> Unit) {
@@ -611,6 +611,6 @@ interface MaterialsObject : MaterialObject {
 
 interface MorphTargetInfluencesObject : Object3D {
 
-    val morphTargetInfluences: List<Float>
+    val morphTargetInfluences: MutableList<Float>
 
 }

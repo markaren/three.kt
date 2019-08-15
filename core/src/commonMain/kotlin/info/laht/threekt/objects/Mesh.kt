@@ -6,17 +6,20 @@ import info.laht.threekt.core.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.MaterialWithMorphTargets
 import info.laht.threekt.math.*
+import kotlin.math.max
+import kotlin.math.min
 
 open class Mesh(
-    override var geometry: BufferGeometry,
-    override val materials: MutableList<Material>
-) : Object3DImpl(), GeometryObject, MaterialsObject {
+        override var geometry: BufferGeometry,
+        override val materials: MutableList<Material>
+) : Object3DImpl(), GeometryObject, MaterialsObject, MorphTargetInfluencesObject {
 
     var drawMode = DrawMode.Triangles
 
+    override val morphTargetInfluences by lazy { mutableListOf<Float>() }
+    val morphTargetDictionary by lazy { mutableMapOf<String, Int>() }
+
     private val raycastHelper by lazy { RaycastHelper() }
-    private val morphTargetInfluences by lazy { mutableListOf<Int>() }
-    private val morphTargetDictionary by lazy { mutableMapOf<String, Int>() }
 
     constructor(geometry: BufferGeometry, material: Material)
             : this(geometry, mutableListOf(material))
@@ -44,7 +47,7 @@ open class Mesh(
 
                         name = m.toString()
 
-                        this.morphTargetInfluences.add(0)
+                        this.morphTargetInfluences.add(0f)
                         this.morphTargetDictionary[name] = m
 
                     }
@@ -59,7 +62,7 @@ open class Mesh(
 
     }
 
-    override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
+    override fun raycast(raycaster: Raycaster, intersects: MutableList<Intersection>) {
 
         with(raycastHelper) {
 
@@ -98,7 +101,7 @@ open class Mesh(
             }
 
             fun checkBufferGeometryIntersection(
-                    `object`: Object3D,
+                    `object`: Mesh,
                     material: Material,
                     position: FloatBufferAttribute,
                     morphPosition: List<FloatBufferAttribute>?,
@@ -122,7 +125,6 @@ open class Mesh(
                     morphC.set(0, 0, 0)
 
                     for (i in 0 until morphPosition.size) {
-
 
                         val influence = morphInfluences[i]
                         val morphAttribute = morphPosition[i]
@@ -180,7 +182,114 @@ open class Mesh(
 
             }
 
+            // Checking boundingSphere distance to ray
+
+            if (geometry.boundingSphere == null) geometry.computeBoundingSphere()
+
+            sphere.copy(geometry.boundingSphere!!)
+            sphere.applyMatrix4(matrixWorld)
+
+            if (!raycaster.ray.intersectsSphere(sphere)) return
+
+            //
+
+            inverseMatrix.getInverse(matrixWorld)
+            ray.copy(raycaster.ray).applyMatrix4(inverseMatrix)
+
+            // Check boundingBox before continuing
+
+            if (geometry.boundingBox != null) {
+
+                if (!ray.intersectsBox(geometry.boundingBox!!)) return
+
+            }
+
+            var intersection: Intersection?
+
+            var a: Int
+            var b: Int
+            var c: Int
+            val index = geometry.index
+            val position = geometry.attributes.position
+            val morphPosition = geometry.morphAttributes?.getValue("position") as List<FloatBufferAttribute>?
+            val uv = geometry.attributes.uv
+            val uv2 = geometry.attributes.uv2
+            var groups = geometry.groups
+            val drawRange = geometry.drawRange
+//                var i, j, il, jl;
+//                var group, groupMaterial;
+            val start: Int
+            val end: Int
+
+            if (index != null) {
+
+                // indexed buffer geometry
+
+                if (isMultiMaterial) {
+
+                    TODO()
+
+                } else {
+
+                    start = max(0, drawRange.start)
+                    end = min(index.count, (drawRange.start + drawRange.count))
+
+                    for (i in start until end step 3) {
+
+                        a = index.getX(i)
+                        b = index.getX(i + 1)
+                        c = index.getX(i + 2)
+
+                        intersection = checkBufferGeometryIntersection(this@Mesh, material, position!!, morphPosition, uv, uv2, a, b, c)
+
+                        if (intersection != null) {
+
+                            intersection.faceIndex = i / 3 // triangle number in indexed buffer semantics
+                            intersects.add(intersection)
+
+                        }
+
+                    }
+
+                }
+
+            } else if (position != null) {
+
+                // non-indexed buffer geometry
+
+                if (isMultiMaterial) {
+
+                    TODO()
+
+                } else {
+
+                    start = max(0, drawRange.start)
+                    end = min(position.count, (drawRange.start + drawRange.count))
+
+                    for (i in start until end step 3) {
+
+                        a = i
+                        b = i + 1
+                        c = i + 2
+
+                        intersection = checkBufferGeometryIntersection(this@Mesh, material, position, morphPosition, uv, uv2, a, b, c)
+
+                        if (intersection != null) {
+
+                            intersection.faceIndex = i / 3 // triangle number in non-indexed buffer semantics
+                            intersects.add(intersection)
+
+                        }
+
+                    }
+
+                }
+
+
+            }
+
         }
+
 
     }
 
