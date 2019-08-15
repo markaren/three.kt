@@ -14,6 +14,16 @@ data class Triangle @JvmOverloads constructor(
 
     override fun clone() = copy()
 
+    fun copy(triangle: Triangle): Triangle {
+
+        this.a.copy(triangle.a)
+        this.b.copy(triangle.b)
+        this.c.copy(triangle.c)
+
+        return this
+
+    }
+
     fun set(a: Vector3, b: Vector3, c: Vector3): Triangle {
 
         this.a.copy(a)
@@ -29,16 +39,6 @@ data class Triangle @JvmOverloads constructor(
         this.a.copy(points[i0])
         this.b.copy(points[i1])
         this.c.copy(points[i2])
-
-        return this
-
-    }
-
-    fun copy(triangle: Triangle): Triangle {
-
-        this.a.copy(triangle.a)
-        this.b.copy(triangle.b)
-        this.c.copy(triangle.c)
 
         return this
 
@@ -208,6 +208,7 @@ data class Triangle @JvmOverloads constructor(
 
         }
 
+        @JvmOverloads
         fun getBarycoord(point: Vector3, a: Vector3, b: Vector3, c: Vector3, target: Vector3 = Vector3()): Vector3 {
 
             v0.subVectors(c, a)
@@ -248,15 +249,16 @@ data class Triangle @JvmOverloads constructor(
 
         }
 
+        @JvmOverloads
         fun getUV(
-            point: Vector3,
-            p1: Vector3,
-            p2: Vector3,
-            p3: Vector3,
-            uv1: Vector2,
-            uv2: Vector2,
-            uv3: Vector2,
-            target: Vector2
+                point: Vector3,
+                p1: Vector3,
+                p2: Vector3,
+                p3: Vector3,
+                uv1: Vector2,
+                uv2: Vector2,
+                uv3: Vector2,
+                target: Vector2 = Vector2()
         ): Vector2 {
 
             this.getBarycoord(point, p1, p2, p3, barycoord)
