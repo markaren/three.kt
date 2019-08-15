@@ -608,3 +608,9 @@ interface MaterialsObject : MaterialObject {
         }
 
 }
+
+interface MorphTargetInfluencesObject : Object3D {
+
+    val morphTargetInfluences: List<Float>
+
+}
