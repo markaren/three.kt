@@ -29,7 +29,7 @@ class Sprite(
 
     }
 
-    override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
+    override fun raycast(raycaster: Raycaster, intersects: MutableList<Intersection>) {
         TODO()
     }
 
