@@ -60,7 +60,7 @@ class LOD : Object3DImpl() {
 
     }
 
-    override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
+    override fun raycast(raycaster: Raycaster, intersects: MutableList<Intersection>) {
 
         val matrixPosition = Vector3()
 
