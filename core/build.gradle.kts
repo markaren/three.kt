@@ -2,11 +2,13 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
     kotlin("multiplatform")
+    id("kotlinx-serialization") version "1.3.41"
     `maven-publish`
 }
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 val os = OperatingSystem.current()
@@ -18,6 +20,7 @@ val lwjglNatives = when {
 }
 
 val kotlinIOVersion = "0.1.13"
+val serialVersion = "0.11.1"
 
 kotlin {
     jvm {
@@ -33,6 +36,7 @@ kotlin {
                 implementation(kotlin("reflect"))
 
                 implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinIOVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialVersion")
             }
         }
         commonTest {
@@ -45,8 +49,6 @@ kotlin {
         named("jvmMain") {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-
-                implementation("com.google.code.gson:gson:2.8.5")
 
                 val slf4jVersion = "1.7.27"
                 implementation("org.slf4j:slf4j-api:$slf4jVersion")
