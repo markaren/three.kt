@@ -5,9 +5,8 @@ plugins {
 }
 
 repositories {
-
     maven(url="http://maven.cuchazinteractive.com")
-
+    jcenter()
 }
 
 dependencies {

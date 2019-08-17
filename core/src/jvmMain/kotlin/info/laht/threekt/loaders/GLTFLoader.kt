@@ -1,6 +1,5 @@
 package info.laht.threekt.loaders
 
-import com.google.gson.Gson
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
@@ -11,6 +10,11 @@ import info.laht.threekt.math.Vector3
 import info.laht.threekt.textures.Image
 import java.io.File
 import java.nio.ByteBuffer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 
 class GLTFLoader {
 
@@ -33,8 +37,9 @@ class GLTFLoader {
     }
 
     fun parse(data: String, path: String) {
+        val json = Json(JsonConfiguration.Stable.copy(encodeDefaults = false, strictMode = false))
 
-        val glft = Gson().fromJson(data, GLTF::class.java)
+        val glft = json.parse(GLTF.serializer(), data)
 
 
         glft.meshes.forEach { mesh ->
@@ -95,7 +100,7 @@ class GLTFLoader {
 
 }
 
-
+@Serializable
 private data class GLTF(
 
     val asset: GLFTAsset,
@@ -114,27 +119,30 @@ private data class GLTF(
 
     val extensionsUsed: List<String> = emptyList(),
     val extensionsRequired: List<String> = emptyList(),
-    val extensions: Map<String, Any>? = null,
-    val extras: Any? = null
+    val extensions: JsonObject? = null,
+    val extras: JsonElement? = null
 
 ) {
 
+    @Serializable
     data class GLFTAsset(
         val version: String,
         val generator: String? = null,
         val copyright: String? = null,
         val minVersion: String? = null,
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null
     )
 
+    @Serializable
     data class GLFTScene(
         var name: String? = null,
         val nodes: List<Int> = emptyList(),
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null
     )
 
+    @Serializable
     data class GLFTNode(
         val name: String? = null,
         val camera: Int? = null,
@@ -169,6 +177,7 @@ private data class GLTF(
 
     }
 
+    @Serializable
     data class GLFTCamera(
 
         val perspective: Perspective? = null,
@@ -177,8 +186,8 @@ private data class GLTF(
         val type: String,
         val name: String? = null,
 
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null
 
     ) {
 
@@ -204,6 +213,7 @@ private data class GLTF(
 
         }
 
+        @Serializable
         data class Perspective(
             val yfov: Float,
             val aspectRatio: Float,
@@ -211,6 +221,7 @@ private data class GLTF(
             val zfar: Float? = null
         )
 
+        @Serializable
         data class Orthographic(
             val xmag: Float,
             val ymag: Float,
@@ -220,24 +231,27 @@ private data class GLTF(
 
     }
 
+    @Serializable
     data class GLFTMesh(
         val primitives: List<GLFTPrimitive>,
         val weights: List<Float>? = null,
         val name: String? = null,
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null
     )
 
+    @Serializable
     data class GLFTPrimitive(
         val attributes: Map<GLFTAttribute, Int>,
         val indices: Int? = null,
         val material: Int? = null,
         val mode: Int = 4,
         val targets: Map<String, Int>? = null,
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null
     )
 
+    @Serializable
     data class GLFTAccessor(
         val bufferView: Int? = null,
         val byteOffset: Int = 0,
@@ -249,40 +263,45 @@ private data class GLTF(
         val min: List<Float>? = null,
         val sparse: Sparse? = null,
         val name: String? = null,
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null
     ) {
 
+        @Serializable
         data class Sparse(
             val count: Int,
             val indices: Indices,
             val values: Values,
-            val extensions: Map<String, Any>? = null,
-            val extras: Any? = null
+            val extensions: JsonObject? = null,
+            val extras: JsonElement? = null
         )
 
+        @Serializable
         data class Indices(
             val bufferView: Int,
             val byteOffset: Int = 0,
             val componentType: Int,
-            val extensions: Map<String, Any>? = null,
-            val extras: Any? = null
+            val extensions: JsonObject? = null,
+            val extras: JsonElement? = null
         )
 
+        @Serializable
         data class Values(
             val bufferView: Int,
             val byteOffset: Int = 0,
-            val extensions: Map<String, Any>? = null,
-            val extras: Any? = null
+            val extensions: JsonObject? = null,
+            val extras: JsonElement? = null
         )
 
     }
 
+    @Serializable
     data class GLFTTexture(
         val sampler: Int,
         val source: Int
     )
 
+    @Serializable
     data class GLFTSampler(
         val magFilter: Int? = null,
         val minFilter: Int? = null,
@@ -290,13 +309,14 @@ private data class GLTF(
         val wrapT: Int? = null
     )
 
+    @Serializable
     data class GLFTImage(
         private val uri: String? = null,
         private val mimeType: Int? = null,
         private val bufferView: Int? = null,
         val name: String? = null,
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null
     ) {
 
 
@@ -317,11 +337,12 @@ private data class GLTF(
 
     }
 
+    @Serializable
     data class GLFTMaterial(
 
         val name: String? = null,
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null,
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null,
         val pbrMetallicRoughness: PBRMetallicRoughness? = null,
         val normalTexture: NormalTextureInfo? = null,
         val occlusionTexture: OcclusionTextureInfo? = null,
@@ -333,40 +354,45 @@ private data class GLTF(
 
     ) {
 
+        @Serializable
         data class PBRMetallicRoughness(
             val metallicFactor: Float = 1f,
             val roughnessFactor: Float = 1f,
             val baseColorFactor: List<Float> = listOf(1f, 1f, 1f, 1f),
-            val extensions: Map<String, Any>? = null,
-            val extras: Any? = null
+            val extensions: JsonObject? = null,
+            val extras: JsonElement? = null
         )
 
+        @Serializable
         data class NormalTextureInfo(
             val index: Int,
             val texCoord: Int = 0,
             val scale: Float = 1f,
-            val extensions: Map<String, Any>? = null,
-            val extras: Any? = null
+            val extensions: JsonObject? = null,
+            val extras: JsonElement? = null
         )
 
+        @Serializable
         data class OcclusionTextureInfo(
             val index: Int,
             val texCoord: Int = 0,
             val strength: Float = 1f,
-            val extensions: Map<String, Any>? = null,
-            val extras: Any? = null
+            val extensions: JsonObject? = null,
+            val extras: JsonElement? = null
         )
 
     }
 
+    @Serializable
     data class GLFTBuffer(
         val uri: String? = null,
         val byteLength: Int,
         val name: String? = null,
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null
     )
 
+    @Serializable
     data class GLFTBufferView(
         val buffer: Int,
         val byteOffset: Int = 0,
@@ -374,8 +400,8 @@ private data class GLTF(
         val byteStride: Int? = null,
         val target: Int,
         val name: String? = null,
-        val extensions: Map<String, Any>? = null,
-        val extras: Any? = null
+        val extensions: JsonObject? = null,
+        val extras: JsonElement? = null
     )
 
     enum class GLFTAttribute {
