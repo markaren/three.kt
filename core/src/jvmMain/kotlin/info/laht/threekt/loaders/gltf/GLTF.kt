@@ -26,4 +26,17 @@ internal data class GLTF(
     val extensions: JsonObject? = null,
     val extras: JsonElement? = null
 
-)
+) {
+
+    operator fun get(key: String): Any? {
+
+        return when (key) {
+            "scenes" -> scene
+            "cameras" -> cameras
+            "animations" -> TODO()
+            else -> TODO()
+        }
+
+    }
+
+}
