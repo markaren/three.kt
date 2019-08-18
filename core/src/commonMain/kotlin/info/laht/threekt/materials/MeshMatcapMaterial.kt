@@ -6,7 +6,7 @@ import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
 class MeshMatcapMaterial : Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphNormals,
-    MaterialWithMorphTarget {
+        MaterialWithMorphTargets {
 
     override val color = Color(0xffffff) // diffuse
 

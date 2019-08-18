@@ -26,11 +26,10 @@ object WaterExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(Canvas.Options().apply {
-            antialiasing = 4
-            width = 1280
-            height = 960
-        }).use { canvas ->
+        Canvas(
+                antialias = 4,
+                width = 1280,
+                height = 960).use { canvas ->
 
             canvas.enableDebugCallback()
 
@@ -57,14 +56,14 @@ object WaterExample {
             val planeGeometry = PlaneGeometry(10000, 10000)
 
             val texture =
-                TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file)
-                    .also {
-                        it.wrapS = TextureWrapping.Repeat
-                        it.wrapT = TextureWrapping.Repeat
-                    }
+                    TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file)
+                            .also {
+                                it.wrapS = TextureWrapping.Repeat
+                                it.wrapT = TextureWrapping.Repeat
+                            }
 
             val water = Water(
-                planeGeometry, Water.Options(
+                    planeGeometry, Water.Options(
                     alpha = 0.7f,
                     waterNormals = texture,
                     waterColor = Color(0x001e0f),
@@ -73,7 +72,7 @@ object WaterExample {
                     textureHeight = 512,
                     sunDirection = light.position.clone().normalize(),
                     distortionScale = 1f
-                )
+            )
             ).also {
                 it.rotateX(-PI.toFloat() / 2)
                 scene.add(it)
@@ -91,7 +90,7 @@ object WaterExample {
             canvas.animate {
 
                 val wTime = water.uniforms["time"]!!.value as Float
-                water.uniforms["time"]!!.value = wTime + (0.6f*clock.getDelta())
+                water.uniforms["time"]!!.value = wTime + (0.6f * clock.getDelta())
 
                 sphere.position.y = 50 * sin(TWO_PI * 0.1f * clock.getElapsedTime())
 

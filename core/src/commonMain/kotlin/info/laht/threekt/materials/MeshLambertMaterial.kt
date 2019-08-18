@@ -2,7 +2,7 @@ package info.laht.threekt.materials
 
 import info.laht.threekt.math.Color
 
-class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphTarget,
+class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphTargets,
     MaterialWithMorphNormals, MaterialWithEmissive, MaterialWithWireframe, MaterialWithReflectivity {
 
     override val color = Color(0xffffff)

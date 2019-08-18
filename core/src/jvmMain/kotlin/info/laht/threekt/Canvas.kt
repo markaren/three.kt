@@ -9,7 +9,7 @@ import java.io.Closeable
 
 
 class Canvas @JvmOverloads constructor(
-    options: Options = Options()
+        options: Options = Options()
 ) : AbstractPeripheralsEventSource(), Closeable {
 
     val hwnd: Long
@@ -24,6 +24,15 @@ class Canvas @JvmOverloads constructor(
     private var debugProc: Callback? = null
 
     var onWindowResize: ((Int, Int) -> Unit)? = null
+
+    constructor(title: String? = null,
+                width: Int? = null,
+                height: Int? = null,
+                antialias: Int? = null,
+                vsync: Boolean? = null,
+                resizeable: Boolean? = null
+    ) : this(Options(title, width, height, antialias, vsync, resizeable))
+
 
     init {
 
@@ -119,8 +128,8 @@ class Canvas @JvmOverloads constructor(
             val width = options.width
             val height = options.height
 
-            if (options.antialiasing > 0) {
-                glfwWindowHint(GLFW_SAMPLES, options.antialiasing)
+            if (options.antialias > 0) {
+                glfwWindowHint(GLFW_SAMPLES, options.antialias)
             }
 
             // In order to see anything, we createShader a new pointer using GLFW's glfwCreateWindow().
@@ -132,9 +141,9 @@ class Canvas @JvmOverloads constructor(
 
             // Center the window
             glfwSetWindowPos(
-                hwnd,
-                (vidMode.width() - width) / 2,
-                (vidMode.height() - height) / 2
+                    hwnd,
+                    (vidMode.width() - width) / 2,
+                    (vidMode.height() - height) / 2
             )
 
             // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
@@ -157,16 +166,24 @@ class Canvas @JvmOverloads constructor(
     }
 
     class Options(
-        var width: Int = 800,
-        var height: Int = 600,
+            title: String? = null,
+            width: Int? = null,
+            height: Int? = null,
+            antialias: Int? = null,
+            vsync: Boolean? = null,
+            resizeable: Boolean? = null
+    ) {
 
-        var antialiasing: Int = 0,
+        val title = title ?: "three.kt"
 
-        var vsync: Boolean = true,
-        var resizeable: Boolean = false,
+        val width = width ?: 800
+        val height = height ?: 600
 
-        var title: String = "Three.kt"
-    )
+        val antialias = antialias ?: 0
+        val vsync = vsync ?: true
+        val resizeable = resizeable ?: false
+
+    }
 
 }
 

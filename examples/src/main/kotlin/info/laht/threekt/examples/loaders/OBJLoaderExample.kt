@@ -5,17 +5,18 @@ import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.Clock
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.loaders.OBJLoader
+import info.laht.threekt.objects.Group
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 object OBJLoaderExample {
 
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(Canvas.Options().apply {
-            antialiasing = 4
-        }).use { canvas ->
+        Canvas(antialias = 4).use { canvas ->
 
             val scene = Scene()
             val renderer = GLRenderer(canvas.width, canvas.height)
@@ -24,8 +25,12 @@ object OBJLoaderExample {
                 position.set(0, 100, 175)
             }
 
-            val obj = OBJLoader().load(OBJLoaderExample::class.java.classLoader.getResource("models/obj/female02/female02.obj").file)
-            scene.add(obj)
+            var obj: Group? = null
+            GlobalScope.launch {
+                obj = OBJLoader().load(OBJLoaderExample::class.java.classLoader.getResource("models/obj/female02/female02.obj").file).also {
+                    scene.add(it)
+                }
+            }
 
             val light1 = PointLight(intensity = 1f)
             light1.position.set(25f, 115f, 25f)
@@ -42,7 +47,9 @@ object OBJLoaderExample {
             val clock = Clock()
             canvas.animate {
 
-                obj.rotation.y += 1f * clock.getDelta()
+                obj?.also {
+                    it.rotation.y += 1f * clock.getDelta()
+                }
 
                 renderer.render(scene, camera)
 

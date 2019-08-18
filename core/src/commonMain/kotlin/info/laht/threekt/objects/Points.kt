@@ -15,7 +15,7 @@ class Points(
 
     private val raycastHelper by lazy { RaycastHelper() }
 
-    override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
+    override fun raycast(raycaster: Raycaster, intersects: MutableList<Intersection>) {
 
         with(raycastHelper) {
 

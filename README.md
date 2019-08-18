@@ -13,6 +13,7 @@ Be warned, while the basics works, such as:
 * All materials and lights
 * OrbitControls
 * 2D textures
+* Raycasting against Mesh
 * OBJ, MTL and STL loaders
 * Other stuff like mirror, sky and water shaders
  
@@ -27,7 +28,7 @@ Right now, this is mostly interesting for developers that want to contribute.
 
 ```kotlin
 
-Canvas().use { canvas ->
+Canvas(antialias = 4).use { canvas ->
 
     val scene = Scene().apply {
         setBackground(Color.aliceblue)

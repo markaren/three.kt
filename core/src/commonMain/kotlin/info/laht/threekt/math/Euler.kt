@@ -1,15 +1,16 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
+import kotlin.jvm.JvmOverloads
 import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.atan2
 
 data class Euler(
-    private var _x: Float = 0f,
-    private var _y: Float = 0f,
-    private var _z: Float = 0f,
-    private var _order: EulerOrder = EulerOrder.defaultOrder
+        private var _x: Float = 0f,
+        private var _y: Float = 0f,
+        private var _z: Float = 0f,
+        private var _order: EulerOrder = EulerOrder.defaultOrder
 ) : Cloneable {
 
     var x: Float
@@ -41,7 +42,9 @@ data class Euler(
 
     internal var onChangeCallback: (() -> Unit)? = null
 
-    constructor(x: Number, y: Number, z: Number, w: Number) : this(x.toFloat(), y.toFloat(), z.toFloat())
+    @JvmOverloads
+    constructor(x: Number, y: Number, z: Number, order: EulerOrder? = null) : this(x.toFloat(), y.toFloat(), z.toFloat(), order
+            ?: EulerOrder.defaultOrder)
 
     fun set(x: Number, y: Number, z: Number, order: EulerOrder?): Euler {
         this._x = x.toFloat()

@@ -3,24 +3,29 @@ package info.laht.threekt
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
+import info.laht.threekt.core.MaterialObject
+import info.laht.threekt.core.Raycaster
 import info.laht.threekt.geometries.BoxGeometry
 import info.laht.threekt.geometries.CylinderBufferGeometry
 import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.input.MouseAdapter
+import info.laht.threekt.input.MouseEvent
+import info.laht.threekt.materials.MaterialWithColor
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
+import info.laht.threekt.math.Vector2
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
+import kotlin.random.Random
 
 object BasicExample {
 
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(Canvas.Options().apply {
-            antialiasing = 4
-        }).use { canvas ->
+        Canvas(antialias = 4).use { canvas ->
 
             val scene = Scene().apply {
                 setBackground(Color.aliceblue)
@@ -33,7 +38,7 @@ object BasicExample {
 
             OrbitControls(camera, canvas)
 
-            val plane = Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
+            Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
                 side = Side.Double
             }).also {
@@ -72,8 +77,37 @@ object BasicExample {
                 cylinder.add(it)
             }
 
+            val mouse = Vector2()
+            val raycaster = Raycaster()
+            canvas.addMouseListener(object : MouseAdapter() {
+
+                override fun onMouseMove(event: MouseEvent) {
+
+                    mouse.x = (event.clientX.toFloat() / canvas.width) * 2 - 1
+                    mouse.y = -(event.clientY.toFloat() / canvas.height) * 2 + 1
+
+
+                }
+
+            })
+
             val clock = Clock()
             canvas.animate {
+
+                if (clock.elapsedTime_ > 0.1f) {
+                    raycaster.setFromCamera(mouse, camera)
+                    raycaster.intersectObjects(scene.children).forEach {
+
+                        val obj = it.`object`
+                        if (obj is MaterialObject) {
+                            val mat = obj.material
+                            if (mat is MaterialWithColor) {
+                                mat.color.set(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
+                            }
+                        }
+
+                    }
+                }
 
                 renderer.render(scene, camera)
 

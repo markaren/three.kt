@@ -47,7 +47,7 @@ open class Line @JvmOverloads constructor(
         return this
     }
 
-    override fun raycast(raycaster: Raycaster, intersects: List<Intersection>) {
+    override fun raycast(raycaster: Raycaster, intersects: MutableList<Intersection>) {
         TODO()
     }
 

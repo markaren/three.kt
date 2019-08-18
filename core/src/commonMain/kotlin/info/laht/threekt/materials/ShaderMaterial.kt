@@ -3,7 +3,7 @@ package info.laht.threekt.materials
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.renderers.shaders.ShaderChunk
 
-open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTarget, MaterialWithMorphNormals,
+open class ShaderMaterial : Material(), MaterialWithSkinning, MaterialWithMorphTargets, MaterialWithMorphNormals,
     MaterialWithClipping, MaterialWithWireframe, MaterialWithLineWidth, MaterialWithDefaultAttributeValues {
 
     public override val uniforms: MutableMap<String, Uniform>

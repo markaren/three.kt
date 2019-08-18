@@ -4,7 +4,7 @@ import info.laht.threekt.TextureCombineOperation
 import info.laht.threekt.math.Color
 import info.laht.threekt.textures.Texture
 
-class MeshBasicMaterial : Material(), MaterialWithMorphTarget, MaterialWithSkinning, MaterialWithColor,
+class MeshBasicMaterial : Material(), MaterialWithMorphTargets, MaterialWithSkinning, MaterialWithColor,
     MaterialWithWireframe, MaterialWithReflectivity {
 
     override val color = Color(0xffffff)
