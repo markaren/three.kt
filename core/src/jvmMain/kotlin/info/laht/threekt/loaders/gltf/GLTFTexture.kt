@@ -7,13 +7,13 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class GLTFTexture(
+internal data class GLTFTexture(
     val sampler: Int,
     val source: Int
 )
 
 @Serializable
-data class GLTFSampler(
+internal data class GLTFSampler(
     val magFilter: Int? = null,
     val minFilter: Int? = null,
     val wrapS: Int? = null,
@@ -21,7 +21,7 @@ data class GLTFSampler(
 )
 
 @Serializable
-data class GLTFImage(
+internal data class GLTFImage(
     private val uri: String? = null,
     private val mimeType: Int? = null,
     private val bufferView: Int? = null,

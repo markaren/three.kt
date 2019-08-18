@@ -5,7 +5,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class GLTFAsset(
+internal data class GLTFAsset(
     val version: String,
     val generator: String? = null,
     val copyright: String? = null,

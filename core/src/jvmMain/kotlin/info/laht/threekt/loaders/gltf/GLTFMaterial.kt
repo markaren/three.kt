@@ -5,7 +5,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class GLTFMaterial(
+internal data class GLTFMaterial(
 
     val name: String? = null,
     val extensions: JsonObject? = null,

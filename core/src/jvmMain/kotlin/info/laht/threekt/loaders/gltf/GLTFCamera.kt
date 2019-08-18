@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class GLTFCamera(
+internal data class GLTFCamera(
 
     val perspective: Perspective? = null,
     val orthographic: Orthographic? = null,

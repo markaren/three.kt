@@ -5,7 +5,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class GLTFScene(
+internal data class GLTFScene(
     var name: String? = null,
     val nodes: List<Int> = emptyList(),
     val extensions: JsonObject? = null,

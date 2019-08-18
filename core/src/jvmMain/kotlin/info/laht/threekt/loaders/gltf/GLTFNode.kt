@@ -6,7 +6,7 @@ import info.laht.threekt.math.Vector3
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GLTFNode(
+internal data class GLTFNode(
     val name: String? = null,
     val camera: Int? = null,
     val children: List<Int> = emptyList(),

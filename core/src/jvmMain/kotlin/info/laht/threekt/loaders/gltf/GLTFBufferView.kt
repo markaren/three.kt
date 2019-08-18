@@ -5,7 +5,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class GLTFBufferView(
+internal data class GLTFBufferView(
     val buffer: Int,
     val byteOffset: Int = 0,
     val byteLength: Int,
