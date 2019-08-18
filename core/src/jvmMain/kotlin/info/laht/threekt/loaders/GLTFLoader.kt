@@ -32,26 +32,4 @@ class GLTFLoader {
 
     }
 
-
-    private val bufferCache = mutableMapOf<String, ByteArray>()
-
-    private fun loadBufferView(gltf: GLTF, index: Int, path: String): ByteArray {
-
-        val bufferViewDef = gltf.bufferViews[index]
-        val buffer = gltf.buffers[bufferViewDef.buffer]
-
-        val dataLocation = File("$path/${buffer.uri!!}")
-
-        val data = bufferCache[dataLocation.absolutePath] ?: run {
-            dataLocation.readBytes().also {
-                bufferCache[dataLocation.absolutePath] = it
-            }
-        }
-
-        val byteLength = bufferViewDef.byteLength
-        val byteOffset = bufferViewDef.byteOffset
-        return data.sliceArray(byteOffset until byteOffset + byteLength)
-
-    }
-
 }
