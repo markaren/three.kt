@@ -1,5 +1,7 @@
 package info.laht.threekt.loaders.gltf
 
+import info.laht.threekt.Side
+import info.laht.threekt.materials.MeshStandardMaterial
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -47,5 +49,21 @@ internal data class GLTFMaterial(
         val extensions: JsonObject? = null,
         val extras: JsonElement? = null
     )
+
+    companion object {
+
+        val defaultMaterial by lazy {
+            MeshStandardMaterial().apply {
+                color.set(0xffffff)
+                emissive.set(0x000000)
+                metalness = 1f
+                roughness = 1f
+                transparent = true
+                depthTest = true
+                side = Side.Front
+            }
+        }
+
+    }
 
 }
