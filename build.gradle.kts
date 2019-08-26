@@ -1,6 +1,6 @@
 plugins {
     java
-    kotlin("jvm") version "1.3.41" apply false
+    kotlin("jvm") version "1.3.50" apply false
 }
 
 configure<JavaPluginExtension> {
