@@ -36,6 +36,15 @@ open class LightShadow(
         val shadowCamera = this.camera
         val shadowMatrix = this.matrix
 
+        lightPositionWorld.setFromMatrixPosition(light.matrixWorld)
+        camera.position.copy(lightPositionWorld)
+
+        light as LightWithTarget
+
+        lookTarget.setFromMatrixPosition(light.target.matrixWorld)
+        camera.lookAt(lookTarget)
+        camera.updateMatrixWorld()
+
         projScreenMatrix.multiplyMatrices(shadowCamera.projectionMatrix, shadowCamera.matrixWorldInverse)
         this.frustum.setFromMatrix(projScreenMatrix)
 
@@ -159,13 +168,6 @@ class SpotLightShadow : LightShadow(PerspectiveCamera(50, 1f, 0.5f, 500f)) {
 
         }
 
-        lightPositionWorld.setFromMatrixPosition(light.matrixWorld)
-        camera.position.copy(lightPositionWorld)
-
-        lookTarget.setFromMatrixPosition(light.target.matrixWorld)
-        camera.lookAt(lookTarget)
-        camera.updateMatrixWorld()
-
         super.updateMatrices(light, viewCamera, viewportIndex)
 
     }
@@ -176,21 +178,4 @@ class SpotLightShadow : LightShadow(PerspectiveCamera(50, 1f, 0.5f, 500f)) {
 
 }
 
-class DirectionalLightShadow : LightShadow(OrthographicCamera(-5f, 5f, 5f, -5f, 0.5f, 500f)) {
-
-    override fun updateMatrices(light: Light, viewCamera: Camera, viewportIndex: Int) {
-
-        light as DirectionalLight
-
-        lightPositionWorld.setFromMatrixPosition(light.matrixWorld)
-        camera.position.copy(lightPositionWorld)
-
-        lookTarget.setFromMatrixPosition(light.target.matrixWorld)
-        camera.lookAt(lookTarget)
-        camera.updateMatrixWorld()
-
-        super.updateMatrices(light, viewCamera, viewportIndex)
-
-    }
-
-}
+class DirectionalLightShadow : LightShadow(OrthographicCamera(-5f, 5f, 5f, -5f, 0.5f, 500f))

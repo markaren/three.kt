@@ -2,6 +2,7 @@ package info.laht.threekt.renderers.opengl
 
 import info.laht.threekt.*
 import info.laht.threekt.cameras.Camera
+import info.laht.threekt.cameras.CameraCanUpdateProjectionMatrix
 import info.laht.threekt.cameras.CameraWithNearAndFar
 import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.MaterialsObject
@@ -129,6 +130,7 @@ class GLShadowMap internal constructor(
                     )
                     ).apply {
                         texture.name = light.name + ".shadowMap"
+                        (camera as CameraCanUpdateProjectionMatrix).updateProjectionMatrix()
                     }
 
                 }
