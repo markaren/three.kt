@@ -11,9 +11,9 @@ internal data class GLTFNode(
     val camera: Int? = null,
     val children: List<Int> = emptyList(),
     private val matrix: List<Float>? = null,
-    private val rotation: List<Float>? = null,
-    private val scale: List<Float>? = null,
-    private val translation: List<Float>? = null
+    @Serializable(QuaternionSerializer::class) private val rotation: Quaternion? = null,
+    @Serializable(Vector3Serializer::class) private val scale: Vector3? = null,
+    @Serializable(Vector3Serializer::class) private val translation: Vector3? = null
 ) {
 
     fun getMatrix(): Matrix4 {
@@ -27,15 +27,15 @@ internal data class GLTFNode(
     }
 
     private fun getRotation(): Quaternion {
-        return rotation?.let { Quaternion(it[0], it[1], it[2], it[3]) } ?: Quaternion()
+        return rotation ?: Quaternion()
     }
 
     private fun getScale(): Vector3 {
-        return scale?.let { Vector3(it[0], it[1], it[2]) } ?: Vector3(1f, 1f, 1f)
+        return scale ?: Vector3(1f, 1f, 1f)
     }
 
     private fun getTranslation(): Vector3 {
-        return translation?.let { Vector3(it[0], it[1], it[2]) } ?: Vector3()
+        return translation ?: Vector3()
     }
 
 }
