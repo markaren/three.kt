@@ -35,9 +35,9 @@ class MTLLoader {
         val delimiterPattern = "\\s+".toRegex()
         val materialsInfo = mutableMapOf<String, MutableMap<String, Any>>()
 
-        for (i in 0 until lines.size) {
+        for (element in lines) {
 
-            var line = lines[i]
+            var line = element
             line = line.trim()
 
             if (line.isEmpty() || line[0] == '#') {
@@ -129,7 +129,7 @@ class MTLLoader {
                         "kd", "ka", "ks" -> {
                             // Diffuse color (color under white light) using RGB values
 
-                            if (this.options != null && this.options.normalizeRGB) {
+                            if (this.options.normalizeRGB) {
 
                                 value as FloatArray
 
@@ -139,7 +139,7 @@ class MTLLoader {
 
                             }
 
-                            if (this.options != null && this.options.ignoreZeroRGBs) {
+                            if (this.options.ignoreZeroRGBs) {
 
                                 value as FloatArray
 

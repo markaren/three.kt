@@ -95,7 +95,7 @@ abstract class Curve3 {
         var low = 0
         var high = il - 1
 
-        var i = 0
+        var i: Int
         while (low <= high) {
 
             i = low + (high - low) / 2

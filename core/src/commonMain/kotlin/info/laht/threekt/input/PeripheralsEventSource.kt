@@ -5,13 +5,13 @@ interface PeripheralsEventSource {
     val width: Int
     val height: Int
 
-    fun addKeyListener(keyListener: KeyListener)
+    fun addKeyListener(listener: KeyListener)
 
     fun removeKeyListener(listener: KeyListener): Boolean
 
-    fun addMouseListener(mouseListener: MouseListener)
+    fun addMouseListener(listener: MouseListener)
 
-    fun removeMouseListener(mouseListener: MouseListener): Boolean
+    fun removeMouseListener(listener: MouseListener): Boolean
 
 }
 

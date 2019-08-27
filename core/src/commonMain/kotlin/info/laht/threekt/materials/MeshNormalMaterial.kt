@@ -5,7 +5,7 @@ import info.laht.threekt.math.Vector2
 import info.laht.threekt.textures.Texture
 
 class MeshNormalMaterial : Material(), MaterialWithWireframe, MaterialWithMorphNormals, MaterialWithMorphTargets,
-    MaterialWithSkinning {
+        MaterialWithSkinning {
 
     public override var bumpMap: Texture? = null
     public override var bumpScale = 1f
@@ -27,8 +27,8 @@ class MeshNormalMaterial : Material(), MaterialWithWireframe, MaterialWithMorphN
 
     init {
 
-        var fog = false
-        var lights = false
+        fog = false
+        lights = false
 
     }
 
