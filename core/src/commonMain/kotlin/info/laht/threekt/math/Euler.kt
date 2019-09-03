@@ -2,6 +2,7 @@ package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
 import kotlin.jvm.JvmOverloads
+import kotlin.jvm.JvmStatic
 import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.atan2
@@ -43,10 +44,11 @@ data class Euler(
     internal var onChangeCallback: (() -> Unit)? = null
 
     @JvmOverloads
-    constructor(x: Number, y: Number, z: Number, order: EulerOrder? = null) : this(x.toFloat(), y.toFloat(), z.toFloat(), order
-            ?: EulerOrder.defaultOrder)
+    constructor(x: Number, y: Number, z: Number, order: EulerOrder? = null)
+            : this(x.toFloat(), y.toFloat(), z.toFloat(), order ?: EulerOrder.defaultOrder)
 
-    fun set(x: Number, y: Number, z: Number, order: EulerOrder?): Euler {
+    @JvmOverloads
+    fun set(x: Number, y: Number, z: Number, order: EulerOrder? = null): Euler {
         this._x = x.toFloat()
         this._y = y.toFloat()
         this._z = z.toFloat()
@@ -61,6 +63,7 @@ data class Euler(
         return set(euler._x, euler._y, euler._z, euler._order)
     }
 
+    @JvmOverloads
     fun setFromRotationMatrix(m: Matrix4, order: EulerOrder? = null, update: Boolean = true): Euler {
         // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
 
@@ -189,6 +192,7 @@ data class Euler(
         return this
     }
 
+    @JvmOverloads
     fun setFromQuaternion(q: Quaternion, order: EulerOrder? = null, update: Boolean = true): Euler {
         val matrix = Matrix4()
         matrix.makeRotationFromQuaternion(q)
@@ -196,6 +200,7 @@ data class Euler(
         return this.setFromRotationMatrix(matrix, order, update)
     }
 
+    @JvmOverloads
     fun setFromVector3(v: Vector3, order: EulerOrder? = null): Euler {
         return this.set(v.x, v.y, v.z, order ?: this._order)
     }
@@ -210,6 +215,7 @@ data class Euler(
         return this.setFromQuaternion(q, newOrder)
     }
 
+    @JvmOverloads
     fun toVector3(optionalResult: Vector3 = Vector3()): Vector3 {
         return optionalResult.set(_x, _y, _z)
     }
@@ -226,6 +232,7 @@ enum class EulerOrder {
 
     companion object {
 
+        @JvmStatic
         val defaultOrder: EulerOrder = XYZ
 
     }
