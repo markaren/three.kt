@@ -47,7 +47,7 @@ kotlin {
             }
         }
 
-        named("jvmMain") {
+        val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
 
@@ -67,7 +67,7 @@ kotlin {
             }
         }
 
-        named("jvmTest") {
+        val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
@@ -86,12 +86,10 @@ tasks.named<Test>("jvmTest") {
     useJUnitPlatform()
 }
 
-val publicationName = "mavenPublication"
 publishing {
-    publications {
-        register(publicationName, MavenPublication::class) {
-            from(components["kotlin"])
-        }
+    publications.withType<MavenPublication>().apply {
+        val jvm by getting { }
+        val metadata by getting { }
     }
 }
 
@@ -104,7 +102,7 @@ if (bintrayUser != null && bintrayKey != null) {
         user = bintrayUser
         key = bintrayKey
         publish = true
-        setPublications(publicationName)
+        setPublications("jvm")
         pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
             repo = "mvn"
             name = "threekt"
