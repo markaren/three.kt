@@ -174,14 +174,14 @@ class Canvas @JvmOverloads constructor(
             resizeable: Boolean? = null
     ) {
 
-        val title = title ?: "three.kt"
+        var title = title ?: "three.kt"
 
-        val width = width ?: 800
-        val height = height ?: 600
+        var width = width ?: 800
+        var height = height ?: 600
 
-        val antialias = antialias ?: 0
-        val vsync = vsync ?: true
-        val resizeable = resizeable ?: false
+        var antialias = antialias ?: 0
+        var vsync = vsync ?: true
+        var resizeable = resizeable ?: false
 
     }
 
