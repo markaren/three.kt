@@ -19,7 +19,7 @@ class BoxBufferGeometry(
     val depth = depth?.toFloat() ?: 1f
     val widthSegments = widthSegments ?: 1
     val heightSegments = heightSegments ?: 1
-    val depthSegments = heightSegments ?: 1
+    val depthSegments = depthSegments ?: 1
 
     constructor(extents: Number) : this(extents, extents, extents)
     constructor(width: Number, height: Number, depth: Number) : this(width, height, depth, null, null, null)

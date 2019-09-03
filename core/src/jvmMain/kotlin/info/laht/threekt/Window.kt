@@ -1,38 +1,39 @@
 package info.laht.threekt
 
 import info.laht.threekt.input.*
+import info.laht.threekt.math.WindowSize
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.*
 import org.lwjgl.system.Callback
 import java.io.Closeable
 
+private const val DEFAULT_WIDTH = 800
+private const val DEFAULT_HEIGHT = 600
 
-class Canvas @JvmOverloads constructor(
+class Window @JvmOverloads constructor(
         options: Options = Options()
 ) : AbstractPeripheralsEventSource(), Closeable {
 
     val hwnd: Long
 
-    override val width: Int = options.width
-    override val height: Int = options.height
+    override val size: WindowSize = options.size
 
     val aspect: Float
-        get() = width.toFloat() / height
+        get() = size.aspect
 
     private val mouseEvent = MouseEvent()
     private var debugProc: Callback? = null
 
-    var onWindowResize: ((Int, Int) -> Unit)? = null
+    private var windowResizeCallback: WindowResizeListener? = null
 
     constructor(title: String? = null,
                 width: Int? = null,
                 height: Int? = null,
                 antialias: Int? = null,
-                vsync: Boolean? = null,
+                vSync: Boolean? = null,
                 resizeable: Boolean? = null
-    ) : this(Options(title, width, height, antialias, vsync, resizeable))
-
+    ) : this(Options(title, WindowSize(width ?: DEFAULT_WIDTH, height ?: DEFAULT_HEIGHT), antialias, vSync, resizeable))
 
     init {
 
@@ -45,7 +46,7 @@ class Canvas @JvmOverloads constructor(
 
         if (options.resizeable) {
             glfwSetWindowSizeCallback(hwnd) { _, width, height ->
-                onWindowResize?.invoke(width, height)
+                windowResizeCallback?.onWindowResize(width, height)
             }
         }
 
@@ -87,6 +88,10 @@ class Canvas @JvmOverloads constructor(
 
     }
 
+    fun onWindowResize(listener: WindowResizeListener) {
+        this.windowResizeCallback = listener
+    }
+
     fun enableDebugCallback() {
         debugProc = GLUtil.setupDebugMessageCallback()
     }
@@ -125,8 +130,7 @@ class Canvas @JvmOverloads constructor(
 
         fun createWindow(options: Options): Long {
 
-            val width = options.width
-            val height = options.height
+            val (width, height) = options.size
 
             if (options.antialias > 0) {
                 glfwWindowHint(GLFW_SAMPLES, options.antialias)
@@ -167,8 +171,7 @@ class Canvas @JvmOverloads constructor(
 
     class Options(
             title: String? = null,
-            width: Int? = null,
-            height: Int? = null,
+            size: WindowSize? = null,
             antialias: Int? = null,
             vsync: Boolean? = null,
             resizeable: Boolean? = null
@@ -176,14 +179,20 @@ class Canvas @JvmOverloads constructor(
 
         var title = title ?: "three.kt"
 
-        var width = width ?: 800
-        var height = height ?: 600
+        var size = size ?: WindowSize(DEFAULT_WIDTH, DEFAULT_HEIGHT)
 
         var antialias = antialias ?: 0
         var vsync = vsync ?: true
         var resizeable = resizeable ?: false
 
     }
+
+}
+
+
+interface WindowResizeListener {
+
+    fun onWindowResize(width: Int, height: Int)
 
 }
 

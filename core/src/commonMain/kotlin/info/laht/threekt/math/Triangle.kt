@@ -64,12 +64,12 @@ data class Triangle @JvmOverloads constructor(
     }
 
     @JvmOverloads
-    fun getPlane(target: Plane): Plane {
+    fun getPlane(target: Plane = Plane()): Plane {
         return target.setFromCoplanarPoints(this.a, this.b, this.c)
     }
 
     @JvmOverloads
-    fun getBarycoord(point: Vector3, target: Vector3): Vector3 {
+    fun getBarycoord(point: Vector3, target: Vector3 = Vector3()): Vector3 {
         return getBarycoord(point, this.a, this.b, this.c, target)
     }
 

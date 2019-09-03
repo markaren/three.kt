@@ -1,6 +1,6 @@
 package no.info.laht.threekt.examples;
 
-import info.laht.threekt.Canvas;
+import info.laht.threekt.Window;
 import info.laht.threekt.cameras.PerspectiveCamera;
 import info.laht.threekt.controls.OrbitControls;
 import info.laht.threekt.geometries.BoxBufferGeometry;
@@ -16,12 +16,12 @@ public class JavaExample {
 
     public static void main(String[] args) {
 
-        try (Canvas canvas = new Canvas()) {
+        try (Window window = new Window()) {
 
             Scene scene = new Scene();
             PerspectiveCamera camera = new PerspectiveCamera();
             camera.getPosition().z = 5;
-            GLRenderer renderer = new GLRenderer(canvas.getWidth(), canvas.getHeight());
+            GLRenderer renderer = new GLRenderer(window.getSize());
 
             BoxBufferGeometry boxBufferGeometry = new BoxBufferGeometry();
             MeshPhongMaterial boxMaterial = new MeshPhongMaterial();
@@ -40,14 +40,14 @@ public class JavaExample {
             AmbientLight light = new AmbientLight();
             scene.add(light);
 
-            OrbitControls orbitControls = new OrbitControls(camera, canvas);
+            OrbitControls orbitControls = new OrbitControls(camera, window);
 
-            while (!canvas.shouldClose()) {
+            while (!window.shouldClose()) {
 
                 renderer.render(scene, camera);
 
-                canvas.pollEvents();
-                canvas.swapBuffers();
+                window.pollEvents();
+                window.swapBuffers();
 
             }
 

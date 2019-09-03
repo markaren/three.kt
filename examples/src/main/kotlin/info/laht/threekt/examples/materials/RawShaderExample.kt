@@ -1,7 +1,7 @@
 package info.laht.threekt.examples.materials
 
-import info.laht.threekt.Canvas
 import info.laht.threekt.Side
+import info.laht.threekt.Window
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
@@ -17,14 +17,14 @@ object RawShaderExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(antialias = 4).use { canvas ->
+        Window(antialias = 4).use { canvas ->
 
             val scene = Scene().apply {
                 setBackground(0x101010)
             }
             val camera = PerspectiveCamera(50, canvas.aspect, 1, 10)
             camera.position.z = 2f
-            val renderer = GLRenderer(canvas.width, canvas.height).apply {
+            val renderer = GLRenderer(canvas.size).apply {
                 checkShaderErrors = true
             }
 

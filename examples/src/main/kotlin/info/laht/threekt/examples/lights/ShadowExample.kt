@@ -1,7 +1,7 @@
 package info.laht.threekt.examples.lights
 
-import info.laht.threekt.Canvas
 import info.laht.threekt.ShadowType
+import info.laht.threekt.Window
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.geometries.PlaneBufferGeometry
@@ -19,14 +19,14 @@ object ShadowExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(antialias = 4).use { canvas ->
+        Window(antialias = 4).use { canvas ->
 
             val scene = Scene()
 
             val camera = PerspectiveCamera()
             camera.position.set(0f, 5f, 20f)
 
-            val renderer = GLRenderer(canvas.width, canvas.height)
+            val renderer = GLRenderer(canvas.size)
             renderer.shadowMap.enabled = true
             renderer.shadowMap.type = ShadowType.PCFSoft
 

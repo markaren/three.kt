@@ -1,6 +1,7 @@
 package info.laht.threekt.examples.objects
 
-import info.laht.threekt.Canvas
+import info.laht.threekt.Window
+import info.laht.threekt.WindowResizeListener
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.BufferGeometry
@@ -45,19 +46,21 @@ object PointsExampleWaves {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(resizeable = true).use { canvas ->
+        Window(resizeable = true).use { window ->
 
             val scene = Scene()
-            val renderer = GLRenderer(canvas.width, canvas.height)
+            val renderer = GLRenderer(window.size)
 
-            canvas.onWindowResize = { w, h ->
-                renderer.setSize(w, h)
-            }
+            window.onWindowResize(object : WindowResizeListener {
+                override fun onWindowResize(width: Int, height: Int) {
+                    renderer.setSize(width, height)
+                }
+            })
 
-            val camera = PerspectiveCamera(75, canvas.aspect, 1, 100000).apply {
+            val camera = PerspectiveCamera(75, window.aspect, 1, 100000).apply {
                 position.z = 1000f
             }
-            OrbitControls(camera, canvas).apply {
+            OrbitControls(camera, window).apply {
                 zoomSpeed *= 5
             }
 
@@ -99,7 +102,7 @@ object PointsExampleWaves {
 
             var count = 0f
             val clock = Clock()
-            canvas.animate {
+            window.animate {
 
                 camera.lookAt(scene.position)
 

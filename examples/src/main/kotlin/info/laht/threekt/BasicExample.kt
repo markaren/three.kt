@@ -25,7 +25,7 @@ object BasicExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(antialias = 4).use { canvas ->
+        Window(antialias = 4).use { canvas ->
 
             val scene = Scene().apply {
                 setBackground(Color.aliceblue)
@@ -34,7 +34,7 @@ object BasicExample {
             val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000).also {
                 it.translateZ(10f)
             }
-            val renderer = GLRenderer(canvas.width, canvas.height)
+            val renderer = GLRenderer(canvas.size)
 
             OrbitControls(camera, canvas)
 
@@ -83,8 +83,8 @@ object BasicExample {
 
                 override fun onMouseMove(event: MouseEvent) {
 
-                    mouse.x = (event.clientX.toFloat() / canvas.width) * 2 - 1
-                    mouse.y = -(event.clientY.toFloat() / canvas.height) * 2 + 1
+                    mouse.x = (event.clientX.toFloat() / canvas.size.width) * 2 - 1
+                    mouse.y = -(event.clientY.toFloat() / canvas.size.height) * 2 + 1
 
 
                 }

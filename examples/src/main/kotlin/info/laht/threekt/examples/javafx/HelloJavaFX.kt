@@ -6,7 +6,7 @@ import cuchaz.jfxgl.CalledByMainThread
 import cuchaz.jfxgl.JFXGL
 import cuchaz.jfxgl.JFXGLLauncher
 import cuchaz.jfxgl.controls.OpenGLPane
-import info.laht.threekt.Canvas
+import info.laht.threekt.Window
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
@@ -35,7 +35,7 @@ object HelloJavaFX : Application() {
     @JvmStatic
     fun jfxglmain(args: Array<String>) {
 
-        Canvas(antialias = 4).use { canvas ->
+        Window(antialias = 4).use { canvas ->
 
             val scene = Scene().apply {
                 setBackground(Color.aliceblue)
@@ -43,7 +43,7 @@ object HelloJavaFX : Application() {
             val camera = PerspectiveCamera().apply {
                 position.z = 10f
             }
-            val renderer = GLRenderer(canvas.width, canvas.height)
+            val renderer = GLRenderer(canvas.size)
 
             mesh = Mesh(BoxBufferGeometry(1f), MeshBasicMaterial().apply {
                 color.set(0x00ff00)

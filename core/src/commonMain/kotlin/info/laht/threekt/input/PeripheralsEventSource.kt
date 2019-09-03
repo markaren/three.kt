@@ -1,9 +1,10 @@
 package info.laht.threekt.input
 
+import info.laht.threekt.math.WindowSize
+
 interface PeripheralsEventSource {
 
-    val width: Int
-    val height: Int
+    val size: WindowSize
 
     fun addKeyListener(listener: KeyListener)
 

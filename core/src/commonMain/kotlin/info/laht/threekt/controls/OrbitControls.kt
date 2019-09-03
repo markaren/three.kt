@@ -335,18 +335,18 @@ class OrbitControls(
                 targetDistance *= tan((this.camera.fov / 2) * PI.toFloat() / 180f)
 
                 // we use only clientHeight here so aspect ratio does not distort speed
-                panLeft(2 * deltaX * targetDistance / eventSource.height, this.camera.matrix)
-                panUp(2 * deltaY * targetDistance / eventSource.height, this.camera.matrix)
+                panLeft(2 * deltaX * targetDistance / eventSource.size.height, this.camera.matrix)
+                panUp(2 * deltaY * targetDistance / eventSource.size.height, this.camera.matrix)
 
             }
             this.camera is OrthographicCamera -> {
                 // orthographic
                 panLeft(
-                    deltaX * (this.camera.right - this.camera.left) / this.camera.zoom / eventSource.width,
+                        deltaX * (this.camera.right - this.camera.left) / this.camera.zoom / eventSource.size.width,
                     this.camera.matrix
                 )
                 panUp(
-                    deltaY * (this.camera.top - this.camera.bottom) / this.camera.zoom / eventSource.height,
+                        deltaY * (this.camera.top - this.camera.bottom) / this.camera.zoom / eventSource.size.height,
                     this.camera.matrix
                 )
             }
@@ -447,9 +447,9 @@ class OrbitControls(
 
         rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(rotateSpeed)
 
-        rotateLeft(2 * PI.toFloat() * rotateDelta.x / eventSource.width) // yes, height
+        rotateLeft(2 * PI.toFloat() * rotateDelta.x / eventSource.size.width) // yes, height
 
-        rotateUp(2 * PI.toFloat() * rotateDelta.y / eventSource.height)
+        rotateUp(2 * PI.toFloat() * rotateDelta.y / eventSource.size.height)
 
         rotateStart.copy(rotateEnd)
 

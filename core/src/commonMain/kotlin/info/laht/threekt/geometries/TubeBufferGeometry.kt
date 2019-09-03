@@ -8,10 +8,11 @@ import info.laht.threekt.extras.core.Curve3
 import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3
+import kotlin.jvm.JvmOverloads
 import kotlin.math.cos
 import kotlin.math.sin
 
-class TubeBufferGeometry(
+class TubeBufferGeometry @JvmOverloads constructor(
     val path: Curve3,
     val tubularSegments: Int = 64,
     val radius: Float = 1f,

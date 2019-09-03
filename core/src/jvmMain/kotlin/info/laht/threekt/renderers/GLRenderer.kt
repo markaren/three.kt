@@ -28,8 +28,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class GLRenderer(
-        width: Int,
-        height: Int
+        size: WindowSize
 ) : Renderer {
 
     var checkShaderErrors = false
@@ -101,9 +100,9 @@ class GLRenderer(
     private val currentScissor = Vector4()
     private var currentScissorTest: Boolean? = null
 
-    var width = width
+    var width = size.width
         private set
-    var height = height
+    var height = size.height
         private set
 
     private var pixelRatio = 1

@@ -1,7 +1,8 @@
 package info.laht.threekt.examples.materials
 
-import info.laht.threekt.Canvas
 import info.laht.threekt.Side
+import info.laht.threekt.Window
+import info.laht.threekt.WindowResizeListener
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
@@ -18,7 +19,7 @@ object RawShaderExample2 {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(
+        Window(
                 antialias = 8,
             resizeable = true
         ).use { canvas ->
@@ -28,13 +29,13 @@ object RawShaderExample2 {
             val camera = PerspectiveCamera(50, canvas.aspect, 1, 1000000)
             camera.position.y = 100f
 
-            val renderer = GLRenderer(canvas.width, canvas.height)
+            val renderer = GLRenderer(canvas.size)
             OrbitControls(camera, canvas)
             val geometry = BoxBufferGeometry(10000f)
 
             val material = RawShaderMaterial().also {
                 it.uniforms["iTime"] = Uniform(null)
-                it.uniforms["iResolution"] = Uniform(Vector2(canvas.width, canvas.height))
+                it.uniforms["iResolution"] = Uniform(canvas.size.toVector2())
                 it.vertexShader = vertexShader
                 it.fragmentShader = fragmentShader
                 it.side = Side.Double
@@ -43,10 +44,12 @@ object RawShaderExample2 {
             val mesh = Mesh(geometry, material)
             scene.add(mesh)
 
-            canvas.onWindowResize = { w, h ->
-                renderer.setSize(w, h)
-                material.uniforms["iResolution"]!!.value<Vector2>()!!.set(w.toFloat(), h.toFloat())
-            }
+            canvas.onWindowResize(object : WindowResizeListener {
+                override fun onWindowResize(width: Int, height: Int) {
+                    renderer.setSize(width, height)
+                    material.uniforms["iResolution"]!!.value<Vector2>()!!.set(width.toFloat(), height.toFloat())
+                }
+            })
 
             var value = 0f
             val clock = Clock()

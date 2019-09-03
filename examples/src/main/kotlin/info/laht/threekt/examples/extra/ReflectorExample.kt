@@ -1,6 +1,6 @@
 package info.laht.threekt.examples.extra
 
-import info.laht.threekt.Canvas
+import info.laht.threekt.Window
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.extras.objects.Reflector
@@ -20,14 +20,14 @@ object ReflectorExample {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Canvas(antialias = 4).use { canvas ->
+        Window(antialias = 4).use { canvas ->
 
             canvas.enableDebugCallback()
 
             val scene = Scene().apply {
                 setBackground(Color.aliceblue)
             }
-            val renderer = GLRenderer(canvas.width, canvas.height).apply {
+            val renderer = GLRenderer(canvas.size).apply {
                 checkShaderErrors = true
             }
 

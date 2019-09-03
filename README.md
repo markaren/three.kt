@@ -28,17 +28,17 @@ Right now, this is mostly interesting for developers that want to contribute.
 
 ```kotlin
 
-Canvas(antialias = 4).use { canvas ->
+Window(antialias = 4).use { window ->
 
     val scene = Scene().apply {
         setBackground(Color.aliceblue)
     }
 
-    val camera = PerspectiveCamera(75, canvas.aspect, 0.1, 1000).apply {
+    val camera = PerspectiveCamera(75, window.aspect, 0.1, 1000).apply {
         position.z = 5f
     }
 
-    val renderer = GLRenderer(canvas.width, canvas.height)
+    val renderer = GLRenderer(window.width, window.height)
 
     val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
         color.set(0x00ff00)
@@ -46,8 +46,8 @@ Canvas(antialias = 4).use { canvas ->
     scene.add(box)
     
     val clock = Clock()
-    val controls = OrbitControls(camera, canvas)
-    canvas.animate {
+    val controls = OrbitControls(camera, window)
+    window.animate {
      
         val dt = clock.getDelta()
         box.rotation.x += 1f * dt
@@ -67,12 +67,12 @@ public class JavaExample {
 
     public static void main(String[] args) {
 
-        try (Canvas canvas = new Canvas()) {
+        try (Window window = new Window()) {
 
             Scene scene = new Scene();
             PerspectiveCamera camera = new PerspectiveCamera();
             camera.getPosition().z = 5;
-            GLRenderer renderer = new GLRenderer(canvas.getWidth(), canvas.getHeight());
+            GLRenderer renderer = new GLRenderer(window.getWidth(), window.getHeight());
 
             BoxBufferGeometry boxBufferGeometry = new BoxBufferGeometry();
             MeshPhongMaterial boxMaterial = new MeshPhongMaterial();
@@ -90,14 +90,14 @@ public class JavaExample {
             AmbientLight light = new AmbientLight();
             scene.add(light);
 
-            OrbitControls orbitControls = new OrbitControls(camera, canvas);
+            OrbitControls orbitControls = new OrbitControls(camera, window);
 
-            while (!canvas.shouldClose()) {
+            while (!window.shouldClose()) {
 
                 renderer.render(scene, camera);
 
-                canvas.pollEvents();
-                canvas.swapBuffers();
+                window.pollEvents();
+                window.swapBuffers();
 
             }
 
