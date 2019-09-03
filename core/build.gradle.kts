@@ -1,9 +1,14 @@
+import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
     kotlin("multiplatform")
+    id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`
 }
+
+group = "info.laht.threekt"
+version = "r1-ALPHA-1"
 
 repositories {
     mavenCentral()
@@ -81,10 +86,33 @@ tasks.named<Test>("jvmTest") {
     useJUnitPlatform()
 }
 
+val publicationName = "mavenPublication"
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        register(publicationName, MavenPublication::class) {
             from(components["kotlin"])
         }
     }
+}
+
+val bintrayUser: String? by project
+val bintrayKey: String? by project
+
+if (bintrayUser != null && bintrayKey != null) {
+
+    bintray {
+        user = bintrayUser
+        key = bintrayKey
+        publish = true
+        setPublications(publicationName)
+        pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
+            repo = "mvn"
+            name = "threekt"
+            websiteUrl = "https://github.com/markaren/three.kt"
+            vcsUrl = "https://github.com/markaren/three.kt"
+            setLabels("kotlin")
+            setLicenses("MIT")
+        })
+    }
+
 }
