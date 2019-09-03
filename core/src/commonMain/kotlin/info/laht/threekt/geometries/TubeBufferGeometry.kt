@@ -11,8 +11,6 @@ import info.laht.threekt.math.Vector3
 import kotlin.math.cos
 import kotlin.math.sin
 
-typealias TubeGeometry = TubeBufferGeometry
-
 class TubeBufferGeometry(
     val path: Curve3,
     val tubularSegments: Int = 64,

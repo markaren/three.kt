@@ -9,7 +9,7 @@ import info.laht.threekt.math.Vector3
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.shaders.cloneUniforms
 
-class Sky : Mesh(BoxBufferGeometry(1f, 1f, 1f), ShaderMaterial()) {
+class Sky : Mesh(BoxBufferGeometry(1000), ShaderMaterial()) {
 
     val uniforms = (material as ShaderMaterial).uniforms
 

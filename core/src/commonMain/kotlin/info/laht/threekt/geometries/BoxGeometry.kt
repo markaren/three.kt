@@ -5,18 +5,24 @@ import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.core.IntBufferAttribute
 import info.laht.threekt.math.Vector3
 
-typealias BoxGeometry = BoxBufferGeometry
-
 class BoxBufferGeometry(
-    val width: Float = 1f,
-    val height: Float = 1f,
-    val depth: Float = 1f,
-    val widthSegments: Int = 1,
-    val heightSegments: Int = 1,
-    val depthSegments: Int = 1
+        width: Number? = null,
+        height: Number? = null,
+        depth: Number? = null,
+        widthSegments: Int? = null,
+        heightSegments: Int? = null,
+        depthSegments: Int? = null
 ) : BufferGeometry() {
 
-    constructor(extents: Float) : this(extents, extents, extents)
+    val width = width?.toFloat() ?: 1f
+    val height = height?.toFloat() ?: 1f
+    val depth = depth?.toFloat() ?: 1f
+    val widthSegments = widthSegments ?: 1
+    val heightSegments = heightSegments ?: 1
+    val depthSegments = heightSegments ?: 1
+
+    constructor(extents: Number) : this(extents, extents, extents)
+    constructor(width: Number, height: Number, depth: Number) : this(width, height, depth, null, null, null)
 
     init {
 

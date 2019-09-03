@@ -8,7 +8,7 @@ import info.laht.threekt.core.Clock
 import info.laht.threekt.examples.textures.TextureExample
 import info.laht.threekt.extras.objects.Sky
 import info.laht.threekt.extras.objects.Water
-import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.geometries.SphereBufferGeometry
 import info.laht.threekt.lights.DirectionalLight
 import info.laht.threekt.loaders.TextureLoader
@@ -53,7 +53,7 @@ object WaterExample {
             sky.scale.setScalar(45000)
             scene.add(sky)
 
-            val planeGeometry = PlaneGeometry(10000, 10000)
+            val planeGeometry = PlaneBufferGeometry(10000)
 
             val texture =
                     TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file)
@@ -78,7 +78,7 @@ object WaterExample {
                 scene.add(it)
             }
 
-            val sphere = Mesh(SphereBufferGeometry(100f), MeshPhongMaterial().apply {
+            val sphere = Mesh(SphereBufferGeometry(100), MeshPhongMaterial().apply {
                 color.set(0x00ff00)
                 emissive.set(0x333333)
             }).also {

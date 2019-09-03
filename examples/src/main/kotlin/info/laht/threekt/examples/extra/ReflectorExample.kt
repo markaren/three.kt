@@ -5,7 +5,7 @@ import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.extras.objects.Reflector
 import info.laht.threekt.geometries.BoxBufferGeometry
-import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.helpers.PointLightHelper
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.materials.MeshPhongMaterial
@@ -36,7 +36,7 @@ object ReflectorExample {
             }
             OrbitControls(camera, canvas)
 
-            val planeGeometry = PlaneGeometry(10f, 10f)
+            val planeGeometry = PlaneBufferGeometry(10f, 10f)
 
             Reflector(
                     planeGeometry, Reflector.Options(

@@ -5,9 +5,9 @@ import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.Raycaster
-import info.laht.threekt.geometries.BoxGeometry
+import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.geometries.CylinderBufferGeometry
-import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.input.MouseAdapter
 import info.laht.threekt.input.MouseEvent
 import info.laht.threekt.materials.MaterialWithColor
@@ -38,7 +38,7 @@ object BasicExample {
 
             OrbitControls(camera, canvas)
 
-            Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
+            Mesh(PlaneBufferGeometry(10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
                 side = Side.Double
             }).also {
@@ -47,7 +47,7 @@ object BasicExample {
                 scene.add(it)
             }
 
-            val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
+            val box = Mesh(BoxBufferGeometry(1f), MeshBasicMaterial().apply {
                 color.set(0x00ff00)
                 transparent = true
                 opacity = 0.5f

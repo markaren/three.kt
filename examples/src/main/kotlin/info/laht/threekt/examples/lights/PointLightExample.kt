@@ -4,8 +4,8 @@ import info.laht.threekt.Canvas
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
-import info.laht.threekt.geometries.BoxGeometry
-import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.geometries.BoxBufferGeometry
+import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.helpers.PointLightHelper
 import info.laht.threekt.lights.PointLight
 import info.laht.threekt.materials.MeshLambertMaterial
@@ -33,7 +33,7 @@ object PointLightExample {
                 shadowMap.enabled = true
             }
 
-            Mesh(PlaneGeometry(10f, 10f), MeshPhongMaterial().apply {
+            Mesh(PlaneBufferGeometry(10), MeshPhongMaterial().apply {
                 color.set(Color.gray)
             }).also {
                 it.rotation.x = DEG2RAD * -90
@@ -43,14 +43,14 @@ object PointLightExample {
             }
 
 
-            val box = Mesh(BoxGeometry(1f), MeshPhongMaterial().apply {
+            val box = Mesh(BoxBufferGeometry(1), MeshPhongMaterial().apply {
                 color.set(0x00ff00)
             }).also {
                 it.castShadow = true
                 scene.add(it)
             }
 
-             Mesh(BoxGeometry(1f), MeshPhongMaterial().apply {
+            Mesh(BoxBufferGeometry(1), MeshPhongMaterial().apply {
                 color.set(0x0000ff)
             }).also {
                 it.position.x = 2f
@@ -58,7 +58,7 @@ object PointLightExample {
                 box.add(it)
             }
 
-            Mesh(BoxGeometry(1f), MeshLambertMaterial().apply {
+            Mesh(BoxBufferGeometry(1), MeshLambertMaterial().apply {
                 color.set(0xff0000)
             }).also {
                 it.position.x = -2f

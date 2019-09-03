@@ -10,17 +10,26 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-typealias SphereGeometry = SphereBufferGeometry
-
 class SphereBufferGeometry(
-        val radius: Float = 1f,
-        val widthSegments: Int = 32,
-        val heightSegments: Int = 32,
-        val phiStart: Float = 0f,
-        val phiLength: Float = TWO_PI,
-        val thetaStart: Float = 0f,
-        val thetaLength: Float = PI.toFloat()
+        radius: Number? = null,
+        widthSegments: Int? = null,
+        heightSegments: Int? = null,
+        phiStart: Number? = null,
+        phiLength: Number? = null,
+        thetaStart: Number? = null,
+        thetaLength: Number? = null
 ) : BufferGeometry() {
+
+    val radius = radius?.toFloat() ?: 1f
+    val widthSegments = widthSegments ?: 32
+    val heightSegments = heightSegments ?: 32
+    val phiStart = phiStart?.toFloat() ?: 0f
+    val phiLength = phiLength?.toFloat() ?: TWO_PI
+    val thetaStart = thetaStart?.toFloat() ?: 0f
+    val thetaLength = thetaLength?.toFloat() ?: PI.toFloat()
+
+    constructor(radius: Number) : this(radius, null, null, null, null, null, null)
+    constructor(radius: Number, widthSegments: Int, heightSegments: Int) : this(radius, widthSegments, heightSegments, null, null, null, null)
 
     init {
 
@@ -31,7 +40,7 @@ class SphereBufferGeometry(
         addAttribute("normal", helper.normals)
         addAttribute("uvs", helper.uvs)
 
-        boundingSphere = Sphere(Vector3(), radius)
+        boundingSphere = Sphere(Vector3(), this.radius)
 
     }
 
@@ -66,10 +75,10 @@ class SphereBufferGeometry(
                     val u = x.toFloat() / widthSegments
 
                     val px =
-                        -radius * cos(phiStart + u * phiLength) * sin(thetaStart + v * thetaLength)
+                            -radius * cos(phiStart + u * phiLength) * sin(thetaStart + v * thetaLength)
                     val py = radius * cos(thetaStart + v * thetaLength)
                     val pz =
-                        radius * sin(phiStart + u * phiLength) * sin(thetaStart + v * thetaLength)
+                            radius * sin(phiStart + u * phiLength) * sin(thetaStart + v * thetaLength)
 
                     normal.set(px, py, pz).normalize()
 

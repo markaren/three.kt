@@ -9,8 +9,6 @@ import info.laht.threekt.math.Vector3
 import kotlin.math.cos
 import kotlin.math.sin
 
-typealias CylinderGeometry = CylinderBufferGeometry
-
 class CylinderBufferGeometry(
     val radiusTop: Float = 1f,
     val radiusBottom: Float = 1f,

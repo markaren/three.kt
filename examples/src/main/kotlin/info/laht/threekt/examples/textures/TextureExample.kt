@@ -3,8 +3,8 @@ package info.laht.threekt.examples.textures
 import info.laht.threekt.Canvas
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
-import info.laht.threekt.geometries.BoxGeometry
-import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.geometries.BoxBufferGeometry
+import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.loaders.TextureLoader
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.Color
@@ -31,7 +31,7 @@ object TextureExample {
                 checkShaderErrors = true
             }
 
-            Mesh(PlaneGeometry(10f, 10f), MeshBasicMaterial().apply {
+            Mesh(PlaneBufferGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
                 map =
                     TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/brick_bump.jpg").file)
@@ -41,7 +41,7 @@ object TextureExample {
                 scene.add(it)
             }
 
-            Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
+            Mesh(BoxBufferGeometry(1f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
                 map = TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/crate.gif").file)
             }).also {

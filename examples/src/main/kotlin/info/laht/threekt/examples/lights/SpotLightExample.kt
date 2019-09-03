@@ -4,8 +4,8 @@ import info.laht.threekt.Canvas
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
-import info.laht.threekt.geometries.BoxGeometry
-import info.laht.threekt.geometries.PlaneGeometry
+import info.laht.threekt.geometries.BoxBufferGeometry
+import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.helpers.SpotLightHelper
 import info.laht.threekt.lights.SpotLight
 import info.laht.threekt.materials.MeshLambertMaterial
@@ -33,7 +33,7 @@ object SpotLightExample {
             }
 
 
-            Mesh(PlaneGeometry(25f, 25f), MeshPhongMaterial().apply {
+            Mesh(PlaneBufferGeometry(25), MeshPhongMaterial().apply {
                 color.set(Color.yellowgreen)
             }).also {
                 it.rotation.x = DEG2RAD * -90
@@ -42,14 +42,14 @@ object SpotLightExample {
                 scene.add(it)
             }
 
-            val box = Mesh(BoxGeometry(1f), MeshPhongMaterial().apply {
+            val box = Mesh(BoxBufferGeometry(1f), MeshPhongMaterial().apply {
                 color.set(0x00ff00)
             }).also {
                 it.castShadow = true
                 scene.add(it)
             }
 
-            Mesh(BoxGeometry(1f), MeshPhongMaterial().apply {
+            Mesh(BoxBufferGeometry(1f), MeshPhongMaterial().apply {
                 color.set(0x0000ff)
             }).also {
                 it.position.x = 2f
@@ -57,7 +57,7 @@ object SpotLightExample {
                 box.add(it)
             }
 
-            Mesh(BoxGeometry(1f), MeshLambertMaterial().apply {
+            Mesh(BoxBufferGeometry(1f), MeshLambertMaterial().apply {
                 color.set(0xff0000)
             }).also {
                 it.position.x = -2f

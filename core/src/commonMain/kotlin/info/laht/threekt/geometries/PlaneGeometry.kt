@@ -4,17 +4,21 @@ import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.core.IntBufferAttribute
 
-typealias PlaneGeometry = PlaneBufferGeometry
-
 class PlaneBufferGeometry(
-        width: Number = 1f,
-        height: Number = 1f,
-        val widthSegments: Int = 1,
-        val heightSegments: Int = 1
+        width: Number? = null,
+        height: Number? = null,
+        widthSegments: Int? = null,
+        heightSegments: Int? = null
 ) : BufferGeometry() {
 
-    val width = width.toFloat()
-    val height = height.toFloat()
+    val width = width?.toFloat() ?: 1f
+    val height = height?.toFloat() ?: 1f
+    val widthSegments = widthSegments ?: 1
+    val heightSegments = heightSegments ?: 1
+
+    constructor() : this(null)
+    constructor(size: Number) : this(size, size)
+    constructor(width: Number, height: Number) : this(width, height, null, null)
 
     init {
 
