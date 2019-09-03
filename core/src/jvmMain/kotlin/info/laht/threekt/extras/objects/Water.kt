@@ -200,7 +200,7 @@ class Water(
         renderer.setRenderTarget(currentRenderTarget)
     }
 
-    class Options(
+    class Options @JvmOverloads constructor(
 
         val textureWidth: Int = 512,
         val textureHeight: Int = 512,
