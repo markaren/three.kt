@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "info.laht.threekt"
-version = "r1-ALPHA-6"
+version = "r1-ALPHA-7"
 
 repositories {
     mavenCentral()
