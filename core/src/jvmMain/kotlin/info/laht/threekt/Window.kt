@@ -46,6 +46,8 @@ class Window @JvmOverloads constructor(
 
         if (options.resizeable) {
             glfwSetWindowSizeCallback(hwnd) { _, width, height ->
+                size.width = width
+                size.height = height
                 windowResizeCallback?.onWindowResize(width, height)
             }
         }
