@@ -50,16 +50,18 @@ object PointsExampleWaves {
 
             val scene = Scene()
             val renderer = GLRenderer(window.size)
+            val camera = PerspectiveCamera(75, window.aspect, 1, 100000).apply {
+                position.z = 1000f
+            }
 
             window.onWindowResize(object : WindowResizeListener {
                 override fun onWindowResize(width: Int, height: Int) {
+                    camera.aspect = window.aspect
+                    camera.updateProjectionMatrix()
                     renderer.setSize(width, height)
                 }
             })
 
-            val camera = PerspectiveCamera(75, window.aspect, 1, 100000).apply {
-                position.z = 1000f
-            }
             OrbitControls(camera, window).apply {
                 zoomSpeed *= 5
             }
