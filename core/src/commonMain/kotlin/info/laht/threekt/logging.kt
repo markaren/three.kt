@@ -15,5 +15,3 @@ expect class Logger {
 }
 
 expect fun getLogger(clazz: KClass<*>): Logger
-
-
