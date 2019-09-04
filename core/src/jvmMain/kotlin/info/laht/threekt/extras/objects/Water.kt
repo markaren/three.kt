@@ -222,7 +222,7 @@ class Water(
 
 }
 
-val mirrorShader by lazy {
+private val mirrorShader by lazy {
 
     Shader(
             uniforms = mergeUniforms(
@@ -340,6 +340,3 @@ val mirrorShader by lazy {
     )
 
 }
-
-
-

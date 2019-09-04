@@ -17,7 +17,7 @@ import info.laht.threekt.renderers.shaders.cloneUniforms
 import info.laht.threekt.scenes.Scene
 import kotlin.math.sign
 
-class Reflector(
+class Reflector @JvmOverloads constructor(
     geometry: BufferGeometry,
     private val options: Options = Options()
 ) : Mesh(geometry, ShaderMaterial()) {
@@ -202,7 +202,7 @@ class Reflector(
 
 }
 
-val ReflectorShader by lazy {
+private val ReflectorShader by lazy {
 
     Shader(
         mutableMapOf(
