@@ -38,7 +38,7 @@ Window(antialias = 4).use { window ->
         position.z = 5f
     }
 
-    val renderer = GLRenderer(window.width, window.height)
+    val renderer = GLRenderer(window.size)
 
     val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
         color.set(0x00ff00)
@@ -72,7 +72,7 @@ public class JavaExample {
             Scene scene = new Scene();
             PerspectiveCamera camera = new PerspectiveCamera();
             camera.getPosition().z = 5;
-            GLRenderer renderer = new GLRenderer(window.getWidth(), window.getHeight());
+            GLRenderer renderer = new GLRenderer(window.getSize());
 
             BoxBufferGeometry boxBufferGeometry = new BoxBufferGeometry();
             MeshPhongMaterial boxMaterial = new MeshPhongMaterial();
