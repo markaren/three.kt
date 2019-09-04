@@ -1,4 +1,4 @@
-@file: JvmName("Math")
+@file: JvmName("ThreeMath")
 
 package info.laht.threekt.math
 
