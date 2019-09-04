@@ -1,5 +1,8 @@
+@file: JvmName("Math")
+
 package info.laht.threekt.math
 
+import kotlin.jvm.JvmName
 import kotlin.math.*
 import kotlin.random.Random
 
