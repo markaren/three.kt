@@ -1,6 +1,7 @@
 package info.laht.threekt.core
 
 import info.laht.threekt.math.*
+import kotlin.jvm.JvmOverloads
 import kotlin.properties.Delegates
 
 sealed class BufferAttribute(
@@ -47,7 +48,7 @@ sealed class BufferAttribute(
 
 }
 
-class IntBufferAttribute(
+class IntBufferAttribute @JvmOverloads constructor(
         internal val buffer: IntArray,
         itemSize: Int,
         normalized: Boolean? = null
@@ -170,7 +171,7 @@ class IntBufferAttribute(
 
 }
 
-class FloatBufferAttribute(
+class FloatBufferAttribute @JvmOverloads constructor(
         internal val buffer: FloatArray,
         itemSize: Int,
         normalized: Boolean? = null
