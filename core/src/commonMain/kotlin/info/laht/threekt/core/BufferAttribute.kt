@@ -57,6 +57,7 @@ class IntBufferAttribute @JvmOverloads constructor(
     override val size: Int
         get() = buffer.size
 
+    @JvmOverloads
     constructor(
             capacity: Int,
             itemSize: Int,
@@ -180,6 +181,7 @@ class FloatBufferAttribute @JvmOverloads constructor(
     override val size: Int
         get() = buffer.size
 
+    @JvmOverloads
     constructor(
             capacity: Int,
             itemSize: Int,
