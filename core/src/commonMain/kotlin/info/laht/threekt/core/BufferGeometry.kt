@@ -32,6 +32,10 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     internal var drawRange = DrawRange(0, Int.MAX_VALUE / 2)
 
+    fun setIndex(index: IntArray): BufferGeometry {
+        return setIndex(IntBufferAttribute(index, 1))
+    }
+
     fun setIndex(index: IntBufferAttribute): BufferGeometry {
         this.index = index
         return this
