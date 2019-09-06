@@ -55,7 +55,7 @@ kotlin {
                 implementation("org.slf4j:slf4j-api:$slf4jVersion")
                 runtimeOnly("org.slf4j:slf4j-log4j12:$slf4jVersion")
 
-                val lwjglVersion = "3.2.2"
+                val lwjglVersion = "3.2.3"
                 implementation("org.lwjgl:lwjgl:$lwjglVersion")
                 implementation("org.lwjgl:lwjgl-glfw:$lwjglVersion")
                 implementation("org.lwjgl:lwjgl-opengl:$lwjglVersion")
