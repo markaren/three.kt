@@ -5,24 +5,32 @@ import info.laht.threekt.Side
 import info.laht.threekt.core.*
 import info.laht.threekt.materials.Material
 import info.laht.threekt.materials.MaterialWithMorphTargets
+import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.*
 import kotlin.math.max
 import kotlin.math.min
 
 open class Mesh(
-        override var geometry: BufferGeometry,
-        override val materials: MutableList<Material>
+        geometry: BufferGeometry? = null,
+        materials: MutableList<Material>? = null
 ) : Object3DImpl(), GeometryObject, MaterialsObject, MorphTargetInfluencesObject {
 
     var drawMode = DrawMode.Triangles
+
+    override var geometry: BufferGeometry = geometry ?: BufferGeometry()
+    override val materials = materials ?: mutableListOf(MeshBasicMaterial() as Material)
 
     override val morphTargetInfluences by lazy { mutableListOf<Float>() }
     val morphTargetDictionary by lazy { mutableMapOf<String, Int>() }
 
     private val raycastHelper by lazy { RaycastHelper() }
 
-    constructor(geometry: BufferGeometry, material: Material)
-            : this(geometry, mutableListOf(material))
+    constructor() : this(null, null as MutableList<Material>?)
+
+    constructor(geometry: BufferGeometry? = null) : this(geometry, null as MutableList<Material>?)
+
+    constructor(geometry: BufferGeometry? = null, material: Material? = null)
+            : this(geometry, material?.let { mutableListOf(material) })
 
     init {
         updateMorphTargets()
@@ -52,11 +60,9 @@ open class Mesh(
 
                     }
 
-
                 }
 
             }
-
 
         }
 
@@ -116,9 +122,9 @@ open class Mesh(
                 position.toVector3(b, vB)
                 position.toVector3(c, vC)
 
-                val morphInfluences = if (`object` is MorphTargetInfluencesObject) `object`.morphTargetInfluences else null
+                val morphInfluences = `object`.morphTargetInfluences
 
-                if (material is MaterialWithMorphTargets && morphPosition != null && morphInfluences != null) {
+                if (material is MaterialWithMorphTargets && morphPosition != null) {
 
                     morphA.set(0, 0, 0)
                     morphB.set(0, 0, 0)
@@ -214,7 +220,7 @@ open class Mesh(
             val morphPosition = geometry.morphAttributes?.getValue("position") as List<FloatBufferAttribute>?
             val uv = geometry.attributes.uv
             val uv2 = geometry.attributes.uv2
-            var groups = geometry.groups
+//            var groups = geometry.groups
             val drawRange = geometry.drawRange
 //                var i, j, il, jl;
 //                var group, groupMaterial;

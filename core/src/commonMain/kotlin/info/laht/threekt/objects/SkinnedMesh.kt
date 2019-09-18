@@ -7,8 +7,8 @@ import info.laht.threekt.materials.Material
 import info.laht.threekt.math.Matrix4
 
 class SkinnedMesh(
-    geometry: BufferGeometry,
-    material: Material
+        geometry: BufferGeometry? = null,
+        material: Material? = null
 ) : Mesh(geometry, material) {
 
     var bindMode = "attached"
