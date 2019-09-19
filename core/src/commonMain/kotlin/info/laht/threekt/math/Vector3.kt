@@ -3,6 +3,7 @@ package info.laht.threekt.math
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.Cloneable
 import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
 import kotlin.math.*
 
 data class Vector3(
@@ -570,8 +571,11 @@ data class Vector3(
 
     companion object {
 
+        @JvmStatic
         val X = Vector3(1f, 0f, 0f)
+        @JvmStatic
         val Y = Vector3(0f, 1f, 0f)
+        @JvmStatic
         val Z = Vector3(0f, 0f, 1f)
 
     }
