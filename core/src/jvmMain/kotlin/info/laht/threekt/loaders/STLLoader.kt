@@ -11,7 +11,10 @@ import java.util.regex.Pattern
 class STLLoader {
 
     fun load(path: String): BufferGeometry {
-        return parseBinary(File(path).readBytes())
+        val file = File(path)
+        return parseBinary(file.readBytes()).also {
+            it.name = file.nameWithoutExtension
+        }
     }
 
     private fun parseBinary(data: ByteArray): BufferGeometry {
