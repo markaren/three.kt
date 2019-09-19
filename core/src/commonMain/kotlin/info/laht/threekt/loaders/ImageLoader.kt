@@ -8,6 +8,4 @@ expect object ImageLoader {
     @JvmOverloads
     fun load(path: String, flipY: Boolean = true): Image
 
-    fun clearCache()
-
 }

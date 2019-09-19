@@ -20,7 +20,7 @@ actual object ImageLoader {
         if (!file.exists()) {
             throw NoSuchFileException(file)
         }
-        val isJpg = file.name.endsWith(".jpg", true) || file.name.endsWith(".jpeg", true)
+        val isJpg = isJpeg(file)
 
         return cache.getOrPut(file.absolutePath) {
 
@@ -52,8 +52,8 @@ actual object ImageLoader {
         }
     }
 
-    actual fun clearCache() {
-        cache.clear()
+    private fun isJpeg(file: File): Boolean {
+        return file.name.endsWith(".jpg", true) || file.name.endsWith(".jpeg", true)
     }
 
     private fun createFlipped(image: BufferedImage): BufferedImage {
