@@ -12,6 +12,9 @@ class STLLoader {
 
     fun load(path: String): BufferGeometry {
         val file = File(path)
+        if (!file.exists()) {
+            throw NoSuchFileException(file)
+        }
         return parseBinary(file.readBytes()).also {
             it.name = file.nameWithoutExtension
         }
@@ -27,7 +30,7 @@ class STLLoader {
         var defaultR = 0f
         var defaultG = 0f
         var defaultB = 0f
-        var alpha = 1f
+//        var alpha = 1f
         var r = 0f
         var g = 0f
         var b = 0f
@@ -43,7 +46,7 @@ class STLLoader {
                 defaultR = (reader.get(index + 6)).toFloat() / 255
                 defaultG = (reader.get(index + 7)).toFloat() / 255
                 defaultB = (reader.get(index + 8)).toFloat() / 255
-                alpha = (reader.get(index + 9)).toFloat() / 255
+//                alpha = (reader.get(index + 9)).toFloat() / 255
 
             }
 

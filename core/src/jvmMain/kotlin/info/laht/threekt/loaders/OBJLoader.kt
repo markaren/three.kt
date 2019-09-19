@@ -23,7 +23,9 @@ class OBJLoader(
     fun load(path: String): Group {
 
         val file = File(path)
-
+        if (!file.exists()) {
+            throw NoSuchFileException(file)
+        }
         if (tryLoadMtl) {
             val mtlFile = File(file.parent, "${file.nameWithoutExtension}.mtl")
             if (mtlFile.exists()) {
