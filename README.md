@@ -6,6 +6,8 @@
 [![Gitter](https://badges.gitter.im/markaren/three.kt.svg)](https://gitter.im/markaren/three.kt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![CircleCI](https://circleci.com/gh/markaren/three.kt.svg?style=svg)](https://circleci.com/gh/markaren/three.kt)
 
+[ ![Download](https://api.bintray.com/packages/laht/mvn/threekt/images/download.svg) ](https://bintray.com/laht/mvn/threekt/_latestVersion)
+
 Kotlin/JVM port of the popular [three.js](http://threejs.org) 3D library ([r106](https://github.com/mrdoob/three.js/tree/r106)).
 
 Be warned, while the basics works, such as:
