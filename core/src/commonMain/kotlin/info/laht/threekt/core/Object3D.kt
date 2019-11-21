@@ -388,8 +388,8 @@ interface Object3D : Cloneable, EventDispatcher {
 
     fun traverse(callback: (Object3D) -> Unit) {
         callback(this)
-        children.forEach {
-            it.traverse { callback }
+        children.forEach {child ->
+            child.traverse(callback)
         }
     }
 
