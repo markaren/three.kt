@@ -434,7 +434,7 @@ class FloatBufferAttribute @JvmOverloads constructor(
 
 }
 
-class BufferAttributes : MutableMap<String, BufferAttribute> by mutableMapOf<String, BufferAttribute>() {
+class BufferAttributes : MutableMap<String, BufferAttribute> by mutableMapOf() {
 
     val index get() = get("index") as IntBufferAttribute?
     val position get() = get("position") as FloatBufferAttribute?
