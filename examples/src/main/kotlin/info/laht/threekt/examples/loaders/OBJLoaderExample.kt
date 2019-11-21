@@ -8,8 +8,6 @@ import info.laht.threekt.loaders.OBJLoader
 import info.laht.threekt.objects.Group
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 object OBJLoaderExample {
 
@@ -26,11 +24,11 @@ object OBJLoaderExample {
             }
 
             var obj: Group? = null
-            GlobalScope.launch {
+            Thread {
                 obj = OBJLoader().load(OBJLoaderExample::class.java.classLoader.getResource("models/obj/female02/female02.obj").file).also {
                     scene.add(it)
                 }
-            }
+            }.start()
 
             val light1 = PointLight(intensity = 1f)
             light1.position.set(25f, 115f, 25f)
