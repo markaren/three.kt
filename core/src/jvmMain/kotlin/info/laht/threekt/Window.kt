@@ -2,11 +2,18 @@ package info.laht.threekt
 
 import info.laht.threekt.input.*
 import info.laht.threekt.math.WindowSize
+import org.lwjgl.BufferUtils.createByteBuffer
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
+import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.opengl.*
 import org.lwjgl.system.Callback
+import java.awt.image.BufferedImage
+import java.awt.image.DataBufferByte
+import java.awt.image.DataBufferInt
 import java.io.Closeable
+import java.nio.ByteBuffer
+
 
 private const val DEFAULT_WIDTH = 800
 private const val DEFAULT_HEIGHT = 600
@@ -32,8 +39,9 @@ class Window @JvmOverloads constructor(
                 height: Int? = null,
                 antialias: Int? = null,
                 vSync: Boolean? = null,
-                resizeable: Boolean? = null
-    ) : this(Options(title, WindowSize(width ?: DEFAULT_WIDTH, height ?: DEFAULT_HEIGHT), antialias, vSync, resizeable))
+                resizeable: Boolean? = null,
+                favicon: BufferedImage? = null
+    ) : this(Options(title, WindowSize(width ?: DEFAULT_WIDTH, height ?: DEFAULT_HEIGHT), antialias, vSync, resizeable, favicon))
 
     init {
 
@@ -152,6 +160,36 @@ class Window @JvmOverloads constructor(
                     (vidMode.height() - height) / 2
             )
 
+            // Set favicon
+            val favicon = options.favicon
+            if (favicon != null) {
+                val rasterBuffer = favicon.raster.dataBuffer
+                val buffer: ByteBuffer
+                when(rasterBuffer) {
+                    is DataBufferByte -> {
+                        val pixels = rasterBuffer.data
+                        buffer = createByteBuffer(pixels.size).put(pixels)
+                    }
+                    is DataBufferInt -> {
+                        val pixels = rasterBuffer.data
+                        buffer = createByteBuffer(pixels.size * 4)
+                        for(pixel in pixels) {
+                            buffer.put((pixel shr 16 and 0xFF).toByte())
+                            buffer.put((pixel shr 8 and 0xFF).toByte())
+                            buffer.put((pixel and 0xFF).toByte())
+                            buffer.put((pixel shr 24 and 0xFF).toByte())
+                        }
+                    }
+                    else -> throw IllegalStateException("Unhandled data buffer type.")
+                }
+                buffer.flip()
+
+                val glfwImageBuffer = GLFWImage.create(1)
+                val glfwImage = GLFWImage.create().set(favicon.width, favicon.height, buffer)
+                glfwImageBuffer.put(0, glfwImage)
+                glfwSetWindowIcon(hwnd, glfwImageBuffer)
+            }
+
             // Tell GLFW to make the OpenGL context current so that we can make OpenGL calls.
             glfwMakeContextCurrent(hwnd)
 
@@ -176,7 +214,8 @@ class Window @JvmOverloads constructor(
             size: WindowSize? = null,
             antialias: Int? = null,
             vsync: Boolean? = null,
-            resizeable: Boolean? = null
+            resizeable: Boolean? = null,
+            val favicon: BufferedImage? = null
     ) {
 
         var title = title ?: "three.kt"
