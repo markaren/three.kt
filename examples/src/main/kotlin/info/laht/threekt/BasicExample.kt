@@ -18,14 +18,15 @@ import info.laht.threekt.math.Vector2
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
+import javax.imageio.ImageIO
 import kotlin.random.Random
 
 object BasicExample {
 
     @JvmStatic
     fun main(args: Array<String>) {
-
-        Window(antialias = 4).use { canvas ->
+        val favicon = ImageIO.read(javaClass.getResourceAsStream("/images/favicon.bmp"))
+        Window(antialias = 4, favicon = favicon).use { canvas ->
 
             val scene = Scene().apply {
                 setBackground(Color.aliceblue)
