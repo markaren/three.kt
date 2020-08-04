@@ -12,10 +12,18 @@ tasks.named<Wrapper>("wrapper") {
     distributionType = Wrapper.DistributionType.ALL
 }
 
-println ("Gradle version is ${gradle.getGradleVersion()}")
+println("Gradle version is ${gradle.getGradleVersion()}")
+
+group = "info.laht.threekt"
+version = "r1-ALPHA-13"
 
 subprojects {
+
+    group = rootProject.group
+    version = rootProject.version
+
     repositories {
         mavenCentral()
     }
+
 }

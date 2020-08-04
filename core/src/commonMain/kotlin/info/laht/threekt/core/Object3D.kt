@@ -4,6 +4,7 @@ import info.laht.threekt.cameras.Camera
 import info.laht.threekt.lights.Light
 import info.laht.threekt.materials.Material
 import info.laht.threekt.math.*
+import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.scenes.Scene
 
@@ -612,5 +613,58 @@ interface MaterialsObject : MaterialObject {
 interface MorphTargetInfluencesObject : Object3D {
 
     val morphTargetInfluences: MutableList<Float>
+
+}
+
+
+fun Box3.setFromObject(`object`: Object3D): Box3 {
+    this.makeEmpty()
+
+    return this.expandByObject(`object`)
+}
+
+fun Box3.expandByObject(`object`: Object3D): Box3 {
+
+    val v1 = Vector3()
+
+    `object`.updateMatrixWorld(true)
+    `object`.traverse { node ->
+
+        if (node is Mesh) {
+
+            val geometry = node.geometry
+
+            geometry.attributes.position?.also { attribute ->
+
+                for (i in 0 until attribute.count) {
+                    attribute.toVector3(i, v1).applyMatrix4(node.matrixWorld)
+                    expandByPoint(v1)
+                }
+
+            }
+
+        }
+
+    }
+
+    return this
+}
+
+fun Frustum.intersectsObject(`object`: Object3D): Boolean {
+
+    val sphere = Sphere()
+
+    `object` as GeometryObject
+
+    val geometry = `object`.geometry
+
+    if (geometry.boundingSphere == null) {
+        geometry.computeBoundingSphere()
+    }
+
+    sphere.copy(geometry.boundingSphere!!)
+            .applyMatrix4(`object`.matrixWorld)
+
+    return this.intersectsSphere(sphere)
 
 }

@@ -11,6 +11,8 @@ repositories {
 }
 
 dependencies {
+
+    implementation(project(":core"))
     implementation(kotlin("stdlib-jdk8"))
 
     implementation("cuchaz:jfxgl:0.4")
@@ -18,7 +20,6 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC2")
 
-    compile(project(":core"))
 }
 
 tasks {

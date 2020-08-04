@@ -27,10 +27,8 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(project(":math"))
-
+                api(project(":common"))
                 implementation(kotlin("stdlib"))
-                implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinIOVersion")
             }
         }
         commonTest {
@@ -44,15 +42,9 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
 
-                val lwjglVersion = "3.2.3"
-                implementation("org.lwjgl:lwjgl:$lwjglVersion")
-                implementation("org.lwjgl:lwjgl-glfw:$lwjglVersion")
-                implementation("org.lwjgl:lwjgl-opengl:$lwjglVersion")
-                runtimeOnly("org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives")
-                runtimeOnly("org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives")
-                runtimeOnly("org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives")
-
-                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinIOVersion")
+                val slf4jVersion = "1.7.27"
+                implementation("org.slf4j:slf4j-api:$slf4jVersion")
+                runtimeOnly("org.slf4j:slf4j-log4j12:$slf4jVersion")
             }
         }
 

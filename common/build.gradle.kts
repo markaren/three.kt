@@ -27,10 +27,8 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(project(":math"))
-
                 implementation(kotlin("stdlib"))
-                implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinIOVersion")
+                implementation(kotlin("reflect"))
             }
         }
         commonTest {
@@ -44,29 +42,12 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
 
-                val lwjglVersion = "3.2.3"
-                implementation("org.lwjgl:lwjgl:$lwjglVersion")
-                implementation("org.lwjgl:lwjgl-glfw:$lwjglVersion")
-                implementation("org.lwjgl:lwjgl-opengl:$lwjglVersion")
-                runtimeOnly("org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives")
-                runtimeOnly("org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives")
-                runtimeOnly("org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives")
-
-                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinIOVersion")
+                val slf4jVersion = "1.7.27"
+                implementation("org.slf4j:slf4j-api:$slf4jVersion")
+                runtimeOnly("org.slf4j:slf4j-log4j12:$slf4jVersion")
             }
         }
 
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
-
-                val junitVersion = "5.3.2"
-                implementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-                implementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
-                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-            }
-        }
     }
 }
 

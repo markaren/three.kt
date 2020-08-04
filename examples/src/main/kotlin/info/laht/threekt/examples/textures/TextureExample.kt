@@ -34,7 +34,7 @@ object TextureExample {
             Mesh(PlaneBufferGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
                 map =
-                    TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/brick_bump.jpg").file)
+                        TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/brick_bump.jpg")!!.file)
             }).also {
                 it.rotation.x = DEG2RAD * -90
                 it.translateZ(-1f)
@@ -43,7 +43,7 @@ object TextureExample {
 
             Mesh(BoxBufferGeometry(1f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
-                map = TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/crate.gif").file)
+                map = TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/crate.gif")!!.file)
             }).also {
                 it.translateY(2f)
                 scene.add(it)

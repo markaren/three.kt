@@ -39,7 +39,7 @@ data class Quaternion(
             onChangeCallback?.invoke()
         }
 
-    internal var onChangeCallback: (() -> Unit)? = null
+    var onChangeCallback: (() -> Unit)? = null
 
     constructor(x: Number, y: Number, z: Number, w: Number) : this(x.toFloat(), y.toFloat(), z.toFloat(), w.toFloat())
 

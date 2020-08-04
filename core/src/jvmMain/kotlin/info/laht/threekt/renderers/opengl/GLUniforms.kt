@@ -244,8 +244,8 @@ private class SingleUniform(
 
     private val setValue = getSingularSetter(activeInfo)
 
-    override fun setValue(v: Any, textures: GLTextures?) {
-        setValue.invoke(v, textures)
+    override fun setValue(value: Any, textures: GLTextures?) {
+        setValue.invoke(value, textures)
     }
 
     private fun getSingularSetter(activeInfo: ActiveUniformInfo): (Any, GLTextures?) -> Unit {

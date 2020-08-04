@@ -3,6 +3,7 @@ package info.laht.threekt.core
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.OrthographicCamera
 import info.laht.threekt.cameras.PerspectiveCamera
+import info.laht.threekt.cameras.unproject
 import info.laht.threekt.math.Ray
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3

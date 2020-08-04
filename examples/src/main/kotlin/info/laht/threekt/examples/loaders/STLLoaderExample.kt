@@ -28,7 +28,7 @@ object STLLoaderExample {
             }
             OrbitControls(camera, canvas)
 
-            STLLoader().load(STLLoaderExample::class.java.classLoader.getResource("models/stl/pr2_head_tilt.stl").file)
+            STLLoader().load(STLLoaderExample::class.java.classLoader.getResource("models/stl/pr2_head_tilt.stl")!!.file)
                 .also { stl ->
 
                     stl.rotateX(-PI.toFloat() / 2)
@@ -43,7 +43,7 @@ object STLLoaderExample {
 
                 }
 
-            STLLoader().load(STLLoaderExample::class.java.classLoader.getResource("models/stl/pr2_head_pan.stl").file)
+            STLLoader().load(STLLoaderExample::class.java.classLoader.getResource("models/stl/pr2_head_pan.stl")!!.file)
                 .also { stl ->
 
                     stl.rotateX(-PI.toFloat() / 2)
