@@ -1,21 +1,10 @@
 import com.jfrog.bintray.gradle.BintrayExtension
-import org.gradle.internal.os.OperatingSystem
 
 plugins {
     kotlin("multiplatform")
     id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`
 }
-
-val os = OperatingSystem.current()
-val lwjglNatives = when {
-    os.isLinux -> "natives-linux"
-    os.isUnix -> "natives-macos"
-    os.isWindows -> "natives-windows"
-    else -> TODO("OS $os not supported")
-}
-
-val kotlinIOVersion = "0.1.13"
 
 kotlin {
     jvm {
@@ -35,16 +24,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-jdk8"))
-
-                val slf4jVersion = "1.7.27"
-                implementation("org.slf4j:slf4j-api:$slf4jVersion")
-                runtimeOnly("org.slf4j:slf4j-log4j12:$slf4jVersion")
             }
         }
 
