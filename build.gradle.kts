@@ -8,8 +8,11 @@ configure<JavaPluginExtension> {
 }
 
 tasks.named<Wrapper>("wrapper") {
+    gradleVersion = "6.5.1"
     distributionType = Wrapper.DistributionType.ALL
 }
+
+println ("Gradle version is ${gradle.getGradleVersion()}")
 
 subprojects {
     repositories {
