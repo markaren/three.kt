@@ -7,9 +7,6 @@ plugins {
     `maven-publish`
 }
 
-group = "info.laht.threekt"
-version = "r1-ALPHA-13"
-
 val os = OperatingSystem.current()
 val lwjglNatives = when {
     os.isLinux -> "natives-linux"
