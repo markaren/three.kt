@@ -63,13 +63,13 @@ class CubeCamera(
         cameraNZ.lookAt(Vector3(0, 0, -1))
         this.add(cameraNZ)
 
-        val options = options ?: GLRenderTarget.Options(
-            format = TextureFormat.RGB,
-            minFilter = TextureFilter.Linear,
-            magFilter = TextureFilter.Linear
+        val nonNullOptions = options ?: GLRenderTarget.Options(
+                format = TextureFormat.RGB,
+                minFilter = TextureFilter.Linear,
+                magFilter = TextureFilter.Linear
         )
 
-        renderTarget = GLRenderTargetCube(cubeResolution, cubeResolution, options)
+        renderTarget = GLRenderTargetCube(cubeResolution, cubeResolution, nonNullOptions)
         renderTarget.texture.name = "CubeCamera"
 
     }

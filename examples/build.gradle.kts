@@ -5,20 +5,17 @@ plugins {
 }
 
 repositories {
-
     maven(url="http://maven.cuchazinteractive.com")
-
 }
 
 dependencies {
+
+    api(project(":core"))
     implementation(kotlin("stdlib-jdk8"))
 
     implementation("cuchaz:jfxgl:0.4")
     implementation("cuchaz:jfxgl-jfxrt:0.4")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC2")
-
-    compile(project(":core"))
 }
 
 tasks {

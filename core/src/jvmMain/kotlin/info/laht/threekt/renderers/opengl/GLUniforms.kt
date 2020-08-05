@@ -230,7 +230,7 @@ internal sealed class UniformObject(
         val id: String
 ) {
 
-    abstract fun setValue(v: Any, textures: GLTextures? = null)
+    abstract fun setValue(value: Any, textures: GLTextures? = null)
 
 }
 
@@ -244,8 +244,8 @@ private class SingleUniform(
 
     private val setValue = getSingularSetter(activeInfo)
 
-    override fun setValue(v: Any, textures: GLTextures?) {
-        setValue.invoke(v, textures)
+    override fun setValue(value: Any, textures: GLTextures?) {
+        setValue.invoke(value, textures)
     }
 
     private fun getSingularSetter(activeInfo: ActiveUniformInfo): (Any, GLTextures?) -> Unit {
@@ -424,8 +424,8 @@ private class PureArrayUniform(
 
     private val setValue = getPureArraySetter(activeInfo.type, addr, activeInfo.size)
 
-    override fun setValue(v: Any, textures: GLTextures?) {
-        setValue.invoke(v, textures)
+    override fun setValue(value: Any, textures: GLTextures?) {
+        setValue.invoke(value, textures)
     }
 
     private fun getPureArraySetter(type: Int, addr: Int, size: Int): (Any, GLTextures?) -> Unit {

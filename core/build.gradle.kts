@@ -10,10 +10,6 @@ plugins {
 group = "info.laht.threekt"
 version = "r1-ALPHA-13"
 
-repositories {
-    mavenCentral()
-}
-
 val os = OperatingSystem.current()
 val lwjglNatives = when {
     os.isLinux -> "natives-linux"
