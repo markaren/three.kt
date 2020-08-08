@@ -3,7 +3,7 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
     kotlin("multiplatform")
-    id("com.jfrog.bintray") version "1.8.4"
+    id("com.jfrog.bintray")
     `maven-publish`
 }
 
