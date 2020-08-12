@@ -1,8 +1,5 @@
-package info.laht.threekt.extras.core
+package info.laht.threekt.math
 
-import info.laht.threekt.math.Matrix4
-import info.laht.threekt.math.Vector3
-import info.laht.threekt.math.clamp
 import kotlin.math.abs
 import kotlin.math.acos
 

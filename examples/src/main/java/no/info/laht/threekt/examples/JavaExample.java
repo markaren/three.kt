@@ -25,7 +25,7 @@ public class JavaExample {
 
             BoxBufferGeometry boxBufferGeometry = new BoxBufferGeometry();
             MeshPhongMaterial boxMaterial = new MeshPhongMaterial();
-            boxMaterial.getColor().set(Color.getRoyalblue());
+            boxMaterial.getColor().set(Color.royalblue);
 
             Mesh box = new Mesh(boxBufferGeometry, boxMaterial);
             scene.add(box);

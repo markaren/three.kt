@@ -81,3 +81,13 @@ interface CameraCanUpdateProjectionMatrix : Camera {
     fun updateProjectionMatrix()
 
 }
+
+
+fun Vector3.project(camera: Camera): Vector3 {
+    return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(camera.projectionMatrix)
+}
+
+fun Vector3.unproject(camera: Camera): Vector3 {
+    return this.applyMatrix4(camera.projectionMatrixInverse).applyMatrix4(camera.matrixWorld)
+}
+

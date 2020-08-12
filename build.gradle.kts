@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     kotlin("jvm") version "1.3.72" apply false
+    id("com.jfrog.bintray") version "1.8.4" apply false
 }
 
 configure<JavaPluginExtension> {
@@ -12,10 +13,10 @@ tasks.named<Wrapper>("wrapper") {
     distributionType = Wrapper.DistributionType.ALL
 }
 
-println("Gradle version is ${gradle.getGradleVersion()}")
+println("Gradle version is ${gradle.gradleVersion}")
 
 group = "info.laht.threekt"
-version = "r1-ALPHA-13"
+version = "r1-ALPHA-14"
 
 subprojects {
 
@@ -25,4 +26,5 @@ subprojects {
     repositories {
         mavenCentral()
     }
+
 }

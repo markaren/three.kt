@@ -1,21 +1,10 @@
 import com.jfrog.bintray.gradle.BintrayExtension
-import org.gradle.internal.os.OperatingSystem
 
 plugins {
     kotlin("multiplatform")
     id("com.jfrog.bintray")
     `maven-publish`
 }
-
-val os = OperatingSystem.current()
-val lwjglNatives = when {
-    os.isLinux -> "natives-linux"
-    os.isUnix -> "natives-macos"
-    os.isWindows -> "natives-windows"
-    else -> TODO("OS $os not supported")
-}
-
-val kotlinIOVersion = "0.1.13"
 
 kotlin {
     jvm {
@@ -27,32 +16,14 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(project(":math"))
-
+                api(project(":common"))
                 implementation(kotlin("stdlib"))
-                implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinIOVersion")
             }
         }
         commonTest {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-jdk8"))
-
-                val lwjglVersion = "3.2.3"
-                implementation("org.lwjgl:lwjgl:$lwjglVersion")
-                implementation("org.lwjgl:lwjgl-glfw:$lwjglVersion")
-                implementation("org.lwjgl:lwjgl-opengl:$lwjglVersion")
-                runtimeOnly("org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives")
-                runtimeOnly("org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives")
-                runtimeOnly("org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives")
-
-                implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinIOVersion")
             }
         }
 

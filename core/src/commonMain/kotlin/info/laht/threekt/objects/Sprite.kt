@@ -2,6 +2,8 @@ package info.laht.threekt.objects
 
 import info.laht.threekt.core.*
 import info.laht.threekt.materials.SpriteMaterial
+import info.laht.threekt.math.Frustum
+import info.laht.threekt.math.Sphere
 import info.laht.threekt.math.Vector2
 
 class Sprite(
@@ -34,3 +36,16 @@ class Sprite(
     }
 
 }
+
+fun Frustum.intersectsSprite(sprite: Sprite): Boolean {
+
+    val sphere = Sphere()
+
+    sphere.center.set(0f, 0f, 0f)
+    sphere.radius = 0.7071067811865476f
+    sphere.applyMatrix4(sprite.matrixWorld)
+
+    return this.intersectsSphere(sphere)
+
+}
+

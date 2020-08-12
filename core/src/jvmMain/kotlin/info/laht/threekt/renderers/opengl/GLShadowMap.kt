@@ -7,6 +7,7 @@ import info.laht.threekt.cameras.CameraWithNearAndFar
 import info.laht.threekt.core.MaterialObject
 import info.laht.threekt.core.MaterialsObject
 import info.laht.threekt.core.Object3D
+import info.laht.threekt.core.intersectsObject
 import info.laht.threekt.lights.Light
 import info.laht.threekt.lights.LightWithShadow
 import info.laht.threekt.materials.Material
@@ -176,7 +177,7 @@ class GLShadowMap internal constructor(
         val materialVariants = distanceMaterials
 
 
-            val useMorphing = false
+        val useMorphing = false
 
 //            if (material is MorphTargetMaterial && material.morphTargets) {
 //                useMorphing = geometry.morphAttributes && geometry.morphAttributes.position && geometry.morphAttributes.position.length > 0
@@ -186,24 +187,24 @@ class GLShadowMap internal constructor(
 //                LOG.warn("GLShadowMap: SkinnedMesh with material.skinning set to false:  $`object`")
 //            }
 
-            val useSkinning = false // `object` is SkinnedMesh && (material is SkinningMaterial && material.skinning)
+        val useSkinning = false // `object` is SkinnedMesh && (material is SkinningMaterial && material.skinning)
 
-            var variantIndex = 0
+        var variantIndex = 0
 
-            if (useMorphing) {
-                variantIndex = variantIndex or morphingFlag
-            }
-            if (useSkinning) {
-                variantIndex = variantIndex or skinningFlag
-            }
+        if (useMorphing) {
+            variantIndex = variantIndex or morphingFlag
+        }
+        if (useSkinning) {
+            variantIndex = variantIndex or skinningFlag
+        }
 
         var result = materialVariants[variantIndex]
 
 
 
         if (renderer.localClippingEnabled &&
-            material.clipShadows &&
-            material.clippingPlanes?.isNotEmpty() == true
+                material.clipShadows &&
+                material.clippingPlanes?.isNotEmpty() == true
         ) {
 
             // in this case we need a unique material instance reflecting the
@@ -268,11 +269,11 @@ class GLShadowMap internal constructor(
                         if (groupMaterial != null && groupMaterial.visible) {
 
                             val depthMaterial = getDepthMaterial(
-                                `object`,
-                                groupMaterial,
+                                    `object`,
+                                    groupMaterial,
                                     light,
-                                shadowCamera.near,
-                                shadowCamera.far
+                                    shadowCamera.near,
+                                    shadowCamera.far
                             )
                             renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, `object`, group)
 
@@ -283,11 +284,11 @@ class GLShadowMap internal constructor(
                 } else if (`object`.material.visible) {
 
                     val depthMaterial = getDepthMaterial(
-                        `object`,
-                        `object`.material,
+                            `object`,
+                            `object`.material,
                             light,
-                        shadowCamera.near,
-                        shadowCamera.far
+                            shadowCamera.near,
+                            shadowCamera.far
                     )
                     renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, `object`, null)
 

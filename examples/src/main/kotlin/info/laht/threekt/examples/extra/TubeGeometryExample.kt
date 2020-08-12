@@ -4,9 +4,9 @@ import info.laht.threekt.Side
 import info.laht.threekt.Window
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
-import info.laht.threekt.extras.core.Curve3
 import info.laht.threekt.geometries.TubeBufferGeometry
 import info.laht.threekt.materials.MeshBasicMaterial
+import info.laht.threekt.math.Curve3
 import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector3
 import info.laht.threekt.objects.Mesh

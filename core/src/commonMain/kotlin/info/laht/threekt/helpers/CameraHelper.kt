@@ -4,6 +4,7 @@ import info.laht.threekt.Colors
 import info.laht.threekt.cameras.AbstractCamera
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.cameras.CameraCanUpdateProjectionMatrix
+import info.laht.threekt.cameras.unproject
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.materials.LineBasicMaterial
