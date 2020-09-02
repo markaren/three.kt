@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    kotlin("jvm") version "1.3.72" apply false
+    kotlin("jvm") version "1.4.0" apply false
     id("com.jfrog.bintray") version "1.8.4" apply false
 }
 
@@ -16,7 +16,7 @@ tasks.named<Wrapper>("wrapper") {
 println("Gradle version is ${gradle.gradleVersion}")
 
 group = "info.laht.threekt"
-version = "r1-ALPHA-14"
+version = "r1-ALPHA-15"
 
 subprojects {
 

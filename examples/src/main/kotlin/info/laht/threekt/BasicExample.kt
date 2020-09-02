@@ -87,7 +87,6 @@ object BasicExample {
                     mouse.x = (event.clientX.toFloat() / canvas.size.width) * 2 - 1
                     mouse.y = -(event.clientY.toFloat() / canvas.size.height) * 2 + 1
 
-
                 }
 
             })

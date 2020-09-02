@@ -15,7 +15,7 @@ val lwjglNatives = when {
     else -> TODO("OS $os not supported")
 }
 
-val kotlinIOVersion = "0.1.13"
+val kotlinIOVersion = "0.1.16"
 
 kotlin {
     jvm {
