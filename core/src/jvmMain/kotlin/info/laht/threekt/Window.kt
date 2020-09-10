@@ -231,7 +231,7 @@ class Window @JvmOverloads constructor(
 }
 
 
-interface WindowResizeListener {
+fun interface WindowResizeListener {
 
     fun onWindowResize(width: Int, height: Int)
 

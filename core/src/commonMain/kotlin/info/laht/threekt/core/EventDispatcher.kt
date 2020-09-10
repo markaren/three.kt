@@ -5,7 +5,7 @@ class Event(
     val target: Any?
 )
 
-interface EventLister {
+fun interface EventLister {
 
     fun onEvent(event: Event)
 
