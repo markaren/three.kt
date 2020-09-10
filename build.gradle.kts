@@ -9,14 +9,16 @@ configure<JavaPluginExtension> {
 }
 
 tasks.named<Wrapper>("wrapper") {
-    gradleVersion = "6.5.1"
+    gradleVersion = "6.6.1"
     distributionType = Wrapper.DistributionType.ALL
 }
 
 println("Gradle version is ${gradle.gradleVersion}")
 
 group = "info.laht.threekt"
-version = "r1-ALPHA-16"
+version = "r1-ALPHA-17"
+
+println("Building three.kt $version")
 
 subprojects {
 
