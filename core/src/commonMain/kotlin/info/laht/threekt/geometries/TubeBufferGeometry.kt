@@ -34,7 +34,6 @@ class TubeBufferGeometry @JvmOverloads constructor(
         val uvs = mutableListOf<Float>()
         val indices = mutableListOf<Int>()
 
-
         fun generateSegment(i: Int) {
 
             // we use getPointAt to sample evenly distributed points from the given path
@@ -149,6 +148,5 @@ class TubeBufferGeometry @JvmOverloads constructor(
         addAttribute("uv", FloatBufferAttribute(uvs.toFloatArray(), 3))
 
     }
-
 
 }

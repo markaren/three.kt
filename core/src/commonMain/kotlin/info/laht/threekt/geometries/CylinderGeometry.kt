@@ -35,17 +35,17 @@ class CylinderBufferGeometry(
 
     private inner class CylinderBufferGeometryHelper {
 
-        internal var indices: IntBufferAttribute
-        internal var vertices: FloatBufferAttribute
-        internal var normals: FloatBufferAttribute
-        internal var uvs: FloatBufferAttribute
+        val indices: IntBufferAttribute
+        val vertices: FloatBufferAttribute
+        val normals: FloatBufferAttribute
+        val uvs: FloatBufferAttribute
 
-        internal var index = 0
-        internal var indexOffset = 0
-        internal var indexArray: MutableList<List<Int>> = mutableListOf()
-        internal var halfHeight = height / 2
+        var index = 0
+        var indexOffset = 0
+        var indexArray: MutableList<List<Int>> = mutableListOf()
+        val halfHeight = height / 2
 
-        internal var groupStart = 0
+        var groupStart = 0
 
         init {
             var nbCap = 0
@@ -296,6 +296,5 @@ class CylinderBufferGeometry(
         }
 
     }
-
 
 }

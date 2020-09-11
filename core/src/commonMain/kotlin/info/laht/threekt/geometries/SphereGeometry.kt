@@ -2,7 +2,6 @@ package info.laht.threekt.geometries
 
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
-import info.laht.threekt.core.IntBufferAttribute
 import info.laht.threekt.math.Sphere
 import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector3
@@ -35,7 +34,7 @@ class SphereBufferGeometry(
 
         val helper = SphereBufferGeometryHelper()
 
-        setIndex(IntBufferAttribute(helper.indices.toIntArray(), 1))
+
         addAttribute("position", helper.positions)
         addAttribute("normal", helper.normals)
         addAttribute("uvs", helper.uvs)
@@ -46,10 +45,10 @@ class SphereBufferGeometry(
 
     private inner class SphereBufferGeometryHelper {
 
-        internal var indices: MutableList<Int>
-        internal var positions: FloatBufferAttribute
-        internal var normals: FloatBufferAttribute
-        internal var uvs: FloatBufferAttribute
+        val indices: MutableList<Int>
+        val positions: FloatBufferAttribute
+        val normals: FloatBufferAttribute
+        val uvs: FloatBufferAttribute
 
         init {
             val thetaEnd = thetaStart + thetaLength

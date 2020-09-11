@@ -88,8 +88,6 @@ class CircleBufferGeometry @JvmOverloads constructor(
 
             }
 
-            println()
-
         }
 
     }
