@@ -8,6 +8,7 @@ import info.laht.threekt.core.Raycaster
 import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.geometries.CylinderBufferGeometry
 import info.laht.threekt.geometries.PlaneBufferGeometry
+import info.laht.threekt.geometries.SphereBufferGeometry
 import info.laht.threekt.input.MouseAdapter
 import info.laht.threekt.input.MouseEvent
 import info.laht.threekt.materials.MaterialWithColor
@@ -62,6 +63,14 @@ object BasicExample {
                 wireframe = true
             }).also {
                 box.add(it)
+            }
+
+            Mesh(SphereBufferGeometry(0.5f), MeshBasicMaterial().apply {
+                wireframe = true
+                color.set(Color.chocolate)
+            }).also {
+                it.position.y = 2f
+                scene.add(it)
             }
 
             val cylinder = Mesh(CylinderBufferGeometry(0.5f, 1f), MeshBasicMaterial().apply {
