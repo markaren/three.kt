@@ -19,7 +19,7 @@ class SphereBufferGeometry(
         thetaLength: Number? = null
 ) : BufferGeometry() {
 
-    val radius = radius?.toFloat() ?: 1f
+    val radius = radius?.toFloat() ?: 0.5f
     val widthSegments = widthSegments ?: 32
     val heightSegments = heightSegments ?: 32
     val phiStart = phiStart?.toFloat() ?: 0f
@@ -34,7 +34,7 @@ class SphereBufferGeometry(
 
         val helper = SphereBufferGeometryHelper()
 
-
+        setIndex(helper.indices.toIntArray())
         addAttribute("position", helper.positions)
         addAttribute("normal", helper.normals)
         addAttribute("uvs", helper.uvs)
@@ -62,11 +62,11 @@ class SphereBufferGeometry(
             var index = 0
             val normal = Vector3()
 
-            val vertices = ArrayList<List<Int>>()
+            val vertices = mutableListOf<List<Int>>()
 
             for (y in 0..heightSegments) {
 
-                val verticesRow = ArrayList<Int>()
+                val verticesRow = mutableListOf<Int>()
                 val v = y.toFloat() / heightSegments
 
                 for (x in 0..widthSegments) {
@@ -95,7 +95,7 @@ class SphereBufferGeometry(
 
             }
 
-            indices = ArrayList()
+            indices = mutableListOf()
 
             for (y in 0 until heightSegments) {
 
