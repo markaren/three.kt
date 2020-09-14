@@ -13,10 +13,15 @@ import java.awt.image.DataBufferByte
 import java.awt.image.DataBufferInt
 import java.io.Closeable
 import java.nio.ByteBuffer
+import java.util.concurrent.atomic.AtomicBoolean
 
 
 private const val DEFAULT_WIDTH = 800
 private const val DEFAULT_HEIGHT = 600
+
+fun interface WindowClosingCallback {
+    fun onWindowClosing()
+}
 
 class Window @JvmOverloads constructor(
         options: Options = Options()
@@ -34,6 +39,12 @@ class Window @JvmOverloads constructor(
 
     private var windowResizeCallback: WindowResizeListener? = null
 
+    var animating = AtomicBoolean(false)
+    private var closed = AtomicBoolean(false)
+
+    @JvmField
+    var onCloseCallback: WindowClosingCallback? = null
+
     constructor(title: String? = null,
                 width: Int? = null,
                 height: Int? = null,
@@ -41,7 +52,8 @@ class Window @JvmOverloads constructor(
                 vSync: Boolean? = null,
                 resizeable: Boolean? = null,
                 favicon: BufferedImage? = null
-    ) : this(Options(title, WindowSize(width ?: DEFAULT_WIDTH, height ?: DEFAULT_HEIGHT), antialias, vSync, resizeable, favicon))
+    ) : this(Options(title, WindowSize(width ?: DEFAULT_WIDTH, height
+            ?: DEFAULT_HEIGHT), antialias, vSync, resizeable, favicon))
 
     init {
 
@@ -107,32 +119,34 @@ class Window @JvmOverloads constructor(
     }
 
     override fun close() {
-        debugProc?.free()
-        glfwTerminate()
-    }
+        if (!closed.getAndSet(true)) {
+            glfwSetWindowShouldClose(hwnd, true)
 
-    fun shouldClose(): Boolean {
-        return glfwWindowShouldClose(hwnd)
-    }
+            while (animating.get()) {
+                Thread.sleep(1)
+            }
 
-    fun swapBuffers() {
-        glfwSwapBuffers(hwnd)
-    }
+            debugProc?.free()
+            glfwTerminate()
 
-    fun pollEvents() {
-        glfwPollEvents()
+            onCloseCallback?.onWindowClosing()
+        }
     }
 
     inline fun animate(f: () -> Unit) {
 
-        while (!shouldClose()) {
+        animating.set(true)
+
+        while (!glfwWindowShouldClose(hwnd)) {
 
             f.invoke()
 
-            swapBuffers()
-            pollEvents()
+            glfwSwapBuffers(hwnd)
+            glfwPollEvents()
 
         }
+
+        animating.set(false)
 
     }
 
@@ -169,7 +183,7 @@ class Window @JvmOverloads constructor(
             if (favicon != null) {
                 val rasterBuffer = favicon.raster.dataBuffer
                 val buffer: ByteBuffer
-                when(rasterBuffer) {
+                when (rasterBuffer) {
                     is DataBufferByte -> {
                         val pixels = rasterBuffer.data
                         buffer = createByteBuffer(pixels.size).put(pixels)
@@ -177,7 +191,7 @@ class Window @JvmOverloads constructor(
                     is DataBufferInt -> {
                         val pixels = rasterBuffer.data
                         buffer = createByteBuffer(pixels.size * 4)
-                        for(pixel in pixels) {
+                        for (pixel in pixels) {
                             buffer.put((pixel shr 16 and 0xFF).toByte())
                             buffer.put((pixel shr 8 and 0xFF).toByte())
                             buffer.put((pixel and 0xFF).toByte())
