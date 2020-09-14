@@ -69,7 +69,6 @@ object BasicExample {
                 wireframe = true
                 color.set(Color.chocolate)
             }).also {
-                it.position.y = 2f
                 scene.add(it)
             }
 
@@ -87,7 +86,7 @@ object BasicExample {
                 cylinder.add(it)
             }
 
-            val mouse = Vector2()
+            val mouse = Vector2(-1, -1)
             val raycaster = Raycaster()
             canvas.addMouseListener(object : MouseAdapter() {
 
@@ -103,20 +102,19 @@ object BasicExample {
             val clock = Clock()
             canvas.animate {
 
-                if (clock.elapsedTime_ > 0.1f) {
-                    raycaster.setFromCamera(mouse, camera)
-                    raycaster.intersectObjects(scene.children).forEach {
+                raycaster.setFromCamera(mouse, camera)
+                raycaster.intersectObjects(scene.children).forEach {
 
-                        val obj = it.`object`
-                        if (obj is MaterialObject) {
-                            val mat = obj.material
-                            if (mat is MaterialWithColor) {
-                                mat.color.set(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
-                            }
+                    val obj = it.`object`
+                    if (obj is MaterialObject) {
+                        val mat = obj.material
+                        if (mat is MaterialWithColor) {
+                            mat.color.set(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
                         }
-
                     }
+
                 }
+
 
                 renderer.render(scene, camera)
 
