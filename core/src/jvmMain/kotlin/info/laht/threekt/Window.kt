@@ -136,6 +136,10 @@ class Window @JvmOverloads constructor(
 
     }
 
+    fun animate(f: Runnable) {
+        animate { f.run() }
+    }
+
     private companion object {
 
         fun createWindow(options: Options): Long {

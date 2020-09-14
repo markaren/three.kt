@@ -94,14 +94,9 @@ public class JavaExample {
 
             OrbitControls orbitControls = new OrbitControls(camera, window);
 
-            while (!window.shouldClose()) {
-
+            window.animate(() -> {
                 renderer.render(scene, camera);
-
-                window.pollEvents();
-                window.swapBuffers();
-
-            }
+            });
 
         }
 
