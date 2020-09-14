@@ -5,6 +5,7 @@ import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.geometries.PlaneBufferGeometry
+import info.laht.threekt.geometries.SphereBufferGeometry
 import info.laht.threekt.loaders.TextureLoader
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.Color
@@ -33,19 +34,27 @@ object TextureExample {
 
             Mesh(PlaneBufferGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
-                map =
-                        TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/brick_bump.jpg")!!.file)
+                map = TextureLoader.load(javaClass.classLoader.getResource("textures/brick_bump.jpg")!!.file)
             }).also {
                 it.rotation.x = DEG2RAD * -90
                 it.translateZ(-1f)
                 scene.add(it)
             }
 
+
             Mesh(BoxBufferGeometry(1f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
-                map = TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/crate.gif")!!.file)
+                map = TextureLoader.load(javaClass.classLoader.getResource("textures/crate.gif")!!.file)
             }).also {
                 it.translateY(2f)
+                scene.add(it)
+            }
+
+            Mesh(SphereBufferGeometry(0.5f), MeshBasicMaterial().apply {
+                color.set(Color.gray)
+                map = TextureLoader.load(javaClass.classLoader.getResource("textures/checker.png")!!.file)
+            }).also {
+                it.translateY(4f)
                 scene.add(it)
             }
 

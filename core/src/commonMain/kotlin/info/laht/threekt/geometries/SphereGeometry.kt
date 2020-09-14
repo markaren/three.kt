@@ -37,7 +37,7 @@ class SphereBufferGeometry(
         setIndex(helper.indices.toIntArray())
         addAttribute("position", helper.positions)
         addAttribute("normal", helper.normals)
-        addAttribute("uvs", helper.uvs)
+        addAttribute("uv", helper.uvs)
 
         boundingSphere = Sphere(Vector3(), this.radius)
 
