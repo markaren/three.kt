@@ -8,4 +8,10 @@ class ConeBufferGeometry(
         openEnded: Boolean? = null,
         thetaStart: Float? = null,
         thetaLength: Float? = null
-) : CylinderBufferGeometry(0f, radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength)
+) : CylinderBufferGeometry(0f, radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength) {
+
+    override fun clone(): ConeBufferGeometry {
+        return super.clone() as ConeBufferGeometry
+    }
+
+}

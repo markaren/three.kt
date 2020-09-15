@@ -305,6 +305,7 @@ open class Mesh(
         super<Object3DImpl>.copy(source, true)
 
         this.drawMode = source.drawMode
+        this.material.copy(source.material)
 
         return this
 

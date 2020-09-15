@@ -8,6 +8,7 @@ import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.scenes.Scene
 
+
 interface Object3D : Cloneable, EventDispatcher {
 
     var name: String
@@ -477,7 +478,7 @@ interface Object3D : Cloneable, EventDispatcher {
 
     }
 
-    fun copy(source: Object3D, recursive: Boolean): Object3D {
+    fun copy(source: Object3D, recursive: Boolean = true): Object3D {
         this.name = source.name
 
         this.up.copy(source.up)

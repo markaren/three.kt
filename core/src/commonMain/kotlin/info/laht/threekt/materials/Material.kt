@@ -293,7 +293,7 @@ open class Material : Cloneable1, EventDispatcher by EventDispatcherImpl() {
      * Copy the parameters from the passed material into this material.
      * @param material
      */
-    fun copy(source: Material): Material {
+    open fun copy(source: Material): Material {
         this.name = source.name
 
         this.fog = source.fog
