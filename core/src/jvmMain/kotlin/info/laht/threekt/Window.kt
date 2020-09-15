@@ -14,6 +14,7 @@ import java.awt.image.DataBufferInt
 import java.io.Closeable
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.imageio.ImageIO
 
 
 private const val DEFAULT_WIDTH = 800
@@ -233,16 +234,19 @@ class Window @JvmOverloads constructor(
             antialias: Int? = null,
             vsync: Boolean? = null,
             resizeable: Boolean? = null,
-            val favicon: BufferedImage? = null
+            favicon: BufferedImage? = null
     ) {
 
         var title = title ?: "three.kt"
-
         var size = size ?: WindowSize(DEFAULT_WIDTH, DEFAULT_HEIGHT)
 
         var antialias = antialias ?: 0
         var vsync = vsync ?: true
         var resizeable = resizeable ?: false
+
+        var favicon = favicon ?: javaClass.getResourceAsStream("/images/favicon.bmp")?.let {
+            ImageIO.read(it)
+        }
 
     }
 
