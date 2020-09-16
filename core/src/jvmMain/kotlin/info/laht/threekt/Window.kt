@@ -1,7 +1,6 @@
 package info.laht.threekt
 
 import info.laht.threekt.input.*
-import info.laht.threekt.math.WindowSize
 import org.lwjgl.BufferUtils.createByteBuffer
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
