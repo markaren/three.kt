@@ -359,7 +359,7 @@ class GLRenderer(
         state.initAttributes()
 
         val geometryAttributes = geometry.attributes
-        val programAttributes = program.getAttributes()
+        val programAttributes = program.attributes
 
         for (name in programAttributes.keys) {
 
@@ -899,7 +899,7 @@ class GLRenderer(
 
         }
 
-        val progUniforms = materialProperties.getAs<GLProgram>("program")!!.getUniforms()
+        val progUniforms = materialProperties.getAs<GLProgram>("program")!!.uniforms
         val uniformsList = GLUniforms.seqWithValue(progUniforms.seq, uniforms)
 
         materialProperties["uniformsList"] = uniformsList
@@ -970,7 +970,7 @@ class GLRenderer(
         var refreshLights = false
 
         val program = materialProperties["program"] as GLProgram
-        val p_uniforms = program.getUniforms()
+        val p_uniforms = program.uniforms
         val m_uniforms = materialProperties.getAs<Shader>("shader")!!.uniforms
 
         if (state.useProgram(program.program)) {
@@ -1422,7 +1422,7 @@ class GLRenderer(
 
     }
 
-    fun refreshUniformsStandard(uniforms: Map<String, Uniform>, material: MeshStandardMaterial) {
+    private fun refreshUniformsStandard(uniforms: Map<String, Uniform>, material: MeshStandardMaterial) {
 
         uniforms["roughness"]?.value = material.roughness
         uniforms["metalness"]?.value = material.metalness

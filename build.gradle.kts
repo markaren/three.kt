@@ -16,7 +16,7 @@ tasks.named<Wrapper>("wrapper") {
 println("Gradle version is ${gradle.gradleVersion}")
 
 group = "info.laht.threekt"
-version = "r1-ALPHA-20"
+version = "r1-ALPHA-21"
 
 println("Building three.kt $version")
 
