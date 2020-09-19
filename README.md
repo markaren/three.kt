@@ -4,7 +4,7 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/markaren/three.kt/issues)
 
 [![CI](https://github.com/markaren/three.kt/workflows/Build/badge.svg)](https://github.com/markaren/three.kt/actions)
-[![Download](https://api.bintray.com/packages/laht/mvn/threekt/images/download.svg)](https://bintray.com/laht/mvn/threekt/_latestVersion)
+[![Bintray](https://api.bintray.com/packages/laht/mvn/threekt/images/download.svg)](https://bintray.com/laht/mvn/threekt/_latestVersion)
 
 [![Gitter](https://badges.gitter.im/markaren/three.kt.svg)](https://gitter.im/markaren/three.kt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
@@ -104,6 +104,20 @@ public class JavaExample {
 
 }
 
+```
+
+Artifacts are avilable through Bintray:
+
+```
+repositories {
+    /*...*/
+    maven { url "https://dl.bintray.com/laht/mvn" }
+}
+
+dependencies {
+    def version = "..."
+    implementation "info.laht.threekt:core-jvm:$version"
+}
 ```
 
 ## Screenshots
