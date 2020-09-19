@@ -410,28 +410,8 @@ internal class GLProgram(
 
     }
 
-    private lateinit var cachedUniforms: GLUniforms
-    private lateinit var cachedAttributes: Map<String, Int>
-
-    fun getUniforms(): GLUniforms {
-
-        if (!::cachedUniforms.isInitialized) {
-            cachedUniforms = GLUniforms(program)
-        }
-
-        return cachedUniforms
-
-    }
-
-    fun getAttributes(): Map<String, Int> {
-
-        if (!::cachedAttributes.isInitialized) {
-            cachedAttributes = fetchAttributeLocations(program)
-        }
-
-        return cachedAttributes
-
-    }
+    val uniforms: GLUniforms by lazy { GLUniforms(program) }
+    val attributes: Map<String, Int> by lazy { fetchAttributeLocations(program) }
 
     fun destroy() {
         GL20.glDeleteProgram(program)
