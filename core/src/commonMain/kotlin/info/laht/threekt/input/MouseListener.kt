@@ -2,9 +2,9 @@ package info.laht.threekt.input
 
 interface MouseListener {
 
-    fun onMouseDown(event: MouseEvent)
+    fun onMouseDown(button: Int, event: MouseEvent)
 
-    fun onMouseUp(event: MouseEvent)
+    fun onMouseUp(button: Int, event: MouseEvent)
 
     fun onMouseMove(event: MouseEvent)
 
@@ -13,9 +13,9 @@ interface MouseListener {
 
 abstract class MouseAdapter : MouseListener {
 
-    override fun onMouseDown(event: MouseEvent) {}
+    override fun onMouseDown(button: Int, event: MouseEvent) {}
 
-    override fun onMouseUp(event: MouseEvent) {}
+    override fun onMouseUp(button: Int, event: MouseEvent) {}
 
     override fun onMouseMove(event: MouseEvent) {}
 
@@ -48,7 +48,6 @@ class MouseWheelEventImpl : MouseWheelEvent {
 
 interface MouseEvent {
 
-    val button: Int
     val clientX: Int
     val clientY: Int
 
@@ -62,16 +61,13 @@ class MouseEventImpl : MouseEvent {
     override var clientY = 0
         private set
 
-    override var button: Int = 0
-        internal set
-
     internal fun updateCoordinates(clientX: Int, clientY: Int) {
         this.clientX = clientX
         this.clientY = clientY
     }
 
     override fun toString(): String {
-        return "MouseEventImpl(clientX=$clientX, clientY=$clientY, button=$button)"
+        return "MouseEventImpl(clientX=$clientX, clientY=$clientY)"
     }
 
 }

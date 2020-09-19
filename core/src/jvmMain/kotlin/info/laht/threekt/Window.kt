@@ -88,11 +88,10 @@ class Window @JvmOverloads constructor(
         }
 
         glfwSetMouseButtonCallback(hwnd) { _, button, action, _ ->
-            mouseEvent.button = button
             val listeners = mouseListeners?.toMutableList() // avoid concurrent modification exception
             when (action) {
-                0 -> listeners?.forEach { it.onMouseUp(mouseEvent) }
-                1 -> listeners?.forEach { it.onMouseDown(mouseEvent) }
+                0 -> listeners?.forEach { it.onMouseUp(button, mouseEvent) }
+                1 -> listeners?.forEach { it.onMouseDown(button, mouseEvent) }
             }
         }
 

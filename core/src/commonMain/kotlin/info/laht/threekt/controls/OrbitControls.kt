@@ -515,9 +515,9 @@ class OrbitControls(
 
     private inner class MyMouseListener : MouseAdapter() {
 
-        override fun onMouseDown(event: MouseEvent) {
+        override fun onMouseDown(button: Int, event: MouseEvent) {
             if (enabled) {
-                when (event.button) {
+                when (button) {
                     MouseButtons.LEFT -> {
                         if (enableRotate) {
                             handleMouseDownRotate(event)
@@ -591,7 +591,7 @@ class OrbitControls(
         private val moveListener: MyMouseMoveListener
     ) : MouseAdapter() {
 
-        override fun onMouseUp(event: MouseEvent) {
+        override fun onMouseUp(button: Int, event: MouseEvent) {
             if (enabled) {
 
                 eventSource.removeMouseListener(moveListener)
