@@ -4,7 +4,7 @@ import info.laht.threekt.add
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
 import info.laht.threekt.core.IntBufferAttribute
-import info.laht.threekt.extras.core.Curve3
+import info.laht.threekt.math.Curve3
 import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector2
 import info.laht.threekt.math.Vector3
@@ -13,11 +13,11 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class TubeBufferGeometry @JvmOverloads constructor(
-    val path: Curve3,
-    val tubularSegments: Int = 64,
-    val radius: Float = 1f,
-    val radialSegments: Int = 8,
-    val closed: Boolean = false
+        val path: Curve3,
+        val tubularSegments: Int = 64,
+        val radius: Float = 1f,
+        val radialSegments: Int = 8,
+        val closed: Boolean = false
 ) : BufferGeometry() {
 
     val frames = path.computeFrenetFrames(tubularSegments, closed)
@@ -33,7 +33,6 @@ class TubeBufferGeometry @JvmOverloads constructor(
         val normals = mutableListOf<Float>()
         val uvs = mutableListOf<Float>()
         val indices = mutableListOf<Int>()
-
 
         fun generateSegment(i: Int) {
 
@@ -149,6 +148,5 @@ class TubeBufferGeometry @JvmOverloads constructor(
         addAttribute("uv", FloatBufferAttribute(uvs.toFloatArray(), 3))
 
     }
-
 
 }

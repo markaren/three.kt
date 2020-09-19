@@ -1,6 +1,6 @@
 package info.laht.threekt.input
 
-interface KeyListener {
+fun interface KeyListener {
 
     fun onKeyPressed(event: KeyEvent)
 

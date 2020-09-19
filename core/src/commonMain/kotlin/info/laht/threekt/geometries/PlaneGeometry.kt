@@ -33,10 +33,10 @@ class PlaneBufferGeometry(
 
     private inner class PlaneBufferGeometryHelper {
 
-        internal var indices: IntArray
-        internal var vertices: FloatArray
-        internal var normals: FloatArray
-        internal var uvs: FloatArray
+        val indices: IntArray
+        val vertices: FloatArray
+        val normals: FloatArray
+        val uvs: FloatArray
 
         init {
 

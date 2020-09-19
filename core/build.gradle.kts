@@ -3,15 +3,8 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
     kotlin("multiplatform")
-    id("com.jfrog.bintray") version "1.8.4"
+    id("com.jfrog.bintray")
     `maven-publish`
-}
-
-group = "info.laht.threekt"
-version = "r1-ALPHA-13"
-
-repositories {
-    mavenCentral()
 }
 
 val os = OperatingSystem.current()
@@ -22,7 +15,7 @@ val lwjglNatives = when {
     else -> TODO("OS $os not supported")
 }
 
-val kotlinIOVersion = "0.1.13"
+val kotlinIOVersion = "0.1.16"
 
 kotlin {
     jvm {
@@ -34,9 +27,9 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(kotlin("stdlib"))
-                implementation(kotlin("reflect"))
+                api(project(":math"))
 
+                implementation(kotlin("stdlib"))
                 implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinIOVersion")
             }
         }
@@ -50,10 +43,6 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-
-                val slf4jVersion = "1.7.27"
-                implementation("org.slf4j:slf4j-api:$slf4jVersion")
-                runtimeOnly("org.slf4j:slf4j-log4j12:$slf4jVersion")
 
                 val lwjglVersion = "3.2.3"
                 implementation("org.lwjgl:lwjgl:$lwjglVersion")

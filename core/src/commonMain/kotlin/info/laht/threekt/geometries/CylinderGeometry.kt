@@ -9,16 +9,25 @@ import info.laht.threekt.math.Vector3
 import kotlin.math.cos
 import kotlin.math.sin
 
-class CylinderBufferGeometry(
-    val radiusTop: Float = 1f,
-    val radiusBottom: Float = 1f,
-    val height: Float = 1f,
-    val radialSegments: Int = 32,
-    val heightSegments: Int = 8,
-    val openEnded: Boolean = false,
-    val thetaStart: Float = 0f,
-    val thetaLength: Float = TWO_PI
+open class CylinderBufferGeometry(
+        radiusTop: Float? = null,
+        radiusBottom: Float? = null,
+        height: Float? = null,
+        radialSegments: Int? = null,
+        heightSegments: Int? = null,
+        openEnded: Boolean? = null,
+        thetaStart: Float? = null,
+        thetaLength: Float? = null,
 ) : BufferGeometry() {
+
+    val radiusTop: Float = radiusTop ?: 1f
+    val radiusBottom: Float = radiusBottom ?: 1f
+    val height: Float = height ?: 1f
+    val radialSegments: Int = radialSegments ?: 32
+    val heightSegments: Int = heightSegments ?: 8
+    val openEnded: Boolean = openEnded ?: false
+    val thetaStart: Float = thetaStart ?: 0f
+    val thetaLength: Float = thetaLength ?: TWO_PI
 
     constructor(radius: Float, height: Float) : this(radius, radius, height)
 
@@ -35,17 +44,17 @@ class CylinderBufferGeometry(
 
     private inner class CylinderBufferGeometryHelper {
 
-        internal var indices: IntBufferAttribute
-        internal var vertices: FloatBufferAttribute
-        internal var normals: FloatBufferAttribute
-        internal var uvs: FloatBufferAttribute
+        val indices: IntBufferAttribute
+        val vertices: FloatBufferAttribute
+        val normals: FloatBufferAttribute
+        val uvs: FloatBufferAttribute
 
-        internal var index = 0
-        internal var indexOffset = 0
-        internal var indexArray: MutableList<List<Int>> = mutableListOf()
-        internal var halfHeight = height / 2
+        var index = 0
+        var indexOffset = 0
+        var indexArray: MutableList<List<Int>> = mutableListOf()
+        val halfHeight = height / 2
 
-        internal var groupStart = 0
+        var groupStart = 0
 
         init {
             var nbCap = 0
@@ -296,6 +305,5 @@ class CylinderBufferGeometry(
         }
 
     }
-
 
 }

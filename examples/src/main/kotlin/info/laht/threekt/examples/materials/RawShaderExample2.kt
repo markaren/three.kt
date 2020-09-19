@@ -2,9 +2,7 @@ package info.laht.threekt.examples.materials
 
 import info.laht.threekt.Side
 import info.laht.threekt.Window
-import info.laht.threekt.WindowResizeListener
 import info.laht.threekt.cameras.PerspectiveCamera
-import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
 import info.laht.threekt.core.Uniform
 import info.laht.threekt.geometries.BoxBufferGeometry
@@ -21,16 +19,14 @@ object RawShaderExample2 {
 
         Window(
                 antialias = 8,
-            resizeable = true
+                resizeable = true
         ).use { canvas ->
-
 
             val scene = Scene()
             val camera = PerspectiveCamera(50, canvas.aspect, 1, 1000000)
             camera.position.y = 100f
 
             val renderer = GLRenderer(canvas.size)
-            OrbitControls(camera, canvas)
             val geometry = BoxBufferGeometry(10000f)
 
             val material = RawShaderMaterial().also {
@@ -44,12 +40,10 @@ object RawShaderExample2 {
             val mesh = Mesh(geometry, material)
             scene.add(mesh)
 
-            canvas.onWindowResize(object : WindowResizeListener {
-                override fun onWindowResize(width: Int, height: Int) {
-                    renderer.setSize(width, height)
-                    material.uniforms["iResolution"]!!.value<Vector2>()!!.set(width.toFloat(), height.toFloat())
-                }
-            })
+            canvas.onWindowResize { width, height ->
+                renderer.setSize(width, height)
+                material.uniforms["iResolution"]!!.value<Vector2>()!!.set(width.toFloat(), height.toFloat())
+            }
 
             var value = 0f
             val clock = Clock()

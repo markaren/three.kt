@@ -8,6 +8,7 @@ import info.laht.threekt.core.Raycaster
 import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.geometries.CylinderBufferGeometry
 import info.laht.threekt.geometries.PlaneBufferGeometry
+import info.laht.threekt.geometries.SphereBufferGeometry
 import info.laht.threekt.input.MouseAdapter
 import info.laht.threekt.input.MouseEvent
 import info.laht.threekt.materials.MaterialWithColor
@@ -64,6 +65,13 @@ object BasicExample {
                 box.add(it)
             }
 
+            Mesh(SphereBufferGeometry(0.5f), MeshBasicMaterial().apply {
+                wireframe = true
+                color.set(Color.chocolate)
+            }).also {
+                scene.add(it)
+            }
+
             val cylinder = Mesh(CylinderBufferGeometry(0.5f, 1f), MeshBasicMaterial().apply {
                 color.set(0x0000ff)
             }).also {
@@ -78,7 +86,7 @@ object BasicExample {
                 cylinder.add(it)
             }
 
-            val mouse = Vector2()
+            val mouse = Vector2(-1, -1)
             val raycaster = Raycaster()
             canvas.addMouseListener(object : MouseAdapter() {
 
@@ -87,7 +95,6 @@ object BasicExample {
                     mouse.x = (event.clientX.toFloat() / canvas.size.width) * 2 - 1
                     mouse.y = -(event.clientY.toFloat() / canvas.size.height) * 2 + 1
 
-
                 }
 
             })
@@ -95,20 +102,19 @@ object BasicExample {
             val clock = Clock()
             canvas.animate {
 
-                if (clock.elapsedTime_ > 0.1f) {
-                    raycaster.setFromCamera(mouse, camera)
-                    raycaster.intersectObjects(scene.children).forEach {
+                raycaster.setFromCamera(mouse, camera)
+                raycaster.intersectObjects(scene.children).forEach {
 
-                        val obj = it.`object`
-                        if (obj is MaterialObject) {
-                            val mat = obj.material
-                            if (mat is MaterialWithColor) {
-                                mat.color.set(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
-                            }
+                    val obj = it.`object`
+                    if (obj is MaterialObject) {
+                        val mat = obj.material
+                        if (mat is MaterialWithColor) {
+                            mat.color.set(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
                         }
-
                     }
+
                 }
+
 
                 renderer.render(scene, camera)
 

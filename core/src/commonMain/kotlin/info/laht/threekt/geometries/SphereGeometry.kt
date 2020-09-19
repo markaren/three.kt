@@ -2,7 +2,6 @@ package info.laht.threekt.geometries
 
 import info.laht.threekt.core.BufferGeometry
 import info.laht.threekt.core.FloatBufferAttribute
-import info.laht.threekt.core.IntBufferAttribute
 import info.laht.threekt.math.Sphere
 import info.laht.threekt.math.TWO_PI
 import info.laht.threekt.math.Vector3
@@ -20,7 +19,7 @@ class SphereBufferGeometry(
         thetaLength: Number? = null
 ) : BufferGeometry() {
 
-    val radius = radius?.toFloat() ?: 1f
+    val radius = radius?.toFloat() ?: 0.5f
     val widthSegments = widthSegments ?: 32
     val heightSegments = heightSegments ?: 32
     val phiStart = phiStart?.toFloat() ?: 0f
@@ -35,10 +34,10 @@ class SphereBufferGeometry(
 
         val helper = SphereBufferGeometryHelper()
 
-        setIndex(IntBufferAttribute(helper.indices.toIntArray(), 1))
+        setIndex(helper.indices.toIntArray())
         addAttribute("position", helper.positions)
         addAttribute("normal", helper.normals)
-        addAttribute("uvs", helper.uvs)
+        addAttribute("uv", helper.uvs)
 
         boundingSphere = Sphere(Vector3(), this.radius)
 
@@ -46,10 +45,10 @@ class SphereBufferGeometry(
 
     private inner class SphereBufferGeometryHelper {
 
-        internal var indices: MutableList<Int>
-        internal var positions: FloatBufferAttribute
-        internal var normals: FloatBufferAttribute
-        internal var uvs: FloatBufferAttribute
+        val indices: MutableList<Int>
+        val positions: FloatBufferAttribute
+        val normals: FloatBufferAttribute
+        val uvs: FloatBufferAttribute
 
         init {
             val thetaEnd = thetaStart + thetaLength
@@ -63,11 +62,11 @@ class SphereBufferGeometry(
             var index = 0
             val normal = Vector3()
 
-            val vertices = ArrayList<List<Int>>()
+            val vertices = mutableListOf<List<Int>>()
 
             for (y in 0..heightSegments) {
 
-                val verticesRow = ArrayList<Int>()
+                val verticesRow = mutableListOf<Int>()
                 val v = y.toFloat() / heightSegments
 
                 for (x in 0..widthSegments) {
@@ -96,7 +95,7 @@ class SphereBufferGeometry(
 
             }
 
-            indices = ArrayList()
+            indices = mutableListOf()
 
             for (y in 0 until heightSegments) {
 

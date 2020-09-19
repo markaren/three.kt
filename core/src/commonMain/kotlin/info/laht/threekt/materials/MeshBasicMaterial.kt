@@ -42,6 +42,10 @@ class MeshBasicMaterial : Material(), MaterialWithMorphTargets, MaterialWithSkin
         return MeshBasicMaterial().copy(this)
     }
 
+    override fun copy(source: Material): Material {
+        return copy(source as MeshBasicMaterial)
+    }
+
     fun copy(source: MeshBasicMaterial): MeshBasicMaterial {
         super.copy(source)
 

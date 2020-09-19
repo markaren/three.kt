@@ -3,6 +3,7 @@ package info.laht.threekt.renderers
 import info.laht.threekt.DrawMode
 import info.laht.threekt.Side
 import info.laht.threekt.ToneMapping
+import info.laht.threekt.WindowSize
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.*
 import info.laht.threekt.extras.objects.ImmediateRenderObject

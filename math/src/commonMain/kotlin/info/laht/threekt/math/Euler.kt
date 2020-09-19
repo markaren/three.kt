@@ -41,7 +41,7 @@ data class Euler(
             onChangeCallback?.invoke()
         }
 
-    internal var onChangeCallback: (() -> Unit)? = null
+    var onChangeCallback: (() -> Unit)? = null
 
     @JvmOverloads
     constructor(x: Number, y: Number, z: Number, order: EulerOrder? = null)

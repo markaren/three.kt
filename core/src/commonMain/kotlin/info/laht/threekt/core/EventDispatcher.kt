@@ -5,7 +5,7 @@ class Event(
     val target: Any?
 )
 
-interface EventLister {
+fun interface EventLister {
 
     fun onEvent(event: Event)
 
@@ -66,7 +66,8 @@ class EventDispatcherImpl : EventDispatcher {
     }
 
     override fun dispatchEvent(type: String, target: Any) {
-        listeners[type]?.forEach {
+        //toMutableList avoids ConcurrentModificationException
+        listeners[type]?.toMutableList()?.forEach {
             it.onEvent(Event(type, target))
         }
     }

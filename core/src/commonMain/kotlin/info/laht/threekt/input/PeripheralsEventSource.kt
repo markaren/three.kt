@@ -1,6 +1,6 @@
 package info.laht.threekt.input
 
-import info.laht.threekt.math.WindowSize
+import info.laht.threekt.WindowSize
 
 interface PeripheralsEventSource {
 

@@ -1,7 +1,7 @@
 package info.laht.threekt.math
 
 import info.laht.threekt.core.Cloneable
-import kotlin.jvm.JvmStatic
+import kotlin.jvm.JvmField
 import kotlin.math.max
 
 data class Color(
@@ -104,301 +104,448 @@ data class Color(
 
     companion object {
 
-        @JvmStatic
+        @JvmField
         val aliceblue = 0xF0F8FF
-        @JvmStatic
+
+        @JvmField
         val antiquewhite = 0xFAEBD7
-        @JvmStatic
+
+        @JvmField
         val aqua = 0x00FFFF
-        @JvmStatic
+
+        @JvmField
         val aquamarine = 0x7FFFD4
-        @JvmStatic
+
+        @JvmField
         val azure = 0xF0FFFF
-        @JvmStatic
+
+        @JvmField
         val beige = 0xF5F5DC
-        @JvmStatic
+
+        @JvmField
         val bisque = 0xFFE4C4
-        @JvmStatic
+
+        @JvmField
         val black = 0x000000
-        @JvmStatic
+
+        @JvmField
         val blanchedalmond = 0xFFEBCD
-        @JvmStatic
+
+        @JvmField
         val blue = 0x0000FF
-        @JvmStatic
+
+        @JvmField
         val blueviolet = 0x8A2BE2
-        @JvmStatic
+
+        @JvmField
         val brown = 0xA52A2A
-        @JvmStatic
+
+        @JvmField
         val burlywood = 0xDEB887
-        @JvmStatic
+
+        @JvmField
         val cadetblue = 0x5F9EA0
-        @JvmStatic
+
+        @JvmField
         val chartreuse = 0x7FFF00
-        @JvmStatic
+
+        @JvmField
         val chocolate = 0xD2691E
-        @JvmStatic
+
+        @JvmField
         val coral = 0xFF7F50
-        @JvmStatic
+
+        @JvmField
         val cornflowerblue = 0x6495ED
-        @JvmStatic
+
+        @JvmField
         val cornsilk = 0xFFF8DC
-        @JvmStatic
+
+        @JvmField
         val crimson = 0xDC143C
-        @JvmStatic
+
+        @JvmField
         val cyan = 0x00FFFF
-        @JvmStatic
+
+        @JvmField
         val darkblue = 0x00008B
-        @JvmStatic
+
+        @JvmField
         val darkcyan = 0x008B8B
-        @JvmStatic
+
+        @JvmField
         val darkgoldenrod = 0xB8860B
-        @JvmStatic
+
+        @JvmField
         val darkgray = 0xA9A9A9
-        @JvmStatic
+
+        @JvmField
         val darkgreen = 0x006400
-        @JvmStatic
+
+        @JvmField
         val darkgrey = 0xA9A9A9
-        @JvmStatic
+
+        @JvmField
         val darkkhaki = 0xBDB76B
-        @JvmStatic
+
+        @JvmField
         val darkmagenta = 0x8B008B
-        @JvmStatic
+
+        @JvmField
         val darkolivegreen = 0x556B2F
-        @JvmStatic
+
+        @JvmField
         val darkorange = 0xFF8C00
-        @JvmStatic
+
+        @JvmField
         val darkorchid = 0x9932CC
-        @JvmStatic
+
+        @JvmField
         val darkred = 0x8B0000
-        @JvmStatic
+
+        @JvmField
         val darksalmon = 0xE9967A
-        @JvmStatic
+
+        @JvmField
         val darkseagreen = 0x8FBC8F
-        @JvmStatic
+
+        @JvmField
         val darkslateblue = 0x483D8B
-        @JvmStatic
+
+        @JvmField
         val darkslategray = 0x2F4F4F
-        @JvmStatic
+
+        @JvmField
         val darkslategrey = 0x2F4F4F
-        @JvmStatic
+
+        @JvmField
         val darkturquoise = 0x00CED1
-        @JvmStatic
+
+        @JvmField
         val darkviolet = 0x9400D3
-        @JvmStatic
+
+        @JvmField
         val deeppink = 0xFF1493
-        @JvmStatic
+
+        @JvmField
         val deepskyblue = 0x00BFFF
-        @JvmStatic
+
+        @JvmField
         val dimgray = 0x696969
-        @JvmStatic
+
+        @JvmField
         val dimgrey = 0x696969
-        @JvmStatic
+
+        @JvmField
         val dodgerblue = 0x1E90FF
-        @JvmStatic
+
+        @JvmField
         val firebrick = 0xB22222
-        @JvmStatic
+
+        @JvmField
         val floralwhite = 0xFFFAF0
-        @JvmStatic
+
+        @JvmField
         val forestgreen = 0x228B22
-        @JvmStatic
+
+        @JvmField
         val fuchsia = 0xFF00FF
-        @JvmStatic
+
+        @JvmField
         val gainsboro = 0xDCDCDC
-        @JvmStatic
+
+        @JvmField
         val ghostwhite = 0xF8F8FF
-        @JvmStatic
+
+        @JvmField
         val gold = 0xFFD700
-        @JvmStatic
+
+        @JvmField
         val goldenrod = 0xDAA520
-        @JvmStatic
+
+        @JvmField
         val gray = 0x808080
-        @JvmStatic
+
+        @JvmField
         val green = 0x008000
-        @JvmStatic
+
+        @JvmField
         val greenyellow = 0xADFF2F
-        @JvmStatic
+
+        @JvmField
         val grey = 0x808080
-        @JvmStatic
+
+        @JvmField
         val honeydew = 0xF0FFF0
-        @JvmStatic
+
+        @JvmField
         val hotpink = 0xFF69B4
-        @JvmStatic
+
+        @JvmField
         val indianred = 0xCD5C5C
-        @JvmStatic
+
+        @JvmField
         val indigo = 0x4B0082
-        @JvmStatic
+
+        @JvmField
         val ivory = 0xFFFFF0
-        @JvmStatic
+
+        @JvmField
         val khaki = 0xF0E68C
-        @JvmStatic
+
+        @JvmField
         val lavender = 0xE6E6FA
-        @JvmStatic
+
+        @JvmField
         val lavenderblush = 0xFFF0F5
-        @JvmStatic
+
+        @JvmField
         val lawngreen = 0x7CFC00
-        @JvmStatic
+
+        @JvmField
         val lemonchiffon = 0xFFFACD
-        @JvmStatic
+
+        @JvmField
         val lightblue = 0xADD8E6
-        @JvmStatic
+
+        @JvmField
         val lightcoral = 0xF08080
-        @JvmStatic
+
+        @JvmField
         val lightcyan = 0xE0FFFF
-        @JvmStatic
+
+        @JvmField
         val lightgoldenrodyellow = 0xFAFAD2
-        @JvmStatic
+
+        @JvmField
         val lightgray = 0xD3D3D3
-        @JvmStatic
+
+        @JvmField
         val lightgreen = 0x90EE90
-        @JvmStatic
+
+        @JvmField
         val lightgrey = 0xD3D3D3
-        @JvmStatic
+
+        @JvmField
         val lightpink = 0xFFB6C1
-        @JvmStatic
+
+        @JvmField
         val lightsalmon = 0xFFA07A
-        @JvmStatic
+
+        @JvmField
         val lightseagreen = 0x20B2AA
-        @JvmStatic
+
+        @JvmField
         val lightskyblue = 0x87CEFA
-        @JvmStatic
+
+        @JvmField
         val lightslategray = 0x778899
-        @JvmStatic
+
+        @JvmField
         val lightslategrey = 0x778899
-        @JvmStatic
+
+        @JvmField
         val lightsteelblue = 0xB0C4DE
-        @JvmStatic
+
+        @JvmField
         val lightyellow = 0xFFFFE0
-        @JvmStatic
+
+        @JvmField
         val lime = 0x00FF00
-        @JvmStatic
+
+        @JvmField
         val limegreen = 0x32CD32
-        @JvmStatic
+
+        @JvmField
         val linen = 0xFAF0E6
-        @JvmStatic
+
+        @JvmField
         val magenta = 0xFF00FF
-        @JvmStatic
+
+        @JvmField
         val maroon = 0x800000
-        @JvmStatic
+
+        @JvmField
         val mediumaquamarine = 0x66CDAA
-        @JvmStatic
+
+        @JvmField
         val mediumblue = 0x0000CD
-        @JvmStatic
+
+        @JvmField
         val mediumorchid = 0xBA55D3
-        @JvmStatic
+
+        @JvmField
         val mediumpurple = 0x9370DB
-        @JvmStatic
+
+        @JvmField
         val mediumseagreen = 0x3CB371
-        @JvmStatic
+
+        @JvmField
         val mediumslateblue = 0x7B68EE
-        @JvmStatic
+
+        @JvmField
         val mediumspringgreen = 0x00FA9A
-        @JvmStatic
+
+        @JvmField
         val mediumturquoise = 0x48D1CC
-        @JvmStatic
+
+        @JvmField
         val mediumvioletred = 0xC71585
-        @JvmStatic
+
+        @JvmField
         val midnightblue = 0x191970
-        @JvmStatic
+
+        @JvmField
         val mintcream = 0xF5FFFA
-        @JvmStatic
+
+        @JvmField
         val mistyrose = 0xFFE4E1
-        @JvmStatic
+
+        @JvmField
         val moccasin = 0xFFE4B5
-        @JvmStatic
+
+        @JvmField
         val navajowhite = 0xFFDEAD
-        @JvmStatic
+
+        @JvmField
         val navy = 0x000080
-        @JvmStatic
+
+        @JvmField
         val oldlace = 0xFDF5E6
-        @JvmStatic
+
+        @JvmField
         val olive = 0x808000
-        @JvmStatic
+
+        @JvmField
         val olivedrab = 0x6B8E23
-        @JvmStatic
+
+        @JvmField
         val orange = 0xFFA500
-        @JvmStatic
+
+        @JvmField
         val orangered = 0xFF4500
-        @JvmStatic
+
+        @JvmField
         val orchid = 0xDA70D6
-        @JvmStatic
+
+        @JvmField
         val palegoldenrod = 0xEEE8AA
-        @JvmStatic
+
+        @JvmField
         val palegreen = 0x98FB98
-        @JvmStatic
+
+        @JvmField
         val paleturquoise = 0xAFEEEE
-        @JvmStatic
+
+        @JvmField
         val palevioletred = 0xDB7093
-        @JvmStatic
+
+        @JvmField
         val papayawhip = 0xFFEFD5
-        @JvmStatic
+
+        @JvmField
         val peachpuff = 0xFFDAB9
-        @JvmStatic
+
+        @JvmField
         val peru = 0xCD853F
-        @JvmStatic
+
+        @JvmField
         val pink = 0xFFC0CB
-        @JvmStatic
+
+        @JvmField
         val plum = 0xDDA0DD
-        @JvmStatic
+
+        @JvmField
         val powderblue = 0xB0E0E6
-        @JvmStatic
+
+        @JvmField
         val purple = 0x800080
-        @JvmStatic
+
+        @JvmField
         val rebeccapurple = 0x663399
-        @JvmStatic
+
+        @JvmField
         val red = 0xFF0000
-        @JvmStatic
+
+        @JvmField
         val rosybrown = 0xBC8F8F
-        @JvmStatic
+
+        @JvmField
         val royalblue = 0x4169E1
-        @JvmStatic
+
+        @JvmField
         val saddlebrown = 0x8B4513
-        @JvmStatic
+
+        @JvmField
         val salmon = 0xFA8072
-        @JvmStatic
+
+        @JvmField
         val sandybrown = 0xF4A460
-        @JvmStatic
+
+        @JvmField
         val seagreen = 0x2E8B57
-        @JvmStatic
+
+        @JvmField
         val seashell = 0xFFF5EE
-        @JvmStatic
+
+        @JvmField
         val sienna = 0xA0522D
-        @JvmStatic
+
+        @JvmField
         val silver = 0xC0C0C0
-        @JvmStatic
+
+        @JvmField
         val skyblue = 0x87CEEB
-        @JvmStatic
+
+        @JvmField
         val slateblue = 0x6A5ACD
-        @JvmStatic
+
+        @JvmField
         val slategray = 0x708090
-        @JvmStatic
+
+        @JvmField
         val slategrey = 0x708090
-        @JvmStatic
+
+        @JvmField
         val snow = 0xFFFAFA
-        @JvmStatic
+
+        @JvmField
         val springgreen = 0x00FF7F
-        @JvmStatic
+
+        @JvmField
         val steelblue = 0x4682B4
-        @JvmStatic
+
+        @JvmField
         val tan = 0xD2B48C
-        @JvmStatic
+
+        @JvmField
         val teal = 0x008080
-        @JvmStatic
+
+        @JvmField
         val thistle = 0xD8BFD8
-        @JvmStatic
+
+        @JvmField
         val tomato = 0xFF6347
-        @JvmStatic
+
+        @JvmField
         val turquoise = 0x40E0D0
-        @JvmStatic
+
+        @JvmField
         val violet = 0xEE82EE
-        @JvmStatic
+
+        @JvmField
         val wheat = 0xF5DEB3
-        @JvmStatic
+
+        @JvmField
         val white = 0xFFFFFF
-        @JvmStatic
+
+        @JvmField
         val whitesmoke = 0xF5F5F5
-        @JvmStatic
+
+        @JvmField
         val yellow = 0xFFFF00
-        @JvmStatic
+
+        @JvmField
         val yellowgreen = 0x9ACD32
 
     }

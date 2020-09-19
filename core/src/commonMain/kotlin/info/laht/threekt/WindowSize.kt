@@ -1,5 +1,6 @@
-package info.laht.threekt.math
+package info.laht.threekt
 
+import info.laht.threekt.math.Vector2
 import kotlin.jvm.JvmOverloads
 
 data class WindowSize(

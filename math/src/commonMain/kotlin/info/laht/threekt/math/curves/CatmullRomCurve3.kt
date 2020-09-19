@@ -1,16 +1,16 @@
-package info.laht.threekt.extras.curves
+package info.laht.threekt.math.curves
 
-import info.laht.threekt.extras.core.Curve3
+import info.laht.threekt.math.Curve3
 import info.laht.threekt.math.Vector3
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.pow
 
 class CatmullRomCurve3(
-    val points: List<Vector3> = mutableListOf(),
-    var closed: Boolean = false,
-    var curveType: CurveType = CurveType.centripetal,
-    var tension: Float = 0.5f
+        val points: List<Vector3> = mutableListOf(),
+        var closed: Boolean = false,
+        var curveType: CurveType = CurveType.centripetal,
+        var tension: Float = 0.5f
 ) : Curve3() {
 
     private val tmp = Vector3()

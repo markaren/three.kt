@@ -51,6 +51,19 @@ open class Line @JvmOverloads constructor(
         TODO()
     }
 
+    fun copy(source: Line): Line {
+        super<Object3DImpl>.copy(source, false)
+
+        this.geometry.copy(source.geometry)
+        this.material.copy(source.material)
+
+        return this
+    }
+
+    override fun clone(): Line {
+        return Line(this.geometry, this.material).copy(this)
+    }
+
     private companion object {
 
         val LOG: Logger = getLogger(Line::class)

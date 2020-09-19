@@ -167,6 +167,24 @@ internal inline fun <reified T> MutableList<T>.splice(start: Int, deleteCount: I
 }
 
 
+internal inline fun <reified T> MutableList<T>.push(value: T): Int {
+    add(value)
+    return size
+}
+
+internal inline fun <reified T> MutableList<T>.push(v1: T, v2: T): Int {
+    add(v1)
+    add(v2)
+    return size
+}
+
+internal inline fun <reified T> MutableList<T>.push(v1: T, v2: T, v3: T): Int {
+    add(v1)
+    add(v2)
+    add(v3)
+    return size
+}
+
 internal inline fun <reified T> MutableList<T>.push(value: T, vararg values: T): Int {
     add(value)
     values.forEach { add(it) }

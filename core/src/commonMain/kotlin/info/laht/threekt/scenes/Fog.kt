@@ -37,7 +37,7 @@ class FogExp2(
 
     var density = density?.toFloat() ?: 0.00025f
 
-    constructor(color: Int, density: Float?) : this(Color(color), density)
+    constructor(color: Int, density: Float? = null) : this(Color(color), density)
 
     override fun clone(): FogExp2 {
         return FogExp2(color.clone(), density)
