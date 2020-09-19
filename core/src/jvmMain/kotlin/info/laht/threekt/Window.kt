@@ -34,7 +34,8 @@ class Window @JvmOverloads constructor(
     val aspect: Float
         get() = size.aspect
 
-    private val mouseEvent = MouseEvent()
+    private val mouseEvent = MouseEventImpl()
+    private val mouseWheelEvent = MouseWheelEventImpl()
     private var debugProc: Callback? = null
 
     private var windowResizeCallback: WindowResizeListener? = null
@@ -103,8 +104,8 @@ class Window @JvmOverloads constructor(
 
         glfwSetScrollCallback(hwnd) { _, xoffset, yoffset ->
             mouseListeners?.also { listeners ->
-                val evt = MouseWheelEvent(xoffset.toFloat(), yoffset.toFloat())
-                listeners.forEach { it.onMouseWheel(evt) }
+                mouseWheelEvent.update(xoffset.toFloat(), yoffset.toFloat())
+                listeners.forEach { it.onMouseWheel(mouseWheelEvent) }
             }
         }
 

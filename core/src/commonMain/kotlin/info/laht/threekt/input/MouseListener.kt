@@ -23,36 +23,55 @@ abstract class MouseAdapter : MouseListener {
 
 }
 
+interface MouseWheelEvent {
+    val deltaX: Float
+    val deltaY: Float
+}
 
-data class MouseWheelEvent(
-        val deltaX: Float,
-        val deltaY: Float
-)
 
-class MouseEvent {
+class MouseWheelEventImpl : MouseWheelEvent {
 
-    var clientX = 0
+    override var deltaX: Float = 0f
+    override var deltaY: Float = 0f
+
+    internal fun update(deltaX: Float, deltaY: Float) {
+        this.deltaX = deltaX
+        this.deltaY = deltaY
+    }
+
+    override fun toString(): String {
+        return "MouseWheelEventImpl(deltaX=$deltaX, deltaY=$deltaY)"
+    }
+
+}
+
+
+interface MouseEvent {
+
+    val button: Int
+    val clientX: Int
+    val clientY: Int
+
+}
+
+class MouseEventImpl : MouseEvent {
+
+    override var clientX = 0
         private set
-    private var lastClientX = 0
 
-    var clientY = 0
+    override var clientY = 0
         private set
 
-    private var lastClientY = 0
-
-    var button: Int = 0
+    override var button: Int = 0
         internal set
 
     internal fun updateCoordinates(clientX: Int, clientY: Int) {
-        this.lastClientX = this.clientX
-        this.lastClientY = this.clientY
-
         this.clientX = clientX
         this.clientY = clientY
     }
 
     override fun toString(): String {
-        return "MouseEvent(clientX=$clientX, clientY=$clientY, button=$button)"
+        return "MouseEventImpl(clientX=$clientX, clientY=$clientY, button=$button)"
     }
 
 }
