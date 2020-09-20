@@ -98,12 +98,15 @@ class OrbitControls(
 
     private var state = State.NONE
 
+	private val defaultKeyListener = MyKeyListener()
+	private val defaultMouseListener = MyMouseListener()
+
     init {
 
         update()
 
-        eventSource.addKeyListener(MyKeyListener())
-        eventSource.addMouseListener(MyMouseListener())
+        eventSource.addKeyListener(defaultKeyListener)
+        eventSource.addMouseListener(defaultMouseListener)
 
     }
 
@@ -503,6 +506,11 @@ class OrbitControls(
         update()
 
     }
+
+	fun dispose() {
+		eventSource.removeKeyListener(defaultKeyListener)
+		eventSource.removeMouseListener(defaultMouseListener)
+	}
 
     private inner class MyKeyListener : KeyListener {
 

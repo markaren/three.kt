@@ -74,3 +74,11 @@ fun ceilPowerOfTwo(value: Float): Float {
 fun floorPowerOfTwo(value: Float): Float {
     return 2f.pow(floor(ln(value) / LN2))
 }
+
+fun radToDeg(radians: Float): Float {
+	return radians * RAD2DEG
+}
+
+fun degToRad(degrees: Int): Float {
+	return degrees * DEG2RAD
+}
