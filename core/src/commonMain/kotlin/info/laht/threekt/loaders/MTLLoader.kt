@@ -313,7 +313,7 @@ class MTLLoader {
 
         }
 
-        fun loadTexture(url: String, mapping: TextureMapping? = null): Texture {
+        private fun loadTexture(url: String, mapping: TextureMapping? = null): Texture {
 
             val texture = TextureLoader.load(url)
             mapping?.also {
