@@ -101,8 +101,8 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 
 		if (heightSpeed) {
 
-			var y = clamp(camera.position.y, heightMin, heightMax)
-			var heightDelta = y - heightMin
+			val y = clamp(camera.position.y, heightMin, heightMax)
+			val heightDelta = y - heightMin
 
 			this.autoSpeedFactor = delta * (heightDelta * heightCoef)
 
@@ -112,7 +112,7 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 
 		}
 
-		var actualMoveSpeed = delta * movementSpeed
+		val actualMoveSpeed = delta * movementSpeed
 
 		if (moveForward || (autoForward && !moveBackward)) camera.translateZ(-(actualMoveSpeed + autoSpeedFactor))
 		if (moveBackward) camera.translateZ(actualMoveSpeed)
@@ -120,8 +120,8 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 		if (moveLeft) camera.translateX(-actualMoveSpeed)
 		if (moveRight) camera.translateX(actualMoveSpeed)
 
-		if (moveUp) camera.translateY(actualMoveSpeed)
-		if (moveDown) camera.translateY(-actualMoveSpeed)
+		if (moveUp) camera.translateY(-actualMoveSpeed)
+		if (moveDown) camera.translateY(actualMoveSpeed)
 
 		var actualLookSpeed = delta * lookSpeed
 
@@ -145,7 +145,7 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 		lat = max(-85, min(85, lat))
 
 		var phi = degToRad(90 - lat)
-		var theta = degToRad(lon)
+		val theta = degToRad(lon)
 
 		if (constrainVertical) {
 
@@ -153,7 +153,7 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 
 		}
 
-		var position = camera.position
+		val position = camera.position
 
 		targetPosition.setFromSphericalCoords(1.0f, phi, theta).add(position)
 
@@ -192,8 +192,8 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 			}
 		}
 
-		fun onKeyReleased(event: KeyEvent) {
-			var needsUpdate = true
+		override fun onKeyReleased(event: KeyEvent) {
+			var needsUpdate = false
 			when (event.keyCode) {
 				38, 87 -> moveForward = false
 				37, 65 -> moveLeft = false
@@ -231,8 +231,8 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 		}
 
 		override fun onMouseMove(event: MouseEvent) {
-			mouseX = event.clientX
-			mouseY = event.clientY
+			mouseX = event.clientX - viewHalfX
+			mouseY = event.clientY - viewHalfY
 		}
 	}
 
