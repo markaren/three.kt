@@ -5,6 +5,7 @@ import info.laht.threekt.core.EventDispatcher
 import info.laht.threekt.core.EventDispatcherImpl
 import info.laht.threekt.input.*
 import info.laht.threekt.math.*
+import kotlin.jvm.JvmOverloads
 import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.min
@@ -92,10 +93,10 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 		return this
 	}
 
-	fun update() {
+	//this function has to be called in the animation loop
+	@JvmOverloads
+	fun update(delta: Float = 0.5f) {
 		val targetPosition = Vector3()
-
-		val delta = 0.5f
 
 		if (!enabled) return
 
@@ -177,7 +178,7 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 
 	private inner class MyKeyListener : KeyListener {
 		override fun onKeyPressed(event: KeyEvent) {
-			var needsUpdate = true
+			var needUpdate = true
 			when (event.keyCode) {
 				38, 87 -> moveForward = true
 				37, 65 -> moveLeft = true
@@ -185,15 +186,15 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 				39, 68 -> moveRight = true
 				82 -> moveUp = true
 				70 -> moveDown = true
-				else -> needsUpdate = false
+				else -> needUpdate = false
 			}
-			if (needsUpdate) {
+			if (needUpdate) {
 				update()
 			}
 		}
 
 		override fun onKeyReleased(event: KeyEvent) {
-			var needsUpdate = false
+			var needUpdate = false
 			when (event.keyCode) {
 				38, 87 -> moveForward = false
 				37, 65 -> moveLeft = false
@@ -201,9 +202,9 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 				39, 68 -> moveRight = false
 				82 -> moveUp = false
 				70 -> moveDown = false
-				else -> needsUpdate = false
+				else -> needUpdate = false
 			}
-			if (needsUpdate) {
+			if (needUpdate) {
 				update()
 			}
 		}
