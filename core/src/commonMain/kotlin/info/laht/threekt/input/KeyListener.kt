@@ -8,7 +8,7 @@ interface KeyListener {
 
 }
 
-open class KeyAdapter : KeyListener {
+abstract class KeyAdapter : KeyListener {
 
     override fun onKeyPressed(event: KeyEvent) {}
     override fun onKeyReleased(event: KeyEvent) {}
