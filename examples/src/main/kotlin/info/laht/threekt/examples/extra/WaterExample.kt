@@ -5,13 +5,13 @@ import info.laht.threekt.Window
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.core.Clock
-import info.laht.threekt.examples.textures.TextureExample
 import info.laht.threekt.extras.objects.Sky
 import info.laht.threekt.extras.objects.Water
 import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.geometries.SphereBufferGeometry
 import info.laht.threekt.lights.DirectionalLight
 import info.laht.threekt.loaders.TextureLoader
+import info.laht.threekt.loaders.load
 import info.laht.threekt.materials.MeshPhongMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.TWO_PI
@@ -55,12 +55,11 @@ object WaterExample {
 
             val planeGeometry = PlaneBufferGeometry(10000)
 
-            val texture =
-                    TextureLoader.load(TextureExample::class.java.classLoader.getResource("textures/waternormals.jpg").file)
-                            .also {
-                                it.wrapS = TextureWrapping.Repeat
-                                it.wrapT = TextureWrapping.Repeat
-                            }
+            val normals = javaClass.classLoader.getResource("textures/waternormals.jpg")!!
+            val texture = TextureLoader.load(normals).also {
+                it.wrapS = TextureWrapping.Repeat
+                it.wrapT = TextureWrapping.Repeat
+            }
 
             val water = Water(
                     planeGeometry, Water.Options(
@@ -72,8 +71,7 @@ object WaterExample {
                     textureHeight = 512,
                     sunDirection = light.position.clone().normalize(),
                     distortionScale = 1f
-            )
-            ).also {
+            )).also {
                 it.rotateX(-PI.toFloat() / 2)
                 scene.add(it)
             }
