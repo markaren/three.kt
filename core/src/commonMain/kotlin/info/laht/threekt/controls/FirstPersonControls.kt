@@ -203,6 +203,10 @@ class FirstPersonControls(
                 70 -> moveDown = false //F
             }
         }
+
+	    override fun onKeyRepeat(event: KeyEvent) {
+		    //empty
+	    }
     }
 
     private inner class MyMouseListener : MouseAdapter() {

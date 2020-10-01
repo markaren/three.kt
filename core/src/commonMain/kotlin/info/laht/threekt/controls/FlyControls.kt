@@ -134,6 +134,10 @@ class FlyControls(
             updateMovementVector()
             updateRotationVector()
         }
+
+	    override fun onKeyRepeat(event: KeyEvent) {
+		    //empty
+	    }
     }
 
     private inner class MyMouseListener : MouseAdapter() {

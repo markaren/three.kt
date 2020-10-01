@@ -521,10 +521,12 @@ class OrbitControls(
         }
 
         override fun onKeyReleased(event: KeyEvent) {
-            /*
-            * Empty
-            */
+            //empty
         }
+
+	    override fun onKeyRepeat(event: KeyEvent) {
+		    //empty
+	    }
     }
 
     private inner class MyMouseListener : MouseAdapter() {

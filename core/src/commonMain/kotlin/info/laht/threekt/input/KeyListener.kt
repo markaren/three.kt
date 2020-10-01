@@ -4,16 +4,8 @@ interface KeyListener {
 
     fun onKeyPressed(event: KeyEvent)
     fun onKeyReleased(event: KeyEvent)
+    fun onKeyRepeat(event: KeyEvent)
 
 }
 
-data class KeyEvent(
-        val keyCode: Int,
-        val action: KeyAction
-)
-
-enum class KeyAction {
-    RELEASE,
-    PRESS,
-    REPEAT;
-}
+data class KeyEvent(val keyCode: Int)
