@@ -181,7 +181,7 @@ class FirstPersonControls(
         lon = radToDeg(spherical.theta).toInt()
     }
 
-    private inner class MyKeyListener : KeyListener {
+    private inner class MyKeyListener : KeyAdapter() {
         override fun onKeyPressed(event: KeyEvent) {
             when (event.keyCode) {
                 38, 87, 265 -> moveForward = true //Up, W (265 = up)
@@ -204,9 +204,6 @@ class FirstPersonControls(
             }
         }
 
-	    override fun onKeyRepeat(event: KeyEvent) {
-		    //empty
-	    }
     }
 
     private inner class MyMouseListener : MouseAdapter() {

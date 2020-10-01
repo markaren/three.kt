@@ -92,7 +92,7 @@ class FlyControls(
         eventSource.removeMouseListener(defaultMouseListener)
     }
 
-    private inner class MyKeyListener : KeyListener {
+    private inner class MyKeyListener : KeyAdapter() {
         override fun onKeyPressed(event: KeyEvent) {
             when (event.keyCode) {
                 16 -> movementSpeedMultiplier = 0.1 //Shift
@@ -135,9 +135,6 @@ class FlyControls(
             updateRotationVector()
         }
 
-	    override fun onKeyRepeat(event: KeyEvent) {
-		    //empty
-	    }
     }
 
     private inner class MyMouseListener : MouseAdapter() {

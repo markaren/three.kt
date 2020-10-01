@@ -512,7 +512,7 @@ class OrbitControls(
         eventSource.removeMouseListener(defaultMouseListener)
     }
 
-    private inner class MyKeyListener : KeyListener {
+    private inner class MyKeyListener : KeyAdapter() {
 
         override fun onKeyPressed(event: KeyEvent) {
             if (enabled && enableKeys && enablePan) {
@@ -520,13 +520,6 @@ class OrbitControls(
             }
         }
 
-        override fun onKeyReleased(event: KeyEvent) {
-            //empty
-        }
-
-	    override fun onKeyRepeat(event: KeyEvent) {
-		    //empty
-	    }
     }
 
     private inner class MyMouseListener : MouseAdapter() {

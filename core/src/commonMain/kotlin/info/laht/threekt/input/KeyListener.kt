@@ -8,4 +8,11 @@ interface KeyListener {
 
 }
 
+open class KeyAdapter : KeyListener {
+
+    override fun onKeyPressed(event: KeyEvent) {}
+    override fun onKeyReleased(event: KeyEvent) {}
+    override fun onKeyRepeat(event: KeyEvent) {}
+}
+
 data class KeyEvent(val keyCode: Int)
