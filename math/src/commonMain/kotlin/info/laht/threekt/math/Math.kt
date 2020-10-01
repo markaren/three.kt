@@ -76,9 +76,9 @@ fun floorPowerOfTwo(value: Float): Float {
 }
 
 fun radToDeg(radians: Float): Float {
-	return radians * RAD2DEG
+    return radians * RAD2DEG
 }
 
 fun degToRad(degrees: Int): Float {
-	return degrees * DEG2RAD
+    return degrees * DEG2RAD
 }

@@ -15,8 +15,8 @@ import kotlin.math.*
 private const val EPS = 0.000001f
 
 class OrbitControls(
-    private val camera: Camera,
-    private val eventSource: PeripheralsEventSource
+        private val camera: Camera,
+        private val eventSource: PeripheralsEventSource
 ) : EventDispatcher by EventDispatcherImpl() {
 
     // Set to false to disable this control
@@ -98,8 +98,8 @@ class OrbitControls(
 
     private var state = State.NONE
 
-	private val defaultKeyListener = MyKeyListener()
-	private val defaultMouseListener = MyMouseListener()
+    private val defaultKeyListener = MyKeyListener()
+    private val defaultMouseListener = MyMouseListener()
 
     init {
 
@@ -247,8 +247,8 @@ class OrbitControls(
         // using small-angle approximation cos(x/2) = 1 - x^2 / 8
 
         if (zoomChanged ||
-            lastPosition.distanceToSquared(this.camera.position) > EPS ||
-            8 * (1 - lastQuaternion.dot(this.camera.quaternion)) > EPS
+                lastPosition.distanceToSquared(this.camera.position) > EPS ||
+                8 * (1 - lastQuaternion.dot(this.camera.quaternion)) > EPS
         ) {
 
             this.dispatchEvent("change", this)
@@ -346,11 +346,11 @@ class OrbitControls(
                 // orthographic
                 panLeft(
                         deltaX * (this.camera.right - this.camera.left) / this.camera.zoom / eventSource.size.width,
-                    this.camera.matrix
+                        this.camera.matrix
                 )
                 panUp(
                         deltaY * (this.camera.top - this.camera.bottom) / this.camera.zoom / eventSource.size.height,
-                    this.camera.matrix
+                        this.camera.matrix
                 )
             }
             else -> {
@@ -507,10 +507,10 @@ class OrbitControls(
 
     }
 
-	fun dispose() {
-		eventSource.removeKeyListener(defaultKeyListener)
-		eventSource.removeMouseListener(defaultMouseListener)
-	}
+    fun dispose() {
+        eventSource.removeKeyListener(defaultKeyListener)
+        eventSource.removeMouseListener(defaultMouseListener)
+    }
 
     private inner class MyKeyListener : KeyListener {
 
@@ -520,11 +520,11 @@ class OrbitControls(
             }
         }
 
-		override fun onKeyReleased(event: KeyEvent) {
-			/*
-			* Empty
-			*/
-		}
+        override fun onKeyReleased(event: KeyEvent) {
+            /*
+            * Empty
+            */
+        }
     }
 
     private inner class MyMouseListener : MouseAdapter() {
@@ -602,7 +602,7 @@ class OrbitControls(
     }
 
     private inner class MyMouseUpListener(
-        private val moveListener: MyMouseMoveListener
+            private val moveListener: MyMouseMoveListener
     ) : MouseAdapter() {
 
         override fun onMouseUp(button: Int, event: MouseEvent) {

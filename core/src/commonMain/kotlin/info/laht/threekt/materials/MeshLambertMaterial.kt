@@ -4,7 +4,7 @@ import info.laht.threekt.math.Color
 import info.laht.threekt.textures.Texture
 
 class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning, MaterialWithMorphTargets,
-    MaterialWithMorphNormals, MaterialWithEmissive, MaterialWithWireframe, MaterialWithReflectivity {
+        MaterialWithMorphNormals, MaterialWithEmissive, MaterialWithWireframe, MaterialWithReflectivity {
 
     override val color = Color(0xffffff)
 
@@ -21,7 +21,7 @@ class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning,
     override var morphTargets = false
     override var morphNormals = false
 
-	public override var map: Texture? = null
+    public override var map: Texture? = null
 
     override fun clone(): MeshLambertMaterial {
         return MeshLambertMaterial().copy(this)

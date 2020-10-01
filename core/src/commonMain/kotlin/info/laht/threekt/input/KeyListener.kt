@@ -3,7 +3,7 @@ package info.laht.threekt.input
 interface KeyListener {
 
     fun onKeyPressed(event: KeyEvent)
-	fun onKeyReleased(event: KeyEvent)
+    fun onKeyReleased(event: KeyEvent)
 
 }
 

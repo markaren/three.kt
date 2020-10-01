@@ -78,20 +78,20 @@ class Window @JvmOverloads constructor(
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(hwnd, true) // We will detect this in the rendering loop
             } else if (action == GLFW_RELEASE) {
-				keyListeners?.also { listeners ->
-					val evt = KeyEvent(key, action.toKeyAction())
-					listeners.forEach {
-						it.onKeyReleased(evt)
-					}
-				}
-			} else {
-				keyListeners?.also { listeners ->
-					val evt = KeyEvent(key, action.toKeyAction())
-					listeners.forEach {
-						it.onKeyPressed(evt)
-					}
-				}
-			}
+                keyListeners?.also { listeners ->
+                    val evt = KeyEvent(key, action.toKeyAction())
+                    listeners.forEach {
+                        it.onKeyReleased(evt)
+                    }
+                }
+            } else {
+                keyListeners?.also { listeners ->
+                    val evt = KeyEvent(key, action.toKeyAction())
+                    listeners.forEach {
+                        it.onKeyPressed(evt)
+                    }
+                }
+            }
         }
 
         glfwSetMouseButtonCallback(hwnd) { _, button, action, _ ->
