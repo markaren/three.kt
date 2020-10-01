@@ -10,7 +10,8 @@ import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.min
 
-class FirstPersonControls(private val camera: Camera, private val eventSource: PeripheralsEventSource) : EventDispatcher by EventDispatcherImpl() {
+class FirstPersonControls(private val camera: Camera, private val eventSource: PeripheralsEventSource) :
+	EventDispatcher by EventDispatcherImpl() {
 
 	// Set to false to disable this control
 	var enabled = true
@@ -32,8 +33,8 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 	var heightMax = 1.0f
 
 	var constrainVertical = false
-	var verticalMin = 0
-	var verticalMax = PI
+	var verticalMin = 0.0f
+	var verticalMax = PI_FLOAT
 
 	var mouseDragOn = false
 
@@ -74,7 +75,7 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 		eventSource.addMouseListener(defaultMouseListener)
 	}
 
-	fun handleResize() {
+	private fun handleResize() {
 		viewHalfX = eventSource.size.width / 2
 		viewHalfY = eventSource.size.height / 2
 	}
@@ -115,7 +116,9 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 
 		val actualMoveSpeed = delta * movementSpeed
 
-		if (moveForward || (autoForward && !moveBackward)) camera.translateZ(-(actualMoveSpeed + autoSpeedFactor))
+		if (moveForward || (autoForward && !moveBackward)) {
+			camera.translateZ(-(actualMoveSpeed + autoSpeedFactor))
+		}
 		if (moveBackward) camera.translateZ(actualMoveSpeed)
 
 		if (moveLeft) camera.translateX(-actualMoveSpeed)
@@ -150,7 +153,7 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 
 		if (constrainVertical) {
 
-			phi = mapLinear(phi, 0.0f, PI.toFloat(), verticalMin.toFloat(), verticalMax.toFloat())
+			phi = mapLinear(phi, 0.0f, PI_FLOAT, verticalMin, verticalMax)
 
 		}
 
@@ -166,7 +169,7 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 		eventSource.removeMouseListener(defaultMouseListener)
 	}
 
-	fun setOrientation(controls: FirstPersonControls) {
+	private fun setOrientation(controls: FirstPersonControls) {
 		val quaternion = controls.camera.quaternion
 
 		lookDirection.set(0, 0, -1).applyQuaternion(quaternion)
@@ -178,34 +181,24 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 
 	private inner class MyKeyListener : KeyListener {
 		override fun onKeyPressed(event: KeyEvent) {
-			var needUpdate = true
 			when (event.keyCode) {
-				38, 87 -> moveForward = true
-				37, 65 -> moveLeft = true
-				40, 83 -> moveBackward = true
-				39, 68 -> moveRight = true
-				82 -> moveUp = true
-				70 -> moveDown = true
-				else -> needUpdate = false
-			}
-			if (needUpdate) {
-				update()
+				38, 87, 265 -> moveForward = true //Up, W (265 = up)
+				37, 65, 263 -> moveLeft = true //Left, A (263 = left)
+				40, 83, 264 -> moveBackward = true //Down S (264 = down)
+				39, 68, 262 -> moveRight = true //Right D (262 = right)
+				82 -> moveUp = true //R
+				70 -> moveDown = true //F
 			}
 		}
 
 		override fun onKeyReleased(event: KeyEvent) {
-			var needUpdate = false
 			when (event.keyCode) {
-				38, 87 -> moveForward = false
-				37, 65 -> moveLeft = false
-				40, 83 -> moveBackward = false
-				39, 68 -> moveRight = false
-				82 -> moveUp = false
-				70 -> moveDown = false
-				else -> needUpdate = false
-			}
-			if (needUpdate) {
-				update()
+				38, 87, 265 -> moveForward = false //Up, W (265 = up)
+				37, 65, 263 -> moveLeft = false //Left, A (263 = left)
+				40, 83, 264 -> moveBackward = false //Down S (264 = down)
+				39, 68, 262 -> moveRight = false //Right D (262 = right)
+				82 -> moveUp = false //R
+				70 -> moveDown = false //F
 			}
 		}
 	}
@@ -214,8 +207,8 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 		override fun onMouseDown(button: Int, event: MouseEvent) {
 			if (activeLook) {
 				when (button) {
-					0 -> moveForward = true //0 = left
-					1 -> moveBackward = true //1 == right
+					0 -> moveForward = true //Left click
+					1 -> moveBackward = true //Right click
 				}
 			}
 			mouseDragOn = true
@@ -224,8 +217,8 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 		override fun onMouseUp(button: Int, event: MouseEvent) {
 			if (activeLook) {
 				when (button) {
-					0 -> moveForward = false
-					1 -> moveBackward = false
+					0 -> moveForward = false //Left click
+					1 -> moveBackward = false //Right click
 				}
 			}
 			mouseDragOn = false
@@ -235,6 +228,10 @@ class FirstPersonControls(private val camera: Camera, private val eventSource: P
 			mouseX = event.clientX - viewHalfX
 			mouseY = event.clientY - viewHalfY
 		}
+	}
+
+	companion object {
+		private const val PI_FLOAT = PI.toFloat()
 	}
 
 }

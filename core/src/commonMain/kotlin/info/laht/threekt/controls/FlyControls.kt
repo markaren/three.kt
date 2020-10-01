@@ -8,26 +8,27 @@ import info.laht.threekt.math.Quaternion
 import info.laht.threekt.math.Vector3
 import kotlin.jvm.JvmOverloads
 
-class FlyControls(private val camera: Camera, private val eventSource: PeripheralsEventSource) : EventDispatcher by EventDispatcherImpl() {
+class FlyControls(private val camera: Camera, private val eventSource: PeripheralsEventSource) :
+		EventDispatcher by EventDispatcherImpl() {
 
-	var movementSpeed = 1.0
-	var rollSpeed = 0.005
+	var movementSpeed = 1.0f
+	var rollSpeed = 0.005f
 	var dragToLook = false
 	var autoForward = false
 
 	private val tmpQuaternion = Quaternion()
 	private var mouseStatus = 0
 	private var moveStateUp = 0
-	private var moveStateDown = 0
-	private var moveStateLeft = 0
-	private var moveStateRight = 0
+	private var moveStateDown = 0.0f
+	private var moveStateLeft = 0.0f
+	private var moveStateRight = 0.0f
 	private var moveStateForward = 0
 	private var moveStateBack = 0
 	private var moveStatePitchUp = 0
-	private var moveStatePitchDown = 0.0
-	private var moveStateYawLeft = 0.0
-	private var moveStateYawRight = 0
-	private var moveStateRollLeft = 0
+	private var moveStatePitchDown = 0.0f
+	private var moveStateYawLeft = 0.0f
+	private var moveStateYawRight = 0.0f
+	private var moveStateRollLeft = 0.0f
 	private var moveStateRollRight = 0
 
 	private var moveVector = Vector3()
@@ -38,6 +39,10 @@ class FlyControls(private val camera: Camera, private val eventSource: Periphera
 	private val defaultKeyListener = MyKeyListener()
 	private val defaultMouseListener = MyMouseListener()
 
+	//used for updating
+	private val lastQuaternion = Quaternion()
+	private val lastPosition = Vector3()
+
 	init {
 		eventSource.addKeyListener(defaultKeyListener)
 		eventSource.addMouseListener(defaultMouseListener)
@@ -46,32 +51,31 @@ class FlyControls(private val camera: Camera, private val eventSource: Periphera
 	}
 
 	private fun updateMovementVector() {
-		val forward = if (moveStateForward != 0 || autoForward && moveStateBack == 0) 1 else 0
+		val forward = if (moveStateForward != 0 || autoForward && moveStateBack == 0) 1.0f else 0.0f
 
-		moveVector.x = -moveStateLeft.toFloat() + moveStateRight
-		moveVector.y = -moveStateDown.toFloat() + moveStateUp
-		moveVector.z = -forward + moveStateBack.toFloat()
+		moveVector.x = -moveStateLeft + moveStateRight
+		moveVector.y = -moveStateDown + moveStateUp
+		moveVector.z = -forward + moveStateBack
 	}
 
 	private fun updateRotationVector() {
-		rotationVector.x = -moveStatePitchDown.toFloat() + moveStatePitchUp
-		rotationVector.y = -moveStateYawRight.toFloat() + moveStateYawLeft.toFloat()
-		rotationVector.z = -moveStateRollRight.toFloat() + moveStateRollLeft
+		rotationVector.x = -moveStatePitchDown + moveStatePitchUp
+		rotationVector.y = -moveStateYawRight + moveStateYawLeft
+		rotationVector.z = -moveStateRollRight + moveStateRollLeft
 	}
 
 	//this function has to be called in the animation loop
 	@JvmOverloads
 	fun update(delta: Float = 0.5f) {
-		val lastQuaternion = Quaternion()
-		val lastPosition = Vector3()
 		val moveMult = delta * movementSpeed
 		val rotMult = delta * rollSpeed
 
-		camera.translateX(moveVector.x * moveMult.toFloat())
-		camera.translateY(moveVector.y * moveMult.toFloat())
-		camera.translateZ(moveVector.z * moveMult.toFloat())
+		camera.translateX(moveVector.x * moveMult)
+		camera.translateY(moveVector.y * moveMult)
+		camera.translateZ(moveVector.z * moveMult)
 
-		tmpQuaternion.set(rotationVector.x * rotMult, rotationVector.y * rotMult, rotationVector.z * rotMult, 1).normalize()
+		tmpQuaternion.set(rotationVector.x * rotMult, rotationVector.y * rotMult, rotationVector.z * rotMult, 1)
+				.normalize()
 		camera.quaternion.multiply(tmpQuaternion)
 
 		if (lastPosition.distanceToSquared(camera.position) > EPS || 8 * (1 - lastQuaternion.dot(camera.quaternion)) > EPS) {
@@ -88,55 +92,45 @@ class FlyControls(private val camera: Camera, private val eventSource: Periphera
 
 	private inner class MyKeyListener : KeyListener {
 		override fun onKeyPressed(event: KeyEvent) {
-			var update = true
 			when (event.keyCode) {
-				16 -> movementSpeedMultiplier = .1
-				87 -> moveStateForward = 1
-				83 -> moveStateBack = 1
-				65 -> moveStateLeft = 1
-				68 -> moveStateRight = 1
-				82 -> moveStateUp = 1
-				70 -> moveStateDown = 1
-				38, 265 -> moveStatePitchUp = 1
-				40, 264 -> moveStatePitchDown = 1.0
-				37 -> moveStateYawLeft = 1.0
-				39 -> moveStateYawRight = 1
-				81 -> moveStateRollLeft = 1
-				69 -> moveStateRollRight = 1
-				342 -> return //alt key
-				else -> update = false
+				16 -> movementSpeedMultiplier = 0.1 //Shift
+				87 -> moveStateForward = 1 //W
+				83 -> moveStateBack = 1 //S
+				65 -> moveStateLeft = 1.0f //A
+				68 -> moveStateRight = 1.0f //D
+				82 -> moveStateUp = 1 //R
+				70 -> moveStateDown = 1.0f //F
+				38, 265 -> moveStatePitchUp = 1 //Up
+				40, 264 -> moveStatePitchDown = 1.0f //Down
+				37, 263 -> moveStateYawLeft = 1.0f //Left
+				39, 262 -> moveStateYawRight = 1.0f //Right
+				81 -> moveStateRollLeft = 1.0f //Q
+				69 -> moveStateRollRight = 1 //E
+				else -> return
 			}
 			updateMovementVector()
 			updateRotationVector()
-			if (update) {
-				update()
-			}
 		}
 
 		override fun onKeyReleased(event: KeyEvent) {
-			var needUpdate = true
 			when (event.keyCode) {
-				16 -> movementSpeedMultiplier = 1.0
-				87 -> moveStateForward = 0
-				83 -> moveStateBack = 0
-				65 -> moveStateLeft = 0
-				68 -> moveStateRight = 0
-				82 -> moveStateUp = 0
-				70 -> moveStateDown = 0
-				38, 265 -> moveStatePitchUp = 0
-				40, 264 -> moveStatePitchDown = 0.0
-				37 -> moveStateYawLeft = 0.0
-				39 -> moveStateYawRight = 0
-				81 -> moveStateRollLeft = 0
-				69 -> moveStateRollRight = 0
-				342 -> return //alt key
-				else -> needUpdate = false
+				16 -> movementSpeedMultiplier = 1.0 //Shift
+				87 -> moveStateForward = 0 //W
+				83 -> moveStateBack = 0 //S
+				65 -> moveStateLeft = 0.0f //A
+				68 -> moveStateRight = 0.0f //D
+				82 -> moveStateUp = 0 //R
+				70 -> moveStateDown = 0.0f //F
+				38, 265 -> moveStatePitchUp = 0 //Up
+				40, 264 -> moveStatePitchDown = 0.0f //Down
+				37, 263 -> moveStateYawLeft = 0.0f //Left
+				39, 262 -> moveStateYawRight = 0.0f //Right
+				81 -> moveStateRollLeft = 0.0f //Q
+				69 -> moveStateRollRight = 0 //E
+				342 -> return
 			}
 			updateMovementVector()
 			updateRotationVector()
-			if (needUpdate) {
-				update()
-			}
 		}
 	}
 
@@ -146,18 +140,17 @@ class FlyControls(private val camera: Camera, private val eventSource: Periphera
 				mouseStatus++
 			} else {
 				when (button) {
-					0 -> moveStateForward = 1
-					1 -> moveStateBack = 1
+					0 -> moveStateForward = 1 //Left click
+					1 -> moveStateBack = 1 //Right click
 				}
 				updateMovementVector()
 			}
-			update()
 		}
 
 		override fun onMouseUp(button: Int, event: MouseEvent) {
 			if (dragToLook) {
 				mouseStatus--
-				moveStatePitchDown = 0.0
+				moveStatePitchDown = 0.0f
 				moveStateYawLeft = moveStatePitchDown
 			} else {
 				when (button) {
@@ -167,17 +160,15 @@ class FlyControls(private val camera: Camera, private val eventSource: Periphera
 				updateMovementVector()
 			}
 			updateRotationVector()
-			update()
 		}
 
 		override fun onMouseMove(event: MouseEvent) {
 			if (!dragToLook || mouseStatus > 0) {
 				val halfWidth = eventSource.size.width / 2
 				val halfHeight = eventSource.size.height / 2
-				moveStateYawLeft = -(event.clientX - halfWidth) / halfWidth.toDouble()
-				moveStatePitchDown = (event.clientY - halfHeight) / halfHeight.toDouble()
+				moveStateYawLeft = -(event.clientX - halfWidth) / halfWidth.toFloat()
+				moveStatePitchDown = (event.clientY - halfHeight) / halfHeight.toFloat()
 				updateRotationVector()
-				update()
 			}
 		}
 	}
