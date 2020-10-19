@@ -1,18 +1,18 @@
 package info.laht.threekt.input
 
-fun interface KeyListener {
+interface KeyListener {
 
     fun onKeyPressed(event: KeyEvent)
+    fun onKeyReleased(event: KeyEvent)
+    fun onKeyRepeat(event: KeyEvent)
 
 }
 
-data class KeyEvent(
-        val keyCode: Int,
-        val action: KeyAction
-)
+abstract class KeyAdapter : KeyListener {
 
-enum class KeyAction {
-    RELEASE,
-    PRESS,
-    REPEAT;
+    override fun onKeyPressed(event: KeyEvent) {}
+    override fun onKeyReleased(event: KeyEvent) {}
+    override fun onKeyRepeat(event: KeyEvent) {}
 }
+
+data class KeyEvent(val keyCode: Int)
