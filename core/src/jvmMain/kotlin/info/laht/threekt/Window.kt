@@ -77,14 +77,16 @@ class Window @JvmOverloads constructor(
         glfwSetKeyCallback(hwnd) { _, key, _, action, _ ->
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(hwnd, true) // We will detect this in the rendering loop
-            } else {
-                keyListeners?.also { listeners ->
-                    val evt = KeyEvent(key, action.toKeyAction())
-                    listeners.forEach {
-                        it.onKeyPressed(evt)
-                    }
-                }
+	            return@glfwSetKeyCallback
             }
+	        keyListeners?.also { listeners ->
+		        val evt = KeyEvent(key)
+		        when(action) {
+			        GLFW_PRESS -> listeners.forEach { it.onKeyPressed(evt) }
+			        GLFW_RELEASE -> listeners.forEach { it.onKeyReleased(evt) }
+			        GLFW_REPEAT -> listeners.forEach { it.onKeyRepeat(evt) }
+		        }
+	        }
         }
 
         glfwSetMouseButtonCallback(hwnd) { _, button, action, _ ->
@@ -256,13 +258,4 @@ fun interface WindowResizeListener {
 
     fun onWindowResize(width: Int, height: Int)
 
-}
-
-private fun Int.toKeyAction(): KeyAction {
-    return when (this) {
-        GLFW_RELEASE -> KeyAction.RELEASE
-        GLFW_PRESS -> KeyAction.PRESS
-        GLFW_REPEAT -> KeyAction.REPEAT
-        else -> throw IllegalArgumentException()
-    }
 }

@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    kotlin("jvm") version "1.4.10" apply false
+    kotlin("jvm") version "1.4.20" apply false
     id("com.jfrog.bintray") version "1.8.4" apply false
 }
 
@@ -9,7 +9,7 @@ configure<JavaPluginExtension> {
 }
 
 tasks.named<Wrapper>("wrapper") {
-    gradleVersion = "6.6.1"
+    gradleVersion = "6.7"
     distributionType = Wrapper.DistributionType.ALL
 }
 
