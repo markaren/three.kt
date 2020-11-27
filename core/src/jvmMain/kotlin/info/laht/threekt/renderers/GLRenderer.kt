@@ -147,8 +147,14 @@ class GLRenderer(
         return if (currentRenderTarget == null) pixelRatio else 1
     }
 
+    fun setScissor(x: Int, y: Int, width: Int, height: Int) {
+        scissor.set(x, y, width, height)
+    }
+
     fun setScissorTest(boolean: Boolean) {
-        state.setScissorTest(boolean)
+        state.setScissorTest(boolean).also {
+            scissorTest = boolean
+        }
     }
 
     fun setClearColor(color: Color, alpha: Float = 1f) {
