@@ -220,21 +220,32 @@ open class Mesh(
             val morphPosition = geometry.morphAttributes?.getValue("position") as List<FloatBufferAttribute>?
             val uv = geometry.attributes.uv
             val uv2 = geometry.attributes.uv2
-//            var groups = geometry.groups
+            val groups = geometry.groups
             val drawRange = geometry.drawRange
-//                var i, j, il, jl;
-//                var group, groupMaterial;
-            val start: Int
-            val end: Int
+            var start: Int
+            var end: Int
 
             if (index != null) {
 
                 // indexed buffer geometry
 
                 if (isMultiMaterial) {
-
-                    TODO()
-
+                    for(group in groups) {
+						val groupMaterial = materials[group.materialIndex]
+	                    start = max(group.start, drawRange.start)
+	                    end = min((group.start + group.count), (drawRange.start + drawRange.count))
+	                    for(i in start until end step 3) {
+		                    a = index.getX(i)
+		                    b = index.getX(i + 1)
+		                    c = index.getX(i + 2)
+		                    intersection = checkBufferGeometryIntersection(this@Mesh, groupMaterial, position!!, morphPosition, uv, uv2, a, b, c)
+		                    if (intersection != null) {
+			                    intersection.faceIndex = i / 3 // triangle number in indexed buffer semantics
+			                    intersection.face?.materialIndex = group.materialIndex
+			                    intersects.add(intersection)
+		                    }
+	                    }
+                    }
                 } else {
 
                     start = max(0, drawRange.start)
@@ -264,9 +275,22 @@ open class Mesh(
                 // non-indexed buffer geometry
 
                 if (isMultiMaterial) {
-
-                    TODO()
-
+	                for(group in groups) {
+		                val groupMaterial = materials[group.materialIndex]
+		                start = max(group.start, drawRange.start)
+		                end = min(group.start + group.count, drawRange.start + drawRange.count)
+		                for(i in start until end step 3) {
+			                a = i
+			                b = i + 1
+			                c = i + 2
+			                intersection = checkBufferGeometryIntersection(this@Mesh, groupMaterial, position!!, morphPosition, uv, uv2, a, b, c)
+			                if (intersection != null) {
+				                intersection.faceIndex = i / 3 // triangle number in indexed buffer semantics
+				                intersection.face?.materialIndex = group.materialIndex
+				                intersects.add(intersection)
+			                }
+		                }
+	                }
                 } else {
 
                     start = max(0, drawRange.start)
