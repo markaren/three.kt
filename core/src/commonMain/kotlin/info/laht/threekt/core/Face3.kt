@@ -11,7 +11,7 @@ class Face3 private constructor(
     val color: Color,
     val vertexNormals: MutableList<Vector3>,
     val vertexColors: MutableList<Color>,
-    private var materialIndex: Int
+    var materialIndex: Int
 ) : Cloneable {
 
     constructor(
