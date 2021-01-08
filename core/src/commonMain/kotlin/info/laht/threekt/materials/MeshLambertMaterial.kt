@@ -1,5 +1,6 @@
 package info.laht.threekt.materials
 
+import info.laht.threekt.TextureCombineOperation
 import info.laht.threekt.math.Color
 import info.laht.threekt.textures.Texture
 
@@ -8,8 +9,25 @@ class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning,
 
     override val color = Color(0xffffff)
 
+    public override var map: Texture? = null
+
+    public override var lightMap: Texture? = null
+    public override var lightMapIntensity = 1f
+
+    public override var aoMap: Texture? = null
+    public override var aoMapIntensity = 1f
+
     override val emissive = Color(0x000000)
     override var emissiveIntensity = 1f
+    override var emissiveMap: Texture? = null
+
+    public override var specularMap: Texture? = null
+
+    public override var alphaMap: Texture? = null
+
+    public override var envMap: Texture? = null
+
+    public override var combine = TextureCombineOperation.Multiply
 
     override var reflectivity = 1f
     override var refractionRatio = 0.98f
@@ -20,8 +38,6 @@ class MeshLambertMaterial : Material(), MaterialWithColor, MaterialWithSkinning,
     override var skinning = false
     override var morphTargets = false
     override var morphNormals = false
-
-    public override var map: Texture? = null
 
     override fun clone(): MeshLambertMaterial {
         return MeshLambertMaterial().copy(this)

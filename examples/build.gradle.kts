@@ -8,10 +8,14 @@ repositories {
     maven(url="http://maven.cuchazinteractive.com")
 }
 
+val kotlinIOVersion = "0.1.16"
+
 dependencies {
 
     api(project(":core"))
     implementation(kotlin("stdlib-jdk8"))
+    implementation("org.jetbrains.kotlinx:kotlinx-io:$kotlinIOVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinIOVersion")
 
     implementation("cuchaz:jfxgl:0.4")
     implementation("cuchaz:jfxgl-jfxrt:0.4")
