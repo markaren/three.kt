@@ -7,11 +7,13 @@ import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.helpers.AxesHelper
 import info.laht.threekt.loaders.ImageLoader
+import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.materials.MeshLambertMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
+import info.laht.threekt.textures.Image
 import info.laht.threekt.textures.Texture
 
 object MipMapsFailingExample {
@@ -54,13 +56,14 @@ object MipMapsFailingExample {
                 addMipMap(4)
                 addMipMap(2)
                 addMipMap(1)
+                image = Image(0, 0, null)
                 repeat.set(5f, 5f)
                 wrapS = TextureWrapping.Repeat
                 wrapT = TextureWrapping.Repeat
-                //needsUpdate = true
+                needsUpdate = true
             }
 
-            val material = MeshLambertMaterial().apply {
+            val material = MeshBasicMaterial().apply {
                 map = texture
             }
 

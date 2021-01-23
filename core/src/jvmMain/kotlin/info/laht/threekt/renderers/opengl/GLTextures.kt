@@ -357,14 +357,14 @@ internal class GLTextures(
                 mipmaps.forEachIndexed { i, mipmap ->
 
                     state.texImage2D(
-                            GL11.GL_TEXTURE_2D,
-                            i,
-                            glInternalFormat,
-                            glFormat,
-                            glType,
-                            mipmap.width,
-                            mipmap.height,
-                            mipmap.data
+                        GL11.GL_TEXTURE_2D,
+                        i,
+                        glInternalFormat,
+                        mipmap.width,
+                        mipmap.height,
+                        glFormat,
+                        glType,
+                        mipmap.data
                     )
 
                 }
