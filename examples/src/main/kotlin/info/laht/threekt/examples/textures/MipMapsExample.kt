@@ -6,9 +6,9 @@ import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.controls.OrbitControls
 import info.laht.threekt.geometries.PlaneBufferGeometry
 import info.laht.threekt.helpers.AxesHelper
+import info.laht.threekt.lights.AmbientLight
 import info.laht.threekt.loaders.ImageLoader
 import info.laht.threekt.materials.MeshBasicMaterial
-import info.laht.threekt.materials.MeshLambertMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
@@ -16,7 +16,7 @@ import info.laht.threekt.scenes.Scene
 import info.laht.threekt.textures.Image
 import info.laht.threekt.textures.Texture
 
-object MipMapsFailingExample {
+object MipMapsExample {
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -35,13 +35,16 @@ object MipMapsFailingExample {
                 checkShaderErrors = true
             }
 
+            val light = AmbientLight()
+            scene.add(light)
+
             val axesHelper1 = AxesHelper(5)
             scene.add(axesHelper1)
             val axesHelper2 = AxesHelper(5)
             scene.add(axesHelper2)
 
             fun Texture.addMipMap(size: Int) {
-                val cl = MipMapsFailingExample.javaClass.classLoader
+                val cl = MipMapsExample.javaClass.classLoader
                 val mip = cl.getResource("textures/mipmaps/${size}x${size}.png")!!.file
                 val img = ImageLoader.load(mip)
                 mipmaps.add(img)
