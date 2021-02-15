@@ -37,6 +37,7 @@ object InstancedMeshExample {
 
             OrbitControls(camera, canvas)
 
+            // TODO Hemisphere lighting doesn't show up form some reason
             val light1 = HemisphereLight(0xffffff, 0x000088)
             light1.position.set(- 1, 1.5, 1)
             scene.add(light1)
@@ -45,7 +46,7 @@ object InstancedMeshExample {
             light2.position.set(- 1, 1.5, 1)
             scene.add(light2)
 
-            val color = Color(Color.whitesmoke)
+            val color = Color(Color.whitesmoke) // Added whitesmoke color because hemisphere lighting isn't working
             val geometry = IcosahedronBufferGeometry(0.5f, 3)
             val material = MeshPhongMaterial()
             val mesh = InstancedMesh(geometry, mutableListOf(material), count)
