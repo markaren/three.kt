@@ -114,6 +114,9 @@ internal class GLProgram(
 
                     customDefines,
 
+                    if (parameters.instancing) "#define USE_INSTANCING" else "",
+                    if (parameters.instancingColor) "#define USE_INSTANCING_COLOR" else "",
+
                     if (parameters.supportsVertexTextures) "#define VERTEX_TEXTURES" else "",
 
                     "#define GAMMA_FACTOR $gammaFactorDefine",
@@ -161,6 +164,14 @@ internal class GLProgram(
                     "uniform mat4 viewMatrix;",
                     "uniform mat3 normalMatrix;",
                     "uniform vec3 cameraPosition;",
+
+                    "#ifdef USE_INSTANCING",
+                    "	attribute mat4 instanceMatrix;",
+                    "#endif",
+
+                    "#ifdef USE_INSTANCING_COLOR",
+                    "	attribute vec3 instanceColor;",
+                    "#endif",
 
                     "attribute vec3 position;",
                     "attribute vec3 normal;",
@@ -248,7 +259,7 @@ internal class GLProgram(
                     if (parameters.alphaMap) "#define USE_ALPHAMAP" else "",
 
                     if (parameters.vertexTangents) "#define USE_TANGENT" else "",
-                    if (parameters.vertexColors.value > 0) "#define USE_COLOR" else "",
+                    if (parameters.vertexColors.value > 0 || parameters.instancingColor) "#define USE_COLOR" else "",
 
                     if (parameters.gradientMap) "#define USE_GRADIENTMAP" else "",
 

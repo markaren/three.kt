@@ -126,7 +126,8 @@ data class Intersection internal constructor(
         var faceIndex: Int? = null,
         var `object`: Object3D,
         var uv: Vector2? = null,
-        var uv2: Vector2? = null
+        var uv2: Vector2? = null,
+        var instanceId: Int? = null
 ) : Comparable<Intersection> {
 
     override fun compareTo(other: Intersection): Int {
