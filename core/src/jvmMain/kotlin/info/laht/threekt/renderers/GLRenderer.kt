@@ -1134,7 +1134,7 @@ class GLRenderer(
             } else if (material is MeshLambertMaterial) {
 
                 refreshUniformsCommon(m_uniforms, material)
-                //refreshUniformsLambert(m_uniforms, material)
+                refreshUniformsLambert(m_uniforms, material)
 
             } else if (material is MeshPhongMaterial) {
 
