@@ -395,15 +395,6 @@ class GLRenderer(
                     val buffer = attribute.buffer
                     val type = attribute.type
 
-                    /*if (geometryAttribute is InstancedBufferAttribute) {
-                        state.enableAttributeAndDivisor(programAttribute, geometryAttribute.meshPerAttribute)
-                        if (geometry._maxInstanceCount == null) {
-                            geometry._maxInstanceCount = geometryAttribute.meshPerAttribute * geometryAttribute.count
-                        }
-                    } else {
-                        state.enableAttribute(programAttribute)
-                    }*/
-
                     state.enableAttribute(programAttribute)
                     GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, buffer)
                     GL20.glVertexAttribPointer(programAttribute, size, type, normalized, 0, 0)
