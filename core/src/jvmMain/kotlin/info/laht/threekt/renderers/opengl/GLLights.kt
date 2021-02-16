@@ -190,7 +190,7 @@ internal class GLLights {
                     uniforms.skyColor.copy( light.color ).multiplyScalar( intensity )
                     uniforms.groundColor.copy( light.groundColor ).multiplyScalar( intensity )
 
-                    state.hemi[ hemiLength ] = uniforms
+                    state.hemi.safeSet(hemiLength, uniforms)
 
                     hemiLength ++
                 }
@@ -281,6 +281,7 @@ internal class GLLights {
                     is DirectionalLight -> DirectionalLightUniforms()
                     is PointLight -> PointLightUniforms()
                     is SpotLight -> SpotLightUniforms()
+                    is HemisphereLight -> HemisphereLightUniforms()
                     else -> throw IllegalArgumentException("Unsupported light: $light")
                 }
 

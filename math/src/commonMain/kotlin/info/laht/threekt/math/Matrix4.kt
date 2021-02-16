@@ -940,7 +940,7 @@ class Matrix4(
 
     @JvmOverloads
     fun fromArray(array: FloatArray, offset: Int = 0): Matrix4 {
-        array.copyInto(elements, offset)
+        array.copyInto(elements, 0, offset, offset + 16)
         return this
     }
 
