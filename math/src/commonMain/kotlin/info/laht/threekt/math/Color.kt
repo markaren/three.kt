@@ -10,7 +10,7 @@ data class Color(
         var b: Float
 ) : Cloneable {
 
-    constructor() : this(0f, 0f, 0f)
+    constructor() : this(1f, 1f, 1f)
 
     constructor(hex: Int) : this() {
         set(hex)

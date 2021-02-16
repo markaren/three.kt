@@ -46,7 +46,7 @@ object InstancedMeshExample {
             light2.position.set(- 1, 1.5, 1)
             scene.add(light2)
 
-            val color = Color(Color.whitesmoke) // Added whitesmoke color because hemisphere lighting isn't working
+            val color = Color() // Added whitesmoke color because hemisphere lighting isn't working
             val geometry = IcosahedronBufferGeometry(0.5f, 3)
             val material = MeshPhongMaterial()
             val mesh = InstancedMesh(geometry, mutableListOf(material), count)
