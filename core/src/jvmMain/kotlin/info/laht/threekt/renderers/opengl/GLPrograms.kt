@@ -7,6 +7,7 @@ import info.laht.threekt.TextureMapping
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.core.Shader
 import info.laht.threekt.materials.*
+import info.laht.threekt.objects.InstancedMesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.FogExp2
 import info.laht.threekt.scenes._Fog
@@ -181,6 +182,9 @@ internal class GLPrograms(
         val maxBones = 0 // TODO
         val precision = "highp"
 
+        val instancing = `object` is InstancedMesh
+        val instancingColor = `object` is InstancedMesh && `object`.instanceColor != null
+
         val supportsVertexTextures = capabilities.vertexTextures
         val outputEncoding = getTextureEncodingFromMap(renderer.getRenderTarget()?.texture, renderer.gammaOutput)
 
@@ -264,6 +268,8 @@ internal class GLPrograms(
 
 private val parameterNames = listOf(
     "precision",
+    "instancing",
+    "instancingColor",
     "supportsVertexTextures",
     "map",
     "mapEncoding",

@@ -1,6 +1,5 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.core.InstancedBufferGeometry
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL31
 import kotlin.properties.Delegates
@@ -11,6 +10,8 @@ internal sealed class _GLRenderer {
 
     abstract fun render(start: Int, count: Int)
 
+    abstract fun renderInstances(start: Int, count: Int, primCount: Int)
+
 }
 
 internal class GLBufferRenderer(
@@ -20,6 +21,14 @@ internal class GLBufferRenderer(
     override fun render(start: Int, count: Int) {
         GL11.glDrawArrays(mode, start, count)
         info.update(count, mode)
+    }
+
+    override fun renderInstances(start: Int, count: Int, primCount: Int) {
+        if (count == 0) {
+            return
+        }
+        GL31.glDrawArraysInstanced(mode, start, count, primCount)
+        info.update(count, mode, primCount)
     }
 
 }
@@ -41,8 +50,9 @@ internal class GLIndexedBufferRenderer(
         info.update(count, mode)
     }
 
-    fun renderInstances(geometry: InstancedBufferGeometry, start: Int, count: Int) {
-        GL31.glDrawElementsInstanced(mode, count, type, (start * bytesPerElement).toLong(), geometry.maxInstancedCount)
+    override fun renderInstances(start: Int, count: Int, primCount: Int) {
+        GL31.glDrawElementsInstanced(mode, count, type, (start * bytesPerElement).toLong(), primCount)
+        info.update(count, mode, primCount)
     }
 
 }

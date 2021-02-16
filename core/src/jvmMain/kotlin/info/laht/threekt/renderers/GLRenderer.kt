@@ -40,7 +40,7 @@ class GLRenderer(
     private val textures = GLTextures(state, properties, capabilities, info)
     private val attributes = GLAttributes()
     private val geometries = GLGeometries(attributes, info)
-    internal val objects = GLObjects(geometries, info)
+    internal val objects = GLObjects(geometries, attributes, info)
     private val programCache = GLPrograms(this, capabilities)
     private val renderLists = GLRenderLists()
     private val renderStates = GLRenderStates()
@@ -229,6 +229,10 @@ class GLRenderer(
 
         }
 
+        if (`object` is InstancedMesh) {
+            updateBuffers = true
+        }
+
         var index = geometry.index
         val position = geometry.attributes.position
         var rangeFactor = 1
@@ -256,7 +260,7 @@ class GLRenderer(
 
         if (updateBuffers) {
 
-            setupVertexAttributes(material, program, geometry)
+            setupVertexAttributes(`object`, material, program, geometry)
 
             if (index != null) {
 
@@ -335,7 +339,13 @@ class GLRenderer(
 
         }
 
-        renderer.render(drawStart, drawCount)
+        if (`object` is InstancedMesh) {
+            renderer.renderInstances(drawStart, drawCount, `object`.count)
+        } /*else if (`object` is InstancedBufferGeometry) { //TODO Implement Object3D in InstancedBufferGeometry?
+            renderer.renderInstances(drawStart, drawCount, `object`.maxInstancedCount)
+        }*/ else {
+            renderer.render(drawStart, drawCount)
+        }
 
     }
 
@@ -360,7 +370,7 @@ class GLRenderer(
 
     }
 
-    private fun setupVertexAttributes(material: Material, program: GLProgram, geometry: BufferGeometry) {
+    private fun setupVertexAttributes(`object`: Object3D, material: Material, program: GLProgram, geometry: BufferGeometry) {
 
         state.initAttributes()
 
@@ -386,11 +396,52 @@ class GLRenderer(
                     val type = attribute.type
 
                     state.enableAttribute(programAttribute)
-
                     GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, buffer)
                     GL20.glVertexAttribPointer(programAttribute, size, type, normalized, 0, 0)
 
 
+                } else if (name == "instanceMatrix") {
+                    `object` as InstancedMesh
+                    val attribute = attributes.get(`object`.instanceMatrix)
+
+                    // TODO Attribute may not be available on context restore
+
+                    if (attribute == null) {
+                        continue
+                    }
+
+                    val buffer = attribute.buffer
+                    val type = attribute.type
+
+                    state.enableAttributeAndDivisor(programAttribute + 0, 1)
+                    state.enableAttributeAndDivisor(programAttribute + 1, 1)
+                    state.enableAttributeAndDivisor(programAttribute + 2, 1)
+                    state.enableAttributeAndDivisor(programAttribute + 3, 1)
+
+                    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, buffer)
+
+                    GL20.glVertexAttribPointer(programAttribute + 0, 4, type, false, 64, 0)
+                    GL20.glVertexAttribPointer(programAttribute + 1, 4, type, false, 64, 16)
+                    GL20.glVertexAttribPointer(programAttribute + 2, 4, type, false, 64, 32)
+                    GL20.glVertexAttribPointer(programAttribute + 3, 4, type, false, 64, 48)
+                } else if (name == "instanceColor") {
+                    `object` as InstancedMesh
+                    val attribute = attributes.get(`object`.instanceColor!!)
+
+                    // TODO Attribute may not be available on context restore
+
+                    if (attribute == null) {
+                        continue
+                    }
+
+                    val buffer = attribute.buffer
+                    val type = attribute.type
+
+                    state.enableAttributeAndDivisor(programAttribute, 1)
+
+                    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, buffer)
+
+                    GL20.glVertexAttribPointer(programAttribute, 3, type, false, 12, 0)
                 } else if (material is MaterialWithDefaultAttributeValues) {
 
                     val value = material.defaultAttributeValues[name] as FloatArray?
