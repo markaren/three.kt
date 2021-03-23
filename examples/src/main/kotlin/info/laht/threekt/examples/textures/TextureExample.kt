@@ -13,8 +13,13 @@ import info.laht.threekt.math.DEG2RAD
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
+import info.laht.threekt.textures.Texture
 
 object TextureExample {
+
+    private fun loadTexture(name: String): Texture {
+        return TextureLoader.load(javaClass.classLoader.getResource(name)!!.file)
+    }
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -34,7 +39,7 @@ object TextureExample {
 
             Mesh(PlaneBufferGeometry(10f, 10f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
-                map = TextureLoader.load(javaClass.classLoader.getResource("textures/brick_bump.jpg")!!.file)
+                map = loadTexture("textures/brick_bump.jpg")
             }).also {
                 it.rotation.x = DEG2RAD * -90
                 it.translateZ(-1f)
@@ -44,7 +49,7 @@ object TextureExample {
 
             Mesh(BoxBufferGeometry(1f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
-                map = TextureLoader.load(javaClass.classLoader.getResource("textures/crate.gif")!!.file)
+                map = loadTexture("textures/crate.gif")
             }).also {
                 it.translateY(2f)
                 scene.add(it)
@@ -52,7 +57,7 @@ object TextureExample {
 
             Mesh(SphereBufferGeometry(0.5f), MeshBasicMaterial().apply {
                 color.set(Color.gray)
-                map = TextureLoader.load(javaClass.classLoader.getResource("textures/checker.png")!!.file)
+                map = loadTexture("textures/checker.png")
             }).also {
                 it.translateY(4f)
                 scene.add(it)
