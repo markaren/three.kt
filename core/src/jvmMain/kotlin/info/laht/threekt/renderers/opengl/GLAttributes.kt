@@ -22,7 +22,7 @@ internal class GLAttributes {
         val (type, bytesPerElement) = when (attribute) {
             is IntBufferAttribute -> {
                 GL15.glBufferData(bufferType, attribute.buffer, usage)
-                GL11.GL_UNSIGNED_INT to 3
+                GL11.GL_UNSIGNED_INT to 4
             }
             is FloatBufferAttribute -> {
                 GL15.glBufferData(bufferType, attribute.buffer, usage)
