@@ -24,7 +24,9 @@ class Sprite(
         )
 
         geometry.setIndex(IntBufferAttribute(intArrayOf(0, 1, 2, 0, 2, 3), 1))
-        TODO()
+
+        TODO("Sprite not implemented yet")
+
 //        geometry.addAttribute( "position",  InterleavedBufferAttribute( interleavedBuffer, 3, 0, false ) );
 //        geometry.addAttribute( "uv",  InterleavedBufferAttribute( interleavedBuffer, 2, 3, false ) );
 
