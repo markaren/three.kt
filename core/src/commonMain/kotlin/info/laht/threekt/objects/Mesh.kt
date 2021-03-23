@@ -280,16 +280,26 @@ open class Mesh(
 		                start = max(group.start, drawRange.start)
 		                end = min(group.start + group.count, drawRange.start + drawRange.count)
 		                for(i in start until end step 3) {
-			                a = i
-			                b = i + 1
-			                c = i + 2
-			                intersection = checkBufferGeometryIntersection(this@Mesh, groupMaterial, position!!, morphPosition, uv, uv2, a, b, c)
-			                if (intersection != null) {
-				                intersection.faceIndex = i / 3 // triangle number in indexed buffer semantics
-				                intersection.face?.materialIndex = group.materialIndex
-				                intersects.add(intersection)
-			                }
-		                }
+                            a = i
+                            b = i + 1
+                            c = i + 2
+                            intersection = checkBufferGeometryIntersection(
+                                this@Mesh,
+                                groupMaterial,
+                                position,
+                                morphPosition,
+                                uv,
+                                uv2,
+                                a,
+                                b,
+                                c
+                            )
+                            if (intersection != null) {
+                                intersection.faceIndex = i / 3 // triangle number in indexed buffer semantics
+                                intersection.face?.materialIndex = group.materialIndex
+                                intersects.add(intersection)
+                            }
+                        }
 	                }
                 } else {
 
