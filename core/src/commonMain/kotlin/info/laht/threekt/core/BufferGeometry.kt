@@ -4,13 +4,14 @@ import info.laht.threekt.Logger
 import info.laht.threekt.getLogger
 import info.laht.threekt.math.*
 import kotlin.jvm.JvmOverloads
+import kotlin.jvm.Synchronized
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
 open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() {
 
-    internal val id = geometryIdCount++
+    internal val id = getAndIncrementGeometryCount()
 
     var name = ""
     val uuid = generateUUID()
@@ -555,7 +556,12 @@ open class BufferGeometry : Cloneable, EventDispatcher by EventDispatcherImpl() 
 
     private companion object {
 
-        var geometryIdCount = 0
+        private var geometryIdCount = 0
+
+        @Synchronized
+        fun getAndIncrementGeometryCount(): Int {
+            return geometryIdCount++
+        }
 
         val LOG: Logger = getLogger(BufferGeometry::class)
 

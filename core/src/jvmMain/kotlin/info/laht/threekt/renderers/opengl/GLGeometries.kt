@@ -31,8 +31,11 @@ internal class GLGeometries(
         return buffergeometry
     }
 
+    @Synchronized
     fun update(geometry: BufferGeometry) {
         val index = geometry.index
+
+
         val geometryAttributes = geometry.attributes
 
         if (index != null) {

@@ -14,11 +14,16 @@ import kotlin.math.roundToInt
 private var emptyTexture = Texture()
 private var emptyCubeTexture = CubeTexture()
 
-private val arrayCacheF32 = mutableListOf<FloatArray>()
-private val arrayCacheI32 = mutableListOf<IntArray>()
 
-private val mat4array = FloatArray(16)
-private val mat3array = FloatArray(9)
+internal class Cache {
+
+    val mat4array = FloatArray(16)
+    val mat3array = FloatArray(9)
+
+    val arrayCacheF32 = mutableListOf<FloatArray>()
+    val arrayCacheI32 = mutableListOf<IntArray>()
+
+}
 
 internal interface Container {
 
@@ -27,14 +32,14 @@ internal interface Container {
 
 }
 
-private fun flatten(array: Array<Flattable>, nBlocks: Int, blockSize: Int): FloatArray {
+private fun flatten(array: Array<Flattable>, nBlocks: Int, blockSize: Int, cache: Cache): FloatArray {
 
     val n = nBlocks * blockSize
-    while (n >= arrayCacheF32.size) {
-        arrayCacheF32.add(FloatArray(arrayCacheF32.size))
+    while (n >= cache.arrayCacheF32.size) {
+        cache.arrayCacheF32.add(FloatArray(cache.arrayCacheF32.size))
     }
 
-    return arrayCacheF32[n].also { r ->
+    return cache.arrayCacheF32[n].also { r ->
 
         if (nBlocks != 0) {
 
@@ -52,14 +57,14 @@ private fun flatten(array: Array<Flattable>, nBlocks: Int, blockSize: Int): Floa
 
 }
 
-private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): FloatArray {
+private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int, cache: Cache): FloatArray {
 
     val n = nBlocks * blockSize
-    while (n >= arrayCacheF32.size) {
-        arrayCacheF32.add(FloatArray(arrayCacheF32.size))
+    while (n >= cache.arrayCacheF32.size) {
+        cache.arrayCacheF32.add(FloatArray(cache.arrayCacheF32.size))
     }
 
-    return arrayCacheF32[n].also { r ->
+    return cache.arrayCacheF32[n].also { r ->
 
         if (nBlocks != 0) {
 
@@ -77,13 +82,13 @@ private fun flatten(array: List<Flattable>, nBlocks: Int, blockSize: Int): Float
 
 }
 
-private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
+private fun allocTexUnits(textures: GLTextures, n: Int, cache: Cache): IntArray {
 
-    while (n >= arrayCacheI32.size) {
-        arrayCacheI32.add(IntArray(arrayCacheI32.size))
+    while (n >= cache.arrayCacheI32.size) {
+        cache.arrayCacheI32.add(IntArray(cache.arrayCacheI32.size))
     }
 
-    return arrayCacheI32[n].also { r ->
+    return cache.arrayCacheI32[n].also { r ->
         for (i in 0 until n) {
             r[i] = textures.allocateTextureUnit()
         }
@@ -93,7 +98,7 @@ private fun allocTexUnits(textures: GLTextures, n: Int): IntArray {
 
 
 internal class GLUniforms(
-        program: Int
+    program: Int
 ) : Container {
 
     override val seq = mutableListOf<UniformObject>()
@@ -202,8 +207,8 @@ internal class GLUniforms(
 }
 
 private class ActiveUniformInfo(
-        program: Int,
-        index: Int
+    program: Int,
+    index: Int
 ) {
 
     val name: String
@@ -227,17 +232,18 @@ private class ActiveUniformInfo(
 }
 
 internal sealed class UniformObject(
-        val id: String
+    val id: String
 ) {
 
+    val cache = Cache()
     abstract fun setValue(value: Any, textures: GLTextures? = null)
 
 }
 
 private class SingleUniform(
-        id: String,
-        activeInfo: ActiveUniformInfo,
-        private val addr: Int
+    id: String,
+    activeInfo: ActiveUniformInfo,
+    private val addr: Int
 ) : UniformObject(id) {
 
     private val floatCache = mutableListOf<Float>()
@@ -372,14 +378,14 @@ private class SingleUniform(
         when (v) {
             is FloatArray -> {
                 if (floatCache.getOrNull(0) == v[0] && floatCache.getOrNull(1) == v[1]
-                        && floatCache.getOrNull(2) == v[2] && floatCache.getOrNull(3) == v[3]
+                    && floatCache.getOrNull(2) == v[2] && floatCache.getOrNull(3) == v[3]
                 ) return
                 GL20.glUniform4fv(addr, v)
                 floatCache.safeSet(v[0], v[1], v[2], v[3])
             }
             is Vector4 -> {
                 if (floatCache.getOrNull(0) == v.x && floatCache.getOrNull(1) == v.y
-                        && floatCache.getOrNull(2) == v.z && floatCache.getOrNull(3) == v.w
+                    && floatCache.getOrNull(2) == v.z && floatCache.getOrNull(3) == v.w
                 ) return
                 GL20.glUniform4f(addr, v.x, v.y, v.z, v.w)
                 floatCache.safeSet(v.x, v.y, v.z, v.w)
@@ -392,7 +398,7 @@ private class SingleUniform(
         when (v) {
             is Matrix3 -> {
                 if (v.elements.contentEquals(floatCache, true)) return
-                GL20.glUniformMatrix3fv(addr, false, v.toArray(mat3array))
+                GL20.glUniformMatrix3fv(addr, false, v.toArray(cache.mat3array))
                 v.elements.copyInto(floatCache)
             }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
@@ -403,7 +409,7 @@ private class SingleUniform(
         when (v) {
             is Matrix4 -> {
                 if (v.elements.contentEquals(floatCache)) return
-                GL20.glUniformMatrix4fv(addr, false, v.toArray(mat4array))
+                GL20.glUniformMatrix4fv(addr, false, v.toArray(cache.mat4array))
                 v.elements.copyInto(floatCache)
             }
             else -> throw IllegalArgumentException("Illegal type encountered: $v")
@@ -417,9 +423,9 @@ private class SingleUniform(
 }
 
 private class PureArrayUniform(
-        id: String,
-        activeInfo: ActiveUniformInfo,
-        private val addr: Int
+    id: String,
+    activeInfo: ActiveUniformInfo,
+    private val addr: Int
 ) : UniformObject(id) {
 
     private val setValue = getPureArraySetter(activeInfo.type, addr, activeInfo.size)
@@ -433,22 +439,22 @@ private class PureArrayUniform(
         return when (type) {
 
             0x1406 -> { v, _ -> GL20.glUniform1fv(addr, v as FloatArray) } // FLOAT
-            0x8b50 -> { v, _ -> GL20.glUniform2fv(addr, flatten(v as Array<Flattable>, size, 2)) } // _VEC2
-            0x8b51 -> { v, _ -> GL20.glUniform3fv(addr, flatten(v as Array<Flattable>, size, 3)) } // _VEC3
-            0x8b52 -> { v, _ -> GL20.glUniform4fv(addr, flatten(v as Array<Flattable>, size, 4)) } // _VEC4
+            0x8b50 -> { v, _ -> GL20.glUniform2fv(addr, flatten(v as Array<Flattable>, size, 2, cache)) } // _VEC2
+            0x8b51 -> { v, _ -> GL20.glUniform3fv(addr, flatten(v as Array<Flattable>, size, 3, cache)) } // _VEC3
+            0x8b52 -> { v, _ -> GL20.glUniform4fv(addr, flatten(v as Array<Flattable>, size, 4, cache)) } // _VEC4
 
             0x8b5b -> { v, _ ->
                 GL20.glUniformMatrix3fv(
-                        addr,
-                        false,
-                        flatten(v as List<Flattable>, size, 9)
+                    addr,
+                    false,
+                    flatten(v as List<Flattable>, size, 9, cache)
                 )
             } // _MAT3
             0x8b5c -> { v, _ ->
                 GL20.glUniformMatrix4fv(
-                        addr,
-                        false,
-                        flatten(v as List<Flattable>, size, 16)
+                    addr,
+                    false,
+                    flatten(v as List<Flattable>, size, 16, cache)
                 )
             } // _MAT4
 
@@ -469,7 +475,7 @@ private class PureArrayUniform(
     fun setValueT1Array(v: List<Texture?>, textures: GLTextures) {
 
         val n = v.size
-        val units = allocTexUnits(textures, n)
+        val units = allocTexUnits(textures, n, cache)
         GL20.glUniform1iv(addr, units)
 
         for (i in 0 until n) {
@@ -485,7 +491,7 @@ private class PureArrayUniform(
 }
 
 private class StructuredUniform(
-        id: String
+    id: String
 ) : UniformObject(id), Container {
 
     override val seq = mutableListOf<UniformObject>()
