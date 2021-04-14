@@ -7,6 +7,7 @@ import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxBufferGeometry
 import info.laht.threekt.geometries.CylinderBufferGeometry
 import info.laht.threekt.geometries.PlaneBufferGeometry
+import info.laht.threekt.geometries.SphereBufferGeometry
 import info.laht.threekt.materials.MeshBasicMaterial
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.DEG2RAD
@@ -15,8 +16,10 @@ import info.laht.threekt.renderers.GLRenderer
 import info.laht.threekt.scenes.Scene
 import javafx.application.Application
 import javafx.event.EventHandler
+import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import org.eclipse.fx.drift.DriftFXSurface
@@ -37,12 +40,6 @@ class HelloDriftFX : Application() {
     private val mesh2: Mesh
 
     init {
-        driftFxSurface1.prefWidth = 300.0
-        driftFxSurface1.prefHeight = 200.0
-
-        driftFxSurface2.prefWidth = 400.0
-        driftFxSurface2.prefHeight = 200.0
-
         mesh1 = Mesh(BoxBufferGeometry(1f), MeshBasicMaterial().apply {
             color.set(0x00ff00)
         })
@@ -68,9 +65,18 @@ class HelloDriftFX : Application() {
         }
         checkBox2.isSelected = mesh1.visible
 
-        border.left = VBox(checkBox2, checkBox1)
-        border.center = driftFxSurface2
-        border.right = driftFxSurface1
+        val button = Button("Open new window")
+        button.setOnAction {
+            openNewWindow()
+        }
+
+        border.left = VBox(checkBox2, checkBox1, button)
+
+        val pane1 = BorderPane(driftFxSurface1)
+        pane1.setPrefSize(300.0, 300.0)
+        val pane2 = BorderPane(driftFxSurface2)
+        pane2.setPrefSize(300.0, 300.0)
+        border.center = HBox(pane1, pane2)
 
         stage.setOnCloseRequest {
             driftFxSurfaceRenderer1.close()
@@ -83,6 +89,7 @@ class HelloDriftFX : Application() {
 
         Thread {
             driftFxSurfaceRenderer1.initialize()
+            driftFxSurfaceRenderer1.enableDebugCallback()
             renderThree1()
         }.start()
 
@@ -141,11 +148,59 @@ class HelloDriftFX : Application() {
         val renderer = GLRenderer(WindowSize(driftFxSurface2.width.toInt(), driftFxSurface2.height.toInt()))
 
         val clock = Clock()
+
+        driftFxSurfaceRenderer2.onCloseCallback = {
+            renderer.dispose()
+        }
+
         driftFxSurfaceRenderer2.animate {
             mesh2.rotation.y += 1f * clock.getDelta()
 
             renderer.render(scene, camera)
         }
+    }
+
+    private fun openNewWindow() {
+        val driftFxSurface3 = DriftFXSurface()
+        val driftFxSurfaceRenderer3 = DriftFxSurfaceRenderer(driftFxSurface3)
+
+        val stage = Stage()
+        val root = BorderPane(driftFxSurface3)
+        stage.scene = javafx.scene.Scene(root, 400.0, 300.0)
+        stage.setOnCloseRequest {
+            driftFxSurfaceRenderer3.close()
+        }
+        stage.show()
+
+        Thread {
+            driftFxSurfaceRenderer3.initialize()
+
+            val scene = Scene().apply {
+                setBackground(Color.brown)
+            }
+            val camera = PerspectiveCamera().apply {
+                position.z = 10f
+            }
+
+            val geometry = SphereBufferGeometry(2)
+            val material = MeshBasicMaterial().apply {
+                color.set(0xff0000)
+                wireframe = true
+            }
+
+            val sphere = Mesh(geometry, material)
+            scene.add(sphere)
+
+            val renderer = GLRenderer(WindowSize(driftFxSurface3.width.toInt(), driftFxSurface3.height.toInt()))
+
+            val clock = Clock()
+
+            driftFxSurfaceRenderer3.animate {
+                sphere.rotation.y += 0.5f * clock.getDelta()
+
+                renderer.render(scene, camera)
+            }
+        }.start()
     }
 
 }

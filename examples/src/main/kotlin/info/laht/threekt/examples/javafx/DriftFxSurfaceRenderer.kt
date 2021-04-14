@@ -1,21 +1,15 @@
 package info.laht.threekt.examples.javafx
 
-import info.laht.threekt.*
+import info.laht.threekt.WindowSize
 import info.laht.threekt.input.AbstractPeripheralsEventSource
-import info.laht.threekt.input.MouseEventImpl
-import info.laht.threekt.input.MouseWheelEventImpl
 import org.eclipse.fx.drift.*
 import org.eclipse.fx.drift.internal.GL
 import org.lwjgl.opengl.*
 import org.lwjgl.system.Callback
-import java.awt.image.BufferedImage
 import java.io.Closeable
 import java.nio.ByteBuffer
-import java.util.concurrent.atomic.AtomicBoolean
 
-// info.laht.threekt.Window is part of threekt core so we can use it here to avoid duplicate code
-class DriftFxSurfaceRenderer(surface: DriftFXSurface):
-    AbstractPeripheralsEventSource(), Closeable {
+class DriftFxSurfaceRenderer(surface: DriftFXSurface): AbstractPeripheralsEventSource(), Closeable {
 
     private val driftFxRenderer = GLRenderer.getRenderer(surface)
 
@@ -33,10 +27,10 @@ class DriftFxSurfaceRenderer(surface: DriftFXSurface):
 
     private var debugProc: Callback? = null
 
-    private var windowResizeCallback: WindowResizeListener? = null
+    private var windowResizeCallback: ((Int, Int) -> Unit)? = null
 
     @JvmField
-    var onCloseCallback: WindowClosingCallback? = null
+    var onCloseCallback: (() -> Unit)? = null
 
     private var running = true
 
@@ -51,16 +45,6 @@ class DriftFxSurfaceRenderer(surface: DriftFXSurface):
 
         fbo = GL30.glGenFramebuffers()
         depthTex = GL11.glGenTextures()
-        //		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        //		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTex, 0);
-    }
-
-    private fun check() {
-        val status = GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER)
-        when (status) {
-            GL30.GL_FRAMEBUFFER_COMPLETE -> { }
-            GL30.GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT -> System.err.println("INCOMPLETE_ATTACHMENT!")
-        }
     }
 
     private fun bind() {
@@ -105,7 +89,7 @@ class DriftFxSurfaceRenderer(surface: DriftFXSurface):
         GL32.glFramebufferTexture(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, depthTex, 0)
     }
 
-    fun onWindowResize(listener: WindowResizeListener) {
+    fun onWindowResize(listener: (Int, Int) -> Unit) {
         windowResizeCallback = listener
     }
 
@@ -114,23 +98,38 @@ class DriftFxSurfaceRenderer(surface: DriftFXSurface):
     }
 
     fun animate(unit: () -> Unit) {
-        val swapChain: Swapchain
-        try {
-            swapChain = driftFxRenderer.createSwapchain(SwapchainConfig(driftFxRenderer.size, 2, PresentationMode.MAILBOX, StandardTransferTypes.MainMemory))
-        } catch (e: Exception) {
-            System.err.println("swapchain creation failed! " + e.message)
-            e.printStackTrace(System.err)
-            return
-        }
-        val renderTarget = swapChain.acquire()
-
-        var lastSize = Vec2i(0, 0)
+        var swapChain: Swapchain? = null
         while(running) {
-            if (lastSize.x != driftFxRenderer.size.x || lastSize.y != driftFxRenderer.size.y) {
-                updateFBO(driftFxRenderer.size, renderTarget)
-                lastSize = driftFxRenderer.size
-                windowResizeCallback?.onWindowResize(lastSize.x, lastSize.y)
+            val rendererSize = driftFxRenderer.size
+            val swapChainSize = swapChain?.config?.size
+            val resized = swapChain == null || rendererSize.x != swapChainSize?.x || rendererSize.y != swapChainSize.y
+            if (swapChain == null || swapChainSize == null || resized) {
+                swapChain?.dispose()
+                try {
+                    swapChain = driftFxRenderer.createSwapchain(
+                        SwapchainConfig(
+                            driftFxRenderer.size,
+                            2,
+                            PresentationMode.MAILBOX,
+                            StandardTransferTypes.MainMemory
+                        )
+                    )
+                } catch (e: Exception) {
+                    System.err.println("swapchain creation failed! " + e.message)
+                    e.printStackTrace(System.err)
+                }
             }
+
+            swapChain ?: continue
+
+            val renderTarget = swapChain.acquire()
+
+            updateFBO(swapChain.config.size, renderTarget)
+
+            if (resized) {
+                windowResizeCallback?.invoke(swapChain.config.size.x, swapChain.config.size.y)
+            }
+
             bind()
 
             unit()
@@ -139,7 +138,7 @@ class DriftFxSurfaceRenderer(surface: DriftFXSurface):
             swapChain.present(renderTarget)
             Thread.sleep(0)
         }
-
+        onCloseCallback?.invoke()
         swapChain?.dispose()
         dispose()
     }

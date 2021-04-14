@@ -39,7 +39,7 @@ dependencies {
     runtimeOnly("org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives")
 
-    api("org.eclipse.fx:org.eclipse.fx.drift:999.0.0-SNAPSHOT")
+    api("org.eclipse.fx:org.eclipse.fx.drift:1.0.0.rc4")
 }
 
 tasks {
