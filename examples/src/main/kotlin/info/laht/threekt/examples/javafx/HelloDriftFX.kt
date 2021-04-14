@@ -154,7 +154,7 @@ class HelloDriftFX : Application() {
         }
 
         driftFxSurfaceRenderer2.animate {
-            mesh2.rotation.y += 1f * clock.getDelta()
+            mesh2.rotation.x += 1f * clock.getDelta()
 
             renderer.render(scene, camera)
         }
