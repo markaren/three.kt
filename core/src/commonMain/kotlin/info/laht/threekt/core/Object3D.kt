@@ -7,6 +7,7 @@ import info.laht.threekt.math.*
 import info.laht.threekt.objects.Mesh
 import info.laht.threekt.renderers.Renderer
 import info.laht.threekt.scenes.Scene
+import kotlin.jvm.Synchronized
 
 
 interface Object3D : Cloneable, EventDispatcher {
@@ -515,7 +516,12 @@ interface Object3D : Cloneable, EventDispatcher {
 
     companion object {
 
-        internal var object3DId = 0
+        private var object3DId = 0
+
+        @Synchronized
+        internal fun getAndIncrementObject3dId(): Int {
+            return object3DId++
+        }
 
         var defaultUp = Vector3.Y.clone()
 
@@ -526,7 +532,7 @@ open class Object3DImpl : Object3D, EventDispatcher by EventDispatcherImpl() {
 
     override var name = ""
     override val uuid = generateUUID()
-    override val id = Object3D.object3DId++
+    override val id = Object3D.getAndIncrementObject3dId()
 
     override var parent: Object3D? = null
     override val children = mutableListOf<Object3D>()
