@@ -11,6 +11,7 @@ import info.laht.threekt.renderers.shaders.ShaderChunk
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20
+import java.util.concurrent.atomic.AtomicInteger
 
 internal sealed class _GLProgram : Program
 
@@ -26,7 +27,7 @@ internal class GLProgram(
         parameters: GLPrograms.Parameters
 ) : _GLProgram() {
 
-    override val id = programIdCount++
+    override val id = programIdCount.incrementAndGet()
 
     var usedTimes = 1
 
@@ -431,7 +432,7 @@ internal class GLProgram(
 
     private companion object {
 
-        var programIdCount = 0
+        var programIdCount = AtomicInteger(0)
 
         val LOG: Logger = getLogger(GLProgram::class)
 
