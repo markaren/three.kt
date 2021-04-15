@@ -1,7 +1,6 @@
 package info.laht.threekt.examples.javafx
 
 import info.laht.threekt.Side
-import info.laht.threekt.WindowSize
 import info.laht.threekt.cameras.PerspectiveCamera
 import info.laht.threekt.core.Clock
 import info.laht.threekt.geometries.BoxBufferGeometry
@@ -23,6 +22,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import org.eclipse.fx.drift.DriftFXSurface
+import kotlin.concurrent.thread
 
 fun main() {
     Application.launch(HelloDriftFX::class.java)
@@ -87,16 +87,16 @@ class HelloDriftFX : Application() {
 
         // render multiple surfaces :)
 
-        Thread {
+        thread(start = true) {
             driftFxSurfaceRenderer1.initialize()
             driftFxSurfaceRenderer1.enableDebugCallback()
             renderThree1()
-        }.start()
+        }
 
-        Thread {
+        thread(start = true) {
             driftFxSurfaceRenderer2.initialize()
             renderThree2()
-        }.start()
+        }
     }
 
     private fun renderThree1() {
@@ -117,7 +117,7 @@ class HelloDriftFX : Application() {
             scene.add(it)
         }
 
-        val renderer = GLRenderer(WindowSize(driftFxSurface1.width.toInt(), driftFxSurface1.height.toInt()))
+        val renderer = GLRenderer(driftFxSurface1.width.toInt(), driftFxSurface1.height.toInt())
 
         val clock = Clock()
         driftFxSurfaceRenderer1.animate {
@@ -145,7 +145,7 @@ class HelloDriftFX : Application() {
             scene.add(it)
         }
 
-        val renderer = GLRenderer(WindowSize(driftFxSurface2.width.toInt(), driftFxSurface2.height.toInt()))
+        val renderer = GLRenderer(driftFxSurface2.width.toInt(), driftFxSurface2.height.toInt())
 
         val clock = Clock()
 
@@ -172,7 +172,7 @@ class HelloDriftFX : Application() {
         }
         stage.show()
 
-        Thread {
+        thread(start = true) {
             driftFxSurfaceRenderer3.initialize()
 
             val scene = Scene().apply {
@@ -191,7 +191,7 @@ class HelloDriftFX : Application() {
             val sphere = Mesh(geometry, material)
             scene.add(sphere)
 
-            val renderer = GLRenderer(WindowSize(driftFxSurface3.width.toInt(), driftFxSurface3.height.toInt()))
+            val renderer = GLRenderer(driftFxSurface3.width.toInt(), driftFxSurface3.height.toInt())
 
             val clock = Clock()
 
@@ -200,7 +200,7 @@ class HelloDriftFX : Application() {
 
                 renderer.render(scene, camera)
             }
-        }.start()
+        }
     }
 
 }
