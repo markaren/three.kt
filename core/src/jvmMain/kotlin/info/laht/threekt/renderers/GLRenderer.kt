@@ -32,6 +32,8 @@ class GLRenderer(
         size: WindowSize
 ) : Renderer {
 
+    constructor(width: Int, height: Int) : this(WindowSize(width, height))
+
     var checkShaderErrors = false
     private val capabilities = GLCapabilities()
     internal val state = GLState()
