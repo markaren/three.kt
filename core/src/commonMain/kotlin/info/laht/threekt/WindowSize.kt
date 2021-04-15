@@ -4,8 +4,8 @@ import info.laht.threekt.math.Vector2
 import kotlin.jvm.JvmOverloads
 
 data class WindowSize(
-        var width: Int,
-        var height: Int
+    var width: Int,
+    var height: Int
 ) {
 
     val aspect: Float
