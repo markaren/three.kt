@@ -4,8 +4,6 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/markaren/three.kt/issues)
 
 [![CI](https://github.com/markaren/three.kt/workflows/Build/badge.svg)](https://github.com/markaren/three.kt/actions)
-[![Bintray](https://api.bintray.com/packages/laht/mvn/threekt/images/download.svg)](https://bintray.com/laht/mvn/threekt/_latestVersion)
-
 [![Gitter](https://badges.gitter.im/markaren/three.kt.svg)](https://gitter.im/markaren/three.kt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Kotlin/JVM port of the popular [three.js](http://threejs.org) 3D library ([r106](https://github.com/mrdoob/three.js/tree/r106)).
@@ -22,7 +20,6 @@ Be warned, while the basics works, such as:
 a lot of features are still missing and the API can change rapidly.
 
 Right now, this is mostly interesting for developers that want to contribute.
-
 
 #### API (subject to changes)
 
@@ -106,12 +103,12 @@ public class JavaExample {
 
 ```
 
-Artifacts are avilable through Bintray:
+Artifacts are available through [Repsy](https://repo.repsy.io/mvn/laht/threekt):
 
 ```
 repositories {
     /*...*/
-    maven { url "https://dl.bintray.com/laht/mvn" }
+    maven { url "https://repo.repsy.io/mvn/laht/threekt" }
 }
 
 dependencies {

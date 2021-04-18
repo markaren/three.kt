@@ -1,9 +1,7 @@
-import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
     kotlin("multiplatform")
-    id("com.jfrog.bintray")
     `maven-publish`
 }
 
@@ -80,26 +78,19 @@ publishing {
         val jvm by getting { }
         val metadata by getting { }
     }
-}
 
-val bintrayUser: String? by project
-val bintrayKey: String? by project
+    val repsyUser: String? by project
+    val repsyPw: String? by project
 
-if (bintrayUser != null && bintrayKey != null) {
-
-    bintray {
-        user = bintrayUser
-        key = bintrayKey
-        publish = true
-        setPublications("jvm")
-        pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-            repo = "mvn"
-            name = "threekt"
-            websiteUrl = "https://github.com/markaren/three.kt"
-            vcsUrl = "https://github.com/markaren/three.kt"
-            setLabels("kotlin")
-            setLicenses("MIT")
-        })
+    if (repsyUser != null && repsyPw != null) {
+        repositories {
+            maven {
+                credentials {
+                    username = repsyUser
+                    password = repsyPw
+                }
+                url = uri("https://repo.repsy.io/mvn/laht/threekt")
+            }
+        }
     }
-
 }
