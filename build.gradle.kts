@@ -1,7 +1,6 @@
 plugins {
     `java-library`
     kotlin("jvm") version "1.4.30" apply false
-    id("com.jfrog.bintray") version "1.8.4" apply false
 }
 
 configure<JavaPluginExtension> {
