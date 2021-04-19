@@ -1,0 +1,43 @@
+import org.gradle.internal.os.OperatingSystem
+
+plugins {
+    id "kotlin"
+}
+
+repositories {
+    maven { url "http://maven.cuchazinteractive.com" }
+    maven { url "https://repo.eclipse.org/content/groups/efxclipse" }
+}
+
+def os = OperatingSystem.current()
+def lwjglNatives = null
+if (os.isLinux()) {
+    lwjglNatives = "natives-linux"
+} else if (os.isUnix()) {
+    lwjglNatives = "natives-macos"
+} else if (os.isWindows()) {
+    lwjglNatives = "natives-windows"
+} else {
+    TODO("OS $os not supported")
+}
+
+dependencies {
+
+    api project(":core")
+
+    // JFXGL
+    implementation("cuchaz:jfxgl:0.4")
+    implementation("cuchaz:jfxgl-jfxrt:0.4")
+
+    // DriftFX
+    def lwjglVersion = "3.2.3"
+    implementation("org.lwjgl:lwjgl:$lwjglVersion")
+    implementation("org.lwjgl:lwjgl-glfw:$lwjglVersion")
+    implementation("org.lwjgl:lwjgl-opengl:$lwjglVersion")
+    runtimeOnly("org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives")
+    api("org.eclipse.fx:org.eclipse.fx.drift:1.0.0.rc4")
+
+}
+
