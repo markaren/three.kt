@@ -1,3 +1,1 @@
-plugins {
-    id "maven-publish"
-}
+apply from: rootProject.file("gradle/publisher.gradle")
