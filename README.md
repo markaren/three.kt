@@ -112,7 +112,7 @@ repositories {
 
 dependencies {
     def version = "..."
-    implementation "info.laht.threekt:core-jvm:$version"
+    implementation "info.laht.threekt:core:$version"
 }
 ```
 
