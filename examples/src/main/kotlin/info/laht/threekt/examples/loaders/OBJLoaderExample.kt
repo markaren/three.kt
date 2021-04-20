@@ -25,7 +25,9 @@ object OBJLoaderExample {
 
             var obj: Group? = null
             Thread {
-                obj = OBJLoader().load(javaClass.classLoader.getResource("models/obj/female02/female02.obj")!!.file).also {
+                val cl = javaClass.classLoader
+                val file = cl.getResource("models/obj/female02/female02.obj")!!.file
+                obj = OBJLoader().load(file).also {
                     scene.add(it)
                 }
             }.start()

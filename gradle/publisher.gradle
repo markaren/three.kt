@@ -1,0 +1,88 @@
+class PublishPluginExtension {
+    String description = "Port of the three.js 3D javascript library for Kotlin/JVM"
+}
+
+class PublishPlugin implements Plugin<Project> {
+
+    protected Jar sourcesJar(Project project) {
+        Jar task = project.tasks.create("sourcesJar", Jar.class)
+        task.from project.sourceSets.main.allSource
+        task.classifier = 'sources'
+        return task
+    }
+
+    protected Jar javadocJar(Project project) {
+        Jar task = project.tasks.create("javadocJar", Jar.class)
+        task.from project.javadoc.destinationDir
+        task.classifier = 'javadoc'
+        return task
+    }
+
+    void apply(Project project) {
+
+        project.apply(plugin: MavenPublishPlugin)
+
+        def extension = project.extensions.create('pomDescription', PublishPluginExtension)
+
+        project.publishing {
+            publications {
+                mavenJava(MavenPublication) {
+
+                    from project.components.java
+                    artifact sourcesJar(project)
+                    artifact javadocJar(project)
+
+                    pom {
+                        name = project.archivesBaseName
+                        description = extension.description
+                        url = 'https://github.com/markaren/three.kt'
+
+                        scm {
+                            url = 'https://github.com/markaren/three.kt/tree/master'
+                        }
+
+                        licenses {
+                            license {
+                                name = 'The MIT License'
+                                url = 'https://opensource.org/licenses/mit-license.php'
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                id = 'laht'
+                                name = 'Lars Ivar Hatledal'
+                                email = 'larsivarhatledal@ntnu.com'
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (project.hasProperty("ossrhUsername") && project.hasProperty("ossrhPassword")) {
+
+                project.apply(plugin: SigningPlugin)
+
+                repositories {
+                    maven {
+                        def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                        def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+                        url project.version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                        credentials {
+                            username = project.ossrhUsername
+                            password = project.ossrhPassword
+                        }
+                    }
+                }
+
+                project.signing {
+                    sign project.publishing.publications.mavenJava
+                }
+
+            }
+        }
+    }
+
+}
+
+apply plugin: PublishPlugin

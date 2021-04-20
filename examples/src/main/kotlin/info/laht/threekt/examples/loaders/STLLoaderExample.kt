@@ -28,7 +28,8 @@ object STLLoaderExample {
             }
             OrbitControls(camera, canvas)
 
-            STLLoader().load(STLLoaderExample::class.java.classLoader.getResource("models/stl/pr2_head_tilt.stl")!!.file)
+            val cl = STLLoaderExample::class.java.classLoader
+            STLLoader().load(cl.getResource("models/stl/pr2_head_tilt.stl")!!.file)
                 .also { stl ->
 
                     stl.rotateX(-PI.toFloat() / 2)

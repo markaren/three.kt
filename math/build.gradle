@@ -1,0 +1,11 @@
+apply from: rootProject.file("gradle/publisher.gradle")
+
+dependencies {
+
+    api project(":common")
+
+    def slf4jVersion = "1.7.27"
+    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    runtimeOnly("org.slf4j:slf4j-log4j12:$slf4jVersion")
+
+}

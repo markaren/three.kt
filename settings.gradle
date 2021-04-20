@@ -1,0 +1,6 @@
+rootProject.name = "threekt"
+
+include "math"
+include "core"
+include "common"
+include "examples"

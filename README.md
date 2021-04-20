@@ -103,17 +103,16 @@ public class JavaExample {
 
 ```
 
-Artifacts are available through [Repsy](https://repo.repsy.io/mvn/laht/threekt):
+Artifacts are available through Maven central:
 
 ```
 repositories {
-    /*...*/
-    maven { url "https://repo.repsy.io/mvn/laht/threekt" }
+    mavenCentral()
 }
 
 dependencies {
     def version = "..."
-    implementation "info.laht.threekt:core-jvm:$version"
+    implementation "info.laht.threekt:core:$version"
 }
 ```
 
