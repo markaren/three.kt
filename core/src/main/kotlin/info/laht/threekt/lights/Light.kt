@@ -1,7 +1,9 @@
 package info.laht.threekt.lights
 
+import info.laht.threekt.core.Intersection
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.core.Object3DImpl
+import info.laht.threekt.core.Raycaster
 import info.laht.threekt.math.Color
 import info.laht.threekt.math.SphericalHarmonics3
 import kotlin.math.PI
@@ -26,6 +28,10 @@ sealed class Light(
 
     init {
         receiveShadow = false
+    }
+
+    override fun raycast(raycaster: Raycaster, intersects: MutableList<Intersection>) {
+        // empty
     }
 
     fun copy(source: Light): Light {
