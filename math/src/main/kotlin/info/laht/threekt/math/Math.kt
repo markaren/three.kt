@@ -2,6 +2,7 @@
 
 package info.laht.threekt.math
 
+import java.util.*
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -29,7 +30,7 @@ fun generateUUID(): String {
             lut[d2 and 0x3f or 0x80] + lut[d2 shr 8 and 0xff] + '-' + lut[d2 shr 16 and 0xff] + lut[d2 shr 24 and 0xff] +
             lut[d3 and 0xff] + lut[d3 shr 8 and 0xff] + lut[d3 shr 16 and 0xff] + lut[d3 shr 24 and 0xff]
 
-    return uuid.toUpperCase()
+    return uuid.uppercase(Locale.getDefault())
 }
 
 fun clamp(value: Int, min: Int, max: Int): Int {

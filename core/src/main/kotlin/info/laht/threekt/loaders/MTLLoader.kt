@@ -9,6 +9,7 @@ import info.laht.threekt.math.Vector2
 import info.laht.threekt.splice
 import info.laht.threekt.textures.Texture
 import java.io.File
+import java.util.*
 
 class MTLLoader {
 
@@ -55,7 +56,7 @@ class MTLLoader {
             val pos = line.indexOf(" ")
 
             var key = if (pos >= 0) line.substring(0, pos) else line
-            key = key.toLowerCase()
+            key = key.lowercase(Locale.getDefault())
 
             var value = if (pos >= 0) line.substring(pos + 1) else ""
             value = value.trim()
@@ -128,7 +129,7 @@ class MTLLoader {
 
                     var save = true
                     val value = mat.getValue(prop)
-                    val lprop = prop.toLowerCase()
+                    val lprop = prop.lowercase(Locale.getDefault())
 
                     when (lprop) {
                         "kd", "ka", "ks" -> {
@@ -237,7 +238,7 @@ class MTLLoader {
 
                 if (value == "") continue
 
-                when (prop.toLowerCase()) {
+                when (prop.lowercase(Locale.getDefault())) {
 
                     "kd" -> params.color.fromArray(value as FloatArray)
                     "ks" -> params.specular.fromArray(value as FloatArray)

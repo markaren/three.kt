@@ -13,6 +13,7 @@ import info.laht.threekt.objects.Points
 import info.laht.threekt.push
 import info.laht.threekt.splice
 import java.io.File
+import java.util.*
 
 class OBJLoader(
     private val tryLoadMtl: Boolean = true
@@ -234,7 +235,7 @@ class OBJLoader(
                  */
                 if (result.length > 1) {
 
-                    val value = result[1].trim().toLowerCase()
+                    val value = result[1].trim().lowercase(Locale.getDefault())
                     state.`object`!!.smooth = (value != "0" && value != "off")
 
                 } else {
