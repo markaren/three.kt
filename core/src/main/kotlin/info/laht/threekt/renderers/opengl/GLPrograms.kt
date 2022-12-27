@@ -1,9 +1,7 @@
 package info.laht.threekt.renderers.opengl
 
-import info.laht.threekt.NormalMapType
-import info.laht.threekt.Side
-import info.laht.threekt.TextureEncoding
-import info.laht.threekt.TextureMapping
+import info.laht.threekt.*
+import info.laht.threekt.core.GeometryObject
 import info.laht.threekt.core.Object3D
 import info.laht.threekt.core.Shader
 import info.laht.threekt.materials.*
@@ -257,6 +255,7 @@ internal class GLPrograms(
         val flipSided = material.side == Side.Back
 
         val depthPacking = if (material is MeshDepthMaterial) material.depthPacking else false
+        val vertexAlphas = material.vertexColors == Colors.Vertex && `object` is GeometryObject && `object`.geometry.attributes.color?.itemSize == 4
 
         operator fun get(name: String): String? {
             return Parameters::class.java.getDeclaredField(name)?.get(this).toString()
@@ -293,6 +292,7 @@ private val parameterNames = listOf(
     "alphaMap",
     "combine",
     "vertexColors",
+    "vertexAlphas",
     "vertexTangents",
     "fog",
     "useFog",

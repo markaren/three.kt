@@ -148,6 +148,7 @@ internal class GLProgram(
 
                     if (parameters.vertexTangents) "#define USE_TANGENT" else "",
                     if (parameters.vertexColors.value > 0) "#define USE_COLOR" else "",
+                    if (parameters.vertexAlphas) "#define USE_COLOR_ALPHA" else "",
 
                     if (parameters.flatShading) "#define FLAT_SHADED" else "",
 
@@ -189,9 +190,13 @@ internal class GLProgram(
 
                     "#endif",
 
-                    "#ifdef USE_COLOR",
+                    "#if defined( USE_COLOR_ALPHA )",
 
-                    "	attribute vec3 color;",
+                    "   attribute vec4 color;",
+
+                    "#elif defined( USE_COLOR )",
+
+                    "   attribute vec3 color;",
 
                     "#endif",
 
@@ -266,6 +271,7 @@ internal class GLProgram(
 
                     if (parameters.vertexTangents) "#define USE_TANGENT" else "",
                     if (parameters.vertexColors.value > 0 || parameters.instancingColor) "#define USE_COLOR" else "",
+                    if (parameters.vertexAlphas) "#define USE_COLOR_ALPHA" else "",
 
                     if (parameters.gradientMap) "#define USE_GRADIENTMAP" else "",
 
