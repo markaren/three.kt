@@ -1,9 +1,6 @@
 package info.laht.threekt.renderers
 
-import info.laht.threekt.DrawMode
-import info.laht.threekt.Side
-import info.laht.threekt.ToneMapping
-import info.laht.threekt.WindowSize
+import info.laht.threekt.*
 import info.laht.threekt.cameras.Camera
 import info.laht.threekt.core.*
 import info.laht.threekt.extras.objects.ImmediateRenderObject
@@ -927,6 +924,8 @@ class GLRenderer(
 
         }
 
+        materialProperties["vertexAlphas"] = parameters.vertexAlphas
+
         materialProperties["fog"] = fog
 
         // store the light setup it was created for
@@ -964,6 +963,8 @@ class GLRenderer(
     private fun setProgram(camera: Camera, fog: _Fog?, material: Material, `object`: Object3D): GLProgram {
 
         textures.resetTextureUnits()
+
+        val vertexAlphas = material.vertexColors == Colors.Vertex && `object` is GeometryObject && `object`.geometry.attributes.color?.itemSize == 4
 
         val materialProperties = properties[material]
         val lights = currentRenderState!!.lights
@@ -1009,6 +1010,8 @@ class GLRenderer(
 
                 material.needsUpdate = true
 
+            } else if (materialProperties["vertexAlphas"] != vertexAlphas) {
+                material.needsUpdate = true
             }
 
         }
