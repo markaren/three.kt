@@ -148,6 +148,7 @@ class GLRenderer(
 
     fun setScissor(x: Int, y: Int, width: Int, height: Int) {
         scissor.set(x, y, width, height)
+        state.scissor(currentScissor.copy(scissor).multiplyScalar(pixelRatio).floor())
     }
 
     fun setScissorTest(boolean: Boolean) {
