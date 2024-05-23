@@ -39,7 +39,7 @@ Window(antialias = 4).use { window ->
 
     val renderer = GLRenderer(window.size)
 
-    val box = Mesh(BoxGeometry(1f), MeshBasicMaterial().apply {
+    val box = Mesh(BoxBufferGeometry(1f), MeshBasicMaterial().apply {
         color.set(0x00ff00)
     })
     scene.add(box)
